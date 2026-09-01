@@ -25,4 +25,9 @@ This log records permanent architectural, design, and structural decisions made 
   * Explicit column-level privilege whitelist: direct modifications to profiles.role and producer_profiles.verification_status are disbarred for authenticated clients.
   * Concurrency enforcement: Partial unique index on app_sessions(user_id) WHERE (is_active = TRUE).
   * Secure Session RPC: register_app_session() derives user identity strictly from auth.uid(), sets search_path = '', validates 64-hex token hash, and deactivates prior sessions atomically.
-  * Concurrency limitation noted: Concurrent login calls may trigger unique-constraint collisions; graceful client retry handling will be implemented with session logic.
+- Producer Authentication Milestone (Step 3):
+  * Migration 002_producer_auth_rpc.sql executed in Supabase.
+  * Shared AuthService implemented under lib/core/auth/.
+  * ProducerLoginScreen, ProducerSignupScreen, and ProducerAuthService implemented.
+  * Strict Role Policy: register_producer_profile RPC and ProducerAuthService validate Producer role and reject existing Buyer and Admin accounts.
+  * Unauthorized Session Termination: If a user authenticates with Supabase Auth but fails Producer portal authorization, the client immediately terminates (signs out) the active session.

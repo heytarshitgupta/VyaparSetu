@@ -4,13 +4,62 @@ PRODUCER AUTHENTICATION
 
 STATUS
 ------------------------------------------------------------
-NOT YET IMPLEMENTED
+IMPLEMENTED (Step 3: Producer Authentication Milestone):
+- Producer Login/Signup UI = IMPLEMENTED
+- Email/Password Supabase Auth = IMPLEMENTED
+- Secure register_producer_profile RPC = IMPLEMENTED (Migration 002 executed)
+- Producer role validation & unauthorized signout = IMPLEMENTED
+- Buyer/Admin rejection = IMPLEMENTED
+
+NOT IMPLEMENTED (Planned for subsequent steps):
+- Phone OTP = PLANNED
+- Full application-level single-session enforcement = PLANNED (Step 4)
+- Producer onboarding routing = PLANNED (Step 5)
+- Producer dashboard routing = PLANNED (Step 6)
 
 
-PLANNED SCOPE
+1. SHARED AUTHENTICATION SERVICE
 ------------------------------------------------------------
-1. Provide dedicated authentication flows tailored for Producers under lib/producer_section/auth/.
-2. Support phone OTP authentication as primary login for low-literacy users, with email/password fallback.
-3. Support secure session token storage and automatic token refresh.
-4. Integrate with Supabase Auth schema (auth.users) linked to producer_profiles.
-5. Role-based redirection upon successful authentication.
+Implemented under lib/core/auth/:
+- AuthService (lib/core/auth/auth_service.dart)
+  * Singleton wrapping Supabase Auth operations using SupabaseService.client.
+  * Methods: signUpWithEmail, signInWithEmail, signOut, currentUser, currentSession, authStateChanges stream.
+  * Uses the Supabase publishable key only. Zero service-role keys.
+
+- AuthExceptionHandler (lib/core/auth/auth_exception_handler.dart)
+  * Sanitizes Supabase Auth and network errors into clean user-facing messages.
+  * Masks internal database schemas, status codes, and stack traces.
+
+
+2. SECURE PRODUCER AUTH SERVICE & RPC
+------------------------------------------------------------
+Implemented under lib/producer_section/auth/services/:
+- ProducerAuthService (lib/producer_section/auth/services/producer_auth_service.dart)
+  * Calls register_producer_profile(p_full_name) database RPC.
+  * Fetches public.profiles and public.producer_profiles.
+  * Validates that caller has role = 'producer' and producer_profiles exists.
+  * Security Control: If authorization fails (e.g. Buyer account, Admin account, or setup incomplete), the service automatically terminates the active Supabase session (signs out) before returning the access-denied result to prevent unauthorized state retention.
+
+- Database RPC (supabase/sql/002_producer_auth_rpc.sql):
+  * Executed successfully in Supabase SQL Editor.
+  * Mode: SECURITY DEFINER with SET search_path = ''.
+  * Caller Identity: Derived strictly from auth.uid().
+  * Validates full name (2–120 characters).
+  * Strict Role Policy: Assigns role = 'producer' for new users; allows idempotent retry for existing producers; REJECTS existing Buyer and Admin accounts (Buyer -> Producer conversion not supported in this phase).
+  * Initializes producer_profiles with onboarding_status = 'not_started' and verification_status = 'unverified' via ON CONFLICT (id) DO NOTHING.
+
+
+3. AUTHENTICATION SCREENS & ROUTING
+------------------------------------------------------------
+- ProducerLoginScreen (lib/producer_section/auth/producer_login_screen.dart):
+  * Low-literacy friendly layout with high-contrast inputs and show/hide password toggles.
+  * Responsive wrapping footer and 52px primary action button.
+  * Fully wired to AuthService and ProducerAuthService.
+
+- ProducerSignupScreen (lib/producer_section/auth/producer_signup_screen.dart):
+  * Fields: Full Name, Email, Password, Confirm Password.
+  * On submission: signs up via Supabase Auth and invokes register_producer_profile RPC.
+
+- AppRouter Integration (lib/core/routes/app_router.dart):
+  * AppRouter.producerLoginRoute ('/producer_login')
+  * AppRouter.producerSignupRoute ('/producer_signup')

@@ -4,7 +4,15 @@ SECURITY ARCHITECTURE AND DESIGN PRINCIPLES
 
 CURRENT STATUS
 ------------------------------------------------------------
-Security architecture documented; backend security implementation has not started yet.
+- Zero Secrets in Codebase: IMPLEMENTED (Git rules, .env ignored)
+- Module Code Isolation: IMPLEMENTED (lib/buyer_section/ isolation)
+- Database Foundation & Privileges: IMPLEMENTED (supabase/sql/001_database_foundation.sql executed)
+- Email/Password Supabase Auth: IMPLEMENTED (lib/core/auth/ + Producer UI)
+- Producer Role RPC (register_producer_profile): IMPLEMENTED (supabase/sql/002_producer_auth_rpc.sql executed)
+- Producer Role Validation & Unauthorized Signout: IMPLEMENTED (ProducerAuthService)
+- Buyer/Admin Rejection: IMPLEMENTED
+- Single Active Session (Client Enforcement): PLANNED (Step 4)
+- Secure File Uploads (Storage RLS): PLANNED (Step 5)
 
 
 1. SECURITY PHILOSOPHY
@@ -12,35 +20,23 @@ Security architecture documented; backend security implementation has not starte
 Security is an integral, development-time requirement in VyaparSetu, not a post-development polish item. The client application (Flutter frontend) is treated as an untrusted environment. All critical security boundaries, access controls, and data validations must be strictly enforced at the database and backend layer.
 
 
-2. CORE PLANNED SECURITY PRINCIPLES
-------------------------------------------------------------
+2. CORE SECURITY PRINCIPLES & IMPLEMENTATION
 
-A. Authentication and Session Management (PLANNED)
-- Supabase Auth: Secure identity management using cryptographic JWT tokens and standard PKCE OAuth / OTP flows.
-- Single Active Session Goal: To mitigate credential sharing and session hijacking in prototype deployment, each user account is constrained to one active session at a time. New logins generate a unique session identifier that automatically revokes/supersedes prior active sessions.
-- Token Storage: Secure on-device key-value storage using platform-native security (iOS Keychain / Android EncryptedSharedPreferences).
+A. Authentication and Session Management
+- Supabase Auth: Secure identity management using cryptographic JWT tokens. auth.users is the sole authentication source of truth.
+- Unauthorized Session Cleanup: If a user authenticates via Supabase Auth but fails application authorization (e.g. Buyer account attempting Producer access), the client immediately invokes auth.signOut() to destroy the active session and prevent unauthorized state retention.
+- Single Active Session: Concurrency safety is mathematically guaranteed by PostgreSQL's partial unique index on app_sessions(user_id) WHERE (is_active = TRUE).
 
-B. Authorization and Row Level Security (RLS) (PLANNED)
-- Default Deny: All PostgreSQL tables have RLS enabled by default with zero public access unless an explicit policy grants it.
-- Least Privilege: Users are only granted access to read and mutate data they strictly own or are authorized to interact with.
-- Ownership Checks: Update/Delete policies verify auth.uid() = producer_id or auth.uid() = buyer_id directly in database triggers and policy predicates.
+B. Authorization, Privileges & Row Level Security (RLS)
+- Default Deny: All PostgreSQL tables have RLS enabled by default.
+- Private-by-Default: Foundation tables (profiles, producer_profiles, app_sessions) enforce owner-only access (auth.uid() = id).
+- Column-Level Privilege Whitelists: Direct client updates to sensitive columns (profiles.role, producer_profiles.verification_status) are revoked.
+- Trusted Role Assignment RPC: Role elevation to 'producer' is strictly handled via public.register_producer_profile() which derives the caller via auth.uid(), copies email/phone from auth.users, cannot assign 'admin', and explicitly rejects existing Buyer and Admin accounts.
 
-C. Secrets Management and API Protection (IMPLEMENTED / ONGOING PRINCIPLE)
+C. Secrets Management and API Protection
 - Zero Secrets in Git: No database connection strings, passwords, or service-role keys may ever be committed to Git.
-- No Service-Role Key in Flutter: The client app only uses the public Supabase anon key. Elevated privileges are strictly confined to database functions and secure backend Edge Functions.
+- No Service-Role Key in Flutter: The client app only uses the public Supabase anon key.
 
-D. Data Protection and Validation (PLANNED)
-- Input Validation: Sanitization and type validation at both Flutter forms and PostgreSQL constraint levels (CHECK, NOT NULL, foreign keys).
-- Identity Data Minimization: Avoid storing unnecessary sensitive personal data. Secure private storage buckets with signed URLs for sensitive verification documents.
-- Safe Error Handling: Error messages returned to users do not leak stack traces, database schemas, or internal server details.
-
-
-3. IMPLEMENTATION STATUS SUMMARY
-------------------------------------------------------------
-- Zero Secrets in Codebase: IMPLEMENTED (Git Pre-commit / Repository rules)
-- Module Code Isolation: IMPLEMENTED (Flutter Architecture)
-- Supabase Auth Integration: PLANNED (Client / Auth Service)
-- Row Level Security (RLS): PLANNED (PostgreSQL Engine)
-- Single Active Session: PLANNED (PostgreSQL + Realtime / Auth)
-- Secure File Uploads (Storage RLS): PLANNED (Supabase Storage)
-- Input Sanitization & DB Constraints: PLANNED (Flutter Forms + DB Schema)
+D. Data Protection, Minimization and Error Handling
+- Identity Data Minimization: Raw government identifiers (Aadhaar, PAN) and IP addresses are excluded from foundation tables. device_info is treated as untrusted metadata with bounded character limits.
+- Safe Error Handling: Error messages presented in the UI never leak raw database schemas, SQL statements, or stack traces.

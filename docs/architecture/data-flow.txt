@@ -4,44 +4,64 @@ APPLICATION DATA FLOW
 
 STATUS
 ------------------------------------------------------------
-Documented design specification.
+IMPLEMENTED (Authentication Flow Milestone).
 
 
-1. PRODUCER ONBOARDING AND VERIFICATION FLOW
+1. PRODUCER SIGNUP AND REGISTRATION FLOW (IMPLEMENTED)
 ------------------------------------------------------------
 
 [Producer App Open]
        |
        v
-[Role Selection: "I Make & Sell Products"]
+[Producer Signup Screen: Email + Password + Full Name]
        |
        v
-[Producer Auth: Phone OTP / Email] ---> [Supabase Auth] ---> Generates JWT
+[Supabase Auth (auth.signUp)] ---> Creates auth.users & returns session
        |
        v
-[Producer Profile Setup] -------------> [Insert producer_profiles (RLS)]
+[RPC: register_producer_profile] ---> [Executes with auth.uid() & search_path = '']
+                                             |
+                                             +---> Validates full_name (2-120 chars)
+                                             +---> Rejects if existing role is 'buyer' or 'admin'
+                                             +---> Inserts public.profiles (role = 'producer')
+                                             +---> Inserts public.producer_profiles (onboarding_status = 'not_started')
        |
        v
-[Identity & Document Upload] ---------> [Supabase Private Storage (RLS)]
+[Validation: ProducerAuthService.validateProducerAccess]
        |
        v
-[Verification Status: Verified]
-       |
-       v
-[Producer Dashboard (Home)]
+[Producer Account Created & Verified]
 
 
-2. PRODUCT CATALOG MANAGEMENT FLOW
+2. PRODUCER LOGIN AND ROLE VALIDATION FLOW (IMPLEMENTED)
 ------------------------------------------------------------
 
-[Producer Dashboard] ---> [Add New Product Screen]
-                                |
-                                +---> [Capture Image] ---> Compress ---> [Supabase Public Storage]
-                                +---> [Input Title, Price, MOQ]
-                                +---> [AI Studio Suggestion] (Optional)
-                                |
-                                v
-                        [Insert products Table (RLS)]
-                                |
-                                v
-                        [Visible on Buyer Marketplace]
+[Producer Login Screen: Email + Password]
+       |
+       v
+[Supabase Auth (signInWithPassword)] ---> Returns JWT
+       |
+       v
+[Validation: ProducerAuthService.validateProducerAccess]
+       |
+       +---> If role == 'producer' & producer_profiles exists:
+       |            |
+       |            v
+       |     [Authentication Success]
+       |
+       +---> If role == 'buyer':
+       |            |
+       |            v
+       |     [Auto Sign Out] ---> [Display: "Registered as Buyer. Access restricted."]
+       |
+       +---> If role == 'admin':
+                    |
+                    v
+             [Auto Sign Out] ---> [Display: "Admin accounts cannot access Producer portal."]
+
+
+3. FUTURE ONBOARDING & DASHBOARD FLOWS (PLANNED)
+------------------------------------------------------------
+- Step 4: Full single-active-session concurrency enforcement (app_sessions)
+- Step 5: Multi-step Producer Onboarding wizard (craft, bio, location, documents)
+- Step 6: Producer Home Dashboard
