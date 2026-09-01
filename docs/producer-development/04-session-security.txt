@@ -1,0 +1,15 @@
+============================================================
+SINGLE ACTIVE SESSION SECURITY
+============================================================
+
+STATUS
+------------------------------------------------------------
+NOT YET IMPLEMENTED
+
+
+PLANNED SCOPE
+------------------------------------------------------------
+1. Implement single active session constraint per user for prototype security.
+2. Store active session identifiers in a secure database table (user_active_sessions).
+3. On new login from any device or client, generate a unique session token, store it in the database, and invalidate prior active sessions for that account.
+4. Periodically validate session validity or listen to Supabase Realtime changes to force logout on superseded clients with user-friendly notification.

@@ -1,0 +1,16 @@
+============================================================
+PRODUCER AUTHENTICATION
+============================================================
+
+STATUS
+------------------------------------------------------------
+NOT YET IMPLEMENTED
+
+
+PLANNED SCOPE
+------------------------------------------------------------
+1. Provide dedicated authentication flows tailored for Producers under lib/producer_section/auth/.
+2. Support phone OTP authentication as primary login for low-literacy users, with email/password fallback.
+3. Support secure session token storage and automatic token refresh.
+4. Integrate with Supabase Auth schema (auth.users) linked to producer_profiles.
+5. Role-based redirection upon successful authentication.

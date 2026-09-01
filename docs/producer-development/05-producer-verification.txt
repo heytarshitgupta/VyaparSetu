@@ -1,0 +1,19 @@
+============================================================
+PRODUCER VERIFICATION
+============================================================
+
+STATUS
+------------------------------------------------------------
+NOT YET IMPLEMENTED
+
+
+PLANNED SCOPE
+------------------------------------------------------------
+1. Provide multi-tiered verification for micro-producers and artisans.
+2. Levels of verification:
+   - Phone verification (OTP confirmation).
+   - Identity verification (e.g. Aadhaar / Government ID document upload).
+   - Producer / Craft verification (artisan card, self-help group certificate, or local trade reference).
+   - Bank account / UPI payout verification.
+3. Verification status tracking badge ("Verified Producer", "Pending Verification").
+4. Secure private storage buckets in Supabase Storage with strict RLS for sensitive ID documents.

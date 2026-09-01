@@ -1,0 +1,46 @@
+============================================================
+SECURITY ARCHITECTURE AND DESIGN PRINCIPLES
+============================================================
+
+CURRENT STATUS
+------------------------------------------------------------
+Security architecture documented; backend security implementation has not started yet.
+
+
+1. SECURITY PHILOSOPHY
+------------------------------------------------------------
+Security is an integral, development-time requirement in VyaparSetu, not a post-development polish item. The client application (Flutter frontend) is treated as an untrusted environment. All critical security boundaries, access controls, and data validations must be strictly enforced at the database and backend layer.
+
+
+2. CORE PLANNED SECURITY PRINCIPLES
+------------------------------------------------------------
+
+A. Authentication and Session Management (PLANNED)
+- Supabase Auth: Secure identity management using cryptographic JWT tokens and standard PKCE OAuth / OTP flows.
+- Single Active Session Goal: To mitigate credential sharing and session hijacking in prototype deployment, each user account is constrained to one active session at a time. New logins generate a unique session identifier that automatically revokes/supersedes prior active sessions.
+- Token Storage: Secure on-device key-value storage using platform-native security (iOS Keychain / Android EncryptedSharedPreferences).
+
+B. Authorization and Row Level Security (RLS) (PLANNED)
+- Default Deny: All PostgreSQL tables have RLS enabled by default with zero public access unless an explicit policy grants it.
+- Least Privilege: Users are only granted access to read and mutate data they strictly own or are authorized to interact with.
+- Ownership Checks: Update/Delete policies verify auth.uid() = producer_id or auth.uid() = buyer_id directly in database triggers and policy predicates.
+
+C. Secrets Management and API Protection (IMPLEMENTED / ONGOING PRINCIPLE)
+- Zero Secrets in Git: No database connection strings, passwords, or service-role keys may ever be committed to Git.
+- No Service-Role Key in Flutter: The client app only uses the public Supabase anon key. Elevated privileges are strictly confined to database functions and secure backend Edge Functions.
+
+D. Data Protection and Validation (PLANNED)
+- Input Validation: Sanitization and type validation at both Flutter forms and PostgreSQL constraint levels (CHECK, NOT NULL, foreign keys).
+- Identity Data Minimization: Avoid storing unnecessary sensitive personal data. Secure private storage buckets with signed URLs for sensitive verification documents.
+- Safe Error Handling: Error messages returned to users do not leak stack traces, database schemas, or internal server details.
+
+
+3. IMPLEMENTATION STATUS SUMMARY
+------------------------------------------------------------
+- Zero Secrets in Codebase: IMPLEMENTED (Git Pre-commit / Repository rules)
+- Module Code Isolation: IMPLEMENTED (Flutter Architecture)
+- Supabase Auth Integration: PLANNED (Client / Auth Service)
+- Row Level Security (RLS): PLANNED (PostgreSQL Engine)
+- Single Active Session: PLANNED (PostgreSQL + Realtime / Auth)
+- Secure File Uploads (Storage RLS): PLANNED (Supabase Storage)
+- Input Sanitization & DB Constraints: PLANNED (Flutter Forms + DB Schema)

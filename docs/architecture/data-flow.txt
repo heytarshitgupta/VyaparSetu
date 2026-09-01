@@ -1,0 +1,47 @@
+============================================================
+APPLICATION DATA FLOW
+============================================================
+
+STATUS
+------------------------------------------------------------
+Documented design specification.
+
+
+1. PRODUCER ONBOARDING AND VERIFICATION FLOW
+------------------------------------------------------------
+
+[Producer App Open]
+       |
+       v
+[Role Selection: "I Make & Sell Products"]
+       |
+       v
+[Producer Auth: Phone OTP / Email] ---> [Supabase Auth] ---> Generates JWT
+       |
+       v
+[Producer Profile Setup] -------------> [Insert producer_profiles (RLS)]
+       |
+       v
+[Identity & Document Upload] ---------> [Supabase Private Storage (RLS)]
+       |
+       v
+[Verification Status: Verified]
+       |
+       v
+[Producer Dashboard (Home)]
+
+
+2. PRODUCT CATALOG MANAGEMENT FLOW
+------------------------------------------------------------
+
+[Producer Dashboard] ---> [Add New Product Screen]
+                                |
+                                +---> [Capture Image] ---> Compress ---> [Supabase Public Storage]
+                                +---> [Input Title, Price, MOQ]
+                                +---> [AI Studio Suggestion] (Optional)
+                                |
+                                v
+                        [Insert products Table (RLS)]
+                                |
+                                v
+                        [Visible on Buyer Marketplace]

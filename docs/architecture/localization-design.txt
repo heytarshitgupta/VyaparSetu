@@ -1,0 +1,44 @@
+============================================================
+MULTILINGUAL AND VOICE GUIDANCE ARCHITECTURE
+============================================================
+
+CURRENT STATUS
+------------------------------------------------------------
+Architecture and specifications documented; localization and text-to-speech runtime are not yet implemented.
+
+
+1. CORE CONCEPT: DUAL LANGUAGE PREFERENCES
+------------------------------------------------------------
+VyaparSetu is engineered specifically for diverse Indian regional demographics, including rural artisans, home-based producers, and grassroots micro-enterprises who may have varying digital literacy.
+
+To solve this, the application decouples visual UI language from spoken voice guidance language:
+
++-------------------------------------------------------------+
+|                    User Language Preferences                |
+|                                                             |
+|   +---------------------------+ +-------------------------+ |
+|   |     A. App UI Language    | | B. Voice Guidance Lang  | |
+|   |                           | |                         | |
+|   | - Screen text & headers   | | - Spoken instructions   | |
+|   | - Buttons & action labels | | - Step-by-step narration| |
+|   | - Forms & input hints     | | - Audio error prompts   | |
+|   +---------------------------+ +-------------------------+ |
++-------------------------------------------------------------+
+
+Example scenario: A user selects English as their App UI language to view standard invoices, but selects Punjabi as their Voice Guidance language to hear spoken explanations for complex verification steps.
+
+
+2. PLANNED LANGUAGE SUPPORT
+------------------------------------------------------------
+The architecture is designed to support expandable Indian regional languages:
+- English (en)
+- Hindi (hi)
+- Punjabi (pa)
+- Extensible to: Marathi (mr), Bengali (bn), Tamil (ta), Telugu (te), Gujarati (gu), etc.
+
+
+3. OPTIONAL VOICE GUIDANCE AND LOW-LITERACY RATIONALE
+------------------------------------------------------------
+- Optional & User-Controlled: Spoken guidance is strictly opt-in and can be paused, toggled, or muted at any time from a prominent accessibility icon.
+- Large Touch Targets: High-contrast, visual icons accompanying all audio triggers.
+- Audio Asset Organization: Structured in assets/audio/<lang_code>/ alongside on-device text-to-speech fallbacks.

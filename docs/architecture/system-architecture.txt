@@ -1,0 +1,49 @@
+============================================================
+HIGH-LEVEL SYSTEM ARCHITECTURE
+============================================================
+
+STATUS
+------------------------------------------------------------
+Documented baseline design; implementation in progress across modules.
+
+
+1. ARCHITECTURAL LAYERS
+------------------------------------------------------------
+
++-------------------------------------------------------------+
+|                       Flutter Client                        |
+|                                                             |
+|  +----------------------+         +----------------------+  |
+|  |     Buyer Module     |         |   Producer Module    |  |
+|  | (lib/buyer_section)  |         |(lib/producer_section)|  |
+|  +----------+-----------+         +----------+-----------+  |
+|             |                                |              |
+|             +---------------+----------------+              |
+|                             |                               |
+|                   +---------v---------+                     |
+|                   |    Core / Shared  |                     |
+|                   |    (lib/core)     |                     |
+|                   +---------+---------+                     |
++-----------------------------+-------------------------------+
+                              | HTTPS / WSS
+                              | (Anon Key + JWT)
++-----------------------------v-------------------------------+
+|                      Supabase Cloud                         |
+|                                                             |
+|  +----------------------+         +----------------------+  |
+|  |    PostgreSQL DB     |         |    Supabase Auth     |  |
+|  |  (RLS Enabled Tables)|         |(JWT, Phone/Email OTP)|  |
+|  +----------------------+         +----------------------+  |
+|  +----------------------+         +----------------------+  |
+|  |   Supabase Storage   |         |    Edge Functions    |  |
+|  | (Public & Priv Buckets)        |   (AI & Verification)|  |
+|  +----------------------+         +----------------------+  |
++-------------------------------------------------------------+
+
+
+2. CORE SUBSYSTEMS
+------------------------------------------------------------
+1. Presentation Layer: Flutter widgets utilizing Material 3, shared design tokens (AppTheme), responsive layout constraints, and accessibility wrappers.
+2. State Management: Provider / ChangeNotifier patterns separating business logic from UI widgets.
+3. Data Layer: Centralized Supabase service layer interfacing with PostgreSQL and storage buckets via typed data models.
+4. Security and Authorization: Row Level Security (RLS) policies enforcing multi-tenant isolation directly inside PostgreSQL.

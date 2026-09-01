@@ -1,0 +1,16 @@
+============================================================
+SUPABASE CONNECTION
+============================================================
+
+STATUS
+------------------------------------------------------------
+NOT YET IMPLEMENTED
+
+
+PLANNED SCOPE
+------------------------------------------------------------
+1. Integrate official supabase_flutter dependency.
+2. Create a centralized, singleton Supabase service under lib/core/services/supabase_service.dart.
+3. Configure environment variables and secure keys.
+4. Implement network resilience and offline/reconnection handling.
+5. Verify initialization health check during application bootstrap.

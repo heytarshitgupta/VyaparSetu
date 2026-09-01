@@ -1,0 +1,26 @@
+============================================================
+VIVA NOTES AND TECHNICAL REFERENCE
+============================================================
+
+PROJECT CORE CONCEPT
+------------------------------------------------------------
+- VyaparSetu: A unified B2B marketplace bridging grassroots Indian producers/artisans directly with bulk buyers, wholesalers, and retail chains.
+- Dual Modular Architecture: Two autonomous domains (buyer_section and producer_section) operating over a shared core foundation and unified Supabase backend.
+
+
+KEY ARCHITECTURAL AND ENGINEERING DECISIONS
+------------------------------------------------------------
+1. Module Isolation:
+   lib/buyer_section is read-only to preserve existing teammate work; new development happens exclusively under lib/producer_section and extensible lib/core.
+
+2. Security-First Paradigm:
+   - Supabase Row Level Security (RLS) guarantees data privacy at the database layer.
+   - Client is treated as untrusted; no service-role secrets in Flutter.
+   - Planned single-active-session concurrency protection.
+
+3. Accessibility for Grassroots Users:
+   - Visual-first, high touch-target, low-literacy friendly UX.
+   - Separation of App UI Language and Voice Guidance / Spoken Language for maximum regional inclusivity (English, Hindi, Punjabi, etc.).
+
+4. Backend History Source of Truth:
+   - Numbered migration scripts stored in supabase/sql/ version-controlled in Git.

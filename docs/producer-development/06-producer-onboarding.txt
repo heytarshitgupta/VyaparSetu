@@ -1,0 +1,15 @@
+============================================================
+PRODUCER ONBOARDING
+============================================================
+
+STATUS
+------------------------------------------------------------
+NOT YET IMPLEMENTED
+
+
+PLANNED SCOPE
+------------------------------------------------------------
+1. Low-literacy friendly step-by-step onboarding wizard.
+2. Visual icon-based selection for craft and product categories (Textiles, Pottery, Spices, Handicrafts, Organic Food, Metalwork).
+3. Business details input: Workshop name, artisan collective/SHG affiliation, location (State, District, Pincode), production capacity.
+4. Integration with local state management (ProducerProfileProvider) and Supabase persistence.

@@ -1,0 +1,16 @@
+============================================================
+PRODUCER PRODUCT MANAGEMENT MODULE
+============================================================
+
+STATUS
+------------------------------------------------------------
+NOT YET IMPLEMENTED
+
+
+PLANNED SCOPE
+------------------------------------------------------------
+1. Product catalog management (Create, Read, Update, Delete).
+2. Fields: Title, description, category, unit price (INR), minimum order quantity (MOQ), available stock/batch size, production lead time, and photos.
+3. Image capture from mobile camera or gallery with on-device compression before upload.
+4. Supabase storage integration with public image CDN caching.
+5. Future AI Studio hooks for background cleanup and multilingual product copywriting.

@@ -1,0 +1,73 @@
+============================================================
+PROJECT STRUCTURE AND MODULE BOUNDARIES
+============================================================
+
+Date: 2026-09-02
+Active Branch: producer-development
+
+
+1. ARCHITECTURAL PHILOSOPHY: MODULE ISOLATION
+------------------------------------------------------------
+VyaparSetu is designed as a modular Flutter application that unifies two distinct user perspectives into one cohesive codebase:
+- Buyer Module (owned by teammate)
+- Producer Module (our focus)
+- Core / Shared Layer (cross-cutting utilities, theme, routing, shared services)
+
+To maintain team velocity and avoid regression, lib/buyer_section/ is strictly treated as READ-ONLY. All Producer-specific features, widgets, screens, models, and providers are encapsulated within lib/producer_section/.
+
+
+2. REPOSITORY LAYOUT AND NESTED STRUCTURE
+------------------------------------------------------------
+The repository exists at /Users/tarshitgupta/Projects/VyaparSetu/VyaparSetu.
+This nested directory structure was intentionally preserved as the existing project, Git tracking, and development environment operate cleanly from the inner root.
+
+
+3. DIRECTORY BREAKDOWN
+------------------------------------------------------------
+
+lib/producer_section/ (Producer Domain)
+Contains all producer-specific capabilities:
+- auth/: Producer login, signup, OTP, and password reset flows.
+- onboarding/: Guided profile creation, craft details, location.
+- verification/: Identity and business verification steps and status badges.
+- home/: Producer dashboard, stats, and primary navigation.
+- products/: Product catalogue management, addition, AI enhancements.
+- opportunities/: Buyer demand matching, quote submissions.
+- profile/: Producer profile viewing, editing, settings.
+- models/: Producer data models and JSON serialization.
+- services/: Producer-specific API/Supabase data services.
+- providers/: State management providers (ChangeNotifier / Provider).
+- widgets/: Reusable Producer UI components (cards, metrics, stat tiles).
+
+lib/buyer_section/ (Buyer Domain - Read Only)
+Contains buyer flows built by our teammate:
+- home/: Buyer dashboard, product browsing, requests overview.
+- onboarding/: Buyer profile onboarding and verification.
+- screens/shared/: Initial authentication, OTP, and placeholder screens.
+
+lib/core/ (Shared / Cross-Cutting Layer)
+Common infrastructure shared across modules:
+- auth/: Shared authentication abstractions and token management.
+- constants/: Global constants, API endpoints, error strings.
+- localization/: Multi-language dictionary, language models, and translation service.
+- accessibility/: Voice guidance, text-to-speech engine, and accessible UI helpers.
+- onboarding/: Shared app entry point, intro explainer, and role selection (Buyer vs Producer).
+- routes/: Central application routing (AppRouter).
+- services/: Shared network, Supabase client, local storage services.
+- theme/: Global theme (AppColors, AppTextStyles, AppTheme).
+- utils/: Common formatting, validators, helpers.
+- widgets/: Common atomic widgets (PrimaryButton, SecondaryButton, AppCard).
+
+supabase/ (Backend Source of Truth)
+- sql/: Numbered, auditable SQL migration scripts for schema, tables, RLS policies, and triggers.
+
+docs/ (Project Knowledge Base)
+- producer-development/: Stage-by-stage implementation plans, notes, and viva references (.txt).
+- architecture/: High-level system designs, database schemas, security, and localization specs (.txt).
+- decisions/: Chronological decision log (.txt).
+
+assets/ (Static Assets)
+- images/: Static image assets.
+- icons/: Custom icons and vectors.
+- videos/onboarding/: Intro/explainer tutorial video files.
+- audio/: Regional audio clips for voice guidance (en/, hi/, pa/).

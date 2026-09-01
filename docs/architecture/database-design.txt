@@ -1,0 +1,59 @@
+============================================================
+DATABASE DESIGN AND SCHEMA SPECIFICATIONS
+============================================================
+
+STATUS
+------------------------------------------------------------
+Planned schema specification. SQL implementation will follow in supabase/sql/.
+
+
+1. ENTITY RELATIONSHIP OVERVIEW
+------------------------------------------------------------
+
+auth.users (Managed by Supabase Auth)
+- Primary user account, phone/email identities.
+
+producer_profiles
+- id (UUID, PK, FK -> auth.users.id)
+- full_name (TEXT)
+- business_name (TEXT)
+- phone (TEXT)
+- craft_category (TEXT)
+- state, district, pincode, address (TEXT)
+- verification_status (TEXT: 'unverified', 'pending', 'verified')
+- created_at, updated_at (TIMESTAMPTZ)
+
+user_active_sessions
+- id (UUID, PK)
+- user_id (UUID, FK -> auth.users.id)
+- session_token_hash (TEXT)
+- device_info (TEXT)
+- last_active_at (TIMESTAMPTZ)
+- is_active (BOOLEAN)
+
+products
+- id (UUID, PK)
+- producer_id (UUID, FK -> producer_profiles.id)
+- title (TEXT)
+- description (TEXT)
+- category (TEXT)
+- price (NUMERIC)
+- min_order_qty (INTEGER)
+- stock_available (INTEGER)
+- lead_time_days (INTEGER)
+- image_urls (TEXT[])
+- is_active (BOOLEAN)
+- created_at, updated_at (TIMESTAMPTZ)
+
+buyer_requests
+- id (UUID, PK)
+- buyer_id (UUID, FK -> auth.users.id)
+- title, description, category, required_qty, target_price, deadline
+- status (TEXT: 'open', 'responses_received', 'closed')
+
+quotations
+- id (UUID, PK)
+- request_id (UUID, FK -> buyer_requests.id)
+- producer_id (UUID, FK -> producer_profiles.id)
+- offered_price, quantity, lead_time_days, notes
+- status (TEXT: 'pending', 'accepted', 'rejected')

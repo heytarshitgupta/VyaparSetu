@@ -1,0 +1,78 @@
+============================================================
+PRODUCER DEVELOPMENT ROADMAP
+============================================================
+
+OVERVIEW
+------------------------------------------------------------
+This document outlines the incremental, step-by-step engineering roadmap
+for the Producer Module in VyaparSetu. Each stage is strictly modular,
+security-first, and independently verifiable before advancing to
+subsequent stages.
+
+
+PLANNED DEVELOPMENT SEQUENCE
+------------------------------------------------------------
+
+Stage 1: Repository and Architecture Setup (CURRENT / IMPLEMENTED)
+- Branch setup (producer-development).
+- Project directory scaffolding (lib/producer_section/, lib/core/, assets/, docs/, supabase/sql/).
+- Baseline smoke testing of existing Buyer frontend.
+- Comprehensive documentation baseline in plain text.
+
+Stage 2: Secure Flutter <-> Supabase Connection (PLANNED)
+- Supabase client initialization under lib/core/services/.
+- Environment configuration and secure credential handling.
+- Connectivity validation and health checks.
+
+Stage 3: Foundational Database Schema (PLANNED)
+- Versioned SQL scripts in supabase/sql/.
+- Tables: producer_profiles, verification_records, user_active_sessions, products, buyer_opportunities.
+- Robust Row Level Security (RLS) policies and database constraints.
+
+Stage 4: Producer Authentication (PLANNED)
+- OTP and secure email/password flows for Producers under lib/producer_section/auth/.
+- Separation of Buyer and Producer auth sessions.
+- Session persistence and secure token storage.
+
+Stage 5: Single-Active-Session Security (PLANNED)
+- Prototype session concurrency control.
+- Automatic invalidation/superseding of prior active sessions upon new successful login.
+- Realtime/polling session validation.
+
+Stage 6: Producer Verification (PLANNED)
+- Multistep verification workflow (Mobile OTP, Identity document upload, Business proof).
+- Trust badge calculation and status tracking.
+
+Stage 7: Producer Onboarding (PLANNED)
+- Low-literacy friendly, step-by-step profile creation wizard.
+- Business category selection, craft details, location, and bank/payout info.
+
+Stage 8: Producer Dashboard (PLANNED)
+- Overview metrics (active listings, incoming inquiries, sales stats).
+- Quick action shortcuts and high-contrast, simple touch targets.
+
+Stage 9: Product Management (PLANNED)
+- Product catalog listing, addition, editing, inventory tracking.
+- Image upload pipeline with size optimization.
+
+Stage 10: AI Product Studio Integration (PLANNED)
+- AI-assisted product description generation in regional languages.
+- Automated catalog photo enhancement/cleanup preview.
+
+Stage 11: Buyer Request / Opportunity Integration (PLANNED)
+- Ingesting Buyer requirements into the Producer feed.
+- Quotation and response submission flow.
+
+Stage 12: Market Radar Integration (PLANNED)
+- Price trend insights and regional demand indicators for micro-producers.
+
+Stage 13: Testing, Security Review and Final Integration (PLANNED)
+- Full end-to-end regression tests across Buyer and Producer journeys.
+- Security penetration review, RLS verification, and UX accessibility audit.
+
+
+EXECUTION PRINCIPLES
+------------------------------------------------------------
+1. Incremental Testing: Every stage must be built, run, and verified before proceeding to the next.
+2. Buyer Module Isolation: lib/buyer_section/ remains read-only.
+3. Security-First: Security, RLS, and validation are built at development time, not as an afterthought.

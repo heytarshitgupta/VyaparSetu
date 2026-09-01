@@ -1,0 +1,20 @@
+============================================================
+ENGINEERING DECISION LOG
+============================================================
+
+This log records permanent architectural, design, and structural decisions made for VyaparSetu.
+
+
+2026-09-02
+------------------------------------------------------------
+- Buyer Module Isolation: The Buyer module under lib/buyer_section/ is owned by another teammate and is strictly treated as READ-ONLY for Producer development to prevent regressions.
+- Standardized Terminology: The term Producer is adopted across code, routes, database schemas, and documentation (replacing "Seller" for all new development).
+- Branch Strategy: Producer development occurs on the dedicated producer-development branch.
+- Security-First Development: Security, authorization, and Row Level Security (RLS) are development-time requirements built incrementally at each stage, not added as a post-development polish item.
+- Responsive UI Constraint: All future screens must avoid fixed-size overflows and support diverse screen sizes and text scaling via flexible Flutter layouts.
+- Low-Literacy Friendly UX: UX is engineered specifically for grassroots micro-producers with clear icons, large touch targets, simplified terminology, and step-by-step guidance.
+- Decoupled Language Preferences: The application architecture decouples App UI Language from Voice Guidance Spoken Language (e.g. English UI with Punjabi audio narration).
+- Optional Voice Guidance: Audio guidance is strictly optional, user-controlled, and can be disabled at any time.
+- Auditable SQL History: All SQL queries, migrations, and table definitions executed against Supabase must be stored as versioned files in supabase/sql/ inside the Git repository.
+- Live Documentation: Documentation will use .txt files for easy reading and management. Executable database scripts will continue to use .sql.
+- Preserve Nested Repo Structure: The existing nested /VyaparSetu/VyaparSetu folder structure is preserved to avoid disturbing working directory paths and tooling.
