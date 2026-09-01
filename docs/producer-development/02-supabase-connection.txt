@@ -1,16 +1,73 @@
 ============================================================
-SUPABASE CONNECTION
+SUPABASE CONNECTION AND CONFIGURATION
 ============================================================
 
 STATUS
 ------------------------------------------------------------
-NOT YET IMPLEMENTED
+IMPLEMENTED (Step 2A: Basic Client Initialization)
 
 
-PLANNED SCOPE
+1. OVERVIEW
 ------------------------------------------------------------
-1. Integrate official supabase_flutter dependency.
-2. Create a centralized, singleton Supabase service under lib/core/services/supabase_service.dart.
-3. Configure environment variables and secure keys.
-4. Implement network resilience and offline/reconnection handling.
-5. Verify initialization health check during application bootstrap.
+The Flutter application is connected to Supabase using the official
+supabase_flutter package. A shared singleton service under lib/core/services/
+initializes the client before runApp() using securely loaded environment
+variables from the root .env file.
+
+
+2. FILES CHANGED AND CREATED
+------------------------------------------------------------
+- lib/core/services/supabase_service.dart (CREATED: Central Supabase client service)
+- .env.example (CREATED: Committed template with safe placeholder keys)
+- .gitignore (MODIFIED: Ignored .env and .env.*)
+- pubspec.yaml (MODIFIED: Added supabase_flutter, flutter_dotenv, and .env asset entry)
+- lib/main.dart (MODIFIED: Invoked WidgetsFlutterBinding.ensureInitialized() and SupabaseService.initialize())
+
+
+3. ENVIRONMENT VARIABLE LOADING FLOW
+------------------------------------------------------------
+1. Local root .env file stores SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY.
+2. SupabaseService.initialize() loads .env via flutter_dotenv:
+   await dotenv.load(fileName: '.env');
+3. Reads and validates SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY.
+4. Initializes Supabase client:
+   await Supabase.initialize(url: supabaseUrl, publishableKey: supabasePublishableKey);
+5. Exposes global client accessor via SupabaseService.client.
+
+
+4. SECURITY AND SECRETS MANAGEMENT
+------------------------------------------------------------
+- Why .env is ignored: .env contains real instance credentials and project URLs. Keeping it in .gitignore prevents accidental leakage into version control.
+- Why .env.example is safe: .env.example contains purely generic placeholders (e.g. your_supabase_project_url) with zero credentials.
+- Publishable Key vs Service-Role Key:
+  * Publishable Key (Anon Key): Designed for client-side applications. It identifies the client to Supabase and is constrained by Row Level Security (RLS) policies in PostgreSQL.
+  * Service-Role / Admin Key: Bypasses ALL Row Level Security rules and has full database superuser privileges. It must NEVER be included in Flutter client code or Git.
+
+
+5. COMMANDS USED
+------------------------------------------------------------
+- flutter pub add supabase_flutter flutter_dotenv
+- flutter pub get
+- flutter test
+- flutter analyze
+- flutter run -d chrome --web-port=8080
+
+
+6. VERIFICATION RESULT
+------------------------------------------------------------
+- flutter analyze: 0 Errors, 0 Warnings.
+- flutter test: All tests passed.
+- Startup verification: Supabase init completed successfully on application boot (INFO: ***** Supabase init completed *****).
+- Buyer Isolation: Zero modifications to lib/buyer_section/.
+
+
+7. POSSIBLE VIVA QUESTIONS
+------------------------------------------------------------
+Q1: Why should you never put the Supabase service-role key in a Flutter app?
+A1: Flutter client binaries and web JavaScript bundles can be decompiled or inspected by end users. The service-role key bypasses all PostgreSQL Row Level Security (RLS) policies, which would allow anyone to read, modify, or delete the entire database. Only the publishable (anon) key should be in client apps.
+
+Q2: How does the client interact securely with the database using only a publishable key?
+A2: When users authenticate, Supabase Auth issues a JWT token containing their user ID. PostgreSQL uses this JWT to evaluate Row Level Security (RLS) policies for every SELECT, INSERT, UPDATE, and DELETE query.
+
+Q3: Why initialize Supabase in lib/core/services/ rather than inside lib/producer_section/?
+A3: Supabase is a shared backend infrastructure required by both the Buyer module and the Producer module (and shared auth). Placing it in lib/core/ ensures modular reusability without coupling.
