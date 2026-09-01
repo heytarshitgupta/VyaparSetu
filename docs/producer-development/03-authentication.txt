@@ -4,21 +4,36 @@ PRODUCER AUTHENTICATION
 
 STATUS
 ------------------------------------------------------------
-IMPLEMENTED (Step 3: Producer Authentication Milestone):
-- Producer Login/Signup UI = IMPLEMENTED
-- Email/Password Supabase Auth = IMPLEMENTED
-- Secure register_producer_profile RPC = IMPLEMENTED (Migration 002 executed)
-- Producer role validation & unauthorized signout = IMPLEMENTED
-- Buyer/Admin rejection = IMPLEMENTED
+IMPLEMENTED AND LIVE VERIFIED (Step 3 Milestone Finalized):
+- Shared Buyer/Producer role entry gateway = IMPLEMENTED
+- Producer Login & Signup UI = IMPLEMENTED
+- Supabase Email/Password authentication = IMPLEMENTED
+- Secure register_producer_profile RPC = IMPLEMENTED & LIVE VERIFIED (Migration 004)
+- Producer role validation & unauthorized auto-signout = IMPLEMENTED
+- Buyer/Admin rejection from Producer portal = IMPLEMENTED
+- Automatic profiles creation = IMPLEMENTED & LIVE VERIFIED
+- Automatic producer_profiles creation = IMPLEMENTED & LIVE VERIFIED
+- Producer post-login routing to Producer portal = IMPLEMENTED
+- Producer logout = IMPLEMENTED
 
-NOT IMPLEMENTED (Planned for subsequent steps):
-- Phone OTP = PLANNED
-- Full application-level single-session enforcement = PLANNED (Step 4)
-- Producer onboarding routing = PLANNED (Step 5)
-- Producer dashboard routing = PLANNED (Step 6)
+NOT IMPLEMENTED YET (Planned for subsequent stages):
+- Phone OTP authentication = PLANNED
+- Aadhaar/PAN / Business KYC verification = PLANNED (Step 5/6)
+- Producer multi-step onboarding wizard = PLANNED (Step 5)
+- Actual Producer dashboard = PLANNED (Step 6)
+- Application-level single-active-session enforcement = PLANNED (Step 4)
 
 
-1. SHARED AUTHENTICATION SERVICE
+1. SHARED ROLE ENTRY GATEWAY
+------------------------------------------------------------
+Implemented in lib/core/auth/role_selection_screen.dart:
+- Displays high-contrast, low-literacy friendly cards for choosing between "I Want to Buy Products" (Buyer Portal) and "I Make & Sell Products" (Producer Portal).
+- Root route ('/') loads RoleSelectionScreen.
+- Buyer selection routes to '/buyer_auth' (preserving teammate's Buyer module 100% untouched).
+- Producer selection routes to '/producer_login'.
+
+
+2. SHARED AUTHENTICATION SERVICE
 ------------------------------------------------------------
 Implemented under lib/core/auth/:
 - AuthService (lib/core/auth/auth_service.dart)
@@ -31,7 +46,7 @@ Implemented under lib/core/auth/:
   * Masks internal database schemas, status codes, and stack traces.
 
 
-2. SECURE PRODUCER AUTH SERVICE & RPC
+3. SECURE PRODUCER AUTH SERVICE & RPC
 ------------------------------------------------------------
 Implemented under lib/producer_section/auth/services/:
 - ProducerAuthService (lib/producer_section/auth/services/producer_auth_service.dart)
@@ -40,26 +55,32 @@ Implemented under lib/producer_section/auth/services/:
   * Validates that caller has role = 'producer' and producer_profiles exists.
   * Security Control: If authorization fails (e.g. Buyer account, Admin account, or setup incomplete), the service automatically terminates the active Supabase session (signs out) before returning the access-denied result to prevent unauthorized state retention.
 
-- Database RPC (supabase/sql/002_producer_auth_rpc.sql):
-  * Executed successfully in Supabase SQL Editor.
+- Database RPC (supabase/sql/004_fix_producer_rpc_sql_expressions.sql):
+  * Executed and verified in Supabase SQL Editor.
   * Mode: SECURITY DEFINER with SET search_path = ''.
   * Caller Identity: Derived strictly from auth.uid().
-  * Validates full name (2–120 characters).
+  * Validates full name (2–120 characters) using standard TRIM and LENGTH.
   * Strict Role Policy: Assigns role = 'producer' for new users; allows idempotent retry for existing producers; REJECTS existing Buyer and Admin accounts (Buyer -> Producer conversion not supported in this phase).
   * Initializes producer_profiles with onboarding_status = 'not_started' and verification_status = 'unverified' via ON CONFLICT (id) DO NOTHING.
 
 
-3. AUTHENTICATION SCREENS & ROUTING
+4. AUTHENTICATION SCREENS & ROUTING
 ------------------------------------------------------------
 - ProducerLoginScreen (lib/producer_section/auth/producer_login_screen.dart):
   * Low-literacy friendly layout with high-contrast inputs and show/hide password toggles.
-  * Responsive wrapping footer and 52px primary action button.
   * Fully wired to AuthService and ProducerAuthService.
+  * On success, routes to '/producer_home' (ProducerPlaceholderScreen).
 
 - ProducerSignupScreen (lib/producer_section/auth/producer_signup_screen.dart):
   * Fields: Full Name, Email, Password, Confirm Password.
-  * On submission: signs up via Supabase Auth and invokes register_producer_profile RPC.
+  * On submission: signs up via Supabase Auth, invokes register_producer_profile RPC, and routes to '/producer_home'.
+
+- ProducerPlaceholderScreen (lib/producer_section/home/producer_placeholder_screen.dart):
+  * Displays "Producer Account Ready", user account details (Email, Role, Onboarding Status, Verification Status), and Sign Out action.
 
 - AppRouter Integration (lib/core/routes/app_router.dart):
-  * AppRouter.producerLoginRoute ('/producer_login')
-  * AppRouter.producerSignupRoute ('/producer_signup')
+  * AppRouter.initialRoute ('/') -> RoleSelectionScreen
+  * AppRouter.buyerAuthRoute ('/buyer_auth') -> AuthScreen
+  * AppRouter.producerLoginRoute ('/producer_login') -> ProducerLoginScreen
+  * AppRouter.producerSignupRoute ('/producer_signup') -> ProducerSignupScreen
+  * AppRouter.producerHomeRoute ('/producer_home') -> ProducerPlaceholderScreen

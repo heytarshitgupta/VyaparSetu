@@ -6,13 +6,16 @@ import '../../buyer_section/onboarding/buyer_onboarding_screen.dart';
 import '../../buyer_section/onboarding/buyer_verification_screen.dart';
 import '../../buyer_section/home/buyer_main_screen.dart';
 
+import '../auth/role_selection_screen.dart';
 import '../../producer_section/auth/producer_login_screen.dart';
 import '../../producer_section/auth/producer_signup_screen.dart';
+import '../../producer_section/home/producer_placeholder_screen.dart';
 
 class AppRouter {
   AppRouter._();
 
   static const String initialRoute = '/';
+  static const String buyerAuthRoute = '/buyer_auth';
   static const String otpRoute = '/otp';
   static const String buyerOnboardingRoute = '/buyer_onboarding';
   static const String buyerVerificationRoute = '/buyer_verification';
@@ -25,10 +28,13 @@ class AppRouter {
 
   static const String producerLoginRoute = '/producer_login';
   static const String producerSignupRoute = '/producer_signup';
+  static const String producerHomeRoute = '/producer_home';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case initialRoute:
+        return MaterialPageRoute(builder: (_) => const RoleSelectionScreen());
+      case buyerAuthRoute:
         return MaterialPageRoute(builder: (_) => const AuthScreen());
       case otpRoute:
         return MaterialPageRoute(builder: (_) => const OtpScreen());
@@ -50,6 +56,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ProducerLoginScreen());
       case producerSignupRoute:
         return MaterialPageRoute(builder: (_) => const ProducerSignupScreen());
+      case producerHomeRoute:
+        return MaterialPageRoute(builder: (_) => const ProducerPlaceholderScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

@@ -4,15 +4,26 @@ APPLICATION DATA FLOW
 
 STATUS
 ------------------------------------------------------------
-IMPLEMENTED (Authentication Flow Milestone).
+IMPLEMENTED AND LIVE VERIFIED (Step 3: Producer Authentication Milestone).
 
 
-1. PRODUCER SIGNUP AND REGISTRATION FLOW (IMPLEMENTED)
+1. SHARED APP STARTUP FLOW (IMPLEMENTED)
 ------------------------------------------------------------
 
-[Producer App Open]
+[App Launch (MaterialApp initialRoute: '/')]
        |
        v
+[RoleSelectionScreen]
+       |
+       +---> "I Want to Buy Products" ───► [Buyer AuthScreen (/buyer_auth)]
+       |                                          │ (Teammate's Buyer flow preserved 100% untouched)
+       |
+       +---> "I Make & Sell Products" ───► [ProducerLoginScreen (/producer_login)]
+
+
+2. PRODUCER SIGNUP AND REGISTRATION FLOW (IMPLEMENTED)
+------------------------------------------------------------
+
 [Producer Signup Screen: Email + Password + Full Name]
        |
        v
@@ -24,22 +35,22 @@ IMPLEMENTED (Authentication Flow Milestone).
                                              +---> Validates full_name (2-120 chars)
                                              +---> Rejects if existing role is 'buyer' or 'admin'
                                              +---> Inserts public.profiles (role = 'producer')
-                                             +---> Inserts public.producer_profiles (onboarding_status = 'not_started')
+                                             +---> Inserts public.producer_profiles (onboarding_status = 'not_started', verification_status = 'unverified')
        |
        v
 [Validation: ProducerAuthService.validateProducerAccess]
        |
        v
-[Producer Account Created & Verified]
+[Navigate: ProducerPlaceholderScreen (/producer_home)]
 
 
-2. PRODUCER LOGIN AND ROLE VALIDATION FLOW (IMPLEMENTED)
+3. PRODUCER LOGIN AND ROLE VALIDATION FLOW (IMPLEMENTED)
 ------------------------------------------------------------
 
 [Producer Login Screen: Email + Password]
        |
        v
-[Supabase Auth (signInWithPassword)] ---> Returns JWT
+[Supabase Auth (signInWithPassword)] ---> Authenticates & issues JWT
        |
        v
 [Validation: ProducerAuthService.validateProducerAccess]
@@ -47,7 +58,7 @@ IMPLEMENTED (Authentication Flow Milestone).
        +---> If role == 'producer' & producer_profiles exists:
        |            |
        |            v
-       |     [Authentication Success]
+       |     [Navigate: ProducerPlaceholderScreen (/producer_home)]
        |
        +---> If role == 'buyer':
        |            |
@@ -60,7 +71,7 @@ IMPLEMENTED (Authentication Flow Milestone).
              [Auto Sign Out] ---> [Display: "Admin accounts cannot access Producer portal."]
 
 
-3. FUTURE ONBOARDING & DASHBOARD FLOWS (PLANNED)
+4. FUTURE ONBOARDING & DASHBOARD FLOWS (PLANNED)
 ------------------------------------------------------------
 - Step 4: Full single-active-session concurrency enforcement (app_sessions)
 - Step 5: Multi-step Producer Onboarding wizard (craft, bio, location, documents)

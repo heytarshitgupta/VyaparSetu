@@ -4,11 +4,11 @@ DATABASE DESIGN AND SCHEMA SPECIFICATIONS
 
 STATUS
 ------------------------------------------------------------
-IMPLEMENTED (Step 2D: Database Foundation Executed).
-Migration script supabase/sql/001_database_foundation.sql was successfully
-executed in Supabase SQL Editor.
-Note: Authentication, Flutter session client logic, and verification workflows
-remain in PLANNED status for subsequent steps.
+IMPLEMENTED (Step 2D: Database Foundation Executed, Step 3: Producer Auth RPC Live Verified).
+- Migration 001_database_foundation.sql executed in Supabase SQL Editor.
+- Migration 002_producer_auth_rpc.sql executed in Supabase SQL Editor.
+- Migration 003_fix_producer_registration_rpc.sql executed in Supabase SQL Editor.
+- Migration 004_fix_producer_rpc_sql_expressions.sql EXECUTED AND LIVE VERIFIED in Supabase SQL Editor.
 
 
 1. ARCHITECTURAL AND SECURITY PRINCIPLES
@@ -25,6 +25,7 @@ remain in PLANNED status for subsequent steps.
    - Direct mutations on app_sessions are disabled; session registration occurs via secure stored function.
 7. Function Security Standards:
    - SECURITY DEFINER functions declare an empty search path (SET search_path = '') and fully schema-qualify all references.
+   - Built-in SQL syntax constructs (TRIM, LENGTH, COALESCE, CASE, CURRENT_TIMESTAMP) are used directly without invalid pg_catalog qualification.
    - PUBLIC and anon execution permissions are revoked; execution is granted exclusively to authenticated.
    - Functions never accept a client-supplied user_id; the caller is derived strictly from auth.uid().
 
@@ -79,7 +80,7 @@ TABLE: profiles
 TABLE: producer_profiles
 - Purpose: Stores domain-specific business details, craft categories, and verification state for Producers.
 - Columns:
-  * id (UUID, PK, REFERENCES profiles(id) ON DELETE CASCADE)
+  * id (UUID, PK REFERENCES profiles(id) ON DELETE CASCADE)
   * business_name (TEXT, NOT NULL DEFAULT '')
   * craft_category (TEXT, NOT NULL DEFAULT '')
   * bio (TEXT, NULLABLE)
@@ -133,16 +134,23 @@ TABLE: app_sessions
   * Validates session token hash is 64 hex characters.
   * SECURITY DEFINER with SET search_path = ''.
   * REVOKE ALL ON FUNCTION FROM PUBLIC, anon; GRANT EXECUTE TO authenticated;
-- Known Concurrency Limitation:
-  The partial unique index guarantees only one active session row per user.
-  If two session registration calls happen concurrently, one call may receive
-  a unique-constraint failure. Graceful serialization/retry will be handled
-  when session logic is implemented.
 
 
-4. FUTURE TABLES AND INTERFACES (PLANNED FOR LATER STEPS)
+4. STORED PROCEDURES & RPCs
 ------------------------------------------------------------
-- Public Producer Directory View / RPC: Safe column-filtered view exposing only public business fields of verified producers.
+- register_producer_profile(p_full_name TEXT DEFAULT '')
+  * Mode: SECURITY DEFINER, SET search_path = ''.
+  * Migration 004 EXECUTED and LIVE VERIFIED in Supabase SQL Editor.
+  * Uses standard SQL expressions (TRIM, LENGTH, COALESCE, CURRENT_TIMESTAMP).
+  * Resolves user identity from auth.uid() and copies email/phone from auth.users.
+  * Inserts/updates public.profiles (role = 'producer') and public.producer_profiles (onboarding_status = 'not_started', verification_status = 'unverified').
+  * Rejects existing Buyer and Admin accounts from role conversion.
+  * Execution granted strictly to authenticated.
+
+
+5. FUTURE TABLES AND INTERFACES (PLANNED FOR LATER STEPS)
+------------------------------------------------------------
+- Public Producer Directory View / RPC
 - products (Stage 9)
 - product_images (Stage 9)
 - verification_documents (Stage 6)

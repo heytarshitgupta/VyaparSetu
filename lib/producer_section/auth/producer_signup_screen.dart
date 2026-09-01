@@ -69,14 +69,9 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
         if (!mounted) return;
 
         if (validation.isSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Producer account created successfully! You can now sign in to your account.',
-              ),
-              backgroundColor: AppColors.primary,
-              duration: Duration(seconds: 4),
-            ),
+          Navigator.pushReplacementNamed(
+            context,
+            AppRouter.producerHomeRoute,
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

@@ -8,8 +8,8 @@ CURRENT STATUS
 - Module Code Isolation: IMPLEMENTED (lib/buyer_section/ isolation)
 - Database Foundation & Privileges: IMPLEMENTED (supabase/sql/001_database_foundation.sql executed)
 - Email/Password Supabase Auth: IMPLEMENTED (lib/core/auth/ + Producer UI)
-- Producer Role RPC (register_producer_profile): IMPLEMENTED (supabase/sql/002_producer_auth_rpc.sql executed)
-- Producer Role Validation & Unauthorized Signout: IMPLEMENTED (ProducerAuthService)
+- Producer Role RPC (register_producer_profile): IMPLEMENTED & LIVE VERIFIED (supabase/sql/004_fix_producer_rpc_sql_expressions.sql executed)
+- Producer Role Validation & Unauthorized Auto-Signout: IMPLEMENTED (ProducerAuthService)
 - Buyer/Admin Rejection: IMPLEMENTED
 - Single Active Session (Client Enforcement): PLANNED (Step 4)
 - Secure File Uploads (Storage RLS): PLANNED (Step 5)

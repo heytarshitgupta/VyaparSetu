@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:buyer_section/core/routes/app_router.dart';
 import 'package:buyer_section/producer_section/auth/producer_login_screen.dart';
 import 'package:buyer_section/producer_section/auth/producer_signup_screen.dart';
 
 void main() {
+  testWidgets('RoleSelectionScreen renders choices and handles taps',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        initialRoute: AppRouter.initialRoute,
+        onGenerateRoute: AppRouter.generateRoute,
+      ),
+    );
+
+    expect(find.text('VyaparSetu'), findsOneWidget);
+    expect(find.text('I Want to Buy Products'), findsOneWidget);
+    expect(find.text('I Make & Sell Products'), findsOneWidget);
+
+    // Tap Producer card
+    await tester.tap(find.text('I Make & Sell Products'));
+    await tester.pumpAndSettle();
+
+    // Verify it navigated to ProducerLoginScreen
+    expect(find.text('Producer Login'), findsOneWidget);
+    expect(find.text('Sign In as Producer'), findsOneWidget);
+  });
+
   testWidgets('ProducerLoginScreen renders all required fields and buttons',
       (WidgetTester tester) async {
     await tester.pumpWidget(

@@ -54,12 +54,9 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
         if (!mounted) return;
 
         if (validation.isSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Signed in as Producer successfully.'),
-              backgroundColor: AppColors.primary,
-              duration: Duration(seconds: 4),
-            ),
+          Navigator.pushReplacementNamed(
+            context,
+            AppRouter.producerHomeRoute,
           );
         } else {
           // If rejected (e.g. Buyer account or incomplete setup), display the user-friendly message
