@@ -2,12 +2,21 @@ import 'package:flutter/material.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/routes/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../auth/services/producer_auth_service.dart';
 import 'producer_onboarding_provider.dart';
+import 'steps/basic_details_step.dart';
 import 'widgets/onboarding_navigation_buttons.dart';
 import 'widgets/onboarding_progress_header.dart';
 
 class ProducerOnboardingScreen extends StatefulWidget {
-  const ProducerOnboardingScreen({super.key});
+  final ProducerOnboardingProvider? provider;
+  final Future<void> Function({required String fullName, String? phone})? step1Saver;
+
+  const ProducerOnboardingScreen({
+    super.key,
+    this.provider,
+    this.step1Saver,
+  });
 
   @override
   State<ProducerOnboardingScreen> createState() => _ProducerOnboardingScreenState();
@@ -19,8 +28,24 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
   @override
   void initState() {
     super.initState();
-    _provider = ProducerOnboardingProvider();
+    _provider = widget.provider ?? ProducerOnboardingProvider();
+    if (widget.step1Saver != null) {
+      _provider.step1Saver = widget.step1Saver;
+    }
     _provider.addListener(_onProviderUpdate);
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    try {
+      final user = AuthService.instance.currentUser;
+      final profile = await ProducerAuthService.instance.fetchProfile();
+      if (mounted) {
+        _provider.initializeFromProfile(profile: profile, user: user);
+      }
+    } catch (_) {
+      // Fallback: provider maintains default empty state
+    }
   }
 
   void _onProviderUpdate() {
@@ -40,14 +65,27 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-          'Onboarding review submitted. Full data persistence will be enabled in Step 4B.',
+          'Onboarding review submitted. Full submission will be finalized in upcoming steps.',
         ),
         backgroundColor: AppColors.primary,
         duration: Duration(seconds: 4),
       ),
     );
-    // Route to placeholder/home for now
     Navigator.pushReplacementNamed(context, AppRouter.producerHomeRoute);
+  }
+
+  Future<void> _handleNext() async {
+    if (_provider.currentStep == 0) {
+      // Step 1: Validate and persist to public.profiles
+      final saved = await _provider.saveStep1();
+      if (saved) {
+        _provider.nextStep();
+      }
+    } else if (_provider.isLastStep) {
+      _handleSubmit();
+    } else {
+      _provider.nextStep();
+    }
   }
 
   @override
@@ -119,13 +157,7 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
                     isLastStep: _provider.isLastStep,
                     isSubmitting: _provider.isSubmitting,
                     onPrevious: _provider.previousStep,
-                    onNext: () {
-                      if (_provider.isLastStep) {
-                        _handleSubmit();
-                      } else {
-                        _provider.nextStep();
-                      }
-                    },
+                    onNext: _handleNext,
                   ),
                 ],
               ),
@@ -139,17 +171,7 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
   Widget _buildStepContent(int step) {
     switch (step) {
       case 0:
-        return _buildStepCard(
-          icon: Icons.person_outline,
-          title: 'Basic Artisan Profile',
-          description:
-              'Provide your primary display name, phone number, and preferred language for order notifications.',
-          fields: [
-            _buildInfoTile('Full Name', 'Ramesh Kumar (from account)'),
-            _buildInfoTile('Primary Language', 'Hindi / English'),
-            _buildInfoTile('Voice Assistance', 'Enabled (Hindi)'),
-          ],
-        );
+        return BasicDetailsStep(provider: _provider);
       case 1:
         return _buildStepCard(
           icon: Icons.storefront_outlined,
@@ -182,7 +204,7 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
               'Verify your artisan status with government-recognized ID (Artisan Card, Udyam MSME, or Aadhaar).',
           fields: [
             _buildInfoTile('Verification ID', 'Artisan Pehchan Card / Udyam'),
-            _buildInfoTile('Status', 'Pending document upload in Step 4B'),
+            _buildInfoTile('Status', 'Pending verification workflow in Step 4B'),
             _buildInfoTile('Privacy', 'Private & encrypted strictly for verification'),
           ],
         );

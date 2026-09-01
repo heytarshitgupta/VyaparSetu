@@ -32,7 +32,11 @@ This log records permanent architectural, design, and structural decisions made 
   * Strict Role Policy: register_producer_profile RPC and ProducerAuthService validate Producer role and reject existing Buyer and Admin accounts.
   * Unauthorized Session Termination: If a user authenticates with Supabase Auth but fails Producer portal authorization, the client immediately terminates (signs out) the active session.
   * Migration 004_fix_producer_rpc_sql_expressions.sql executed and live-verified in Supabase.
-- Producer Onboarding Foundation & Data Model (Step 4A & 4B0.2):
+- Producer Onboarding Foundation & Data Model (Step 4A & 4B0.3 Finalized):
   * Multi-step onboarding shell (5 steps) and provider implemented.
   * Post-login/signup routing dynamically checks onboarding_status ('not_started'/'in_progress' -> '/producer_onboarding', 'completed' -> '/producer_home').
-  * Migration 005_expand_producer_onboarding_schema.sql hardened: explicitly revokes client write privileges on onboarding_status (granted in 001); restricts client writes to declared inputs (business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin); keeps all identity verification artifacts (pan_last4, pan_hash, aadhaar_last4, aadhaar_verification_reference) and verification statuses strictly backend-only. Prohibits storage of raw Aadhaar.
+  * Migration 005_expand_producer_onboarding_schema.sql executed in Supabase: explicitly revokes client write privileges on onboarding_status (granted in 001); restricts client writes to declared inputs (business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin); keeps all identity verification artifacts (pan_last4, pan_hash, aadhaar_last4, aadhaar_verification_reference) and verification statuses strictly backend-only. Prohibits storage of raw Aadhaar.
+- Producer Basic Details Form Milestone (Step 4B1):
+  * Step 1 (Basic Details) UI implemented (BasicDetailsStep) with prefilling from public.profiles and auth.users.
+  * Source of truth: Supabase Auth is authoritative for email (read-only) and verified phone (read-only). If no auth phone exists, public.profiles.phone is treated strictly as an editable contact phone (10-digit Indian mobile validation) rather than verified authentication.
+  * Full Name (2–120 chars) and contact phone are persisted to public.profiles before step progression.

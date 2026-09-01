@@ -72,6 +72,29 @@ class ProducerAuthService {
     return response;
   }
 
+  /// Updates public.profiles (full_name and optional contact phone) for the current user.
+  /// Note: phone stored here is strictly a contact phone, not an authenticated phone.
+  Future<void> updateBasicProfile({
+    required String fullName,
+    String? phone,
+  }) async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw Exception('User is not authenticated.');
+    }
+
+    final data = <String, dynamic>{
+      'full_name': fullName.trim(),
+      'updated_at': DateTime.now().toIso8601String(),
+    };
+
+    if (phone != null) {
+      data['phone'] = phone.trim();
+    }
+
+    await _client.from('profiles').update(data).eq('id', user.id);
+  }
+
   /// Validates that the authenticated user possesses the Producer role and
   /// that their domain profile exists.
   /// If authorization fails for any reason (e.g. Buyer/Admin account or incomplete setup),

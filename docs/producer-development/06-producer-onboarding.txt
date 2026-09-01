@@ -4,40 +4,48 @@ PRODUCER ONBOARDING
 
 STATUS
 ------------------------------------------------------------
-IMPLEMENTED (Step 4A & 4B0.2):
+IMPLEMENTED (Step 4A, 4B0, & 4B1):
 - Step 4A: Multi-step onboarding shell, progress header, navigation buttons, and post-auth routing based on onboarding_status ('not_started' / 'in_progress' -> '/producer_onboarding', 'completed' -> '/producer_home').
-- Step 4B0.2: Data model expanded and hardened in Migration 005 to cover all planned onboarding steps with strict trust boundaries. Onboarding status transitions are strictly protected and cannot be self-declared by the client.
+- Step 4B0: Data model expanded and hardened in Migration 005 to cover all planned onboarding steps with strict trust boundaries. Onboarding status transitions are strictly protected and cannot be self-declared by the client.
+- Step 4B1: Step 1 (Basic Details) form implemented, prefilled from profiles/auth, validated, and persisted to public.profiles.
 
-NOT IMPLEMENTED YET (Planned for Step 4B+):
-- Live form inputs & field controllers per step
-- Database form persistence to public.producer_profiles
-- Government ID / Aadhaar / PAN / GST API verification
+NOT IMPLEMENTED YET (Planned for Step 4B2+):
+- Step 2: Craft & Business Details form
+- Step 3: Location Details form
+- Step 4: Identity & Compliance (Aadhaar / PAN / GST verification workflows)
+- Step 5: Review & Submit (Trusted backend RPC for transitioning onboarding_status -> 'completed')
 - Document uploads to Supabase Storage
-- Trusted backend RPC for transitioning onboarding_status -> 'completed'
 
 
-1. ONBOARDING STEP & DATA MODEL ALIGNMENT
+1. STEP 1 (BASIC DETAILS) IMPLEMENTATION & SOURCE OF TRUTH
 ------------------------------------------------------------
-Step 1: Basic Details
-- Display Name, phone/email profile copy, primary language.
+A. Full Name:
+- Prefill: public.profiles.full_name (fallback: auth.users metadata full_name).
+- Validation: Required, trimmed, 2–120 characters.
+- Editable by Producer.
+- Persistence: Saved directly to public.profiles.full_name.
 
-Step 2: Craft & Business Details
-- Craft specializations (craft_category), workshop name (business_name), bio/experience.
+B. Email Address:
+- Prefill: Authoritative from Supabase Auth user.email.
+- Read-Only: Displayed clearly with 'Read Only' badge.
+- Email editing is not supported in the onboarding flow.
 
-Step 3: Location Details
-- State (state), District (district), City (city), Pincode (pincode), Address (address), address_verification_status.
+C. Phone Number:
+- Authenticated Phone: If Supabase Auth phone exists, it is displayed as read-only with 'Verified Auth' badge.
+- Contact Phone: If no auth phone exists, public.profiles.phone is treated strictly as a contact phone number (not verified authentication).
+- Validation: When editable, validates 10-digit Indian mobile format (starting with 6–9).
+- Persistence: Saved to public.profiles.phone.
 
-Step 4: Identity & Compliance
-- PAN & Aadhaar: Handled via trusted verification workflow; client inputs are submitted to verification endpoints, which derive pan_last4, pan_hash, aadhaar_last4, and aadhaar_verification_reference.
-- GST: Producer-declared gst_registered (boolean) and gstin (15-character identifier).
-
-Step 5: Review & Submit
-- Comprehensive summary review before finalizing onboarding and invoking a trusted RPC to transition onboarding_status to 'completed'.
+D. Step 1 Navigation & Persistence Behavior:
+- Tapping Continue validates form inputs and persists Full Name and Contact Phone to public.profiles.
+- Only after successful save does the wizard advance to Step 2.
+- If persistence fails, the user remains on Step 1 with a friendly error message.
+- Draft values survive forward and backward step navigation via ProducerOnboardingProvider.
 
 
 2. SECURITY & TRUST BOUNDARIES
 ------------------------------------------------------------
-- Client-Writable Fields: business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin.
+- Client-Writable Fields: business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin, full_name, phone (contact).
 - Trusted-Backend-Only Fields: onboarding_status, pan_last4, pan_hash, pan_verification_status, aadhaar_last4, aadhaar_verification_reference, aadhaar_verification_status, gst_verification_status, address_verification_status, verification_status.
 - Direct Mutation Prohibited: Migration 005 explicitly revokes client INSERT/UPDATE privileges on onboarding_status.
 - Prohibited from Storage: Raw 12-digit Aadhaar numbers and plaintext PAN numbers.

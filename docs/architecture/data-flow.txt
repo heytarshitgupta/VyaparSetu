@@ -87,8 +87,29 @@ IMPLEMENTED AND LIVE VERIFIED:
              [Auto Sign Out] ---> [Display: "Admin accounts cannot access Producer portal."]
 
 
-4. FUTURE ONBOARDING & DASHBOARD FLOWS (PLANNED)
+4. PRODUCER ONBOARDING DATA FLOW (STEP 4B1 IMPLEMENTED)
 ------------------------------------------------------------
-- Step 4B: Onboarding form fields, document upload & database persistence
+[Step 1: Basic Details Form]
+       |
+       +---> Full Name (prefilled from profiles.full_name / user_metadata)
+       +---> Email (read-only from Supabase Auth user.email)
+       +---> Phone (read-only if auth phone; editable contact phone if no auth phone)
+       |
+       v (User taps Continue)
+[Validation: 2-120 chars name, 10-digit Indian mobile]
+       |
+       v
+[ProducerAuthService.updateBasicProfile] ---> [UPDATE public.profiles (full_name, phone)]
+       |
+       +---> If Success: [Advance to Step 2: Craft & Business]
+       |
+       +---> If Failure: [Stay on Step 1, show user-friendly error]
+
+
+5. FUTURE ONBOARDING & DASHBOARD FLOWS (PLANNED)
+------------------------------------------------------------
+- Step 4B2: Step 2 (Craft & Business) & Step 3 (Location) forms
+- Step 4B3: Step 4 (Identity & Compliance verification workflows)
+- Step 4B4: Step 5 (Review & Submit; trusted transition of onboarding_status -> 'completed')
 - Step 5: Single-active-session concurrency enforcement (app_sessions)
 - Step 6: Producer Home Dashboard & AI Studio
