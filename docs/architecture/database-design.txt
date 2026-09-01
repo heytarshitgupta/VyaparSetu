@@ -4,56 +4,147 @@ DATABASE DESIGN AND SCHEMA SPECIFICATIONS
 
 STATUS
 ------------------------------------------------------------
-Planned schema specification. SQL implementation will follow in supabase/sql/.
+IMPLEMENTED (Step 2D: Database Foundation Executed).
+Migration script supabase/sql/001_database_foundation.sql was successfully
+executed in Supabase SQL Editor.
+Note: Authentication, Flutter session client logic, and verification workflows
+remain in PLANNED status for subsequent steps.
 
 
-1. ENTITY RELATIONSHIP OVERVIEW
+1. ARCHITECTURAL AND SECURITY PRINCIPLES
+------------------------------------------------------------
+1. Identity Authority: Supabase Auth (auth.users) is the sole authority for identity, credentials, and authentication state. Profile phone/email fields are non-authoritative copies.
+2. Extension Pattern: Application tables extend auth.users using the user's UUID (id) as the primary key.
+3. Sensitive Data Minimization: Zero raw government identifiers (Aadhaar, PAN) or bank credentials in foundation tables.
+4. Strict Private-by-Default RLS: Foundation tables (profiles, producer_profiles, app_sessions) are strictly private. Users may SELECT and UPDATE only their own single row (auth.uid() = id).
+5. Row-Level vs Column-Level Security: PostgreSQL RLS evaluates access at the row level, not the column level. General SELECT access is NOT granted to other users. Public directory/marketplace data will later be exposed through dedicated, column-filtered views or restricted RPC functions containing only safe public attributes.
+6. Explicit Column Whitelist Privileges:
+   - All table-level privileges are revoked from anon, authenticated, and PUBLIC first.
+   - For profiles: Authenticated clients receive SELECT on the table, and column-specific INSERT/UPDATE on (id, phone, email, full_name, avatar_url). Role is strictly excluded and defaults to 'buyer'.
+   - For producer_profiles: Authenticated clients receive SELECT on the table, and column-specific INSERT/UPDATE on (id, business_name, craft_category, bio, state, district, city, pincode, address, onboarding_status). Verification status is strictly excluded and defaults to 'unverified'.
+   - Direct mutations on app_sessions are disabled; session registration occurs via secure stored function.
+7. Function Security Standards:
+   - SECURITY DEFINER functions declare an empty search path (SET search_path = '') and fully schema-qualify all references.
+   - PUBLIC and anon execution permissions are revoked; execution is granted exclusively to authenticated.
+   - Functions never accept a client-supplied user_id; the caller is derived strictly from auth.uid().
+
+
+2. CUSTOM ENUMS
 ------------------------------------------------------------
 
-auth.users (Managed by Supabase Auth)
-- Primary user account, phone/email identities.
+user_role
+- 'buyer'
+- 'producer'
+- 'admin'
 
-producer_profiles
-- id (UUID, PK, FK -> auth.users.id)
-- full_name (TEXT)
-- business_name (TEXT)
-- phone (TEXT)
-- craft_category (TEXT)
-- state, district, pincode, address (TEXT)
-- verification_status (TEXT: 'unverified', 'pending', 'verified')
-- created_at, updated_at (TIMESTAMPTZ)
+onboarding_status
+- 'not_started'
+- 'in_progress'
+- 'completed'
 
-user_active_sessions
-- id (UUID, PK)
-- user_id (UUID, FK -> auth.users.id)
-- session_token_hash (TEXT)
-- device_info (TEXT)
-- last_active_at (TIMESTAMPTZ)
-- is_active (BOOLEAN)
+verification_status
+- 'unverified'
+- 'pending'
+- 'verified'
+- 'rejected'
 
-products
-- id (UUID, PK)
-- producer_id (UUID, FK -> producer_profiles.id)
-- title (TEXT)
-- description (TEXT)
-- category (TEXT)
-- price (NUMERIC)
-- min_order_qty (INTEGER)
-- stock_available (INTEGER)
-- lead_time_days (INTEGER)
-- image_urls (TEXT[])
-- is_active (BOOLEAN)
-- created_at, updated_at (TIMESTAMPTZ)
 
-buyer_requests
-- id (UUID, PK)
-- buyer_id (UUID, FK -> auth.users.id)
-- title, description, category, required_qty, target_price, deadline
-- status (TEXT: 'open', 'responses_received', 'closed')
+3. TABLE SPECIFICATIONS
+------------------------------------------------------------
 
-quotations
-- id (UUID, PK)
-- request_id (UUID, FK -> buyer_requests.id)
-- producer_id (UUID, FK -> producer_profiles.id)
-- offered_price, quantity, lead_time_days, notes
-- status (TEXT: 'pending', 'accepted', 'rejected')
+TABLE: profiles
+- Purpose: Extends auth.users with user profile information.
+- Columns:
+  * id (UUID, PK, REFERENCES auth.users(id) ON DELETE CASCADE)
+  * phone (TEXT, NULLABLE) -- Profile copy only
+  * email (TEXT, NULLABLE) -- Profile copy only
+  * full_name (TEXT, NOT NULL DEFAULT '')
+  * role (user_role, NOT NULL DEFAULT 'buyer')
+  * avatar_url (TEXT, NULLABLE)
+  * created_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())
+  * updated_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())
+- Column Privilege Whitelist (authenticated):
+  * SELECT: Entire table (gated by RLS)
+  * INSERT: (id, phone, email, full_name, avatar_url)
+  * UPDATE: (phone, email, full_name, avatar_url)
+  * role is NOT in whitelist (cannot be inserted or updated by client)
+- Indexes:
+  * idx_profiles_role ON profiles(role)
+- RLS Policies:
+  * Enable RLS: TRUE
+  * SELECT: auth.uid() = id (Strictly private).
+  * INSERT: auth.uid() = id (User creates their initial profile row).
+  * UPDATE: auth.uid() = id (User updates editable profile attributes).
+
+TABLE: producer_profiles
+- Purpose: Stores domain-specific business details, craft categories, and verification state for Producers.
+- Columns:
+  * id (UUID, PK, REFERENCES profiles(id) ON DELETE CASCADE)
+  * business_name (TEXT, NOT NULL DEFAULT '')
+  * craft_category (TEXT, NOT NULL DEFAULT '')
+  * bio (TEXT, NULLABLE)
+  * state (TEXT, NOT NULL DEFAULT '')
+  * district (TEXT, NOT NULL DEFAULT '')
+  * city (TEXT, NOT NULL DEFAULT '')
+  * pincode (TEXT, NOT NULL DEFAULT '')
+  * address (TEXT, NULLABLE)
+  * onboarding_status (onboarding_status, NOT NULL DEFAULT 'not_started')
+  * verification_status (verification_status, NOT NULL DEFAULT 'unverified')
+  * created_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())
+  * updated_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())
+- Column Privilege Whitelist (authenticated):
+  * SELECT: Entire table (gated by RLS)
+  * INSERT: (id, business_name, craft_category, bio, state, district, city, pincode, address, onboarding_status)
+  * UPDATE: (business_name, craft_category, bio, state, district, city, pincode, address, onboarding_status)
+  * verification_status is NOT in whitelist (cannot be inserted or updated by client)
+- Indexes:
+  * idx_producer_profiles_craft ON producer_profiles(craft_category)
+  * idx_producer_profiles_verification ON producer_profiles(verification_status)
+- RLS Policies:
+  * Enable RLS: TRUE
+  * SELECT: auth.uid() = id (Strictly private).
+  * INSERT: auth.uid() = id (Producer creates their domain profile row).
+  * UPDATE: auth.uid() = id (Producer updates editable business details).
+
+TABLE: app_sessions
+- Purpose: Enforces single-active-application-session constraint per user account at the database level.
+- Columns:
+  * id (UUID, PK DEFAULT gen_random_uuid())
+  * user_id (UUID, NOT NULL, REFERENCES auth.users(id) ON DELETE CASCADE)
+  * session_token_hash (TEXT, NOT NULL, CHECK ~ '^[0-9a-fA-F]{64}$')
+  * device_info (VARCHAR(255), NULLABLE) -- Bounded untrusted metadata
+  * is_active (BOOLEAN, NOT NULL DEFAULT TRUE)
+  * created_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())
+  * last_active_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())
+  * revoked_at (TIMESTAMPTZ, NULLABLE)
+- Database-Level Constraint:
+  * Partial Unique Index:
+    CREATE UNIQUE INDEX idx_app_sessions_single_active_user
+    ON app_sessions(user_id)
+    WHERE (is_active = TRUE);
+- Indexes:
+  * idx_app_sessions_token_hash ON app_sessions(session_token_hash)
+- RLS Policies:
+  * Enable RLS: TRUE
+  * SELECT: auth.uid() = user_id (User can inspect only their own session records).
+- Session Registration Function:
+  * register_app_session(p_session_token_hash, p_device_info)
+  * Resolves user internally via auth.uid() (rejects if null).
+  * Validates session token hash is 64 hex characters.
+  * SECURITY DEFINER with SET search_path = ''.
+  * REVOKE ALL ON FUNCTION FROM PUBLIC, anon; GRANT EXECUTE TO authenticated;
+- Known Concurrency Limitation:
+  The partial unique index guarantees only one active session row per user.
+  If two session registration calls happen concurrently, one call may receive
+  a unique-constraint failure. Graceful serialization/retry will be handled
+  when session logic is implemented.
+
+
+4. FUTURE TABLES AND INTERFACES (PLANNED FOR LATER STEPS)
+------------------------------------------------------------
+- Public Producer Directory View / RPC: Safe column-filtered view exposing only public business fields of verified producers.
+- products (Stage 9)
+- product_images (Stage 9)
+- verification_documents (Stage 6)
+- buyer_requests (Stage 11)
+- quotations (Stage 11)

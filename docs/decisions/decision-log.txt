@@ -18,3 +18,11 @@ This log records permanent architectural, design, and structural decisions made 
 - Auditable SQL History: All SQL queries, migrations, and table definitions executed against Supabase must be stored as versioned files in supabase/sql/ inside the Git repository.
 - Live Documentation: Documentation will use .txt files for easy reading and management. Executable database scripts will continue to use .sql.
 - Preserve Nested Repo Structure: The existing nested /VyaparSetu/VyaparSetu folder structure is preserved to avoid disturbing working directory paths and tooling.
+- Single Configuration Method: Project configuration is standardized on a single root .env file loaded via flutter_dotenv, with generic placeholders in .env.example.
+- Database Foundation Schema & Privileges:
+  * Migration 001_database_foundation.sql executed in Supabase.
+  * Private-by-Default RLS enabled on profiles, producer_profiles, and app_sessions.
+  * Explicit column-level privilege whitelist: direct modifications to profiles.role and producer_profiles.verification_status are disbarred for authenticated clients.
+  * Concurrency enforcement: Partial unique index on app_sessions(user_id) WHERE (is_active = TRUE).
+  * Secure Session RPC: register_app_session() derives user identity strictly from auth.uid(), sets search_path = '', validates 64-hex token hash, and deactivates prior sessions atomically.
+  * Concurrency limitation noted: Concurrent login calls may trigger unique-constraint collisions; graceful client retry handling will be implemented with session logic.

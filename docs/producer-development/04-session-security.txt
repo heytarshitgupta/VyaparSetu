@@ -4,12 +4,76 @@ SINGLE ACTIVE SESSION SECURITY
 
 STATUS
 ------------------------------------------------------------
-NOT YET IMPLEMENTED
+DATABASE FOUNDATION IMPLEMENTED (Step 2D: SQL Executed).
+Table public.app_sessions, partial unique index, and stored procedure
+public.register_app_session() were created via supabase/sql/001_database_foundation.sql.
+Note: Flutter client session enforcement logic remains PLANNED for subsequent steps.
 
 
-PLANNED SCOPE
+1. GOAL AND MOTIVATION
 ------------------------------------------------------------
-1. Implement single active session constraint per user for prototype security.
-2. Store active session identifiers in a secure database table (user_active_sessions).
-3. On new login from any device or client, generate a unique session token, store it in the database, and invalidate prior active sessions for that account.
-4. Periodically validate session validity or listen to Supabase Realtime changes to force logout on superseded clients with user-friendly notification.
+For prototype deployment security and to prevent unauthorized concurrent
+account usage / session sharing, the database strictly enforces a
+single active application session per user account.
+
+
+2. DATABASE FOUNDATION: app_sessions
+------------------------------------------------------------
+The app_sessions table tracks active and revoked sessions:
+- id (UUID, PK DEFAULT gen_random_uuid())
+- user_id (UUID, FK -> auth.users)
+- session_token_hash (TEXT: SHA-256 hash of client session token, 64 hex chars)
+- device_info (VARCHAR(255): Untrusted informational client metadata only)
+- is_active (BOOLEAN: TRUE if current active session, FALSE if revoked)
+- created_at, last_active_at, revoked_at (TIMESTAMPTZ)
+
+
+3. DATABASE-LEVEL ENFORCEMENT: PARTIAL UNIQUE INDEX
+------------------------------------------------------------
+Concurrency safety is enforced by PostgreSQL directly:
+
+CREATE UNIQUE INDEX idx_app_sessions_single_active_user
+ON public.app_sessions(user_id)
+WHERE (is_active = TRUE);
+
+This partial unique index guarantees that it is impossible for more
+than one active session row to exist for any user_id in the database.
+
+
+4. SECURE SESSION REGISTRATION FUNCTION
+------------------------------------------------------------
+Function Signature:
+register_app_session(p_session_token_hash TEXT, p_device_info TEXT DEFAULT NULL)
+RETURNS UUID
+
+Security Rules:
+1. NEVER accepts a user_id from the client.
+2. Derives identity strictly from auth.uid().
+3. Raises exception if auth.uid() IS NULL.
+4. Atomically marks previous active sessions for auth.uid() as is_active = FALSE and revoked_at = pg_catalog.now().
+5. Inserts the new active session row with is_active = TRUE.
+6. Execution Privileges:
+   - REVOKE ALL ON FUNCTION public.register_app_session(TEXT, TEXT) FROM PUBLIC, anon;
+   - GRANT EXECUTE ON FUNCTION public.register_app_session(TEXT, TEXT) TO authenticated;
+7. Explicit empty search_path:
+   SET search_path = '';
+8. Schema-qualified object references (public.app_sessions, pg_catalog functions).
+
+
+5. DUAL-LAYER ENFORCEMENT & KNOWN LIMITATION
+------------------------------------------------------------
+A. Security Layer (Backend / Database):
+   - Protected database operations and functions validate that the caller's session token hash is active in public.app_sessions (is_active = TRUE).
+   - Revoked sessions are blocked from executing protected operations at the database level.
+
+B. UX Layer (Realtime / App Resume):
+   - Client listens to Supabase Realtime changes on app_sessions for its user_id or verifies on app resume.
+   - If marked inactive, the client immediately presents a clear notice:
+     "Your account was logged in from another device. You have been logged out."
+   - Clears local credentials and redirects to Login.
+
+C. Known Concurrency Limitation:
+   The partial unique index guarantees only one active session row per user.
+   If two session registration calls happen concurrently, one call may receive
+   a unique-constraint failure. Graceful serialization/retry will be handled
+   when session logic is implemented.
