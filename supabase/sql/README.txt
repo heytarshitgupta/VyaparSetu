@@ -22,8 +22,12 @@ MIGRATION LOG
 3. 003_fix_producer_registration_rpc.sql
    - Status: EXECUTED in Supabase SQL Editor (Step 3L).
    - Contains: Fixed pg_catalog.coalesce usage with native COALESCE.
-   - Note: Real runtime testing exposed secondary 42883 error on pg_catalog.trim(text) because TRIM is standard SQL syntax implemented internally via btrim(), not a callable pg_catalog.trim function.
+   - Note: Real runtime testing exposed secondary 42883 error on pg_catalog.trim(text).
 
 4. 004_fix_producer_rpc_sql_expressions.sql
-   - Status: EXECUTED AND VERIFIED in Supabase SQL Editor (Step 3N).
-   - Contains: Comprehensive SQL-expression audit fixing TRIM, LENGTH, COALESCE, and CURRENT_TIMESTAMP to use standard PostgreSQL language constructs under empty search_path, successfully verified through live end-to-end Producer login and profile creation.
+   - Status: EXECUTED AND LIVE VERIFIED in Supabase SQL Editor (Step 3N).
+   - Contains: Comprehensive SQL-expression audit fixing TRIM, LENGTH, COALESCE, and CURRENT_TIMESTAMP to use standard PostgreSQL language constructs under empty search_path.
+
+5. 005_expand_producer_onboarding_schema.sql
+   - Status: EXECUTED in Supabase SQL Editor (Step 4B0.3).
+   - Contains: Expands public.producer_profiles for Onboarding & Compliance. Creates gst_verification_status enum. Enforces strict trust boundaries: explicitly REVOKES direct client INSERT/UPDATE on onboarding_status (granted in 001); restricts client writes to declared inputs (gst_registered, gstin); keeps all identity artifacts (pan_last4, pan_hash, aadhaar_last4, aadhaar_verification_reference) and verification statuses strictly backend-only. Prohibits storage of raw Aadhaar.

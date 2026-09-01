@@ -4,7 +4,9 @@ APPLICATION DATA FLOW
 
 STATUS
 ------------------------------------------------------------
-IMPLEMENTED AND LIVE VERIFIED (Step 3: Producer Authentication Milestone).
+IMPLEMENTED AND LIVE VERIFIED:
+- Step 3: Producer Authentication Milestone
+- Step 4A: Producer Onboarding Foundation & Routing
 
 
 1. SHARED APP STARTUP FLOW (IMPLEMENTED)
@@ -40,8 +42,15 @@ IMPLEMENTED AND LIVE VERIFIED (Step 3: Producer Authentication Milestone).
        v
 [Validation: ProducerAuthService.validateProducerAccess]
        |
-       v
-[Navigate: ProducerPlaceholderScreen (/producer_home)]
+       +---> If onboarding_status == 'completed':
+       |            |
+       |            v
+       |     [Navigate: ProducerPlaceholderScreen (/producer_home)]
+       |
+       +---> If onboarding_status == 'not_started' / 'in_progress':
+                    |
+                    v
+             [Navigate: ProducerOnboardingScreen (/producer_onboarding)]
 
 
 3. PRODUCER LOGIN AND ROLE VALIDATION FLOW (IMPLEMENTED)
@@ -57,8 +66,15 @@ IMPLEMENTED AND LIVE VERIFIED (Step 3: Producer Authentication Milestone).
        |
        +---> If role == 'producer' & producer_profiles exists:
        |            |
-       |            v
-       |     [Navigate: ProducerPlaceholderScreen (/producer_home)]
+       |            +---> If onboarding_status == 'completed':
+       |            |            |
+       |            |            v
+       |            |     [Navigate: ProducerPlaceholderScreen (/producer_home)]
+       |            |
+       |            +---> If onboarding_status == 'not_started' / 'in_progress':
+       |                         |
+       |                         v
+       |                  [Navigate: ProducerOnboardingScreen (/producer_onboarding)]
        |
        +---> If role == 'buyer':
        |            |
@@ -73,6 +89,6 @@ IMPLEMENTED AND LIVE VERIFIED (Step 3: Producer Authentication Milestone).
 
 4. FUTURE ONBOARDING & DASHBOARD FLOWS (PLANNED)
 ------------------------------------------------------------
-- Step 4: Full single-active-session concurrency enforcement (app_sessions)
-- Step 5: Multi-step Producer Onboarding wizard (craft, bio, location, documents)
-- Step 6: Producer Home Dashboard
+- Step 4B: Onboarding form fields, document upload & database persistence
+- Step 5: Single-active-session concurrency enforcement (app_sessions)
+- Step 6: Producer Home Dashboard & AI Studio

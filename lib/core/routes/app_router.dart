@@ -10,6 +10,7 @@ import '../auth/role_selection_screen.dart';
 import '../../producer_section/auth/producer_login_screen.dart';
 import '../../producer_section/auth/producer_signup_screen.dart';
 import '../../producer_section/home/producer_placeholder_screen.dart';
+import '../../producer_section/onboarding/producer_onboarding_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -29,6 +30,7 @@ class AppRouter {
   static const String producerLoginRoute = '/producer_login';
   static const String producerSignupRoute = '/producer_signup';
   static const String producerHomeRoute = '/producer_home';
+  static const String producerOnboardingRoute = '/producer_onboarding';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -58,6 +60,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ProducerSignupScreen());
       case producerHomeRoute:
         return MaterialPageRoute(builder: (_) => const ProducerPlaceholderScreen());
+      case producerOnboardingRoute:
+        return MaterialPageRoute(builder: (_) => const ProducerOnboardingScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

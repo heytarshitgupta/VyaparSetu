@@ -4,12 +4,40 @@ PRODUCER ONBOARDING
 
 STATUS
 ------------------------------------------------------------
-NOT YET IMPLEMENTED
+IMPLEMENTED (Step 4A & 4B0.2):
+- Step 4A: Multi-step onboarding shell, progress header, navigation buttons, and post-auth routing based on onboarding_status ('not_started' / 'in_progress' -> '/producer_onboarding', 'completed' -> '/producer_home').
+- Step 4B0.2: Data model expanded and hardened in Migration 005 to cover all planned onboarding steps with strict trust boundaries. Onboarding status transitions are strictly protected and cannot be self-declared by the client.
+
+NOT IMPLEMENTED YET (Planned for Step 4B+):
+- Live form inputs & field controllers per step
+- Database form persistence to public.producer_profiles
+- Government ID / Aadhaar / PAN / GST API verification
+- Document uploads to Supabase Storage
+- Trusted backend RPC for transitioning onboarding_status -> 'completed'
 
 
-PLANNED SCOPE
+1. ONBOARDING STEP & DATA MODEL ALIGNMENT
 ------------------------------------------------------------
-1. Low-literacy friendly step-by-step onboarding wizard.
-2. Visual icon-based selection for craft and product categories (Textiles, Pottery, Spices, Handicrafts, Organic Food, Metalwork).
-3. Business details input: Workshop name, artisan collective/SHG affiliation, location (State, District, Pincode), production capacity.
-4. Integration with local state management (ProducerProfileProvider) and Supabase persistence.
+Step 1: Basic Details
+- Display Name, phone/email profile copy, primary language.
+
+Step 2: Craft & Business Details
+- Craft specializations (craft_category), workshop name (business_name), bio/experience.
+
+Step 3: Location Details
+- State (state), District (district), City (city), Pincode (pincode), Address (address), address_verification_status.
+
+Step 4: Identity & Compliance
+- PAN & Aadhaar: Handled via trusted verification workflow; client inputs are submitted to verification endpoints, which derive pan_last4, pan_hash, aadhaar_last4, and aadhaar_verification_reference.
+- GST: Producer-declared gst_registered (boolean) and gstin (15-character identifier).
+
+Step 5: Review & Submit
+- Comprehensive summary review before finalizing onboarding and invoking a trusted RPC to transition onboarding_status to 'completed'.
+
+
+2. SECURITY & TRUST BOUNDARIES
+------------------------------------------------------------
+- Client-Writable Fields: business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin.
+- Trusted-Backend-Only Fields: onboarding_status, pan_last4, pan_hash, pan_verification_status, aadhaar_last4, aadhaar_verification_reference, aadhaar_verification_status, gst_verification_status, address_verification_status, verification_status.
+- Direct Mutation Prohibited: Migration 005 explicitly revokes client INSERT/UPDATE privileges on onboarding_status.
+- Prohibited from Storage: Raw 12-digit Aadhaar numbers and plaintext PAN numbers.

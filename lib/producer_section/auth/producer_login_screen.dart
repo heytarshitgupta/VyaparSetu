@@ -54,10 +54,18 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
         if (!mounted) return;
 
         if (validation.isSuccess) {
-          Navigator.pushReplacementNamed(
-            context,
-            AppRouter.producerHomeRoute,
-          );
+          final onboardingStatus = validation.producerProfile?['onboarding_status']?.toString();
+          if (onboardingStatus == 'completed') {
+            Navigator.pushReplacementNamed(
+              context,
+              AppRouter.producerHomeRoute,
+            );
+          } else {
+            Navigator.pushReplacementNamed(
+              context,
+              AppRouter.producerOnboardingRoute,
+            );
+          }
         } else {
           // If rejected (e.g. Buyer account or incomplete setup), display the user-friendly message
           ScaffoldMessenger.of(context).showSnackBar(

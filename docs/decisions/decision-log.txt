@@ -31,4 +31,8 @@ This log records permanent architectural, design, and structural decisions made 
   * ProducerLoginScreen, ProducerSignupScreen, and ProducerAuthService implemented.
   * Strict Role Policy: register_producer_profile RPC and ProducerAuthService validate Producer role and reject existing Buyer and Admin accounts.
   * Unauthorized Session Termination: If a user authenticates with Supabase Auth but fails Producer portal authorization, the client immediately terminates (signs out) the active session.
-  * Migration 004_fix_producer_rpc_sql_expressions.sql executed and live-verified in Supabase, successfully resolving PostgreSQL 42883 function qualification errors.
+  * Migration 004_fix_producer_rpc_sql_expressions.sql executed and live-verified in Supabase.
+- Producer Onboarding Foundation & Data Model (Step 4A & 4B0.2):
+  * Multi-step onboarding shell (5 steps) and provider implemented.
+  * Post-login/signup routing dynamically checks onboarding_status ('not_started'/'in_progress' -> '/producer_onboarding', 'completed' -> '/producer_home').
+  * Migration 005_expand_producer_onboarding_schema.sql hardened: explicitly revokes client write privileges on onboarding_status (granted in 001); restricts client writes to declared inputs (business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin); keeps all identity verification artifacts (pan_last4, pan_hash, aadhaar_last4, aadhaar_verification_reference) and verification statuses strictly backend-only. Prohibits storage of raw Aadhaar.

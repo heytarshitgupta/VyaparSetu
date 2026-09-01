@@ -4,11 +4,12 @@ DATABASE DESIGN AND SCHEMA SPECIFICATIONS
 
 STATUS
 ------------------------------------------------------------
-IMPLEMENTED (Step 2D: Database Foundation Executed, Step 3: Producer Auth RPC Live Verified).
-- Migration 001_database_foundation.sql executed in Supabase SQL Editor.
-- Migration 002_producer_auth_rpc.sql executed in Supabase SQL Editor.
-- Migration 003_fix_producer_registration_rpc.sql executed in Supabase SQL Editor.
-- Migration 004_fix_producer_rpc_sql_expressions.sql EXECUTED AND LIVE VERIFIED in Supabase SQL Editor.
+IMPLEMENTED:
+- Migration 001_database_foundation.sql executed in Supabase.
+- Migration 002_producer_auth_rpc.sql executed in Supabase.
+- Migration 003_fix_producer_registration_rpc.sql executed in Supabase.
+- Migration 004_fix_producer_rpc_sql_expressions.sql EXECUTED AND LIVE VERIFIED.
+- Migration 005_expand_producer_onboarding_schema.sql EXECUTED in Supabase.
 
 
 1. ARCHITECTURAL AND SECURITY PRINCIPLES
@@ -21,7 +22,7 @@ IMPLEMENTED (Step 2D: Database Foundation Executed, Step 3: Producer Auth RPC Li
 6. Explicit Column Whitelist Privileges:
    - All table-level privileges are revoked from anon, authenticated, and PUBLIC first.
    - For profiles: Authenticated clients receive SELECT on the table, and column-specific INSERT/UPDATE on (id, phone, email, full_name, avatar_url). Role is strictly excluded and defaults to 'buyer'.
-   - For producer_profiles: Authenticated clients receive SELECT on the table, and column-specific INSERT/UPDATE on (id, business_name, craft_category, bio, state, district, city, pincode, address, onboarding_status). Verification status is strictly excluded and defaults to 'unverified'.
+   - For producer_profiles: Authenticated clients receive SELECT on the table, and column-specific INSERT/UPDATE strictly on user-declared inputs (id, business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin). Onboarding status, identity artifacts, and verification status columns are strictly excluded.
    - Direct mutations on app_sessions are disabled; session registration occurs via secure stored function.
 7. Function Security Standards:
    - SECURITY DEFINER functions declare an empty search path (SET search_path = '') and fully schema-qualify all references.
@@ -44,6 +45,13 @@ onboarding_status
 - 'completed'
 
 verification_status
+- 'unverified'
+- 'pending'
+- 'verified'
+- 'rejected'
+
+gst_verification_status (Added in Migration 005)
+- 'not_applicable'
 - 'unverified'
 - 'pending'
 - 'verified'
@@ -78,7 +86,7 @@ TABLE: profiles
   * UPDATE: auth.uid() = id (User updates editable profile attributes).
 
 TABLE: producer_profiles
-- Purpose: Stores domain-specific business details, craft categories, and verification state for Producers.
+- Purpose: Stores domain-specific business details, craft categories, identity/compliance metadata, and verification state for Producers.
 - Columns:
   * id (UUID, PK REFERENCES profiles(id) ON DELETE CASCADE)
   * business_name (TEXT, NOT NULL DEFAULT '')
@@ -89,15 +97,33 @@ TABLE: producer_profiles
   * city (TEXT, NOT NULL DEFAULT '')
   * pincode (TEXT, NOT NULL DEFAULT '')
   * address (TEXT, NULLABLE)
-  * onboarding_status (onboarding_status, NOT NULL DEFAULT 'not_started')
-  * verification_status (verification_status, NOT NULL DEFAULT 'unverified')
+  * onboarding_status (onboarding_status, NOT NULL DEFAULT 'not_started') -- Trusted backend only (revoked in 005)
+  * verification_status (verification_status, NOT NULL DEFAULT 'unverified') -- Trusted backend only
+  * pan_last4 (VARCHAR(4), NULLABLE) -- Populated via trusted backend
+  * pan_hash (TEXT, NULLABLE) -- Populated via trusted backend
+  * pan_verification_status (verification_status, NOT NULL DEFAULT 'unverified') -- Trusted backend only
+  * aadhaar_last4 (VARCHAR(4), NULLABLE) -- Populated via trusted backend
+  * aadhaar_verification_reference (TEXT, NULLABLE) -- Populated via trusted backend
+  * aadhaar_verification_status (verification_status, NOT NULL DEFAULT 'unverified') -- Trusted backend only
+  * gst_registered (BOOLEAN, NOT NULL DEFAULT FALSE) -- Producer-declared
+  * gstin (VARCHAR(15), NULLABLE) -- Producer-declared
+  * gst_verification_status (gst_verification_status, NOT NULL DEFAULT 'not_applicable') -- Trusted backend only
+  * address_verification_status (verification_status, NOT NULL DEFAULT 'unverified') -- Trusted backend only
   * created_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())
   * updated_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())
 - Column Privilege Whitelist (authenticated):
   * SELECT: Entire table (gated by RLS)
-  * INSERT: (id, business_name, craft_category, bio, state, district, city, pincode, address, onboarding_status)
-  * UPDATE: (business_name, craft_category, bio, state, district, city, pincode, address, onboarding_status)
-  * verification_status is NOT in whitelist (cannot be inserted or updated by client)
+  * INSERT: (id, business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin)
+  * UPDATE: (business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin)
+  * Direct client mutations on onboarding_status are REVOKED.
+  * All verification artifact and status columns are strictly excluded from client INSERT/UPDATE grants.
+- Constraints:
+  * chk_producer_pan_last4: (pan_last4 IS NULL OR pan_last4 ~ '^[0-9A-Za-z]{4}$')
+  * chk_producer_pan_hash: (pan_hash IS NULL OR pan_hash ~ '^[0-9a-fA-F]{64}$')
+  * chk_producer_aadhaar_last4: (aadhaar_last4 IS NULL OR aadhaar_last4 ~ '^[0-9]{4}$')
+  * chk_producer_pincode: (pincode = '' OR pincode ~ '^[1-9][0-9]{5}$')
+  * chk_producer_gstin: (gstin IS NULL OR gstin ~ '^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')
+  * chk_producer_gst_consistency: ((gst_registered = FALSE AND gstin IS NULL) OR (gst_registered = TRUE))
 - Indexes:
   * idx_producer_profiles_craft ON producer_profiles(craft_category)
   * idx_producer_profiles_verification ON producer_profiles(verification_status)
@@ -105,7 +131,7 @@ TABLE: producer_profiles
   * Enable RLS: TRUE
   * SELECT: auth.uid() = id (Strictly private).
   * INSERT: auth.uid() = id (Producer creates their domain profile row).
-  * UPDATE: auth.uid() = id (Producer updates editable business details).
+  * UPDATE: auth.uid() = id (Producer updates editable business & declared details).
 
 TABLE: app_sessions
 - Purpose: Enforces single-active-application-session constraint per user account at the database level.
@@ -113,7 +139,7 @@ TABLE: app_sessions
   * id (UUID, PK DEFAULT gen_random_uuid())
   * user_id (UUID, NOT NULL, REFERENCES auth.users(id) ON DELETE CASCADE)
   * session_token_hash (TEXT, NOT NULL, CHECK ~ '^[0-9a-fA-F]{64}$')
-  * device_info (VARCHAR(255), NULLABLE) -- Bounded untrusted metadata
+  * device_info (VARCHAR(255), NULLABLE)
   * is_active (BOOLEAN, NOT NULL DEFAULT TRUE)
   * created_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())
   * last_active_at (TIMESTAMPTZ, NOT NULL DEFAULT pg_catalog.now())

@@ -4,16 +4,36 @@ PRODUCER VERIFICATION
 
 STATUS
 ------------------------------------------------------------
-NOT YET IMPLEMENTED
+DATA MODEL EXPANDED & HARDENED (Step 4B0.2):
+- Granular verification fields and trusted artifact columns defined in Migration 005.
+- Client write privileges revoked on all verification artifact and status columns.
+- Live API verification workflows remain PLANNED for subsequent stages.
 
 
-PLANNED SCOPE
+1. VERIFICATION STATUS ARCHITECTURE
 ------------------------------------------------------------
-1. Provide multi-tiered verification for micro-producers and artisans.
-2. Levels of verification:
-   - Phone verification (OTP confirmation).
-   - Identity verification (e.g. Aadhaar / Government ID document upload).
-   - Producer / Craft verification (artisan card, self-help group certificate, or local trade reference).
-   - Bank account / UPI payout verification.
-3. Verification status tracking badge ("Verified Producer", "Pending Verification").
-4. Secure private storage buckets in Supabase Storage with strict RLS for sensitive ID documents.
+A. Granular Domain Verifications:
+- PAN Verification (pan_verification_status: unverified, pending, verified, rejected)
+- Aadhaar / Identity Verification (aadhaar_verification_status: unverified, pending, verified, rejected)
+- GST & Tax Compliance (gst_verification_status: not_applicable, unverified, pending, verified, rejected)
+- Workshop Address (address_verification_status: unverified, pending, verified, rejected)
+
+B. Overall Producer Status (producer_profiles.verification_status):
+- Tracks overall merchant badge ('unverified', 'pending', 'verified', 'rejected').
+- Overall status is derived on backend after individual checks; client cannot mutate directly.
+
+
+2. TRUST BOUNDARIES & DATA MINIMIZATION
+------------------------------------------------------------
+- Raw Aadhaar Prohibited: Zero 12-digit Aadhaar numbers are accepted or stored.
+- Trusted Identity Artifacts (Backend-Only):
+  * aadhaar_last4 and aadhaar_verification_reference (token/reference returned by future verification service)
+  * pan_last4 and pan_hash (backend-generated protected fingerprint or reference token; plaintext PAN is NEVER stored)
+  * These columns are NOT client-writable and cannot be supplied directly by the Flutter app.
+- GST Compliance Declaration:
+  * gst_registered: Producer-supplied boolean indicating whether they are registered for GST.
+  * gstin: Producer-supplied 15-character GSTIN.
+  * gst_registered = FALSE means solely that the Producer declared they are not GST registered (legal threshold validation is outside prototype scope).
+  * gst_verification_status defaults to 'not_applicable' when gst_registered = FALSE.
+- Protected Verification Outcomes & Onboarding Status:
+  * pan_verification_status, aadhaar_verification_status, gst_verification_status, address_verification_status, verification_status, and onboarding_status are strictly omitted from client write grants and can only be updated by trusted backend/admin logic.

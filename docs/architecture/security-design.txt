@@ -10,8 +10,8 @@ CURRENT STATUS
 - Email/Password Supabase Auth: IMPLEMENTED (lib/core/auth/ + Producer UI)
 - Producer Role RPC (register_producer_profile): IMPLEMENTED & LIVE VERIFIED (supabase/sql/004_fix_producer_rpc_sql_expressions.sql executed)
 - Producer Role Validation & Unauthorized Auto-Signout: IMPLEMENTED (ProducerAuthService)
-- Buyer/Admin Rejection: IMPLEMENTED
-- Single Active Session (Client Enforcement): PLANNED (Step 4)
+- Granular Verification Security & Strict Trust Boundaries: IMPLEMENTED (supabase/sql/005_expand_producer_onboarding_schema.sql hardened)
+- Single Active Session (Client Enforcement): PLANNED (Step 5)
 - Secure File Uploads (Storage RLS): PLANNED (Step 5)
 
 
@@ -30,13 +30,14 @@ A. Authentication and Session Management
 B. Authorization, Privileges & Row Level Security (RLS)
 - Default Deny: All PostgreSQL tables have RLS enabled by default.
 - Private-by-Default: Foundation tables (profiles, producer_profiles, app_sessions) enforce owner-only access (auth.uid() = id).
-- Column-Level Privilege Whitelists: Direct client updates to sensitive columns (profiles.role, producer_profiles.verification_status) are revoked.
+- Column-Level Privilege Whitelists: Direct client updates to sensitive columns (profiles.role, producer_profiles.verification_status, pan_last4, pan_hash, pan_verification_status, aadhaar_last4, aadhaar_verification_reference, aadhaar_verification_status, gst_verification_status, address_verification_status) are completely revoked. Clients receive INSERT/UPDATE privileges strictly on user-declared form inputs.
 - Trusted Role Assignment RPC: Role elevation to 'producer' is strictly handled via public.register_producer_profile() which derives the caller via auth.uid(), copies email/phone from auth.users, cannot assign 'admin', and explicitly rejects existing Buyer and Admin accounts.
 
-C. Secrets Management and API Protection
+C. Sensitive Data Minimization & Trust Boundaries
+- Prohibit Raw Aadhaar: Raw 12-digit Aadhaar numbers are strictly never accepted or stored.
+- Trusted Identity Artifacts: aadhaar_last4, aadhaar_verification_reference, pan_last4, and pan_hash are populated only via trusted verification services.
+- GST Declaration: gst_registered represents a user declaration, not legal threshold determination. gst_verification_status is 'not_applicable' when gst_registered is false.
+
+D. Secrets Management and API Protection
 - Zero Secrets in Git: No database connection strings, passwords, or service-role keys may ever be committed to Git.
 - No Service-Role Key in Flutter: The client app only uses the public Supabase anon key.
-
-D. Data Protection, Minimization and Error Handling
-- Identity Data Minimization: Raw government identifiers (Aadhaar, PAN) and IP addresses are excluded from foundation tables. device_info is treated as untrusted metadata with bounded character limits.
-- Safe Error Handling: Error messages presented in the UI never leak raw database schemas, SQL statements, or stack traces.
