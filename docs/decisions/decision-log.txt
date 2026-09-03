@@ -89,6 +89,35 @@ This log records permanent architectural, design, and structural decisions made 
   * Simplified user-facing navigation strings: 'Buyer Requests' -> 'Buyer Needs', 'Market Radar' -> 'What Buyers Want', 'Profile' -> 'My Profile'.
   * Adopted low-literacy naming principle: visible labels prioritize clarity over startup/marketing jargon; internal technical module names remain separate.
   * Updated ARB resources, regenerated AppLocalizations keys (buyerNeeds, whatBuyersWant, myProfile), and updated test assertions across English, Hindi, and Punjabi.
+- Step 5B Global Language + Light/Dark Appearance Foundation:
+  * Created ThemeProvider managing ThemeMode (System, Light, Dark) with immediate MaterialApp rebuilds.
+  * Created PreferencesService for non-sensitive local UI preference persistence across app restarts (language code and theme mode only; zero security/session state).
+  * Added high-contrast, accessible darkTheme to AppTheme matching the artisanal brand aesthetic.
+  * Created reusable AppTopBarControls widget combining Language and Theme selectors with accessible tap targets and low-literacy wording.
+  * Integrated AppTopBarControls before authentication on RoleSelectionScreen, ProducerLoginScreen, ProducerSignupScreen, and ProducerOnboardingScreen.
+  * Preserved strict teammate ownership of lib/buyer_section/ (zero modifications); deferred Buyer AuthScreen integration and reported minimal required code.
+- Step 5B.1 Localize Producer Auth + Role Selection User-Facing Text:
+  * Localized visible text on RoleSelectionScreen, ProducerLoginScreen, and ProducerSignupScreen into English, Hindi (Devanagari), and Punjabi (Gurmukhi).
+  * Applied Meaning-First Translation Rule ensuring labels describe direct, simple actions for grassroots producers (e.g. 'I Make & Sell Products' -> 'मैं सामान बनाता और बेचता हूँ' / 'ਮੈਂ ਸਾਮਾਨ ਬਣਾਉਂਦਾ ਅਤੇ ਵੇਚਦਾ ਹਾਂ').
+  * Verified instant, flicker-free switching at runtime: form text field inputs (name, email, password) remain fully preserved across language and theme toggles without page reload.
+  * Maintained zero diff in lib/buyer_section/. All 41 unit and widget tests pass 100%.
+- Step 5B.2 Localize Complete 5-Step Producer Onboarding:
+  * Localized all 5 steps of Producer Onboarding (Basic Details, Your Work, Your Address, Verification, Check & Submit) across English, Hindi (Devanagari), and Punjabi (Gurmukhi).
+  * Adopted Meaning-First, Low-Literacy Translation Principles: avoided high Sanskritized Hindi, archaic Punjabi, or intimidating startup/compliance jargon ("KYC", "Onboarding", "Catalog", "Compliance") in favor of natural artisan actions ("काम का पता", "सत्यापन", "जांचें और जमा करें").
+  * Localized all form inputs, category chips, state dropdowns, PAN prototype verification elements, Aadhaar informational popup, GST registration toggle, and Step 5 review summary card.
+  * Verified state preservation: form inputs, category selections, and active step index remain 100% intact across live language and theme switches.
+  * Fully themed onboarding components for dark mode using Theme.of(context) with high-contrast accessibility.
+  * Verified responsive layouts with zero RenderFlex overflows on narrow 320px mobile screens in all three languages.
+  * Maintained strict Buyer isolation (lib/buyer_section/ diff is zero). All 46 tests passing, flutter analyze 0 errors/0 warnings.
+- Step 5B.3 Localized Location Data Foundation:
+  * Separated location concerns: canonical geographic identity (canonical state/UT codes based on standard abbreviations, e.g. 'PB'), localized display names (Punjab / पंजाब / ਪੰਜਾਬ), and free-form user-entered address.
+  * Established deterministic, offline IndianStates dataset covering all 36 Indian States and UTs with audited English, Hindi, and Punjabi names. Zero runtime AI or external translation APIs.
+  * Localized Step 3 State dropdown: switching language live updates visible names immediately while preserving canonical selected state ('PB') with zero form resets or flicker.
+  * Retained free-form text input for District; documented future cascading state->district architecture without fabricating incomplete district datasets.
+  * Preserved original Unicode address text (Devanagari, Gurmukhi, English, mixed) as immutable source of truth; documented future AI translation-confirmation UX as derived data with user review.
+  * Codified Three-Tier Localization Rule: Fixed UI (Flutter ARB), Known Structured Data (Canonical IDs + Localized datasets), User-Generated Text (Original preserved + optional confirmed translation).
+  * Documented post-onboarding UX: AppBar top controls retire after onboarding; preferences load automatically on startup and are managed via My Profile -> Settings.
+  * All 54 unit and widget tests passing, flutter analyze 0 errors/0 warnings, Buyer diff is zero.
 
 
 

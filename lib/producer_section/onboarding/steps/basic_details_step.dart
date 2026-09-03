@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/localization/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../producer_onboarding_provider.dart';
 
@@ -46,14 +47,16 @@ class _BasicDetailsStepState extends State<BasicDetailsStep> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final provider = widget.provider;
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,23 +67,23 @@ class _BasicDetailsStepState extends State<BasicDetailsStep> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.person_outline,
                   size: 24,
-                  color: AppColors.primary,
+                  color: theme.colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 14),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Artisan Basic Details',
+                  l10n?.step1Header ?? 'Artisan Basic Details',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -88,11 +91,12 @@ class _BasicDetailsStepState extends State<BasicDetailsStep> {
           ),
           const SizedBox(height: 12),
 
-          const Text(
-            'Confirm your primary business name and contact information for buyer communications.',
+          Text(
+            l10n?.step1Description ??
+                'Confirm your primary name and contact information for buyer communications.',
             style: TextStyle(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
               height: 1.4,
             ),
           ),
@@ -130,12 +134,12 @@ class _BasicDetailsStepState extends State<BasicDetailsStep> {
           // ------------------------------------------------------------------
           // 1. FULL NAME INPUT
           // ------------------------------------------------------------------
-          const Text(
-            'Full Name *',
+          Text(
+            l10n?.fullNameLabel ?? 'Full Name *',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
@@ -145,18 +149,18 @@ class _BasicDetailsStepState extends State<BasicDetailsStep> {
             textCapitalization: TextCapitalization.words,
             onChanged: (val) => provider.setFullName(val),
             decoration: InputDecoration(
-              hintText: 'Enter your full name',
+              hintText: l10n?.enterFullNameHint ?? 'Enter your full name',
               prefixIcon: const Icon(Icons.badge_outlined, size: 20),
-              helperText: 'Your name as you want it shown on VyaparSetu',
+              helperText: l10n?.fullNameHelper ?? 'Your name as you want it shown on VyaparSetu',
               helperMaxLines: 2,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
               ),
             ),
           ),
@@ -165,59 +169,75 @@ class _BasicDetailsStepState extends State<BasicDetailsStep> {
           // ------------------------------------------------------------------
           // 2. EMAIL (READ-ONLY)
           // ------------------------------------------------------------------
-          const Text(
-            'Email Address (Login)',
+          Text(
+            l10n?.emailAddressLogin ?? 'Email Address (Login)',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: theme.scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: theme.dividerColor),
             ),
             child: Row(
               children: [
-                const Icon(Icons.email_outlined, size: 20, color: AppColors.textSecondary),
-                const SizedBox(width: 12),
+                Icon(
+                  Icons.email_outlined,
+                  size: 20,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    provider.displayEmail.isNotEmpty ? provider.displayEmail : 'Not provided',
-                    style: const TextStyle(
+                    provider.displayEmail.isNotEmpty
+                        ? provider.displayEmail
+                        : (l10n?.notProvided ?? 'Not provided'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
                       fontSize: 14,
-                      color: AppColors.textPrimary,
+                      color: theme.colorScheme.onSurface,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: AppColors.border.withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Text(
-                    'Read Only',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textSecondary,
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: theme.dividerColor.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      l10n?.readOnly ?? 'Read Only',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 4, left: 4),
+          Padding(
+            padding: const EdgeInsets.only(top: 4, left: 4),
             child: Text(
-              'Your login email is managed through your Supabase account',
-              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+              l10n?.emailHelper ?? 'Your login email is managed through your account',
+              style: TextStyle(
+                fontSize: 12,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -226,11 +246,13 @@ class _BasicDetailsStepState extends State<BasicDetailsStep> {
           // 3. PHONE NUMBER (AUTH OR CONTACT)
           // ------------------------------------------------------------------
           Text(
-            provider.isAuthPhone ? 'Verified Login Phone' : 'Contact Phone Number',
-            style: const TextStyle(
+            provider.isAuthPhone
+                ? (l10n?.verifiedLoginPhone ?? 'Verified Login Phone')
+                : (l10n?.contactPhoneNumber ?? 'Contact Phone Number'),
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
@@ -240,47 +262,56 @@ class _BasicDetailsStepState extends State<BasicDetailsStep> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
               decoration: BoxDecoration(
-                color: AppColors.background,
+                color: theme.scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: theme.dividerColor),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.phone_android, size: 20, color: AppColors.primary),
+                  Icon(Icons.phone_android, size: 20, color: theme.colorScheme.primary),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       provider.authPhone,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.textPrimary,
+                        color: theme.colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Text(
-                      'Verified Auth',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        l10n?.verifiedAuth ?? 'Verified Auth',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 4, left: 4),
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 4),
               child: Text(
-                'This phone number is verified and tied to your login credentials',
-                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                l10n?.verifiedPhoneHelper ??
+                    'This phone number is verified and tied to your login credentials',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
               ),
             ),
           ] else ...[
@@ -295,23 +326,24 @@ class _BasicDetailsStepState extends State<BasicDetailsStep> {
               ],
               onChanged: (val) => provider.setContactPhone(val),
               decoration: InputDecoration(
-                hintText: 'Enter 10-digit mobile number',
+                hintText: l10n?.enter10DigitPhoneHint ?? 'Enter 10-digit mobile number',
                 prefixIcon: const Icon(Icons.phone_outlined, size: 20),
                 prefixText: '+91 ',
-                prefixStyle: const TextStyle(
+                prefixStyle: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: theme.colorScheme.onSurface,
                 ),
-                helperText: 'Used to contact you about your business (Contact phone only)',
+                helperText: l10n?.contactPhoneHelper ??
+                    'Used to contact you about your business (Contact phone only)',
                 helperMaxLines: 2,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColors.border),
+                  borderSide: BorderSide(color: theme.dividerColor),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                  borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
                 ),
               ),
             ),

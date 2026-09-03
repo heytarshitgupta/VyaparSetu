@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/localization/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../verification/producer_verification_service.dart';
 import '../producer_onboarding_provider.dart';
@@ -211,32 +212,34 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
   }
 
   void _showAadhaarInfoDialog() {
+    final l10n = AppLocalizations.of(context);
     showDialog<void>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Row(
+          title: Row(
             children: [
-              Icon(Icons.fingerprint, color: AppColors.primary, size: 24),
-              SizedBox(width: 10),
+              const Icon(Icons.fingerprint, color: AppColors.primary, size: 24),
+              const SizedBox(width: 10),
               Text(
-                'Aadhaar Verification',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                l10n?.aadhaarVerification ?? 'Aadhaar Verification',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ],
           ),
-          content: const Text(
-            'Aadhaar verification will be available through an authorized verification service. It is not enabled in this prototype.',
-            style: TextStyle(fontSize: 13, color: AppColors.textSecondary, height: 1.4),
+          content: Text(
+            l10n?.aadhaarDialogContent ??
+                'Aadhaar verification will be available through an authorized verification service. It is not enabled in this prototype.',
+            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, height: 1.4),
           ),
           actions: [
             TextButton(
               key: const Key('producer_onboarding_aadhaar_dialog_ok_button'),
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text(
-                'Got It',
-                style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.primary),
+              child: Text(
+                l10n?.gotIt ?? 'Got It',
+                style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.primary),
               ),
             ),
           ],
@@ -290,12 +293,15 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,23 +312,23 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.verified_user_outlined,
                   size: 24,
-                  color: AppColors.primary,
+                  color: theme.colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 14),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Identity & Compliance',
+                  l10n?.step4Header ?? 'Identity & Compliance',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -330,11 +336,11 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
           ),
           const SizedBox(height: 10),
 
-          const Text(
-            'Verify your details to build trust with buyers.',
+          Text(
+            l10n?.step4Description ?? 'Verify your details to build trust with buyers.',
             style: TextStyle(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
               height: 1.4,
             ),
           ),
@@ -344,20 +350,25 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: theme.scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: theme.dividerColor),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.info_outline, size: 16, color: AppColors.textSecondary),
-                SizedBox(width: 10),
+                Icon(
+                  Icons.info_outline,
+                  size: 16,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Demo verification environment • Verification is simulated in this prototype.',
+                    l10n?.demoDisclosure ??
+                        'Demo verification environment • Verification is simulated in this prototype.',
                     style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -373,16 +384,16 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color: _isVerified
                     ? Colors.green.shade300
-                    : AppColors.primary.withValues(alpha: 0.3),
+                    : theme.colorScheme.primary.withValues(alpha: 0.3),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.04),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.04),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -397,7 +408,7 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                     Icon(
                       _isVerified ? Icons.verified : Icons.credit_card,
                       size: 22,
-                      color: _isVerified ? Colors.green.shade700 : AppColors.primary,
+                      color: _isVerified ? Colors.green.shade700 : theme.colorScheme.primary,
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -405,21 +416,25 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _isVerified ? 'PAN Verified' : 'PAN Verification',
-                            style: const TextStyle(
+                            _isVerified
+                                ? (l10n?.panVerified ?? 'PAN Verified')
+                                : (l10n?.panVerification ?? 'PAN Verification'),
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             _isVerified
-                                ? 'Verified in demo verification environment'
-                                : 'Secure identity verification',
-                            style: const TextStyle(
+                                ? (l10n?.verifiedInDemoEnvironment ??
+                                    'Verified in demo verification environment')
+                                : (l10n?.secureIdentityVerification ??
+                                    'Secure identity verification'),
+                            style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.textSecondary,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                             ),
                           ),
                         ],
@@ -506,18 +521,21 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Verified PAN',
+                            Text(
+                              l10n?.verifiedPan ?? 'Verified PAN',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.textSecondary,
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                               ),
                             ),
                             TextButton.icon(
                               onPressed: _handleResetPan,
                               icon: const Icon(Icons.edit, size: 14),
-                              label: const Text('Edit Details', style: TextStyle(fontSize: 12)),
+                              label: Text(
+                                l10n?.editDetails ?? 'Edit Details',
+                                style: const TextStyle(fontSize: 12),
+                              ),
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.zero,
                                 minimumSize: Size.zero,
@@ -530,22 +548,29 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                         Text(
                           _maskedPan ?? '******XXXX',
                           key: const Key('producer_onboarding_masked_pan_text'),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 1.5,
-                            color: AppColors.textPrimary,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            const Icon(Icons.person_outline, size: 16, color: AppColors.textSecondary),
+                            Icon(
+                              Icons.person_outline,
+                              size: 16,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
                             const SizedBox(width: 6),
                             Expanded(
                               child: Text(
                                 _panNameController.text.trim(),
-                                style: const TextStyle(fontSize: 13, color: AppColors.textPrimary),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: theme.colorScheme.onSurface,
+                                ),
                               ),
                             ),
                           ],
@@ -557,17 +582,25 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: theme.scaffoldBackgroundColor,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Icon(Icons.lock_outline, size: 14, color: AppColors.textSecondary),
-                        SizedBox(width: 8),
+                        Icon(
+                          Icons.lock_outline,
+                          size: 14,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Your PAN details are securely verified. Plaintext PAN is never stored.',
-                            style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                            l10n?.panSecurityNote ??
+                                'Your PAN details are securely verified. Plaintext PAN is never stored.',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
                           ),
                         ),
                       ],
@@ -577,12 +610,12 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                   // ------------------------------------------------------------
                   // STATE: EDITABLE FORM (Unverified / Failed)
                   // ------------------------------------------------------------
-                  const Text(
-                    'PAN Number *',
+                  Text(
+                    l10n?.panNumberLabel ?? 'PAN Number *',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -606,29 +639,29 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                       }
                     },
                     decoration: InputDecoration(
-                      hintText: 'ABCDE1234F',
+                      hintText: l10n?.panNumberHint ?? 'ABCDE1234F',
                       prefixIcon: const Icon(Icons.badge_outlined, size: 20),
-                      helperText: '10-character alphanumeric PAN',
+                      helperText: l10n?.panNumberHelper ?? '10-character alphanumeric PAN',
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.border),
+                        borderSide: BorderSide(color: theme.dividerColor),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                        borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
 
                   // Name as per PAN Input
-                  const Text(
-                    'Name as per PAN *',
+                  Text(
+                    l10n?.nameAsPerPanLabel ?? 'Name as per PAN *',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -647,29 +680,29 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                       }
                     },
                     decoration: InputDecoration(
-                      hintText: 'Enter name as shown on PAN card',
+                      hintText: l10n?.nameAsPerPanHint ?? 'Enter name as shown on PAN card',
                       prefixIcon: const Icon(Icons.person_outline, size: 20),
-                      helperText: 'Must match official PAN records',
+                      helperText: l10n?.nameAsPerPanHelper ?? 'Must match official PAN records',
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.border),
+                        borderSide: BorderSide(color: theme.dividerColor),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                        borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
 
                   // Date of Birth Input
-                  const Text(
-                    'Date of Birth *',
+                  Text(
+                    l10n?.dobLabel ?? 'Date of Birth *',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -680,24 +713,28 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       decoration: BoxDecoration(
-                        color: AppColors.surface,
+                        color: theme.colorScheme.surface,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: theme.dividerColor),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.calendar_today_outlined, size: 20, color: AppColors.textSecondary),
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            size: 20,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               _selectedDob != null
                                   ? '${_selectedDob!.day.toString().padLeft(2, '0')}/${_selectedDob!.month.toString().padLeft(2, '0')}/${_selectedDob!.year}'
-                                  : 'Select Date of Birth (DD/MM/YYYY)',
+                                  : (l10n?.selectDobHint ?? 'Select Date of Birth (DD/MM/YYYY)'),
                               style: TextStyle(
                                 fontSize: 14,
                                 color: _selectedDob != null
-                                    ? AppColors.textPrimary
-                                    : AppColors.textSecondary,
+                                    ? theme.colorScheme.onSurface
+                                    : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                 fontWeight: _selectedDob != null
                                     ? FontWeight.w600
                                     : FontWeight.w400,
@@ -714,17 +751,25 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: theme.scaffoldBackgroundColor,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Icon(Icons.shield_outlined, size: 16, color: AppColors.textSecondary),
-                        SizedBox(width: 8),
+                        Icon(
+                          Icons.shield_outlined,
+                          size: 16,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Your PAN number is used only for verification and is not stored in plain text.',
-                            style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                            l10n?.panPrivacyShield ??
+                                'Your PAN number is used only for verification and is not stored in plain text.',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
                           ),
                         ),
                       ],
@@ -750,14 +795,14 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                           : const Icon(Icons.check_circle_outline, size: 18),
                       label: Text(
                         _isVerifying
-                            ? 'Checking Details...'
+                            ? (l10n?.checkingDetails ?? 'Checking Details...')
                             : _badgeState == VerificationBadgeState.couldNotVerify
-                                ? 'Try Again'
-                                : 'Verify PAN',
+                                ? (l10n?.tryAgain ?? 'Try Again')
+                                : (l10n?.verifyPan ?? 'Verify PAN'),
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
+                        backgroundColor: theme.colorScheme.primary,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 13),
                         shape: RoundedRectangleBorder(
@@ -779,9 +824,9 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: theme.dividerColor),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -789,30 +834,31 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.fingerprint,
                       size: 22,
-                      color: AppColors.primary,
+                      color: theme.colorScheme.primary,
                     ),
                     const SizedBox(width: 10),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Aadhaar Verification',
+                            l10n?.aadhaarVerification ?? 'Aadhaar Verification',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
-                            'Identity verification via authorized service',
+                            l10n?.aadhaarSubtitle ??
+                                'Identity verification via authorized service',
                             style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.textSecondary,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                             ),
                           ),
                         ],
@@ -825,11 +871,12 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Verify your identity using Aadhaar. Fast, secure, and helps build trust with commercial buyers.',
+                Text(
+                  l10n?.aadhaarDescription ??
+                      'Verify your identity using Aadhaar. Fast, secure, and helps build trust with commercial buyers.',
                   style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                     height: 1.4,
                   ),
                 ),
@@ -840,13 +887,13 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                     key: const Key('producer_onboarding_verify_aadhaar_button'),
                     onPressed: _showAadhaarInfoDialog,
                     icon: const Icon(Icons.verified_user_outlined, size: 18),
-                    label: const Text(
-                      'Verify Aadhaar',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    label: Text(
+                      l10n?.verifyAadhaar ?? 'Verify Aadhaar',
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.primary,
-                      side: const BorderSide(color: AppColors.primary),
+                      foregroundColor: theme.colorScheme.primary,
+                      side: BorderSide(color: theme.colorScheme.primary),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -865,9 +912,9 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: theme.dividerColor),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -875,32 +922,33 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.receipt_long_outlined,
                       size: 22,
-                      color: AppColors.primary,
+                      color: theme.colorScheme.primary,
                     ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'GST Registration',
+                          Text(
+                            l10n?.gstRegistration ?? 'GST Registration',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             _isGstRegistered
-                                ? 'Declared GST registration'
-                                : 'Business tax registration status',
-                            style: const TextStyle(
+                                ? (l10n?.gstDeclared ?? 'Declared GST registration')
+                                : (l10n?.gstStatusSubtitle ??
+                                    'Business tax registration status'),
+                            style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.textSecondary,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                             ),
                           ),
                         ],
@@ -909,18 +957,20 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                     const SizedBox(width: 8),
                     VerificationStatusBadge(
                       state: VerificationBadgeState.notVerified,
-                      customLabel: _isGstRegistered ? 'Not Verified' : 'Not Registered',
+                      customLabel: _isGstRegistered
+                          ? (l10n?.badgeNotVerified ?? 'Not Verified')
+                          : (l10n?.badgeNotRegistered ?? 'Not Registered'),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
 
-                const Text(
-                  'Are you registered for GST? *',
+                Text(
+                  l10n?.areYouGstRegistered ?? 'Are you registered for GST? *',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -937,21 +987,25 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
                             color: !_isGstRegistered
-                                ? AppColors.primary.withValues(alpha: 0.08)
-                                : AppColors.background,
+                                ? theme.colorScheme.primary.withValues(alpha: 0.08)
+                                : theme.scaffoldBackgroundColor,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: !_isGstRegistered ? AppColors.primary : AppColors.border,
+                              color: !_isGstRegistered
+                                  ? theme.colorScheme.primary
+                                  : theme.dividerColor,
                               width: !_isGstRegistered ? 1.5 : 1.0,
                             ),
                           ),
                           alignment: Alignment.center,
                           child: Text(
-                            'No',
+                            l10n?.no ?? 'No',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: !_isGstRegistered ? AppColors.primary : AppColors.textPrimary,
+                              color: !_isGstRegistered
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -967,21 +1021,25 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
                             color: _isGstRegistered
-                                ? AppColors.primary.withValues(alpha: 0.08)
-                                : AppColors.background,
+                                ? theme.colorScheme.primary.withValues(alpha: 0.08)
+                                : theme.scaffoldBackgroundColor,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: _isGstRegistered ? AppColors.primary : AppColors.border,
+                              color: _isGstRegistered
+                                  ? theme.colorScheme.primary
+                                  : theme.dividerColor,
                               width: _isGstRegistered ? 1.5 : 1.0,
                             ),
                           ),
                           alignment: Alignment.center,
                           child: Text(
-                            'Yes',
+                            l10n?.yes ?? 'Yes',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: _isGstRegistered ? AppColors.primary : AppColors.textPrimary,
+                              color: _isGstRegistered
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -996,20 +1054,25 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: theme.scaffoldBackgroundColor,
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: theme.dividerColor),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Icon(Icons.info_outline, size: 16, color: AppColors.textSecondary),
-                        SizedBox(width: 10),
+                        Icon(
+                          Icons.info_outline,
+                          size: 16,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'GST not registered. Micro-producers below registration thresholds can continue without GST.',
+                            l10n?.gstNotRegisteredNotice ??
+                                'GST not registered. Micro-producers below registration thresholds can continue without GST.',
                             style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.textSecondary,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                               height: 1.35,
                             ),
                           ),
@@ -1019,12 +1082,12 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                   ),
                 ] else ...[
                   // If YES: Show GSTIN field
-                  const Text(
-                    'GSTIN Number *',
+                  Text(
+                    l10n?.gstinNumberLabel ?? 'GSTIN Number *',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -1047,17 +1110,17 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                       }
                     },
                     decoration: InputDecoration(
-                      hintText: '07AAAAA0000A1Z5',
+                      hintText: l10n?.gstinHint ?? '07AAAAA0000A1Z5',
                       prefixIcon: const Icon(Icons.business_outlined, size: 20),
-                      helperText: '15-character alphanumeric GSTIN',
+                      helperText: l10n?.gstinHelper ?? '15-character alphanumeric GSTIN',
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.border),
+                        borderSide: BorderSide(color: theme.dividerColor),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                        borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
                       ),
                     ),
                   ),
@@ -1096,20 +1159,20 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.08),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: AppColors.primary.withValues(alpha: 0.25)),
+                        border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.25)),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.info_outline, size: 16, color: AppColors.primary),
+                          Icon(Icons.info_outline, size: 16, color: theme.colorScheme.primary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               _gstinInfoMessage!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
-                                color: AppColors.primary,
+                                color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -1125,13 +1188,13 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
                       key: const Key('producer_onboarding_verify_gstin_button'),
                       onPressed: _handleVerifyGstin,
                       icon: const Icon(Icons.check_circle_outline, size: 18),
-                      label: const Text(
-                        'Verify GSTIN',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                      label: Text(
+                        l10n?.verifyGstin ?? 'Verify GSTIN',
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.primary,
-                        side: const BorderSide(color: AppColors.primary),
+                        foregroundColor: theme.colorScheme.primary,
+                        side: BorderSide(color: theme.colorScheme.primary),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),

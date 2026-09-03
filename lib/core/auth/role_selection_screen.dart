@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
+import '../localization/generated/app_localizations.dart';
 import '../routes/app_router.dart';
 import '../theme/app_colors.dart';
+import '../widgets/app_top_bar_controls.dart';
 
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: const [
+          AppTopBarControls(),
+          SizedBox(width: 16),
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 480),
               child: Column(
@@ -24,50 +37,50 @@ class RoleSelectionScreen extends StatelessWidget {
                       width: 64,
                       height: 64,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.handshake_outlined,
                         size: 36,
-                        color: AppColors.primary,
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
 
                   // Brand Title
-                  const Text(
-                    'VyaparSetu',
+                  Text(
+                    l10n?.appTitle ?? 'VyaparSetu',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.primary,
+                      color: theme.colorScheme.primary,
                       letterSpacing: -0.5,
                     ),
                   ),
                   const SizedBox(height: 8),
 
                   // Subtitle
-                  const Text(
-                    'Connecting artisan producers directly with commercial buyers across India',
+                  Text(
+                    l10n?.appSubtitle ?? 'Connecting artisan producers directly with commercial buyers across India',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
-                      color: AppColors.textSecondary,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                       height: 1.4,
                     ),
                   ),
                   const SizedBox(height: 36),
 
                   // Selection Prompt
-                  const Text(
-                    'Choose how you want to continue:',
+                  Text(
+                    l10n?.chooseHowToContinue ?? 'Choose how you want to continue:',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -78,8 +91,8 @@ class RoleSelectionScreen extends StatelessWidget {
                     icon: Icons.shopping_bag_outlined,
                     iconColor: AppColors.primary,
                     iconBgColor: AppColors.primary.withValues(alpha: 0.1),
-                    title: 'I Want to Buy Products',
-                    description: 'Discover products and connect with producers',
+                    title: l10n?.roleBuyerTitle ?? 'I Want to Buy Products',
+                    description: l10n?.roleBuyerDescription ?? 'Discover products and connect with producers',
                     badgeText: 'Buyer Portal',
                     onTap: () {
                       Navigator.pushNamed(context, AppRouter.buyerAuthRoute);
@@ -93,8 +106,8 @@ class RoleSelectionScreen extends StatelessWidget {
                     icon: Icons.storefront_outlined,
                     iconColor: AppColors.accent,
                     iconBgColor: AppColors.highlightAccent.withValues(alpha: 0.18),
-                    title: 'I Make & Sell Products',
-                    description: 'Create your profile and reach more buyers',
+                    title: l10n?.roleProducerTitle ?? 'I Make & Sell Products',
+                    description: l10n?.roleProducerDescription ?? 'Create your profile and reach more buyers',
                     badgeText: 'Producer Portal',
                     onTap: () {
                       Navigator.pushNamed(context, AppRouter.producerLoginRoute);
@@ -103,12 +116,12 @@ class RoleSelectionScreen extends StatelessWidget {
                   const SizedBox(height: 32),
 
                   // Footer note
-                  const Text(
-                    'You can switch or register anytime with your phone or email.',
+                  Text(
+                    l10n?.roleSelectionFooter ?? 'You can switch or register anytime with your phone or email.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -130,6 +143,12 @@ class RoleSelectionScreen extends StatelessWidget {
     required String badgeText,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
+    final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
+    final borderColor = theme.dividerColor;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = theme.colorScheme.onSurface.withValues(alpha: 0.65);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -138,9 +157,9 @@ class RoleSelectionScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: cardColor,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border, width: 1.5),
+            border: Border.all(color: borderColor, width: 1.5),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.03),
@@ -178,10 +197,10 @@ class RoleSelectionScreen extends StatelessWidget {
                         Flexible(
                           child: Text(
                             title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: textPrimary,
                             ),
                           ),
                         ),
@@ -190,9 +209,9 @@ class RoleSelectionScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       description,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textSecondary,
+                        color: textSecondary,
                         height: 1.3,
                       ),
                     ),
@@ -202,10 +221,10 @@ class RoleSelectionScreen extends StatelessWidget {
               const SizedBox(width: 8),
 
               // Arrow indicator
-              const Icon(
+              Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 16,
-                color: AppColors.textSecondary,
+                color: textSecondary,
               ),
             ],
           ),

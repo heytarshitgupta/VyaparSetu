@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/localization/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 
 enum VerificationBadgeState {
@@ -21,6 +22,8 @@ class VerificationStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     Color bg;
     Color fg;
     IconData icon;
@@ -31,31 +34,31 @@ class VerificationStatusBadge extends StatelessWidget {
         bg = AppColors.border.withValues(alpha: 0.5);
         fg = AppColors.textSecondary;
         icon = Icons.info_outline;
-        label = customLabel ?? 'Not Verified';
+        label = customLabel ?? (l10n?.badgeNotVerified ?? 'Not Verified');
         break;
       case VerificationBadgeState.checking:
         bg = Colors.amber.withValues(alpha: 0.12);
         fg = Colors.amber.shade800;
         icon = Icons.hourglass_top_outlined;
-        label = customLabel ?? 'Checking...';
+        label = customLabel ?? (l10n?.badgeChecking ?? 'Checking...');
         break;
       case VerificationBadgeState.verified:
         bg = Colors.green.withValues(alpha: 0.12);
         fg = Colors.green.shade700;
         icon = Icons.verified;
-        label = customLabel ?? 'Verified';
+        label = customLabel ?? (l10n?.badgeVerified ?? 'Verified');
         break;
       case VerificationBadgeState.couldNotVerify:
         bg = AppColors.error.withValues(alpha: 0.1);
         fg = AppColors.error;
         icon = Icons.error_outline;
-        label = customLabel ?? 'Could Not Verify';
+        label = customLabel ?? (l10n?.badgeCouldNotVerify ?? 'Could Not Verify');
         break;
       case VerificationBadgeState.comingSoon:
         bg = AppColors.primary.withValues(alpha: 0.08);
         fg = AppColors.primary;
         icon = Icons.schedule_outlined;
-        label = customLabel ?? 'Coming Soon';
+        label = customLabel ?? (l10n?.badgeComingSoon ?? 'Coming Soon');
         break;
     }
 

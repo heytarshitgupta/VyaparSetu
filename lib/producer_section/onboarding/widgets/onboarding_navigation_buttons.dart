@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
+import '../../../core/localization/generated/app_localizations.dart';
 
 class OnboardingNavigationButtons extends StatelessWidget {
   final bool isFirstStep;
@@ -19,6 +19,14 @@ class OnboardingNavigationButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
+    final backLabel = l10n?.back ?? 'Back';
+    final nextLabel = isLastStep
+        ? (l10n?.submitApplication ?? 'Submit Application')
+        : (l10n?.continueButton ?? 'Continue');
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
@@ -30,10 +38,10 @@ class OnboardingNavigationButtons extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: isSubmitting ? null : onPrevious,
                 icon: const Icon(Icons.arrow_back, size: 16),
-                label: const Text('Back'),
+                label: Text(backLabel),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.textPrimary,
-                  side: const BorderSide(color: AppColors.border),
+                  foregroundColor: theme.colorScheme.onSurface,
+                  side: BorderSide(color: theme.dividerColor),
                   minimumSize: const Size.fromHeight(48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -50,7 +58,7 @@ class OnboardingNavigationButtons extends StatelessWidget {
             child: ElevatedButton(
               onPressed: isSubmitting ? null : onNext,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: theme.colorScheme.primary,
                 foregroundColor: Colors.white,
                 minimumSize: const Size.fromHeight(48),
                 shape: RoundedRectangleBorder(
@@ -73,7 +81,7 @@ class OnboardingNavigationButtons extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            isLastStep ? 'Submit Application' : 'Continue',
+                            nextLabel,
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,

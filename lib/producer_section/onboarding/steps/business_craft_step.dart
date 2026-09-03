@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/localization/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../producer_onboarding_provider.dart';
 
@@ -75,16 +76,46 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
     }
   }
 
+  String _getLocalizedCategoryName(String category, AppLocalizations? l10n) {
+    if (l10n == null) return category;
+    switch (category) {
+      case 'Food & Homemade Products':
+        return l10n.catFood;
+      case 'Handicrafts':
+        return l10n.catHandicrafts;
+      case 'Handloom & Textiles':
+        return l10n.catHandloom;
+      case 'Clothing & Embroidery':
+        return l10n.catClothing;
+      case 'Jewellery & Accessories':
+        return l10n.catJewellery;
+      case 'Woodwork':
+        return l10n.catWoodwork;
+      case 'Metal Craft':
+        return l10n.catMetalCraft;
+      case 'Home Decor':
+        return l10n.catHomeDecor;
+      case 'Beauty / Personal Care':
+        return l10n.catBeauty;
+      case 'Other':
+        return l10n.catOther;
+      default:
+        return category;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final provider = widget.provider;
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,23 +126,23 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.storefront_outlined,
                   size: 24,
-                  color: AppColors.primary,
+                  color: theme.colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 14),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Business & Craft Details',
+                  l10n?.step2Header ?? 'Business & Craft Details',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -119,11 +150,12 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
           ),
           const SizedBox(height: 12),
 
-          const Text(
-            'Tell buyers about your enterprise, workshop, or home-based artisanal work.',
+          Text(
+            l10n?.step2Description ??
+                'Tell buyers about your enterprise, workshop, or home-based artisanal work.',
             style: TextStyle(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
               height: 1.4,
             ),
           ),
@@ -161,12 +193,12 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
           // ------------------------------------------------------------------
           // 1. BUSINESS / WORKSHOP NAME
           // ------------------------------------------------------------------
-          const Text(
-            'Business / Workshop Name *',
+          Text(
+            l10n?.businessNameLabel ?? 'Business / Workshop Name *',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
@@ -176,18 +208,18 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
             textCapitalization: TextCapitalization.words,
             onChanged: (val) => provider.setBusinessName(val),
             decoration: InputDecoration(
-              hintText: 'e.g. Sharma Pickles, Punjab Phulkari Works',
+              hintText: l10n?.businessNameHint ?? 'e.g. Sharma Pickles, Punjab Phulkari Works',
               prefixIcon: const Icon(Icons.store_outlined, size: 20),
-              helperText: 'Name of your business, workshop, or home-based work',
+              helperText: l10n?.businessNameHelper ?? 'Name of your business, workshop, or home-based work',
               helperMaxLines: 2,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
               ),
             ),
           ),
@@ -196,20 +228,21 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
           // ------------------------------------------------------------------
           // 2. CRAFT / PRODUCT CATEGORY
           // ------------------------------------------------------------------
-          const Text(
-            'Craft / Product Category *',
+          Text(
+            l10n?.craftCategoryLabel ?? 'Craft / Product Category *',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Select your main product category so commercial buyers can find you easily',
+          Text(
+            l10n?.craftCategoryHelper ??
+                'Select your main product category so commercial buyers can find you easily',
             style: TextStyle(
               fontSize: 12,
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
             ),
           ),
           const SizedBox(height: 12),
@@ -219,26 +252,27 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
             runSpacing: 8,
             children: ProducerOnboardingProvider.standardCategories.map((category) {
               final isSelected = provider.craftCategory == category;
+              final localizedCategory = _getLocalizedCategoryName(category, l10n);
               return ChoiceChip(
                 key: Key('category_chip_${category.replaceAll(' ', '_')}'),
                 avatar: Icon(
                   _getCategoryIcon(category),
                   size: 16,
-                  color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                  color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 label: Text(
-                  category,
+                  localizedCategory,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                    color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
                   ),
                 ),
                 selected: isSelected,
-                selectedColor: AppColors.primary.withValues(alpha: 0.12),
-                backgroundColor: AppColors.surface,
+                selectedColor: theme.colorScheme.primary.withValues(alpha: 0.12),
+                backgroundColor: theme.colorScheme.surface,
                 side: BorderSide(
-                  color: isSelected ? AppColors.primary : AppColors.border,
+                  color: isSelected ? theme.colorScheme.primary : theme.dividerColor,
                   width: isSelected ? 1.5 : 1.0,
                 ),
                 shape: RoundedRectangleBorder(
@@ -256,12 +290,12 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
           // If "Other" selected, show custom category field
           if (provider.craftCategory == 'Other') ...[
             const SizedBox(height: 16),
-            const Text(
-              'Specify Your Category *',
+            Text(
+              l10n?.specifyCategory ?? 'Specify Your Category *',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 6),
@@ -271,17 +305,17 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
               textCapitalization: TextCapitalization.words,
               onChanged: (val) => provider.setCustomCategory(val),
               decoration: InputDecoration(
-                hintText: 'e.g. Bamboo Crafts, Clay Pottery, Stone Carving',
+                hintText: l10n?.specifyCategoryHint ?? 'e.g. Bamboo Crafts, Clay Pottery, Stone Carving',
                 prefixIcon: const Icon(Icons.edit_outlined, size: 20),
-                helperText: 'Enter your custom artisanal or product category',
+                helperText: l10n?.specifyCategoryHelper ?? 'Enter your custom artisanal or product category',
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColors.border),
+                  borderSide: BorderSide(color: theme.dividerColor),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                  borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
                 ),
               ),
             ),
@@ -293,13 +327,13 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
           // ------------------------------------------------------------------
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Short Description (Optional)',
+                  l10n?.shortDescriptionLabel ?? 'Short Description (Optional)',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -310,7 +344,7 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
                   fontSize: 12,
                   color: provider.businessDescription.length > 500
                       ? AppColors.error
-                      : AppColors.textSecondary,
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -327,17 +361,18 @@ class _BusinessCraftStepState extends State<BusinessCraftStep> {
                 const SizedBox.shrink(),
             onChanged: (val) => provider.setBusinessDescription(val),
             decoration: InputDecoration(
-              hintText: 'Tell buyers what you make in a few words (e.g. handwoven cotton stoles using organic natural dyes)',
-              helperText: 'Tell buyers what you make in a few words',
+              hintText: l10n?.shortDescriptionHint ??
+                  'Tell buyers what you make in a few words (e.g. handwoven cotton stoles using organic natural dyes)',
+              helperText: l10n?.shortDescriptionHelper ?? 'Tell buyers what you make in a few words',
               helperMaxLines: 2,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
               ),
             ),
           ),

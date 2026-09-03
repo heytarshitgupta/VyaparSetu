@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/localization/generated/app_localizations.dart';
+import '../../../core/location/indian_states.dart';
 import '../../../core/theme/app_colors.dart';
 import '../producer_onboarding_provider.dart';
 
@@ -58,14 +60,16 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final provider = widget.provider;
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,23 +80,23 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.location_on_outlined,
                   size: 24,
-                  color: AppColors.primary,
+                  color: theme.colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 14),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Workshop Location',
+                  l10n?.step3Header ?? 'Workshop Location',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -100,11 +104,12 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
           ),
           const SizedBox(height: 12),
 
-          const Text(
-            'Provide your workshop or home production address so commercial buyers can calculate logistics and pickup.',
+          Text(
+            l10n?.step3Description ??
+                'Provide your workshop or home production address so commercial buyers can calculate logistics and pickup.',
             style: TextStyle(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
               height: 1.4,
             ),
           ),
@@ -142,30 +147,40 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
           // ------------------------------------------------------------------
           // 1. STATE / UNION TERRITORY
           // ------------------------------------------------------------------
-          const Text(
-            'State / Union Territory *',
+          Text(
+            l10n?.stateLabel ?? 'State / Union Territory *',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
           DropdownButtonFormField<String>(
             key: const Key('producer_onboarding_state_dropdown'),
-            initialValue: provider.state.isNotEmpty &&
-                    ProducerOnboardingProvider.indianStatesAndUTs.contains(provider.state)
-                ? provider.state
+            initialValue: provider.stateCode.isNotEmpty &&
+                    IndianStates.findByCode(provider.stateCode) != null
+                ? provider.stateCode
                 : null,
             isExpanded: true,
-            hint: const Text('Select your state or union territory'),
-            icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
-            items: ProducerOnboardingProvider.indianStatesAndUTs.map((stateName) {
+            hint: Text(
+              l10n?.selectStateHint ?? 'Select your state or union territory',
+              style: TextStyle(
+                fontSize: 14,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+            dropdownColor: theme.colorScheme.surface,
+            icon: Icon(
+              Icons.keyboard_arrow_down,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+            items: IndianStates.allStates.map((indianState) {
               return DropdownMenuItem<String>(
-                value: stateName,
+                value: indianState.code,
                 child: Text(
-                  stateName,
-                  style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
+                  indianState.getLocalizedName(Localizations.localeOf(context)),
+                  style: TextStyle(fontSize: 14, color: theme.colorScheme.onSurface),
                 ),
               );
             }).toList(),
@@ -176,15 +191,15 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
             },
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.map_outlined, size: 20),
-              helperText: 'Select your state or union territory',
+              helperText: l10n?.selectStateHint ?? 'Select your state or union territory',
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
               ),
             ),
           ),
@@ -193,12 +208,12 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
           // ------------------------------------------------------------------
           // 2. DISTRICT
           // ------------------------------------------------------------------
-          const Text(
-            'District *',
+          Text(
+            l10n?.districtLabel ?? 'District *',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
@@ -208,18 +223,18 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
             textCapitalization: TextCapitalization.words,
             onChanged: (val) => provider.setDistrict(val),
             decoration: InputDecoration(
-              hintText: 'e.g. Jaipur, Ludhiana',
+              hintText: l10n?.districtHint ?? 'e.g. Jaipur, Ludhiana',
               prefixIcon: const Icon(Icons.holiday_village_outlined, size: 20),
-              helperText: 'District where you make your products',
+              helperText: l10n?.districtHelper ?? 'District where you make your products',
               helperMaxLines: 2,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
               ),
             ),
           ),
@@ -228,12 +243,12 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
           // ------------------------------------------------------------------
           // 3. CITY / VILLAGE
           // ------------------------------------------------------------------
-          const Text(
-            'City / Village *',
+          Text(
+            l10n?.cityVillageLabel ?? 'City / Village *',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
@@ -243,18 +258,18 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
             textCapitalization: TextCapitalization.words,
             onChanged: (val) => provider.setCity(val),
             decoration: InputDecoration(
-              hintText: 'e.g. Sanganer, Khanna',
+              hintText: l10n?.cityVillageHint ?? 'e.g. Sanganer, Khanna',
               prefixIcon: const Icon(Icons.location_city_outlined, size: 20),
-              helperText: 'Your city, town, or village',
+              helperText: l10n?.cityVillageHelper ?? 'Your city, town, or village',
               helperMaxLines: 2,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
               ),
             ),
           ),
@@ -263,12 +278,12 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
           // ------------------------------------------------------------------
           // 4. PINCODE
           // ------------------------------------------------------------------
-          const Text(
-            'Pincode *',
+          Text(
+            l10n?.pincodeLabel ?? 'Pincode *',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
@@ -282,17 +297,17 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
             ],
             onChanged: (val) => provider.setPincode(val),
             decoration: InputDecoration(
-              hintText: 'e.g. 302029',
+              hintText: l10n?.pincodeHint ?? 'e.g. 302029',
               prefixIcon: const Icon(Icons.pin_drop_outlined, size: 20),
-              helperText: '6-digit postal PIN code (cannot start with 0)',
+              helperText: l10n?.pincodeHelper ?? '6-digit postal PIN code (cannot start with 0)',
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
               ),
             ),
           ),
@@ -303,13 +318,13 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
           // ------------------------------------------------------------------
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Workshop / Business Address *',
+                  l10n?.addressLabel ?? 'Workshop / Business Address *',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -320,7 +335,7 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
                   fontSize: 12,
                   color: provider.address.length > 300
                       ? AppColors.error
-                      : AppColors.textSecondary,
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -337,21 +352,21 @@ class _LocationDetailsStepState extends State<LocationDetailsStep> {
                 const SizedBox.shrink(),
             onChanged: (val) => provider.setAddress(val),
             decoration: InputDecoration(
-              hintText: 'Street, landmark, lane, or house/unit details...',
+              hintText: l10n?.addressHint ?? 'Street, landmark, lane, or house/unit details...',
               prefixIcon: const Padding(
                 padding: EdgeInsets.only(bottom: 24),
                 child: Icon(Icons.home_work_outlined, size: 20),
               ),
-              helperText: 'Where you make or manage your products',
+              helperText: l10n?.addressHelper ?? 'Where you make or manage your products',
               helperMaxLines: 2,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
               ),
             ),
           ),

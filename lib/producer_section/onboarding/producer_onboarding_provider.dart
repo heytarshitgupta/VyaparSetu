@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../core/location/indian_states.dart';
 import '../auth/services/producer_auth_service.dart';
 
 class ProducerOnboardingProvider extends ChangeNotifier {
@@ -130,6 +131,12 @@ class ProducerOnboardingProvider extends ChangeNotifier {
 
   // Step 3 Getters
   String get state => _state;
+
+  /// Canonical Indian state/UT code based on standard 2-letter abbreviations (e.g. 'PB', 'RJ', 'DL').
+  String get stateCode => IndianStates.getCanonicalCode(_state);
+
+  /// Resolved IndianState model for the currently selected state, if any.
+  IndianState? get selectedIndianState => IndianStates.findByCodeOrName(_state);
   String get district => _district;
   String get city => _city;
   String get pincode => _pincode;
@@ -617,9 +624,10 @@ class ProducerOnboardingProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      final stateToSave = selectedIndianState?.englishName ?? _state.trim();
       if (step3Saver != null) {
         await step3Saver!(
-          state: _state.trim(),
+          state: stateToSave,
           district: _district.trim(),
           city: _city.trim(),
           pincode: _pincode.trim(),
@@ -627,7 +635,7 @@ class ProducerOnboardingProvider extends ChangeNotifier {
         );
       } else {
         await ProducerAuthService.instance.updateLocationProfile(
-          state: _state.trim(),
+          state: stateToSave,
           district: _district.trim(),
           city: _city.trim(),
           pincode: _pincode.trim(),

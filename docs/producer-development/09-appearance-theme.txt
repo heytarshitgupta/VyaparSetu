@@ -1,0 +1,79 @@
+VYAPARSETU — GLOBAL LANGUAGE + APPEARANCE FOUNDATION
+============================================================
+
+1. ARCHITECTURAL OVERVIEW
+============================================================
+The application supports global pre-login selection of:
+1. App Language (English, Hindi, Punjabi)
+2. Appearance Theme (Light, Dark, System default)
+
+Both controls are available before authentication and do not require the user
+to create an account or sign in.
+
+Key architectural layers:
+- lib/core/services/preferences_service.dart:
+  * Manages non-sensitive, local UI preference persistence across app restarts.
+  * Strictly stores UI settings: 'app_language_code' and 'app_theme_mode'.
+  * NEVER stores credentials, tokens, PAN, Aadhaar, or session security state.
+  * Includes robust in-memory fallback for testing and headless environments.
+- lib/core/theme/theme_provider.dart:
+  * State provider controlling Flutter ThemeMode (System, Light, Dark).
+  * Automatically loads and persists choice via PreferencesService.
+  * Decoupled from authentication, App Language, and Voice Language.
+- lib/core/localization/language_provider.dart:
+  * State provider controlling active Locale (en, hi, pa) and decoupled VoiceLanguage.
+  * Now automatically loads and persists choice via PreferencesService.
+- lib/core/theme/app_theme.dart:
+  * Provides high-contrast, artisanal lightTheme and darkTheme implementations.
+  * Dark theme uses deep warm slate/charcoal backgrounds (0xFF121819), accessible
+    teal primary accents (0xFF7AB8BC), and warm ochre accents (0xFFDE9E58)
+    designed specifically for craft producers and commercial buyers.
+- lib/core/widgets/app_top_bar_controls.dart:
+  * Compact, accessible, combined top-bar control widget displaying Language (🌐)
+    and Appearance (☀️/🌙) selectors with accessible tap targets (min 40x40dp).
+  * Opens low-literacy-friendly bottom sheets with clear icons and simple text.
+
+2. INDEPENDENCE OF PREFERENCES
+============================================================
+The three preference dimensions operate with complete independence:
+1. App Language: Controls visible UI text on screen.
+2. Appearance Mode: Controls visual theme (Light / Dark / System).
+3. Voice Language: Reserved for future spoken audio instructions / TTS.
+Changing any one setting never mutates or overrides another.
+
+3. PRE-LOGIN AVAILABILITY & ENTRY FLOW MAPPING
+============================================================
+Intended UX structure:
+- Welcome / Role Selection (lib/core/auth/role_selection_screen.dart):
+  * AppTopBarControls integrated directly in AppBar actions.
+  * Role selection cards adapt dynamically to active Light / Dark theme.
+- Producer Sign In (lib/producer_section/auth/producer_login_screen.dart):
+  * AppTopBarControls integrated in AppBar actions next to back button.
+- Producer Sign Up (lib/producer_section/auth/producer_signup_screen.dart):
+  * AppTopBarControls integrated in AppBar actions next to back button.
+- Producer Onboarding (lib/producer_section/onboarding/producer_onboarding_screen.dart):
+  * AppTopBarControls integrated in AppBar actions next to Exit button.
+- Future Settings:
+  * When in-app Settings is built, it will reuse ThemeProvider and LanguageProvider
+    directly, allowing seamless in-app switching using the same state.
+
+4. BUYER SECTION BOUNDARY & TEAMMATE OWNERSHIP
+============================================================
+- The Buyer flow screen for authentication is located at:
+  lib/buyer_section/screens/shared/auth_screen.dart
+- Because lib/buyer_section/ is strictly teammate-owned and read-only, placing
+  top controls onto the Buyer auth screen is intentionally deferred to avoid
+  violating code boundaries.
+- The shared widget (AppTopBarControls) is placed in lib/core/widgets/ and is
+  ready for teammate integration on buyer screens with zero architectural refactoring:
+  Adding `actions: const [AppTopBarControls(), SizedBox(width: 16)]` to the
+  Buyer AuthScreen AppBar will immediately enable both language and theme switching.
+
+5. LOW-LITERACY NAMING & ACCESSIBILITY PRINCIPLE
+============================================================
+All appearance and language labels avoid technical terminology:
+- Rather than 'ThemeMode' or 'Appearance configuration':
+  * 'Light' / 'हल्का' / 'ਹਲਕਾ'
+  * 'Dark' / 'गहरा' / 'ਗੂੜ੍ਹਾ'
+  * 'Use phone setting' / 'फोन की सेटिंग अनुसार' / 'ਫੋਨ ਦੀ ਸੈਟਿੰਗ ਮੁਤਾਬਕ'
+- Paired with familiar iconography (☀️ sun, 🌙 moon, 📱 phone, 🌐 globe).

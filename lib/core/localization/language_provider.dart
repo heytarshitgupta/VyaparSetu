@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/preferences_service.dart';
 
 /// Supported visible application languages.
 enum AppLanguage {
@@ -49,6 +50,11 @@ enum VoiceLanguage {
 class LanguageProvider extends ChangeNotifier {
   AppLanguage _appLanguage = AppLanguage.english;
   VoiceLanguage _voiceLanguage = VoiceLanguage.hindi; // Independent default for future voice guidance
+  final PreferencesService _prefs = PreferencesService.instance;
+
+  LanguageProvider() {
+    _loadSavedLanguage();
+  }
 
   AppLanguage get appLanguage => _appLanguage;
   Locale get currentLocale => _appLanguage.locale;
@@ -60,11 +66,23 @@ class LanguageProvider extends ChangeNotifier {
     Locale('pa'),
   ];
 
-  /// Changes the visible application language.
+  Future<void> _loadSavedLanguage() async {
+    final savedCode = await _prefs.getSavedLanguageCode();
+    if (savedCode != null) {
+      final lang = AppLanguage.fromCode(savedCode);
+      if (_appLanguage != lang) {
+        _appLanguage = lang;
+        notifyListeners();
+      }
+    }
+  }
+
+  /// Changes the visible application language and persists preference.
   void setAppLanguage(AppLanguage language) {
     if (_appLanguage != language) {
       _appLanguage = language;
       notifyListeners();
+      _prefs.saveLanguageCode(language.locale.languageCode);
     }
   }
 
