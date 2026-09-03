@@ -33,6 +33,15 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
 
   static final RegExp _panFormatRegex = RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]$');
 
+  // GST State
+  late bool _isGstRegistered;
+  late final TextEditingController _gstinController;
+  String? _gstinError;
+  String? _gstinInfoMessage;
+
+  static final RegExp _gstinFormatRegex =
+      RegExp(r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$');
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +49,10 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
     _panController = TextEditingController();
     // Prefill Name as per PAN from the Producer's display full name
     _panNameController = TextEditingController(text: widget.provider.fullName);
+
+    // GST Initialization
+    _isGstRegistered = widget.provider.gstRegistered;
+    _gstinController = TextEditingController(text: widget.provider.gstin);
 
     // If already verified from backend profile
     final existingPanStatus = widget.provider.producerProfile?['pan_verification_status'];
@@ -55,6 +68,7 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
   void dispose() {
     _panController.dispose();
     _panNameController.dispose();
+    _gstinController.dispose();
     super.dispose();
   }
 
@@ -193,6 +207,84 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
       _panLocalError = null;
       _panLocalSuccessInfo = null;
       _panController.clear();
+    });
+  }
+
+  void _showAadhaarInfoDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Row(
+            children: [
+              Icon(Icons.fingerprint, color: AppColors.primary, size: 24),
+              SizedBox(width: 10),
+              Text(
+                'Aadhaar Verification',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          content: const Text(
+            'Aadhaar verification will be available through an authorized verification service. It is not enabled in this prototype.',
+            style: TextStyle(fontSize: 13, color: AppColors.textSecondary, height: 1.4),
+          ),
+          actions: [
+            TextButton(
+              key: const Key('producer_onboarding_aadhaar_dialog_ok_button'),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text(
+                'Got It',
+                style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.primary),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _handleGstSelection(bool registered) {
+    setState(() {
+      _isGstRegistered = registered;
+      _gstinError = null;
+      _gstinInfoMessage = null;
+      widget.provider.setGstRegistered(registered);
+      if (!registered) {
+        _gstinController.clear();
+      }
+    });
+  }
+
+  void _handleVerifyGstin() {
+    final trimmed = _gstinController.text.trim().toUpperCase();
+    setState(() {
+      _gstinError = null;
+      _gstinInfoMessage = null;
+    });
+
+    if (trimmed.isEmpty) {
+      setState(() {
+        _gstinError = 'Please enter your 15-character GSTIN.';
+      });
+      return;
+    }
+
+    if (trimmed.length != 15 || !_gstinFormatRegex.hasMatch(trimmed)) {
+      setState(() {
+        _gstinError =
+            'Please enter a valid 15-character GSTIN (e.g. 07AAAAA0000A1Z5).';
+      });
+      return;
+    }
+
+    // Valid format: update draft gstin in provider
+    widget.provider.setGstin(trimmed);
+
+    // Provide informational feedback (prototype does NOT fake verification)
+    setState(() {
+      _gstinInfoMessage = 'GST verification integration will be added next.';
     });
   }
 
@@ -682,89 +774,373 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
           const SizedBox(height: 20),
 
           // ------------------------------------------------------------------
-          // 2. AADHAAR IDENTITY (COMING SOON)
+          // 2. AADHAAR VERIFICATION CARD
           // ------------------------------------------------------------------
-          _buildUnavailableCard(
-            icon: Icons.fingerprint,
-            title: 'Aadhaar Identity Verification',
-            description:
-                'Artisan identity verification will be enabled in upcoming stages. Zero raw 12-digit Aadhaar numbers will ever be stored.',
-          ),
-          const SizedBox(height: 14),
-
-          // ------------------------------------------------------------------
-          // 3. GST & TAX COMPLIANCE (COMING SOON)
-          // ------------------------------------------------------------------
-          _buildUnavailableCard(
-            icon: Icons.receipt_long_outlined,
-            title: 'GST & Tax Compliance',
-            description:
-                'Optional GSTIN declaration for registered business units. Micro-producers below registration thresholds can continue without GST.',
-          ),
-          const SizedBox(height: 14),
-
-          // ------------------------------------------------------------------
-          // 4. WORKSHOP ADDRESS VERIFICATION (COMING SOON)
-          // ------------------------------------------------------------------
-          _buildUnavailableCard(
-            icon: Icons.home_work_outlined,
-            title: 'Workshop Address Verification',
-            description:
-                'Physical workshop verification or utility documents for commercial bulk pickup confidence.',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUnavailableCard({
-    required IconData icon,
-    required String title,
-    required String description,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(icon, size: 20, color: AppColors.textSecondary),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textSecondary,
+                    const Icon(
+                      Icons.fingerprint,
+                      size: 22,
+                      color: AppColors.primary,
+                    ),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Aadhaar Verification',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Identity verification via authorized service',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(width: 8),
                     const VerificationStatusBadge(
-                      state: VerificationBadgeState.comingSoon,
+                      state: VerificationBadgeState.notVerified,
                     ),
                   ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                const Text(
+                  'Verify your identity using Aadhaar. Fast, secure, and helps build trust with commercial buyers.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    key: const Key('producer_onboarding_verify_aadhaar_button'),
+                    onPressed: _showAadhaarInfoDialog,
+                    icon: const Icon(Icons.verified_user_outlined, size: 18),
+                    label: const Text(
+                      'Verify Aadhaar',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      side: const BorderSide(color: AppColors.primary),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 10),
-          Text(
-            description,
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-              height: 1.35,
+          const SizedBox(height: 20),
+
+          // ------------------------------------------------------------------
+          // 3. GST REGISTRATION CARD
+          // ------------------------------------------------------------------
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.receipt_long_outlined,
+                      size: 22,
+                      color: AppColors.primary,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'GST Registration',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _isGstRegistered
+                                ? 'Declared GST registration'
+                                : 'Business tax registration status',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    VerificationStatusBadge(
+                      state: VerificationBadgeState.notVerified,
+                      customLabel: _isGstRegistered ? 'Not Verified' : 'Not Registered',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                const Text(
+                  'Are you registered for GST? *',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Yes / No options
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        key: const Key('producer_onboarding_gst_no_option'),
+                        onTap: () => _handleGstSelection(false),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: !_isGstRegistered
+                                ? AppColors.primary.withValues(alpha: 0.08)
+                                : AppColors.background,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: !_isGstRegistered ? AppColors.primary : AppColors.border,
+                              width: !_isGstRegistered ? 1.5 : 1.0,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'No',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: !_isGstRegistered ? AppColors.primary : AppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: InkWell(
+                        key: const Key('producer_onboarding_gst_yes_option'),
+                        onTap: () => _handleGstSelection(true),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: _isGstRegistered
+                                ? AppColors.primary.withValues(alpha: 0.08)
+                                : AppColors.background,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: _isGstRegistered ? AppColors.primary : AppColors.border,
+                              width: _isGstRegistered ? 1.5 : 1.0,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: _isGstRegistered ? AppColors.primary : AppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                if (!_isGstRegistered) ...[
+                  // Simple informational state for No
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.info_outline, size: 16, color: AppColors.textSecondary),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'GST not registered. Micro-producers below registration thresholds can continue without GST.',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                              height: 1.35,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ] else ...[
+                  // If YES: Show GSTIN field
+                  const Text(
+                    'GSTIN Number *',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  TextFormField(
+                    key: const Key('producer_onboarding_gstin_field'),
+                    controller: _gstinController,
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                      LengthLimitingTextInputFormatter(15),
+                      _UpperCaseTextFormatter(),
+                    ],
+                    onChanged: (val) {
+                      widget.provider.setGstin(val);
+                      if (_gstinError != null || _gstinInfoMessage != null) {
+                        setState(() {
+                          _gstinError = null;
+                          _gstinInfoMessage = null;
+                        });
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: '07AAAAA0000A1Z5',
+                      prefixIcon: const Icon(Icons.business_outlined, size: 20),
+                      helperText: '15-character alphanumeric GSTIN',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  if (_gstinError != null) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.error.withValues(alpha: 0.25)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.error_outline, size: 16, color: AppColors.error),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _gstinError!,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.error,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
+                  if (_gstinInfoMessage != null) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.primary.withValues(alpha: 0.25)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.info_outline, size: 16, color: AppColors.primary),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _gstinInfoMessage!,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      key: const Key('producer_onboarding_verify_gstin_button'),
+                      onPressed: _handleVerifyGstin,
+                      icon: const Icon(Icons.check_circle_outline, size: 18),
+                      label: const Text(
+                        'Verify GSTIN',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                        side: const BorderSide(color: AppColors.primary),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
         ],

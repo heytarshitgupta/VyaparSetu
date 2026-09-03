@@ -246,6 +246,29 @@ I. Step 4E2.6 — Live PAN Flow Verification (Post-Migration 008):
 - Prototype Environment Notice:
   * UI explicitly communicates: 'Demo verification environment • Verification is simulated in this prototype.' No false government-backed verification claims.
 
+J. Step 4E3 — Complete Identity & Compliance UI Structure:
+- Card Ordering:
+  1. PAN Verification (Simulated prototype verification with live RPC & masked display preserved)
+  2. Aadhaar Verification
+  3. GST Registration
+- Aadhaar Verification:
+  * Real Aadhaar verification is deferred.
+  * Zero 12-digit Aadhaar numbers are collected or stored in this prototype.
+  * Tapping 'Verify Aadhaar' presents an informative dialog explaining that Aadhaar verification will be available through an authorized verification partner and is disabled in this prototype.
+  * No government or UIDAI logos are displayed.
+- GST Registration UI:
+  * Prepared for future genuine verification integration.
+  * Asks 'Are you registered for GST?'.
+  * If 'No': Shows clear informational notice that micro-producers below registration thresholds can proceed without GST.
+  * No legal intra-state or national selling eligibility assumption is enforced at this stage.
+  * If 'Yes': Exposes 15-character uppercase GSTIN input with client validation regex (2 state digits + 10 PAN chars + 1 entity + 1 Z + 1 check).
+  * Tapping 'Verify GSTIN' performs format validation and displays informational message that GST verification integration will be added next.
+  * GST verification is NOT simulated and status remains 'Not Verified' (no client-side faking of verified status).
+- Workshop Address Verification Removal:
+  * Address Verification card is completely removed from Identity & Compliance (Step 4) MVP UI.
+  * The producer's physical business location fields (State, District, City/Village, Pincode, Address) remain fully intact and mandatory in Step 3 for discovery, logistics, and buyer confidence.
+
+
 
 
 

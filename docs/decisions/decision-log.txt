@@ -75,7 +75,13 @@ This log records permanent architectural, design, and structural decisions made 
   * Database verified: pan_last4 = '234F', pan_hash is 64 hex characters, pan_verification_status = 'verified'. Plaintext PAN ABCDE1234F is not stored.
   * Same-PAN idempotency confirmed: returns 'already_verified' without state mutation.
   * Different-PAN conflict confirmed: returns 'already_verified_conflict' and protects verified artifacts from modification.
-  * UI verified: masked PAN ******234F and Verified badge persist across page reload at Step 4; app does not advance to Step 5.
+- Step 4E3 Identity & Compliance UI Structure Completion:
+  * Ordered cards: 1. PAN Verification, 2. Aadhaar Verification, 3. GST Registration.
+  * Aadhaar Verification: Replaced generic 'Coming Soon' placeholder with proper card; deferred real Aadhaar verification and zero Aadhaar collection in prototype; informational popup on tap.
+  * GST Registration: Replaced placeholder with interactive Yes/No selector and 15-character GSTIN input with regex validation; deferred verification simulation; preserved 'Not Verified' status.
+  * Removed Address Verification card from Identity & Compliance (Step 4) MVP UI while keeping mandatory physical location fields in Step 3 intact.
+  * Validated with 24/24 passing tests, zero analyze errors, and zero Buyer section changes.
+
 
 
 

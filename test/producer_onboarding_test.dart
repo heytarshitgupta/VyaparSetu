@@ -672,9 +672,9 @@ void main() {
       expect(find.text('Identity & Compliance'), findsNWidgets(2));
       expect(find.text('Demo verification environment • Verification is simulated in this prototype.'), findsOneWidget);
       expect(find.text('PAN Verification'), findsOneWidget);
-      expect(find.text('Aadhaar Identity Verification'), findsOneWidget);
-      expect(find.text('GST & Tax Compliance'), findsOneWidget);
-      expect(find.text('Workshop Address Verification'), findsOneWidget);
+      expect(find.text('Aadhaar Verification'), findsOneWidget);
+      expect(find.text('GST Registration'), findsOneWidget);
+      expect(find.text('Workshop Address Verification'), findsNothing);
 
       // ----------------------------------------------------------------------
       // BACK NAVIGATION: Verify all values preserved across steps
@@ -742,11 +742,10 @@ void main() {
       // 2. Check cards and badges
       expect(find.text('PAN Verification'), findsOneWidget);
       expect(find.text('Secure identity verification'), findsOneWidget);
-      expect(find.text('Not Verified'), findsOneWidget);
-      expect(find.text('Aadhaar Identity Verification'), findsOneWidget);
-      expect(find.text('GST & Tax Compliance'), findsOneWidget);
-      expect(find.text('Workshop Address Verification'), findsOneWidget);
-      expect(find.text('Coming Soon'), findsNWidgets(3));
+      expect(find.text('Aadhaar Verification'), findsOneWidget);
+      expect(find.text('GST Registration'), findsOneWidget);
+      expect(find.text('Workshop Address Verification'), findsNothing);
+      expect(find.text('Coming Soon'), findsNothing);
 
       // 3. Name prefilled from provider.fullName
       final nameFieldFinder = find.byKey(const Key('producer_onboarding_pan_name_field'));
@@ -1142,6 +1141,126 @@ void main() {
       // Conflict is shown cleanly without exposing internal errors
       expect(find.text('Could Not Verify'), findsOneWidget);
       expect(find.text('A verified PAN is already associated with this account. Re-verification is required to change it.'), findsOneWidget);
+    });
+
+    testWidgets('Step 4E3: Aadhaar card shows Not Verified, opens info dialog, and does not collect Aadhaar number', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      final provider = ProducerOnboardingProvider();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: IdentityComplianceStep(provider: provider),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Aadhaar card appears with Not Verified badge
+      expect(find.text('Aadhaar Verification'), findsOneWidget);
+      expect(find.byKey(const Key('producer_onboarding_verify_aadhaar_button')), findsOneWidget);
+
+      // Verify no input field for Aadhaar number exists
+      expect(find.byKey(const Key('producer_onboarding_aadhaar_field')), findsNothing);
+
+      // Tap Verify Aadhaar button
+      final verifyAadhaarBtn = find.byKey(const Key('producer_onboarding_verify_aadhaar_button'));
+      await tester.ensureVisible(verifyAadhaarBtn);
+      await tester.tap(verifyAadhaarBtn);
+      await tester.pumpAndSettle();
+
+      // Informational dialog appears with correct message
+      expect(find.text('Aadhaar verification will be available through an authorized verification service. It is not enabled in this prototype.'), findsOneWidget);
+
+      // Tap Got It to close
+      final okBtn = find.byKey(const Key('producer_onboarding_aadhaar_dialog_ok_button'));
+      expect(okBtn, findsOneWidget);
+      await tester.tap(okBtn);
+      await tester.pumpAndSettle();
+
+      // Dialog closed; no Aadhaar stored or simulated
+      expect(find.text('Aadhaar verification will be available through an authorized verification service. It is not enabled in this prototype.'), findsNothing);
+    });
+
+    testWidgets('Step 4E3: GST card toggles Yes/No, validates GSTIN format, and shows non-faked verification feedback', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      final provider = ProducerOnboardingProvider();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: IdentityComplianceStep(provider: provider),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // GST card appears; default is Not Registered (No selected)
+      expect(find.text('GST Registration'), findsOneWidget);
+      expect(find.text('Not Registered'), findsOneWidget);
+      expect(find.text('GST not registered. Micro-producers below registration thresholds can continue without GST.'), findsOneWidget);
+      expect(find.byKey(const Key('producer_onboarding_gstin_field')), findsNothing);
+
+      // Select "Yes" for GST registered
+      final yesOption = find.byKey(const Key('producer_onboarding_gst_yes_option'));
+      await tester.ensureVisible(yesOption);
+      await tester.tap(yesOption);
+      await tester.pumpAndSettle();
+
+      // Status badge changes to Not Verified and GSTIN input appears
+      expect(find.text('Not Verified'), findsWidgets);
+      final gstinField = find.byKey(const Key('producer_onboarding_gstin_field'));
+      expect(gstinField, findsOneWidget);
+
+      // Select "No" again -> GSTIN field hidden
+      final noOption = find.byKey(const Key('producer_onboarding_gst_no_option'));
+      await tester.ensureVisible(noOption);
+      await tester.tap(noOption);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('producer_onboarding_gstin_field')), findsNothing);
+
+      // Select "Yes" again
+      await tester.ensureVisible(yesOption);
+      await tester.tap(yesOption);
+      await tester.pumpAndSettle();
+
+      // Tap "Verify GSTIN" with empty field -> error
+      final verifyGstinBtn = find.byKey(const Key('producer_onboarding_verify_gstin_button'));
+      await tester.ensureVisible(verifyGstinBtn);
+      await tester.tap(verifyGstinBtn);
+      await tester.pumpAndSettle();
+      expect(find.text('Please enter your 15-character GSTIN.'), findsOneWidget);
+
+      // Enter invalid GSTIN format
+      await tester.enterText(gstinField, 'INVALID123');
+      await tester.tap(verifyGstinBtn);
+      await tester.pumpAndSettle();
+      expect(find.text('Please enter a valid 15-character GSTIN (e.g. 07AAAAA0000A1Z5).'), findsOneWidget);
+
+      // Enter valid format GSTIN (e.g. 07AAAAA0000A1Z5)
+      await tester.enterText(gstinField, '07AAAAA0000A1Z5');
+      await tester.tap(verifyGstinBtn);
+      await tester.pumpAndSettle();
+
+      // Shows informational message; does NOT fake verification
+      expect(find.text('GST verification integration will be added next.'), findsOneWidget);
+      expect(find.text('Verified'), findsNothing); // Does not show fake verified badge
+      expect(provider.gstin, '07AAAAA0000A1Z5');
+      expect(provider.gstRegistered, true);
     });
   });
 }

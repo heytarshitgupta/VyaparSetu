@@ -36,6 +36,15 @@ class ProducerOnboardingProvider extends ChangeNotifier {
   String _pincode = '';
   String _address = '';
 
+  // --------------------------------------------------------------------------
+  // STEP 4 STATE: COMPLIANCE / GST
+  // --------------------------------------------------------------------------
+  bool _gstRegistered = false;
+  String _gstin = '';
+
+  bool get gstRegistered => _gstRegistered;
+  String get gstin => _gstin;
+
   int _persistedServerStep = 1;
   int get persistedServerStep => _persistedServerStep;
 
@@ -205,11 +214,32 @@ class ProducerOnboardingProvider extends ChangeNotifier {
     _pincode = (producerProfile?['pincode'] as String?)?.trim() ?? '';
     _address = (producerProfile?['address'] as String?)?.trim() ?? '';
 
-    // 6. Restore Server-Backed Onboarding Step (1 to 5)
+    // 6. Step 4 Compliance / GST
+    final rawGstReg = producerProfile?['gst_registered'];
+    _gstRegistered = rawGstReg is bool ? rawGstReg : false;
+    _gstin = (producerProfile?['gstin'] as String?)?.trim().toUpperCase() ?? '';
+
+    // 7. Restore Server-Backed Onboarding Step (1 to 5)
     final rawServerStep = (producerProfile?['onboarding_step'] as num?)?.toInt() ?? 1;
     _persistedServerStep = rawServerStep.clamp(1, totalSteps);
     _currentStep = _persistedServerStep - 1;
 
+    notifyListeners();
+  }
+
+  // --------------------------------------------------------------------------
+  // STEP 4 SETTERS: GST
+  // --------------------------------------------------------------------------
+  void setGstRegistered(bool value) {
+    _gstRegistered = value;
+    if (!value) {
+      _gstin = '';
+    }
+    notifyListeners();
+  }
+
+  void setGstin(String value) {
+    _gstin = value.trim().toUpperCase();
     notifyListeners();
   }
 
@@ -655,6 +685,8 @@ class ProducerOnboardingProvider extends ChangeNotifier {
   void reset() {
     _currentStep = 0;
     _persistedServerStep = 1;
+    _gstRegistered = false;
+    _gstin = '';
     _isSubmitting = false;
     _isLoadingProfile = false;
     _errorMessage = null;

@@ -102,4 +102,20 @@ C. Flutter Integration (ProducerVerificationService):
 - Loading state: Disables duplicate Verify taps with loading spinner.
 - Success state: Replaces input form with green verified card showing only masked identifier ('******234F') and allows "Edit Details" if desired. Raw PAN is cleared from controller.
 
+D. Step 4E3 — Aadhaar & GST UI Preparation:
+- Aadhaar Verification Status:
+  * Official / genuine Aadhaar verification is deferred to upcoming phases.
+  * No raw 12-digit Aadhaar numbers are collected or persisted in this prototype.
+  * Tapping 'Verify Aadhaar' provides a clean informational popup stating that verification will be enabled via an authorized verification service.
+- GST Registration Status:
+  * Prepared for future genuine verification integration.
+  * Producer indicates whether registered ('Yes' or 'No').
+  * Non-registered producers see simple guidance: 'GST not registered. Micro-producers below registration thresholds can continue without GST.'
+  * No legal intra-state or national selling assumption is enforced yet.
+  * Registered producers provide 15-character GSTIN (validated via client regex).
+  * Tapping 'Verify GSTIN' provides informational message ('GST verification integration will be added next.') and preserves 'Not Verified' status without simulated verification.
+- Address Verification:
+  * Removed from Identity & Compliance (Step 4) MVP UI. Producer's physical location details remain mandatory in Step 3.
+
+
 
