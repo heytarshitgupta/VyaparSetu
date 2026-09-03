@@ -41,3 +41,28 @@ C. Sensitive Data Minimization & Trust Boundaries
 D. Secrets Management and API Protection
 - Zero Secrets in Git: No database connection strings, passwords, or service-role keys may ever be committed to Git.
 - No Service-Role Key in Flutter: The client app only uses the public Supabase anon key.
+
+E. Sensitive PAN Handling & Prototype Simulation Boundaries (Step 4E1, 4E2, & 4E2.3)
+- Zero Plaintext PAN Storage: Raw 10-character PAN numbers are NEVER stored in database, SharedPreferences, files, analytics, or ProducerOnboardingProvider. Raw PAN resides exclusively in local ephemeral widget memory (TextEditingController) during form entry.
+- SECURITY DEFINER Verification RPC: Migration 006 creates public.verify_producer_pan_prototype() with search_path = ''. It accepts transient inputs, authenticates caller via auth.uid(), validates format defensively, generates 4-character pan_last4 and 64-hex SHA-256 pan_hash, and updates producer_profiles without granting Flutter direct UPDATE privileges on verification columns.
+- Protection of Verified Identity: If caller has pan_verification_status = 'verified', the RPC strictly protects existing verified artifacts. Matching details return 'already_verified' idempotently; conflicting or rejected attempts return 'already_verified_conflict' and NEVER erase or alter verified data.
+- Prototype Fingerprint Boundary: pg_catalog.sha256((v_pan || ':' || v_uid::TEXT)::BYTEA) is a prototype pseudonymous integrity fingerprint, not encryption. Production systems must use server-secret HMAC (HMAC-SHA256) or tokenization vaults.
+- Real Architecture vs Simulated Registry:
+  * REAL: Authenticated request, backend authorization, RLS/trust boundary enforcement, zero raw PAN persistence, trusted status mutation, and masked UI presentation ('******234F').
+  * SIMULATED: Verification against official registries (Income Tax Dept, NSDL, Protean) is simulated via deterministic rules in this hackathon prototype. Future live provider integration replaces internal RPC simulation without client architectural changes.
+- Transparent Disclosure: Visible banner informs users: "Demo verification environment • Verification is simulated in this prototype."
+- Error Sanitization: Database and PostgreSQL errors are masked by ProducerVerificationService to prevent information disclosure.
+- Timestamp Trigger Authority: Client update payloads must not include 'updated_at' (42501). Database triggers trg_profiles_updated_at and trg_producer_profiles_updated_at own timestamp management under SECURITY DEFINER.
+
+F. Resumable Onboarding Trust Boundaries & Progress Protection (Step 4E2.1 & 4E2.3)
+- Server-Authoritative Progress: public.producer_profiles.onboarding_step (SMALLINT, CHECK 1 to 5) is the authoritative source of progress. Progress survives browser reloads, network disconnects, app restarts, and cross-device sign-ins.
+- Client Direct Mutation Revoked: Direct client UPDATE on onboarding_step is completely excluded.
+- Concurrency & Row Locking: Uses SELECT ... FOR UPDATE on producer_profiles to serialize concurrent requests.
+- Stale State & Single-Step Guard: Requires server_step = expected_current_step and next_step = expected_current_step + 1.
+- Server-Side Prerequisite Verification: The RPC validates saved database data (1->2 requires profiles.full_name; 2->3 requires business_name & craft_category; 3->4 requires valid location details). Prevents skipping via repeated RPC calls.
+- Step 4 -> 5 Blocked: Generic progression RPC rejects advancing past Step 4 ('identity_compliance_incomplete') because compliance completion rules are still evolving.
+- Onboarding Status Separation: The step advancement RPC does NOT alter profiles.onboarding_status. If status is 'completed', returns 'already_completed' without mutation. Final onboarding completion remains protected for trusted review/submission logic.
+
+
+
+

@@ -44,4 +44,41 @@ This log records permanent architectural, design, and structural decisions made 
   * Step 2 (Craft & Business Details) implemented: Business/Workshop Name (2–120 chars), 10 single-choice craft category chips with icons, dynamic 'Other' custom category entry (2–60 chars), and optional short bio (max 500 chars with live counter).
   * Step 3 (Location Details) implemented: State dropdown with 36 Indian states & UTs, District (2–100 chars), City/Village (2–100 chars), strict Pincode matching database constraint chk_producer_pincode (^[1-9][0-9]{5}$), and multi-line Address (5–300 chars).
   * Column Privilege Guard (42501 Resolution): Confirmed client update payloads must omit 'updated_at' because column UPDATE privilege is deliberately restricted to user-editable fields in Migration 001. Timestamp updates are handled strictly by database triggers trg_profiles_updated_at and trg_producer_profiles_updated_at.
+- Identity & Compliance UI & Simulated PAN Verification (Step 4E1 & 4E2):
+  * Step 4 UI implemented (IdentityComplianceStep) with clear subtitle, subtle prototype simulation disclosure, reusable VerificationStatusBadge, active simulated PAN card, and unavailable "Coming Soon" cards for upcoming Aadhaar, GST, and Address workflows.
+  * Raw PAN Safety & Zero Persistence: Plaintext 10-character PAN is strictly transient in widget memory (TextEditingController). It is never stored in ProducerOnboardingProvider, never saved to SharedPreferences, never logged, and never persisted to Supabase tables.
+  * Migration 006_pan_verification_prototype.sql created (unexecuted): Defines public.verify_producer_pan_prototype() with SECURITY DEFINER and search_path = ''. Uses auth.uid() exclusively, checks producer role, evaluates deterministic demo simulation rule (PAN starting with 'FAIL' or 4th char 'X' simulates rejection; all other valid PANs simulate success), extracts 4-character pan_last4, computes 64-hex SHA-256 pan_hash, updates producer_profiles without client write privileges, and returns safe masked identifier ('******234F'). Zero raw PAN returned.
+- Resumable Producer Onboarding Architecture (Step 4E2.1):
+  * Problem: Reopening the app, refreshing the browser, losing network connectivity, or signing out previously reset the producer to Step 1, ignoring earlier persisted draft records.
+  * Server-Authoritative Progress: Stored public.producer_profiles.onboarding_step (SMALLINT, CHECK 1 to 5) as the single source of truth. Local persistence mechanisms (SharedPreferences, localStorage, static state) are rejected as authoritative sources to ensure cross-device consistency and prevent client-side bypass.
+  * Progression & Anti-Skipping: Direct client UPDATE on onboarding_step is omitted. Progression is governed strictly by public.advance_producer_onboarding_step(expected_current_step, next_step) RPC (SECURITY DEFINER, search_path = '', caller auth.uid() check, producer role check). Progression allows advancement of at most 1 step beyond server's known progress.
+  * Monotonic & Idempotent: If the user presses "Back" in the UI to review or re-edit prior steps, the server's persisted onboarding_step does NOT regress. The RPC treats calls where server_step >= next_step as idempotent no-ops.
+  * Save-First Advancement: The server progress is updated only after the corresponding form payload save completes successfully. If save fails, progress does not advance.
+  * Initial Load Restoration: On screen load, ProducerOnboardingScreen fetches producer_profiles, extracts onboarding_step, and initializes directly to the saved step with draft data prefilled.
+- Security and Correctness Hardening of Migrations 006 and 007 (Step 4E2.3):
+  * Migration 006 Verified Identity Protection: If caller already has pan_verification_status = 'verified', a matching PAN returns 'already_verified' (idempotent success); a differing or failing PAN returns 'already_verified_conflict' and NEVER destroys, erases, or alters verified artifacts (pan_last4, pan_hash, status).
+  * Fingerprint Documentation: Clarified that sha256(pan || ':' || uid) is a prototype pseudonymous integrity fingerprint, not encryption, and production requires server-secret HMAC or vault tokenization.
+  * Migration 007 Expected Step & Stale State Guard: Uses expected_current_step to enforce server_step = expected_current_step and next_step = expected_current_step + 1, guarding against stale client state and race conditions.
+  * Server-Side Prerequisite Enforcement: RPC verifies saved database records (1->2 requires profiles.full_name; 2->3 requires producer_profiles business_name & craft_category; 3->4 requires valid location fields and pincode). Flutter validation is UX; RPC is the security boundary.
+  * Step 4 -> 5 Blocked: Generic progression RPC rejects advancing past Step 4 ('identity_compliance_incomplete') because compliance completion rules (PAN, Aadhaar, GST, Address) are still evolving.
+  * Backfill Rule Correction: Removed premature pan_verification_status = 'verified' -> 5 inference. Step 4 encompasses full identity and compliance. Added city and string length checks to Location backfill.
+  * Concurrency Row Lock: Used SELECT ... FOR UPDATE on producer_profiles to serialize concurrent requests.
+- Step 4E2.4 Runtime Verification & Execution Milestone:
+  * Migrations 006 and 007 confirmed executed in Supabase.
+  * Verified server-authoritative progress: public.producer_profiles.onboarding_step (SMALLINT, CHECK 1 to 5) accurately backfilled existing test artisan to Step 4.
+  * Direct client mutations to restricted columns (onboarding_step, onboarding_status, pan_last4, pan_hash, pan_verification_status) verified blocked by PostgreSQL column permissions (42501).
+  * Step 4 -> 5 advancement verified blocked live by advance_producer_onboarding_step ('identity_compliance_incomplete').
+  * Resumable onboarding verified: browser reloads restore directly to Step 4; Back button navigates locally without regressing server step.
+- Step 4E2.6 Live PAN Flow Verification & Migration 008 Execution:
+  * Migration 008 executed in Supabase replacing verify_producer_pan_prototype with pg_catalog.btrim.
+  * Live runtime verification confirmed: demo PAN ABCDE1234F verified successfully.
+  * Database verified: pan_last4 = '234F', pan_hash is 64 hex characters, pan_verification_status = 'verified'. Plaintext PAN ABCDE1234F is not stored.
+  * Same-PAN idempotency confirmed: returns 'already_verified' without state mutation.
+  * Different-PAN conflict confirmed: returns 'already_verified_conflict' and protects verified artifacts from modification.
+  * UI verified: masked PAN ******234F and Verified badge persist across page reload at Step 4; app does not advance to Step 5.
+
+
+
+
+
 

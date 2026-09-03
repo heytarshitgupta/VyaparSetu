@@ -97,6 +97,7 @@ TABLE: producer_profiles
   * city (TEXT, NOT NULL DEFAULT '')
   * pincode (TEXT, NOT NULL DEFAULT '')
   * address (TEXT, NULLABLE)
+  * onboarding_step (SMALLINT, NOT NULL DEFAULT 1) -- Trusted server-backed progress (1 to 5; Step 4E2.1)
   * onboarding_status (onboarding_status, NOT NULL DEFAULT 'not_started') -- Trusted backend only (revoked in 005)
   * verification_status (verification_status, NOT NULL DEFAULT 'unverified') -- Trusted backend only
   * pan_last4 (VARCHAR(4), NULLABLE) -- Populated via trusted backend
@@ -115,9 +116,10 @@ TABLE: producer_profiles
   * SELECT: Entire table (gated by RLS)
   * INSERT: (id, business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin)
   * UPDATE: (business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin)
-  * Direct client mutations on onboarding_status are REVOKED.
+  * Direct client mutations on onboarding_status and onboarding_step are strictly REVOKED / EXCLUDED.
   * All verification artifact and status columns are strictly excluded from client INSERT/UPDATE grants.
 - Constraints:
+  * chk_producer_onboarding_step: (onboarding_step >= 1 AND onboarding_step <= 5)
   * chk_producer_pan_last4: (pan_last4 IS NULL OR pan_last4 ~ '^[0-9A-Za-z]{4}$')
   * chk_producer_pan_hash: (pan_hash IS NULL OR pan_hash ~ '^[0-9a-fA-F]{64}$')
   * chk_producer_aadhaar_last4: (aadhaar_last4 IS NULL OR aadhaar_last4 ~ '^[0-9]{4}$')

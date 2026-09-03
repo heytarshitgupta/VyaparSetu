@@ -3,9 +3,11 @@ import '../../core/auth/auth_service.dart';
 import '../../core/routes/app_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../auth/services/producer_auth_service.dart';
+import '../verification/producer_verification_service.dart';
 import 'producer_onboarding_provider.dart';
 import 'steps/basic_details_step.dart';
 import 'steps/business_craft_step.dart';
+import 'steps/identity_compliance_step.dart';
 import 'steps/location_details_step.dart';
 import 'widgets/onboarding_navigation_buttons.dart';
 import 'widgets/onboarding_progress_header.dart';
@@ -25,6 +27,11 @@ class ProducerOnboardingScreen extends StatefulWidget {
     required String pincode,
     required String address,
   })? step3Saver;
+  final Future<void> Function({
+    required int expectedCurrentStep,
+    required int nextStep,
+  })? stepAdvancer;
+  final ProducerVerificationService? verificationService;
 
   const ProducerOnboardingScreen({
     super.key,
@@ -32,6 +39,8 @@ class ProducerOnboardingScreen extends StatefulWidget {
     this.step1Saver,
     this.step2Saver,
     this.step3Saver,
+    this.stepAdvancer,
+    this.verificationService,
   });
 
   @override
@@ -53,6 +62,9 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
     }
     if (widget.step3Saver != null) {
       _provider.step3Saver = widget.step3Saver;
+    }
+    if (widget.stepAdvancer != null) {
+      _provider.stepAdvancer = widget.stepAdvancer;
     }
     _provider.addListener(_onProviderUpdate);
     _loadInitialData();
@@ -216,16 +228,9 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
       case 2:
         return LocationDetailsStep(provider: _provider);
       case 3:
-        return _buildStepCard(
-          icon: Icons.verified_user_outlined,
-          title: 'Identity & Artisan Compliance',
-          description:
-              'Verify your artisan status with government-recognized ID (Artisan Card, Udyam MSME, or Aadhaar).',
-          fields: [
-            _buildInfoTile('Verification ID', 'Artisan Pehchan Card / Udyam'),
-            _buildInfoTile('Status', 'Pending verification workflow in Step 4B'),
-            _buildInfoTile('Privacy', 'Private & encrypted strictly for verification'),
-          ],
+        return IdentityComplianceStep(
+          provider: _provider,
+          verificationService: widget.verificationService,
         );
       case 4:
         return _buildStepCard(

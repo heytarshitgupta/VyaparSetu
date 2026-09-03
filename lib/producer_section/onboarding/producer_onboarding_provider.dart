@@ -36,6 +36,15 @@ class ProducerOnboardingProvider extends ChangeNotifier {
   String _pincode = '';
   String _address = '';
 
+  int _persistedServerStep = 1;
+  int get persistedServerStep => _persistedServerStep;
+
+  /// Optional custom RPC handler for advancing server step in tests
+  Future<void> Function({required int expectedCurrentStep, required int nextStep})? stepAdvancer;
+
+  Map<String, dynamic>? _producerProfile;
+  Map<String, dynamic>? get producerProfile => _producerProfile;
+
   static const List<String> standardCategories = [
     'Food & Homemade Products',
     'Handicrafts',
@@ -152,6 +161,8 @@ class ProducerOnboardingProvider extends ChangeNotifier {
     Map<String, dynamic>? producerProfile,
     required User? user,
   }) {
+    _producerProfile = producerProfile;
+
     // 1. Full Name: profile.full_name -> user metadata full_name -> empty
     final profileName = (profile?['full_name'] as String?)?.trim() ?? '';
     final metaName = (user?.userMetadata?['full_name'] as String?)?.trim() ?? '';
@@ -193,6 +204,11 @@ class ProducerOnboardingProvider extends ChangeNotifier {
     _city = (producerProfile?['city'] as String?)?.trim() ?? '';
     _pincode = (producerProfile?['pincode'] as String?)?.trim() ?? '';
     _address = (producerProfile?['address'] as String?)?.trim() ?? '';
+
+    // 6. Restore Server-Backed Onboarding Step (1 to 5)
+    final rawServerStep = (producerProfile?['onboarding_step'] as num?)?.toInt() ?? 1;
+    _persistedServerStep = rawServerStep.clamp(1, totalSteps);
+    _currentStep = _persistedServerStep - 1;
 
     notifyListeners();
   }
@@ -415,6 +431,32 @@ class ProducerOnboardingProvider extends ChangeNotifier {
   // --------------------------------------------------------------------------
   Future<void> Function({required String fullName, String? phone})? step1Saver;
 
+  Future<void> _advanceServerProgress({
+    required int expectedCurrentStep,
+    required int nextStep,
+  }) async {
+    try {
+      if (stepAdvancer != null) {
+        await stepAdvancer!(
+          expectedCurrentStep: expectedCurrentStep,
+          nextStep: nextStep,
+        );
+      } else {
+        await ProducerAuthService.instance.advanceOnboardingStep(
+          expectedCurrentStep: expectedCurrentStep,
+          nextStep: nextStep,
+        );
+      }
+      if (nextStep > _persistedServerStep) {
+        _persistedServerStep = nextStep;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[ProducerOnboardingProvider] Non-blocking step advance warning: $e');
+      }
+    }
+  }
+
   Future<bool> saveStep1() async {
     final validationError = validateStep1();
     if (validationError != null) {
@@ -440,6 +482,8 @@ class ProducerOnboardingProvider extends ChangeNotifier {
           phone: _isAuthPhone ? null : digitsOnly,
         );
       }
+
+      await _advanceServerProgress(expectedCurrentStep: 1, nextStep: 2);
 
       _isSubmitting = false;
       notifyListeners();
@@ -498,6 +542,8 @@ class ProducerOnboardingProvider extends ChangeNotifier {
           bio: _businessDescription.trim(),
         );
       }
+
+      await _advanceServerProgress(expectedCurrentStep: 2, nextStep: 3);
 
       _isSubmitting = false;
       notifyListeners();
@@ -559,6 +605,8 @@ class ProducerOnboardingProvider extends ChangeNotifier {
         );
       }
 
+      await _advanceServerProgress(expectedCurrentStep: 3, nextStep: 4);
+
       _isSubmitting = false;
       notifyListeners();
       return true;
@@ -606,6 +654,7 @@ class ProducerOnboardingProvider extends ChangeNotifier {
 
   void reset() {
     _currentStep = 0;
+    _persistedServerStep = 1;
     _isSubmitting = false;
     _isLoadingProfile = false;
     _errorMessage = null;

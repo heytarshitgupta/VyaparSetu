@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/supabase_service.dart';
 
@@ -136,6 +137,33 @@ class ProducerAuthService {
     };
 
     await _client.from('producer_profiles').update(data).eq('id', user.id);
+  }
+
+  /// Advances public.producer_profiles.onboarding_step via trusted SECURITY DEFINER RPC.
+  /// Forward-only, monotonic, and idempotent.
+  Future<void> advanceOnboardingStep({
+    required int expectedCurrentStep,
+    required int nextStep,
+  }) async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw Exception('User is not authenticated.');
+    }
+
+    try {
+      await _client.rpc(
+        'advance_producer_onboarding_step',
+        params: {
+          'expected_current_step': expectedCurrentStep,
+          'next_step': nextStep,
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[ProducerAuthService] advance_producer_onboarding_step error: $e');
+      }
+      rethrow;
+    }
   }
 
   /// Validates that the authenticated user possesses the Producer role and

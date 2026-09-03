@@ -87,7 +87,7 @@ IMPLEMENTED AND LIVE VERIFIED:
              [Auto Sign Out] ---> [Display: "Admin accounts cannot access Producer portal."]
 
 
-4. PRODUCER ONBOARDING DATA FLOW (STEPS 4B1, 4C, & 4D IMPLEMENTED)
+4. PRODUCER ONBOARDING DATA FLOW (STEPS 4B1, 4C, 4D, & 4E1 IMPLEMENTED)
 ------------------------------------------------------------
 [Step 1: Basic Details Form]
        |
@@ -101,7 +101,10 @@ IMPLEMENTED AND LIVE VERIFIED:
        v
 [ProducerAuthService.updateBasicProfile] ---> [UPDATE public.profiles (full_name, phone)]
        |
-       +---> If Success: [Advance to Step 2: Craft & Business]
+       +---> If Success:
+       |     * RPC: public.advance_producer_onboarding_step(expected: 1, next: 2)
+       |     * Sets producer_profiles.onboarding_step = 2
+       |     * [Advance to Step 2: Craft & Business]
        |
        +---> If Failure: [Stay on Step 1, show user-friendly error]
        |
@@ -118,7 +121,10 @@ IMPLEMENTED AND LIVE VERIFIED:
        v
 [ProducerAuthService.updateBusinessProfile] ---> [UPDATE public.producer_profiles (business_name, craft_category, bio)]
        |
-       +---> If Success: [Advance to Step 3: Location Details]
+       +---> If Success:
+       |     * RPC: public.advance_producer_onboarding_step(expected: 2, next: 3)
+       |     * Sets producer_profiles.onboarding_step = 3
+       |     * [Advance to Step 3: Location Details]
        |
        +---> If Failure: [Stay on Step 2, show user-friendly error]
        |
@@ -137,9 +143,50 @@ IMPLEMENTED AND LIVE VERIFIED:
        v
 [ProducerAuthService.updateLocationProfile] ---> [UPDATE public.producer_profiles (state, district, city, pincode, address)]
        |
-       +---> If Success: [Advance to Step 4: Identity & Compliance]
+       +---> If Success:
+       |     * RPC: public.advance_producer_onboarding_step(expected: 3, next: 4)
+       |     * Sets producer_profiles.onboarding_step = 4
+       |     * [Advance to Step 4: Identity & Compliance]
        |
        +---> If Failure: [Stay on Step 3, show user-friendly error]
+       |
+       v
+[Step 4: Identity & Compliance Form (Step 4E1 & 4E2)]
+       |
+       +---> PAN Number (transient controller; uppercase; regex ^[A-Z]{5}[0-9]{4}[A-Z]$)
+       +---> Name as per PAN (prefilled from fullName; editable; 2-120 chars)
+       +---> Date of Birth (date picker; historical date only; transient)
+       +---> Aadhaar / GST / Address (Coming Soon / Not Verified cards)
+       |
+       v (User taps 'Verify PAN')
+[Validation: 10-char PAN regex, 2-120 chars name, valid historical DOB]
+       |
+       v
+[ProducerVerificationService.verifyPan]
+       |
+       v (RPC invocation)
+[Supabase RPC: public.verify_producer_pan_prototype (SECURITY DEFINER)]
+       |
+       +---> Authenticates caller via auth.uid()
+       +---> Checks caller role = 'producer' in public.profiles
+       +---> Evaluates demo simulation rule:
+       |     * PAN starts with 'FAIL' or 4th char 'X' -> REJECTED:
+       |       - UPDATE producer_profiles: pan_last4 = NULL, pan_hash = NULL, pan_verification_status = 'rejected'
+       |       - Returns: {success: false, status: 'rejected', message: '...'}
+       |     * Standard valid PAN -> VERIFIED:
+       |       - Computes pan_last4 = RIGHT(pan, 4), pan_hash = SHA-256 hex
+       |       - UPDATE producer_profiles: pan_last4 = v_last4, pan_hash = v_hash, pan_verification_status = 'verified'
+       |       - Returns: {success: true, status: 'verified', pan_last4: '234F', masked_pan: '******234F'}
+       |
+       v
+[Flutter Client UI Result Handler]
+       |
+       +---> If Verified: [Badge = Verified, Displays "PAN Verified", Shows masked_pan '******234F', clears raw PAN from memory]
+       +---> If Rejected: [Badge = Could Not Verify, Shows friendly rejection message, Button = 'Try Again', form remains editable]
+       +---> If Exception: [Sanitizes database/network error -> "Unable to complete verification at this time. Please try again."]
+       |
+       v (User taps Continue)
+[Advance to Step 5: Review & Submit Placeholder]
 
 Note on Timestamps: Client update payloads do NOT include 'updated_at'.
 Timestamps on profiles and producer_profiles are automatically set by
@@ -149,7 +196,8 @@ under SECURITY DEFINER to maintain column-level privilege boundaries (42501).
 
 5. FUTURE ONBOARDING & DASHBOARD FLOWS (PLANNED)
 ------------------------------------------------------------
-- Step 4E: Step 4 (Identity & Compliance verification workflows)
+- Step 4E3+: Aadhaar / GST / Address verification workflows
 - Step 4F: Step 5 (Review & Submit; trusted transition of onboarding_status -> 'completed')
 - Step 5: Single-active-session concurrency enforcement (app_sessions)
 - Step 6: Producer Home Dashboard & AI Studio
+
