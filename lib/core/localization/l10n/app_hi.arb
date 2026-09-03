@@ -1,0 +1,19 @@
+{
+  "@@locale": "hi",
+  "appTitle": "व्यापार सेतु",
+  "home": "होम",
+  "myProducts": "मेरे उत्पाद",
+  "addProduct": "उत्पाद जोड़ें",
+  "buyerNeeds": "खरीदारों की जरूरतें",
+  "whatBuyersWant": "खरीदार क्या चाहते हैं",
+  "myProfile": "मेरी प्रोफाइल",
+  "settings": "सेटिंग्स",
+  "welcome": "स्वागत है",
+  "continueButton": "आगे बढ़ें",
+  "back": "पीछे जाएं",
+  "save": "सहेजें",
+  "cancel": "रद्द करें",
+  "verify": "सत्यापित करें",
+  "verified": "सत्यापित",
+  "notVerified": "सत्यापित नहीं"
+}

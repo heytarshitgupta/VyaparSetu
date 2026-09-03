@@ -1,0 +1,67 @@
+{
+  "@@locale": "en",
+  "appTitle": "VyaparSetu",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Navigation item for home"
+  },
+  "myProducts": "My Products",
+  "@myProducts": {
+    "description": "Navigation item or header for producer products"
+  },
+  "addProduct": "Add Product",
+  "@addProduct": {
+    "description": "Button to add a new product"
+  },
+  "buyerNeeds": "Buyer Needs",
+  "@buyerNeeds": {
+    "description": "Navigation item for incoming buyer requirements and orders"
+  },
+  "whatBuyersWant": "What Buyers Want",
+  "@whatBuyersWant": {
+    "description": "Navigation item for market demand and high-selling craft insights"
+  },
+  "myProfile": "My Profile",
+  "@myProfile": {
+    "description": "Navigation item or header for producer profile"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Navigation item or header for app settings"
+  },
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Greeting on dashboard or home"
+  },
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Generic continue action button"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Generic back action button"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Generic save action button"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Generic cancel action button"
+  },
+  "verify": "Verify",
+  "@verify": {
+    "description": "Generic verify action button"
+  },
+  "verified": "Verified",
+  "@verified": {
+    "description": "Badge or status label for verified status"
+  },
+  "notVerified": "Not Verified",
+  "@notVerified": {
+    "description": "Badge or status label for unverified status"
+  }
+}

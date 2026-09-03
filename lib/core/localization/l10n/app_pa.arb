@@ -1,0 +1,19 @@
+{
+  "@@locale": "pa",
+  "appTitle": "ਵਪਾਰ ਸੇਤੂ",
+  "home": "ਹੋਮ",
+  "myProducts": "ਮੇਰੇ ਉਤਪਾਦ",
+  "addProduct": "ਉਤਪਾਦ ਸ਼ਾਮਲ ਕਰੋ",
+  "buyerNeeds": "ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਲੋੜਾਂ",
+  "whatBuyersWant": "ਖਰੀਦਦਾਰ ਕੀ ਚਾਹੁੰਦੇ ਹਨ",
+  "myProfile": "ਮੇਰੀ ਪ੍ਰੋਫਾਈਲ",
+  "settings": "ਸੈਟਿੰਗਾਂ",
+  "welcome": "ਜੀ ਆਇਆਂ ਨੂੰ",
+  "continueButton": "ਅੱਗੇ ਵਧੋ",
+  "back": "ਪਿੱਛੇ ਜਾਓ",
+  "save": "ਸੰਭਾਲੋ",
+  "cancel": "ਰੱਦ ਕਰੋ",
+  "verify": "ਤਸਦੀਕ ਕਰੋ",
+  "verified": "ਤਸਦੀਕਸ਼ੁਦਾ",
+  "notVerified": "ਤਸਦੀਕ ਨਹੀਂ ਹੋਇਆ"
+}

@@ -3,6 +3,7 @@ import '../../core/auth/auth_service.dart';
 import '../../core/routes/app_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../auth/services/producer_auth_service.dart';
+import '../localization/widgets/language_switcher_widget.dart';
 import '../verification/producer_verification_service.dart';
 import 'producer_onboarding_provider.dart';
 import 'steps/basic_details_step.dart';
@@ -154,6 +155,8 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          const LanguageSwitcherWidget(isCompact: true),
+          const SizedBox(width: 8),
           TextButton.icon(
             onPressed: () async {
               await AuthService.instance.signOut();

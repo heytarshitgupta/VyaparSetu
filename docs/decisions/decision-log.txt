@@ -80,7 +80,17 @@ This log records permanent architectural, design, and structural decisions made 
   * Aadhaar Verification: Replaced generic 'Coming Soon' placeholder with proper card; deferred real Aadhaar verification and zero Aadhaar collection in prototype; informational popup on tap.
   * GST Registration: Replaced placeholder with interactive Yes/No selector and 15-character GSTIN input with regex validation; deferred verification simulation; preserved 'Not Verified' status.
   * Removed Address Verification card from Identity & Compliance (Step 4) MVP UI while keeping mandatory physical location fields in Step 3 intact.
-  * Validated with 24/24 passing tests, zero analyze errors, and zero Buyer section changes.
+- Step 5A Producer Localization Foundation:
+  * Established standard Flutter gen-l10n localization architecture using ARB files (lib/core/localization/l10n/).
+  * Generated type-safe AppLocalizations with fallback to English.
+  * Supported prototype languages: English (en), Hindi (hi - Devanagari), Punjabi (pa - Gurmukhi).
+  * Built LanguageProvider with strict separation between AppLanguage (visible text) and VoiceLanguage (future TTS/voice guidance).
+- Step 5A.1 Simplified Producer User-Facing Language:
+  * Simplified user-facing navigation strings: 'Buyer Requests' -> 'Buyer Needs', 'Market Radar' -> 'What Buyers Want', 'Profile' -> 'My Profile'.
+  * Adopted low-literacy naming principle: visible labels prioritize clarity over startup/marketing jargon; internal technical module names remain separate.
+  * Updated ARB resources, regenerated AppLocalizations keys (buyerNeeds, whatBuyersWant, myProfile), and updated test assertions across English, Hindi, and Punjabi.
+
+
 
 
 
