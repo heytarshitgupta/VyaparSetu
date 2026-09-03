@@ -19,6 +19,75 @@ class ProducerOnboardingProvider extends ChangeNotifier {
   bool _isAuthPhone = false;
   String _authPhone = '';
 
+  // --------------------------------------------------------------------------
+  // STEP 2 STATE: BUSINESS / CRAFT DETAILS
+  // --------------------------------------------------------------------------
+  String _businessName = '';
+  String _craftCategory = '';
+  String _customCategory = '';
+  String _businessDescription = '';
+
+  // --------------------------------------------------------------------------
+  // STEP 3 STATE: LOCATION DETAILS
+  // --------------------------------------------------------------------------
+  String _state = '';
+  String _district = '';
+  String _city = '';
+  String _pincode = '';
+  String _address = '';
+
+  static const List<String> standardCategories = [
+    'Food & Homemade Products',
+    'Handicrafts',
+    'Handloom & Textiles',
+    'Clothing & Embroidery',
+    'Jewellery & Accessories',
+    'Woodwork',
+    'Metal Craft',
+    'Home Decor',
+    'Beauty / Personal Care',
+    'Other',
+  ];
+
+  static const List<String> indianStatesAndUTs = [
+    'Andaman and Nicobar Islands',
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chandigarh',
+    'Chhattisgarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Delhi',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jammu and Kashmir',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Ladakh',
+    'Lakshadweep',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Puducherry',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+  ];
+
   int get currentStep => _currentStep;
   bool get isSubmitting => _isSubmitting;
   bool get isLoadingProfile => _isLoadingProfile;
@@ -28,11 +97,25 @@ class ProducerOnboardingProvider extends ChangeNotifier {
   bool get isLastStep => _currentStep == totalSteps - 1;
   double get progressPercentage => (_currentStep + 1) / totalSteps;
 
+  // Step 1 Getters
   String get fullName => _fullName;
   String get contactPhone => _contactPhone;
   String get displayEmail => _displayEmail;
   bool get isAuthPhone => _isAuthPhone;
   String get authPhone => _authPhone;
+
+  // Step 2 Getters
+  String get businessName => _businessName;
+  String get craftCategory => _craftCategory;
+  String get customCategory => _customCategory;
+  String get businessDescription => _businessDescription;
+
+  // Step 3 Getters
+  String get state => _state;
+  String get district => _district;
+  String get city => _city;
+  String get pincode => _pincode;
+  String get address => _address;
 
   // Step Names & Subtitles
   static const List<Map<String, String>> stepMetadata = [
@@ -62,10 +145,11 @@ class ProducerOnboardingProvider extends ChangeNotifier {
   String get currentStepSubtitle => stepMetadata[_currentStep]['subtitle'] ?? '';
 
   // --------------------------------------------------------------------------
-  // PREFILL INITIAL DATA FROM PROFILES & AUTH.USERS
+  // PREFILL INITIAL DATA FROM PROFILES, PRODUCER_PROFILES & AUTH.USERS
   // --------------------------------------------------------------------------
   void initializeFromProfile({
     required Map<String, dynamic>? profile,
+    Map<String, dynamic>? producerProfile,
     required User? user,
   }) {
     // 1. Full Name: profile.full_name -> user metadata full_name -> empty
@@ -88,9 +172,34 @@ class ProducerOnboardingProvider extends ChangeNotifier {
       _contactPhone = (profile?['phone'] as String?)?.trim() ?? '';
     }
 
+    // 4. Step 2 Business / Craft Details
+    _businessName = (producerProfile?['business_name'] as String?)?.trim() ?? '';
+    _businessDescription = (producerProfile?['bio'] as String?)?.trim() ?? '';
+
+    final existingCategory = (producerProfile?['craft_category'] as String?)?.trim() ?? '';
+    if (existingCategory.isNotEmpty) {
+      if (standardCategories.contains(existingCategory) && existingCategory != 'Other') {
+        _craftCategory = existingCategory;
+        _customCategory = '';
+      } else {
+        _craftCategory = 'Other';
+        _customCategory = existingCategory;
+      }
+    }
+
+    // 5. Step 3 Location Details
+    _state = (producerProfile?['state'] as String?)?.trim() ?? '';
+    _district = (producerProfile?['district'] as String?)?.trim() ?? '';
+    _city = (producerProfile?['city'] as String?)?.trim() ?? '';
+    _pincode = (producerProfile?['pincode'] as String?)?.trim() ?? '';
+    _address = (producerProfile?['address'] as String?)?.trim() ?? '';
+
     notifyListeners();
   }
 
+  // --------------------------------------------------------------------------
+  // STEP 1 SETTERS
+  // --------------------------------------------------------------------------
   void setFullName(String value) {
     _fullName = value;
     if (_errorMessage != null) {
@@ -101,6 +210,87 @@ class ProducerOnboardingProvider extends ChangeNotifier {
 
   void setContactPhone(String value) {
     _contactPhone = value;
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  // --------------------------------------------------------------------------
+  // STEP 2 SETTERS
+  // --------------------------------------------------------------------------
+  void setBusinessName(String value) {
+    _businessName = value;
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  void setCraftCategory(String value) {
+    _craftCategory = value;
+    if (value != 'Other') {
+      _customCategory = '';
+    }
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  void setCustomCategory(String value) {
+    _customCategory = value;
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  void setBusinessDescription(String value) {
+    _businessDescription = value;
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  // --------------------------------------------------------------------------
+  // STEP 3 SETTERS
+  // --------------------------------------------------------------------------
+  void setStateValue(String value) {
+    _state = value;
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  void setDistrict(String value) {
+    _district = value;
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  void setCity(String value) {
+    _city = value;
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  void setPincode(String value) {
+    _pincode = value;
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  void setAddress(String value) {
+    _address = value;
     if (_errorMessage != null) {
       _errorMessage = null;
     }
@@ -133,6 +323,88 @@ class ProducerOnboardingProvider extends ChangeNotifier {
       if (digitsOnly.length != 10 || !RegExp(r'^[6-9]\d{9}$').hasMatch(digitsOnly)) {
         return 'Please enter a valid 10-digit Indian mobile number.';
       }
+    }
+
+    return null;
+  }
+
+  // --------------------------------------------------------------------------
+  // STEP 2 VALIDATION HELPER
+  // --------------------------------------------------------------------------
+  String? validateStep2() {
+    final trimmedBusiness = _businessName.trim();
+    if (trimmedBusiness.isEmpty) {
+      return 'Please enter your business or workshop name.';
+    }
+    if (trimmedBusiness.length < 2) {
+      return 'Business name must be at least 2 characters.';
+    }
+    if (trimmedBusiness.length > 120) {
+      return 'Business name cannot exceed 120 characters.';
+    }
+
+    if (_craftCategory.isEmpty) {
+      return 'Please select a primary craft or product category.';
+    }
+
+    if (_craftCategory == 'Other') {
+      final trimmedCustom = _customCategory.trim();
+      if (trimmedCustom.isEmpty) {
+        return 'Please specify your craft category.';
+      }
+      if (trimmedCustom.length < 2) {
+        return 'Custom category must be at least 2 characters.';
+      }
+      if (trimmedCustom.length > 60) {
+        return 'Custom category cannot exceed 60 characters.';
+      }
+    }
+
+    if (_businessDescription.trim().length > 500) {
+      return 'Short description cannot exceed 500 characters.';
+    }
+
+    return null;
+  }
+
+  // --------------------------------------------------------------------------
+  // STEP 3 VALIDATION HELPER
+  // --------------------------------------------------------------------------
+  String? validateStep3() {
+    if (_state.trim().isEmpty) {
+      return 'Please select your state or union territory.';
+    }
+
+    final trimmedDistrict = _district.trim();
+    if (trimmedDistrict.isEmpty) {
+      return 'Please enter your district.';
+    }
+    if (trimmedDistrict.length < 2 || trimmedDistrict.length > 100) {
+      return 'District must be between 2 and 100 characters.';
+    }
+
+    final trimmedCity = _city.trim();
+    if (trimmedCity.isEmpty) {
+      return 'Please enter your city, town, or village.';
+    }
+    if (trimmedCity.length < 2 || trimmedCity.length > 100) {
+      return 'City or village must be between 2 and 100 characters.';
+    }
+
+    final trimmedPincode = _pincode.trim();
+    if (trimmedPincode.isEmpty) {
+      return 'Please enter your 6-digit postal PIN code.';
+    }
+    if (!RegExp(r'^[1-9][0-9]{5}$').hasMatch(trimmedPincode)) {
+      return 'Please enter a valid 6-digit Indian PIN code (cannot start with 0).';
+    }
+
+    final trimmedAddress = _address.trim();
+    if (trimmedAddress.isEmpty) {
+      return 'Please enter your workshop or business address.';
+    }
+    if (trimmedAddress.length < 5 || trimmedAddress.length > 300) {
+      return 'Address must be between 5 and 300 characters.';
     }
 
     return null;
@@ -173,8 +445,133 @@ class ProducerOnboardingProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
+      if (kDebugMode) {
+        if (e is PostgrestException) {
+          debugPrint('[ProducerOnboarding] PostgrestException on Step 1 save: code=${e.code}, message=${e.message}, hint=${e.hint}, details=${e.details}');
+        } else {
+          debugPrint('[ProducerOnboarding] Exception on Step 1 save: $e');
+        }
+      }
       _isSubmitting = false;
       _errorMessage = 'Failed to save basic details. Please check your connection and try again.';
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // STEP 2 PERSISTENCE: Save to public.producer_profiles
+  // --------------------------------------------------------------------------
+  Future<void> Function({
+    required String businessName,
+    required String craftCategory,
+    String? bio,
+  })? step2Saver;
+
+  Future<bool> saveStep2() async {
+    final validationError = validateStep2();
+    if (validationError != null) {
+      _errorMessage = validationError;
+      notifyListeners();
+      return false;
+    }
+
+    _isSubmitting = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final finalCategory = _craftCategory == 'Other'
+        ? _customCategory.trim()
+        : _craftCategory.trim();
+
+    try {
+      if (step2Saver != null) {
+        await step2Saver!(
+          businessName: _businessName.trim(),
+          craftCategory: finalCategory,
+          bio: _businessDescription.trim(),
+        );
+      } else {
+        await ProducerAuthService.instance.updateBusinessProfile(
+          businessName: _businessName.trim(),
+          craftCategory: finalCategory,
+          bio: _businessDescription.trim(),
+        );
+      }
+
+      _isSubmitting = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        if (e is PostgrestException) {
+          debugPrint('[ProducerOnboarding] PostgrestException on Step 2 save: code=${e.code}, message=${e.message}, hint=${e.hint}, details=${e.details}');
+        } else {
+          debugPrint('[ProducerOnboarding] Exception on Step 2 save: $e');
+        }
+      }
+      _isSubmitting = false;
+      _errorMessage = 'Failed to save business details. Please check your connection and try again.';
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // STEP 3 PERSISTENCE: Save to public.producer_profiles
+  // --------------------------------------------------------------------------
+  Future<void> Function({
+    required String state,
+    required String district,
+    required String city,
+    required String pincode,
+    required String address,
+  })? step3Saver;
+
+  Future<bool> saveStep3() async {
+    final validationError = validateStep3();
+    if (validationError != null) {
+      _errorMessage = validationError;
+      notifyListeners();
+      return false;
+    }
+
+    _isSubmitting = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      if (step3Saver != null) {
+        await step3Saver!(
+          state: _state.trim(),
+          district: _district.trim(),
+          city: _city.trim(),
+          pincode: _pincode.trim(),
+          address: _address.trim(),
+        );
+      } else {
+        await ProducerAuthService.instance.updateLocationProfile(
+          state: _state.trim(),
+          district: _district.trim(),
+          city: _city.trim(),
+          pincode: _pincode.trim(),
+          address: _address.trim(),
+        );
+      }
+
+      _isSubmitting = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        if (e is PostgrestException) {
+          debugPrint('[ProducerOnboarding] PostgrestException on Step 3 save: code=${e.code}, message=${e.message}, hint=${e.hint}, details=${e.details}');
+        } else {
+          debugPrint('[ProducerOnboarding] Exception on Step 3 save: $e');
+        }
+      }
+      _isSubmitting = false;
+      _errorMessage = 'Failed to save location details. Please check your connection and try again.';
       notifyListeners();
       return false;
     }

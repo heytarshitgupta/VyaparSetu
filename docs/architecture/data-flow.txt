@@ -87,7 +87,7 @@ IMPLEMENTED AND LIVE VERIFIED:
              [Auto Sign Out] ---> [Display: "Admin accounts cannot access Producer portal."]
 
 
-4. PRODUCER ONBOARDING DATA FLOW (STEP 4B1 IMPLEMENTED)
+4. PRODUCER ONBOARDING DATA FLOW (STEPS 4B1, 4C, & 4D IMPLEMENTED)
 ------------------------------------------------------------
 [Step 1: Basic Details Form]
        |
@@ -104,12 +104,52 @@ IMPLEMENTED AND LIVE VERIFIED:
        +---> If Success: [Advance to Step 2: Craft & Business]
        |
        +---> If Failure: [Stay on Step 1, show user-friendly error]
+       |
+       v
+[Step 2: Business / Craft Details Form]
+       |
+       +---> Business / Workshop Name (prefilled from producer_profiles.business_name)
+       +---> Craft Category (ChoiceChips; custom input if 'Other'; prefilled from producer_profiles.craft_category)
+       +---> Short Description (prefilled from producer_profiles.bio; optional, max 500 chars)
+       |
+       v (User taps Continue)
+[Validation: 2-120 chars business name, category selected, 2-60 chars custom category if 'Other', max 500 chars bio]
+       |
+       v
+[ProducerAuthService.updateBusinessProfile] ---> [UPDATE public.producer_profiles (business_name, craft_category, bio)]
+       |
+       +---> If Success: [Advance to Step 3: Location Details]
+       |
+       +---> If Failure: [Stay on Step 2, show user-friendly error]
+       |
+       v
+[Step 3: Location Details Form]
+       |
+       +---> State (Dropdown; standard 36 Indian states & UTs; prefilled from producer_profiles.state)
+       +---> District (prefilled from producer_profiles.district)
+       +---> City / Village (prefilled from producer_profiles.city)
+       +---> Pincode (prefilled from producer_profiles.pincode)
+       +---> Workshop Address (prefilled from producer_profiles.address)
+       |
+       v (User taps Continue)
+[Validation: State selected, 2-100 chars district, 2-100 chars city, ^[1-9][0-9]{5}$ pincode, 5-300 chars address]
+       |
+       v
+[ProducerAuthService.updateLocationProfile] ---> [UPDATE public.producer_profiles (state, district, city, pincode, address)]
+       |
+       +---> If Success: [Advance to Step 4: Identity & Compliance]
+       |
+       +---> If Failure: [Stay on Step 3, show user-friendly error]
+
+Note on Timestamps: Client update payloads do NOT include 'updated_at'.
+Timestamps on profiles and producer_profiles are automatically set by
+database triggers (trg_profiles_updated_at, trg_producer_profiles_updated_at)
+under SECURITY DEFINER to maintain column-level privilege boundaries (42501).
 
 
 5. FUTURE ONBOARDING & DASHBOARD FLOWS (PLANNED)
 ------------------------------------------------------------
-- Step 4B2: Step 2 (Craft & Business) & Step 3 (Location) forms
-- Step 4B3: Step 4 (Identity & Compliance verification workflows)
-- Step 4B4: Step 5 (Review & Submit; trusted transition of onboarding_status -> 'completed')
+- Step 4E: Step 4 (Identity & Compliance verification workflows)
+- Step 4F: Step 5 (Review & Submit; trusted transition of onboarding_status -> 'completed')
 - Step 5: Single-active-session concurrency enforcement (app_sessions)
 - Step 6: Producer Home Dashboard & AI Studio

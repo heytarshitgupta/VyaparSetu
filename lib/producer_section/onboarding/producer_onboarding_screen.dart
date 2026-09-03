@@ -5,17 +5,33 @@ import '../../core/theme/app_colors.dart';
 import '../auth/services/producer_auth_service.dart';
 import 'producer_onboarding_provider.dart';
 import 'steps/basic_details_step.dart';
+import 'steps/business_craft_step.dart';
+import 'steps/location_details_step.dart';
 import 'widgets/onboarding_navigation_buttons.dart';
 import 'widgets/onboarding_progress_header.dart';
 
 class ProducerOnboardingScreen extends StatefulWidget {
   final ProducerOnboardingProvider? provider;
   final Future<void> Function({required String fullName, String? phone})? step1Saver;
+  final Future<void> Function({
+    required String businessName,
+    required String craftCategory,
+    String? bio,
+  })? step2Saver;
+  final Future<void> Function({
+    required String state,
+    required String district,
+    required String city,
+    required String pincode,
+    required String address,
+  })? step3Saver;
 
   const ProducerOnboardingScreen({
     super.key,
     this.provider,
     this.step1Saver,
+    this.step2Saver,
+    this.step3Saver,
   });
 
   @override
@@ -32,6 +48,12 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
     if (widget.step1Saver != null) {
       _provider.step1Saver = widget.step1Saver;
     }
+    if (widget.step2Saver != null) {
+      _provider.step2Saver = widget.step2Saver;
+    }
+    if (widget.step3Saver != null) {
+      _provider.step3Saver = widget.step3Saver;
+    }
     _provider.addListener(_onProviderUpdate);
     _loadInitialData();
   }
@@ -40,8 +62,13 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
     try {
       final user = AuthService.instance.currentUser;
       final profile = await ProducerAuthService.instance.fetchProfile();
+      final producerProfile = await ProducerAuthService.instance.fetchProducerProfile();
       if (mounted) {
-        _provider.initializeFromProfile(profile: profile, user: user);
+        _provider.initializeFromProfile(
+          profile: profile,
+          producerProfile: producerProfile,
+          user: user,
+        );
       }
     } catch (_) {
       // Fallback: provider maintains default empty state
@@ -78,6 +105,18 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
     if (_provider.currentStep == 0) {
       // Step 1: Validate and persist to public.profiles
       final saved = await _provider.saveStep1();
+      if (saved) {
+        _provider.nextStep();
+      }
+    } else if (_provider.currentStep == 1) {
+      // Step 2: Validate and persist to public.producer_profiles
+      final saved = await _provider.saveStep2();
+      if (saved) {
+        _provider.nextStep();
+      }
+    } else if (_provider.currentStep == 2) {
+      // Step 3: Validate and persist to public.producer_profiles
+      final saved = await _provider.saveStep3();
       if (saved) {
         _provider.nextStep();
       }
@@ -173,29 +212,9 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
       case 0:
         return BasicDetailsStep(provider: _provider);
       case 1:
-        return _buildStepCard(
-          icon: Icons.storefront_outlined,
-          title: 'Business & Craft Category',
-          description:
-              'Select your artisanal craft specializations, workshop name, and primary product materials.',
-          fields: [
-            _buildInfoTile('Craft Category', 'Handloom Textiles / Pottery / Woodcraft'),
-            _buildInfoTile('Workshop Name', 'e.g. Ramesh Handloom Creations'),
-            _buildInfoTile('Experience', '5+ Years of Craftsmanship'),
-          ],
-        );
+        return BusinessCraftStep(provider: _provider);
       case 2:
-        return _buildStepCard(
-          icon: Icons.location_on_outlined,
-          title: 'Workshop Location',
-          description:
-              'Enter your workshop or unit address so verified commercial buyers can calculate logistics and shipping.',
-          fields: [
-            _buildInfoTile('State & District', 'Rajasthan / Jaipur'),
-            _buildInfoTile('City / Village', 'Sanganer'),
-            _buildInfoTile('Pincode', '302029'),
-          ],
-        );
+        return LocationDetailsStep(provider: _provider);
       case 3:
         return _buildStepCard(
           icon: Icons.verified_user_outlined,

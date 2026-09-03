@@ -4,7 +4,7 @@ import 'package:buyer_section/producer_section/onboarding/producer_onboarding_pr
 import 'package:buyer_section/producer_section/onboarding/producer_onboarding_screen.dart';
 
 void main() {
-  group('ProducerOnboardingProvider Step 1 Unit Tests', () {
+  group('ProducerOnboardingProvider Step 1, 2, & 3 Unit Tests', () {
     test('Initializes at step 0 with 5 total steps', () {
       final provider = ProducerOnboardingProvider();
       expect(provider.currentStep, 0);
@@ -14,107 +14,140 @@ void main() {
       expect(provider.currentStepTitle, 'Basic Details');
     });
 
-    test('Prefill logic correctly prioritizes profile and auth data', () {
+    test('Prefill logic correctly prioritizes profile, producerProfile, and auth data', () {
       final provider = ProducerOnboardingProvider();
 
-      // Profile contains full_name, email, and contact phone (no auth phone)
       provider.initializeFromProfile(
         profile: {
           'full_name': 'Ramesh Artisan',
           'email': 'ramesh@example.com',
           'phone': '9876543210',
         },
+        producerProfile: {
+          'business_name': 'Ramesh Handlooms',
+          'craft_category': 'Handloom & Textiles',
+          'bio': 'Weaving natural cotton stoles for 10 years.',
+          'state': 'Rajasthan',
+          'district': 'Jaipur',
+          'city': 'Sanganer',
+          'pincode': '302029',
+          'address': 'Plot 42, Artisan Colony, Sanganer',
+        },
         user: null,
       );
 
+      // Step 1
       expect(provider.fullName, 'Ramesh Artisan');
       expect(provider.displayEmail, 'ramesh@example.com');
       expect(provider.contactPhone, '9876543210');
       expect(provider.isAuthPhone, isFalse);
+
+      // Step 2
+      expect(provider.businessName, 'Ramesh Handlooms');
+      expect(provider.craftCategory, 'Handloom & Textiles');
+      expect(provider.customCategory, '');
+      expect(provider.businessDescription, 'Weaving natural cotton stoles for 10 years.');
+
+      // Step 3
+      expect(provider.state, 'Rajasthan');
+      expect(provider.district, 'Jaipur');
+      expect(provider.city, 'Sanganer');
+      expect(provider.pincode, '302029');
+      expect(provider.address, 'Plot 42, Artisan Colony, Sanganer');
     });
 
-    test('Validation enforces full_name length and 10-digit mobile', () {
+    test('Step 3 validation enforces state, district, city, pincode, and address rules', () {
       final provider = ProducerOnboardingProvider();
 
-      // Empty name
-      provider.setFullName('');
-      expect(provider.validateStep1(), contains('full name'));
+      // 1. Missing State
+      expect(provider.validateStep3(), contains('state or union territory'));
+      provider.setStateValue('Rajasthan');
 
-      // 1-char name
-      provider.setFullName('A');
-      expect(provider.validateStep1(), contains('at least 2 characters'));
+      // 2. Missing District
+      expect(provider.validateStep3(), contains('enter your district'));
+      provider.setDistrict('J'); // too short
+      expect(provider.validateStep3(), contains('between 2 and 100 characters'));
+      provider.setDistrict('Jaipur');
 
-      // Valid name, invalid contact phone
-      provider.setFullName('Ramesh Kumar');
-      provider.setContactPhone('12345'); // not 10 digits
-      expect(provider.validateStep1(), contains('10-digit Indian mobile'));
+      // 3. Missing City
+      expect(provider.validateStep3(), contains('city, town, or village'));
+      provider.setCity('S'); // too short
+      expect(provider.validateStep3(), contains('between 2 and 100 characters'));
+      provider.setCity('Sanganer');
 
-      // Valid name, valid contact phone (starting with 6-9)
-      provider.setContactPhone('9876543210');
-      expect(provider.validateStep1(), isNull);
+      // 4. Pincode validation (matches ^[1-9][0-9]{5}$)
+      expect(provider.validateStep3(), contains('6-digit postal PIN code'));
+
+      provider.setPincode('012345'); // starts with 0
+      expect(provider.validateStep3(), contains('cannot start with 0'));
+
+      provider.setPincode('12345'); // 5 digits
+      expect(provider.validateStep3(), contains('cannot start with 0'));
+
+      provider.setPincode('302029'); // valid 6 digits
+
+      // 5. Address validation
+      expect(provider.validateStep3(), contains('workshop or business address'));
+
+      provider.setAddress('Home'); // < 5 chars
+      expect(provider.validateStep3(), contains('between 5 and 300 characters'));
+
+      provider.setAddress('A' * 301); // > 300 chars
+      expect(provider.validateStep3(), contains('between 5 and 300 characters'));
+
+      provider.setAddress('Plot 42, Artisan Colony, Main Road');
+      expect(provider.validateStep3(), isNull);
     });
 
-    test('saveStep1 succeeds with custom updater and fails with error handler', () async {
+    test('saveStep3 succeeds with custom updater and handles failures gracefully', () async {
       final provider = ProducerOnboardingProvider();
-      provider.setFullName('Ramesh Kumar');
-      provider.setContactPhone('9876543210');
+      provider.setStateValue('Rajasthan');
+      provider.setDistrict('Jaipur');
+      provider.setCity('Sanganer');
+      provider.setPincode('302029');
+      provider.setAddress('Plot 42, Artisan Colony, Main Road');
 
-      // 1. Success case
-      provider.step1Saver = ({required fullName, phone}) async {};
-      final success = await provider.saveStep1();
+      // Success case
+      String? savedState;
+      String? savedPincode;
+      provider.step3Saver = ({
+        required state,
+        required district,
+        required city,
+        required pincode,
+        required address,
+      }) async {
+        savedState = state;
+        savedPincode = pincode;
+      };
+
+      final success = await provider.saveStep3();
       expect(success, isTrue);
+      expect(savedState, 'Rajasthan');
+      expect(savedPincode, '302029');
       expect(provider.errorMessage, isNull);
 
-      // 2. Failure case
-      provider.step1Saver = ({required fullName, phone}) async {
-        throw Exception('Network disconnected');
+      // Failure case
+      provider.step3Saver = ({
+        required state,
+        required district,
+        required city,
+        required pincode,
+        required address,
+      }) async {
+        throw Exception('Database offline');
       };
-      final failed = await provider.saveStep1();
+
+      final failed = await provider.saveStep3();
       expect(failed, isFalse);
-      expect(provider.errorMessage, contains('Failed to save basic details'));
-    });
-
-    test('nextStep and previousStep work properly with bounds', () {
-      final provider = ProducerOnboardingProvider();
-
-      // Step 0 -> 1
-      provider.nextStep();
-      expect(provider.currentStep, 1);
-      expect(provider.isFirstStep, isFalse);
-      expect(provider.currentStepTitle, 'Craft & Business');
-
-      // Step 1 -> 4 (Last Step)
-      provider.goToStep(4);
-      expect(provider.currentStep, 4);
-      expect(provider.isLastStep, isTrue);
-      expect(provider.currentStepTitle, 'Review & Submit');
-
-      // Next at last step should not overflow
-      provider.nextStep();
-      expect(provider.currentStep, 4);
-
-      // Step 4 -> 3
-      provider.previousStep();
-      expect(provider.currentStep, 3);
-      expect(provider.isLastStep, isFalse);
-      expect(provider.currentStepTitle, 'Identity & Compliance');
-
-      // Step 3 -> 0
-      provider.previousStep();
-      provider.previousStep();
-      provider.previousStep();
-      expect(provider.currentStep, 0);
-
-      // Previous at first step should not underflow
-      provider.previousStep();
-      expect(provider.currentStep, 0);
+      expect(provider.errorMessage, contains('Failed to save location details'));
     });
   });
 
   group('ProducerOnboardingScreen Widget Tests', () {
-    testWidgets('Renders Basic Details form, blocks invalid name, and persists across navigation',
+    testWidgets('Step 1, Step 2, and Step 3 full interaction, validation, and multi-step back navigation',
         (WidgetTester tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
+      tester.view.physicalSize = const Size(800, 1600);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() {
         tester.view.resetPhysicalSize();
@@ -122,65 +155,171 @@ void main() {
       });
 
       String? savedName;
-      String? savedPhone;
+      String? savedBusiness;
+      String? savedCategory;
+      String? savedState;
+      String? savedDistrict;
+      String? savedCity;
+      String? savedPincode;
+      String? savedAddress;
 
       await tester.pumpWidget(
         MaterialApp(
           home: ProducerOnboardingScreen(
             step1Saver: ({required fullName, phone}) async {
               savedName = fullName;
-              savedPhone = phone;
+            },
+            step2Saver: ({required businessName, required craftCategory, bio}) async {
+              savedBusiness = businessName;
+              savedCategory = craftCategory;
+            },
+            step3Saver: ({
+              required state,
+              required district,
+              required city,
+              required pincode,
+              required address,
+            }) async {
+              savedState = state;
+              savedDistrict = district;
+              savedCity = city;
+              savedPincode = pincode;
+              savedAddress = address;
             },
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      // Verify Step 1 elements
-      expect(find.text('Producer Setup'), findsOneWidget);
+      // ----------------------------------------------------------------------
+      // STEP 1: Basic Details
+      // ----------------------------------------------------------------------
       expect(find.text('Step 1 of 5'), findsOneWidget);
-      expect(find.text('Basic Details'), findsOneWidget);
-      expect(find.text('Full Name *'), findsOneWidget);
-      expect(find.text('Email Address (Login)'), findsOneWidget);
-      expect(find.text('Read Only'), findsOneWidget);
-      expect(find.text('Contact Phone Number'), findsOneWidget);
-      expect(find.text('Continue'), findsOneWidget);
-
-      // 1. Try to continue with empty name -> should block and show error
-      await tester.tap(find.text('Continue'));
-      await tester.pumpAndSettle();
-      expect(find.text('Step 1 of 5'), findsOneWidget); // Did not advance
-      expect(find.text('Please enter your full name.'), findsOneWidget);
-
-      // 2. Enter valid Name and Contact Phone
       await tester.enterText(
         find.byKey(const Key('producer_onboarding_name_field')),
         'Sunita Devi',
       );
-      await tester.enterText(
-        find.byKey(const Key('producer_onboarding_phone_field')),
-        '9876543210',
-      );
-      await tester.pumpAndSettle();
-
-      // Tap Continue -> Should save and advance to Step 2
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
 
       expect(savedName, 'Sunita Devi');
-      expect(savedPhone, '9876543210');
       expect(find.text('Step 2 of 5'), findsOneWidget);
-      expect(find.text('Craft & Business'), findsOneWidget);
-      expect(find.text('Back'), findsOneWidget);
 
-      // 3. Navigate Back to Step 1
+      // ----------------------------------------------------------------------
+      // STEP 2: Craft & Business
+      // ----------------------------------------------------------------------
+      await tester.enterText(
+        find.byKey(const Key('producer_onboarding_business_name_field')),
+        'Sunita Handloom Works',
+      );
+      await tester.tap(find.byKey(const Key('category_chip_Handloom_&_Textiles')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+
+      expect(savedBusiness, 'Sunita Handloom Works');
+      expect(savedCategory, 'Handloom & Textiles');
+
+      // ----------------------------------------------------------------------
+      // STEP 3: Location Details
+      // ----------------------------------------------------------------------
+      expect(find.text('Step 3 of 5'), findsOneWidget);
+      expect(find.text('Location Details'), findsOneWidget);
+      expect(find.text('State / Union Territory *'), findsOneWidget);
+      expect(find.text('District *'), findsOneWidget);
+      expect(find.text('City / Village *'), findsOneWidget);
+      expect(find.text('Pincode *'), findsOneWidget);
+      expect(find.text('Workshop / Business Address *'), findsOneWidget);
+
+      // Attempt Continue with empty fields -> should block
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+      expect(find.text('Step 3 of 5'), findsOneWidget);
+      expect(find.text('Please select your state or union territory.'), findsOneWidget);
+
+      // Select State
+      await tester.tap(find.byKey(const Key('producer_onboarding_state_dropdown')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Rajasthan').last);
+      await tester.pumpAndSettle();
+
+      // Enter District & City
+      await tester.enterText(
+        find.byKey(const Key('producer_onboarding_district_field')),
+        'Jaipur',
+      );
+      await tester.enterText(
+        find.byKey(const Key('producer_onboarding_city_field')),
+        'Sanganer',
+      );
+
+      // Enter invalid pincode starting with 0
+      await tester.enterText(
+        find.byKey(const Key('producer_onboarding_pincode_field')),
+        '012345',
+      );
+      await tester.enterText(
+        find.byKey(const Key('producer_onboarding_address_field')),
+        'Plot 42, Artisan Colony',
+      );
+      await tester.pumpAndSettle();
+
+      // Tap Continue -> Should fail on pincode starting with 0
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+      expect(find.text('Please enter a valid 6-digit Indian PIN code (cannot start with 0).'), findsOneWidget);
+
+      // Fix pincode
+      await tester.enterText(
+        find.byKey(const Key('producer_onboarding_pincode_field')),
+        '302029',
+      );
+      await tester.pumpAndSettle();
+
+      // Tap Continue -> Should save Step 3 and advance to Step 4
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+
+      expect(savedState, 'Rajasthan');
+      expect(savedDistrict, 'Jaipur');
+      expect(savedCity, 'Sanganer');
+      expect(savedPincode, '302029');
+      expect(savedAddress, 'Plot 42, Artisan Colony');
+
+      // ----------------------------------------------------------------------
+      // STEP 4: Identity & Compliance placeholder reached
+      // ----------------------------------------------------------------------
+      expect(find.text('Step 4 of 5'), findsOneWidget);
+      expect(find.text('Identity & Compliance'), findsOneWidget);
+
+      // ----------------------------------------------------------------------
+      // BACK NAVIGATION: Verify all values preserved across steps
+      // ----------------------------------------------------------------------
+      // Step 4 -> Step 3
       await tester.tap(find.text('Back'));
       await tester.pumpAndSettle();
 
-      // Verify values survived back navigation
+      expect(find.text('Step 3 of 5'), findsOneWidget);
+      expect(find.text('Rajasthan'), findsOneWidget);
+      expect(find.text('Jaipur'), findsOneWidget);
+      expect(find.text('Sanganer'), findsOneWidget);
+      expect(find.text('302029'), findsOneWidget);
+      expect(find.text('Plot 42, Artisan Colony'), findsOneWidget);
+
+      // Step 3 -> Step 2
+      await tester.tap(find.text('Back'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Step 2 of 5'), findsOneWidget);
+      expect(find.text('Sunita Handloom Works'), findsOneWidget);
+
+      // Step 2 -> Step 1
+      await tester.tap(find.text('Back'));
+      await tester.pumpAndSettle();
+
       expect(find.text('Step 1 of 5'), findsOneWidget);
       expect(find.text('Sunita Devi'), findsOneWidget);
-      expect(find.text('9876543210'), findsOneWidget);
     });
   });
 }

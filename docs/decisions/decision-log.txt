@@ -40,3 +40,8 @@ This log records permanent architectural, design, and structural decisions made 
   * Step 1 (Basic Details) UI implemented (BasicDetailsStep) with prefilling from public.profiles and auth.users.
   * Source of truth: Supabase Auth is authoritative for email (read-only) and verified phone (read-only). If no auth phone exists, public.profiles.phone is treated strictly as an editable contact phone (10-digit Indian mobile validation) rather than verified authentication.
   * Full Name (2–120 chars) and contact phone are persisted to public.profiles before step progression.
+- Producer Business and Location Onboarding Milestone (Step 4C & 4D Finalized):
+  * Step 2 (Craft & Business Details) implemented: Business/Workshop Name (2–120 chars), 10 single-choice craft category chips with icons, dynamic 'Other' custom category entry (2–60 chars), and optional short bio (max 500 chars with live counter).
+  * Step 3 (Location Details) implemented: State dropdown with 36 Indian states & UTs, District (2–100 chars), City/Village (2–100 chars), strict Pincode matching database constraint chk_producer_pincode (^[1-9][0-9]{5}$), and multi-line Address (5–300 chars).
+  * Column Privilege Guard (42501 Resolution): Confirmed client update payloads must omit 'updated_at' because column UPDATE privilege is deliberately restricted to user-editable fields in Migration 001. Timestamp updates are handled strictly by database triggers trg_profiles_updated_at and trg_producer_profiles_updated_at.
+

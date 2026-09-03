@@ -85,14 +85,57 @@ class ProducerAuthService {
 
     final data = <String, dynamic>{
       'full_name': fullName.trim(),
-      'updated_at': DateTime.now().toIso8601String(),
     };
 
     if (phone != null) {
-      data['phone'] = phone.trim();
+      data['phone'] = phone.trim().isNotEmpty ? phone.trim() : null;
     }
 
     await _client.from('profiles').update(data).eq('id', user.id);
+  }
+
+  /// Updates public.producer_profiles (business_name, craft_category, bio) for the current user.
+  Future<void> updateBusinessProfile({
+    required String businessName,
+    required String craftCategory,
+    String? bio,
+  }) async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw Exception('User is not authenticated.');
+    }
+
+    final data = <String, dynamic>{
+      'business_name': businessName.trim(),
+      'craft_category': craftCategory.trim(),
+      'bio': bio != null && bio.trim().isNotEmpty ? bio.trim() : null,
+    };
+
+    await _client.from('producer_profiles').update(data).eq('id', user.id);
+  }
+
+  /// Updates public.producer_profiles (state, district, city, pincode, address) for the current user.
+  Future<void> updateLocationProfile({
+    required String state,
+    required String district,
+    required String city,
+    required String pincode,
+    required String address,
+  }) async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw Exception('User is not authenticated.');
+    }
+
+    final data = <String, dynamic>{
+      'state': state.trim(),
+      'district': district.trim(),
+      'city': city.trim(),
+      'pincode': pincode.trim(),
+      'address': address.trim(),
+    };
+
+    await _client.from('producer_profiles').update(data).eq('id', user.id);
   }
 
   /// Validates that the authenticated user possesses the Producer role and
