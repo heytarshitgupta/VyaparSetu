@@ -762,5 +762,129 @@
   "signOutAction": "Sign Out",
   "@signOutAction": {
     "description": "Sign out button label"
+  },
+  "myProductsSubtitle": "Manage the products you make and sell",
+  "@myProductsSubtitle": {
+    "description": "Subtitle for My Products header"
+  },
+  "filterAll": "All",
+  "@filterAll": {
+    "description": "Filter tab for all products"
+  },
+  "filterActive": "Active",
+  "@filterActive": {
+    "description": "Filter tab for active products"
+  },
+  "filterDraft": "Draft",
+  "@filterDraft": {
+    "description": "Filter tab for draft products"
+  },
+  "filterHidden": "Hidden",
+  "@filterHidden": {
+    "description": "Filter tab for hidden products"
+  },
+  "statusActive": "Active",
+  "@statusActive": {
+    "description": "Status badge for active products"
+  },
+  "statusDraft": "Draft",
+  "@statusDraft": {
+    "description": "Status badge for draft products"
+  },
+  "statusHidden": "Hidden",
+  "@statusHidden": {
+    "description": "Status badge for hidden products"
+  },
+  "priceNotSet": "Price not set",
+  "@priceNotSet": {
+    "description": "Label when product price is not specified"
+  },
+  "draftNeedsCompletion": "Needs price or details",
+  "@draftNeedsCompletion": {
+    "description": "Indicator on draft cards that product details are incomplete"
+  },
+  "noActiveProductsTitle": "No active products",
+  "@noActiveProductsTitle": {
+    "description": "Title when active filter has zero results"
+  },
+  "noActiveProductsSubtitle": "Products ready for listing will appear here",
+  "@noActiveProductsSubtitle": {
+    "description": "Subtitle when active filter has zero results"
+  },
+  "noDraftProductsTitle": "No draft products",
+  "@noDraftProductsTitle": {
+    "description": "Title when draft filter has zero results"
+  },
+  "noDraftProductsSubtitle": "Products that still need details will appear here",
+  "@noDraftProductsSubtitle": {
+    "description": "Subtitle when draft filter has zero results"
+  },
+  "noHiddenProductsTitle": "No hidden products",
+  "@noHiddenProductsTitle": {
+    "description": "Title when hidden filter has zero results"
+  },
+  "noHiddenProductsSubtitle": "Products you temporarily hide will appear here",
+  "@noHiddenProductsSubtitle": {
+    "description": "Subtitle when hidden filter has zero results"
+  },
+  "showAllProducts": "Show All Products",
+  "@showAllProducts": {
+    "description": "Button to clear filters and view all products"
+  },
+  "unableToLoadProducts": "We couldn't load your products",
+  "@unableToLoadProducts": {
+    "description": "Error title when product loading fails"
+  },
+  "unableToLoadSubtitle": "Please check your connection and try again",
+  "@unableToLoadSubtitle": {
+    "description": "Error subtitle when product loading fails"
+  },
+  "notAuthenticatedMessage": "Please sign in to view your products",
+  "@notAuthenticatedMessage": {
+    "description": "Error message when user is not authenticated"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button label"
+  },
+  "hideAction": "Hide",
+  "@hideAction": {
+    "description": "Action button to hide a product"
+  },
+  "showAction": "Show",
+  "@showAction": {
+    "description": "Action button to activate/show a product"
+  },
+  "deleteAction": "Delete",
+  "@deleteAction": {
+    "description": "Action button to delete a product"
+  },
+  "deleteProductTitle": "Delete Product?",
+  "@deleteProductTitle": {
+    "description": "Title of delete confirmation dialog"
+  },
+  "deleteProductConfirmation": "Are you sure you want to delete this product? This action cannot be undone.",
+  "@deleteProductConfirmation": {
+    "description": "Body message of delete confirmation dialog"
+  },
+  "productHiddenSuccess": "Product hidden",
+  "@productHiddenSuccess": {
+    "description": "Feedback message when product is hidden"
+  },
+  "productActivatedSuccess": "Product marked active",
+  "@productActivatedSuccess": {
+    "description": "Feedback message when product is activated"
+  },
+  "productDeletedSuccess": "Product deleted",
+  "@productDeletedSuccess": {
+    "description": "Feedback message when product is deleted"
+  },
+  "productActionFailed": "Unable to update product. Please try again.",
+  "@productActionFailed": {
+    "description": "Error feedback when updating product status fails"
+  },
+  "productDeleteFailed": "Unable to delete product. Please try again.",
+  "@productDeleteFailed": {
+    "description": "Error feedback when deleting product fails"
   }
 }

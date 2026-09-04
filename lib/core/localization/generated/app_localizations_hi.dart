@@ -616,8 +616,111 @@ class AppLocalizationsHi extends AppLocalizations {
       'खरीदारों की मांगें उपलब्ध होने पर यहाँ दिखाई देंगी';
 
   @override
-  String get featureComingSoon => 'यह सुविधा अगले अपडेट में उपलब्ध होगी';
+  String get featureComingSoon =>
+      'This feature will be available in the next update';
 
   @override
   String get signOutAction => 'साइन आउट';
+
+  @override
+  String get myProductsSubtitle =>
+      'अपने बनाए और बेचे जाने वाले उत्पादों का प्रबंधन करें';
+
+  @override
+  String get filterAll => 'सभी';
+
+  @override
+  String get filterActive => 'सक्रिय';
+
+  @override
+  String get filterDraft => 'ड्राफ्ट';
+
+  @override
+  String get filterHidden => 'छिपे हुए';
+
+  @override
+  String get statusActive => 'सक्रिय';
+
+  @override
+  String get statusDraft => 'ड्राफ्ट';
+
+  @override
+  String get statusHidden => 'छिपा हुआ';
+
+  @override
+  String get priceNotSet => 'कीमत तय नहीं';
+
+  @override
+  String get draftNeedsCompletion => 'कीमत या विवरण बाकी है';
+
+  @override
+  String get noActiveProductsTitle => 'कोई सक्रिय उत्पाद नहीं';
+
+  @override
+  String get noActiveProductsSubtitle =>
+      'लिस्टिंग के लिए तैयार उत्पाद यहाँ दिखाई देंगे';
+
+  @override
+  String get noDraftProductsTitle => 'कोई ड्राफ्ट उत्पाद नहीं';
+
+  @override
+  String get noDraftProductsSubtitle =>
+      'अधूरे उत्पाद जिन पर काम बाकी है, यहाँ दिखाई देंगे';
+
+  @override
+  String get noHiddenProductsTitle => 'कोई छिपा हुआ उत्पाद नहीं';
+
+  @override
+  String get noHiddenProductsSubtitle =>
+      'अस्थायी रूप से छिपाए गए उत्पाद यहाँ दिखाई देंगे';
+
+  @override
+  String get showAllProducts => 'सभी उत्पाद देखें';
+
+  @override
+  String get unableToLoadProducts => 'हम आपके उत्पाद लोड नहीं कर सके';
+
+  @override
+  String get unableToLoadSubtitle =>
+      'कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें';
+
+  @override
+  String get notAuthenticatedMessage =>
+      'अपने उत्पाद देखने के लिए कृपया साइन इन करें';
+
+  @override
+  String get retry => 'पुनः प्रयास करें';
+
+  @override
+  String get hideAction => 'छिपाएं';
+
+  @override
+  String get showAction => 'दिखाएं';
+
+  @override
+  String get deleteAction => 'हटाएं';
+
+  @override
+  String get deleteProductTitle => 'उत्पाद हटाएं?';
+
+  @override
+  String get deleteProductConfirmation =>
+      'क्या आप वाकई इस उत्पाद को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।';
+
+  @override
+  String get productHiddenSuccess => 'उत्पाद छिपा दिया गया';
+
+  @override
+  String get productActivatedSuccess => 'उत्पाद सक्रिय चिह्नित किया गया';
+
+  @override
+  String get productDeletedSuccess => 'उत्पाद हटा दिया गया';
+
+  @override
+  String get productActionFailed =>
+      'उत्पाद अपडेट नहीं हो सका। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get productDeleteFailed =>
+      'उत्पाद हटाया नहीं जा सका। कृपया पुनः प्रयास करें।';
 }

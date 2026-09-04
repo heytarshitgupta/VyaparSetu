@@ -626,4 +626,104 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signOutAction => 'Sign Out';
+
+  @override
+  String get myProductsSubtitle => 'Manage the products you make and sell';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterActive => 'Active';
+
+  @override
+  String get filterDraft => 'Draft';
+
+  @override
+  String get filterHidden => 'Hidden';
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusDraft => 'Draft';
+
+  @override
+  String get statusHidden => 'Hidden';
+
+  @override
+  String get priceNotSet => 'Price not set';
+
+  @override
+  String get draftNeedsCompletion => 'Needs price or details';
+
+  @override
+  String get noActiveProductsTitle => 'No active products';
+
+  @override
+  String get noActiveProductsSubtitle =>
+      'Products ready for listing will appear here';
+
+  @override
+  String get noDraftProductsTitle => 'No draft products';
+
+  @override
+  String get noDraftProductsSubtitle =>
+      'Products that still need details will appear here';
+
+  @override
+  String get noHiddenProductsTitle => 'No hidden products';
+
+  @override
+  String get noHiddenProductsSubtitle =>
+      'Products you temporarily hide will appear here';
+
+  @override
+  String get showAllProducts => 'Show All Products';
+
+  @override
+  String get unableToLoadProducts => 'We couldn\'t load your products';
+
+  @override
+  String get unableToLoadSubtitle =>
+      'Please check your connection and try again';
+
+  @override
+  String get notAuthenticatedMessage => 'Please sign in to view your products';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get hideAction => 'Hide';
+
+  @override
+  String get showAction => 'Show';
+
+  @override
+  String get deleteAction => 'Delete';
+
+  @override
+  String get deleteProductTitle => 'Delete Product?';
+
+  @override
+  String get deleteProductConfirmation =>
+      'Are you sure you want to delete this product? This action cannot be undone.';
+
+  @override
+  String get productHiddenSuccess => 'Product hidden';
+
+  @override
+  String get productActivatedSuccess => 'Product marked active';
+
+  @override
+  String get productDeletedSuccess => 'Product deleted';
+
+  @override
+  String get productActionFailed =>
+      'Unable to update product. Please try again.';
+
+  @override
+  String get productDeleteFailed =>
+      'Unable to delete product. Please try again.';
 }

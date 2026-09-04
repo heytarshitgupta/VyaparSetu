@@ -1257,6 +1257,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign Out'**
   String get signOutAction;
+
+  /// Subtitle for My Products header
+  ///
+  /// In en, this message translates to:
+  /// **'Manage the products you make and sell'**
+  String get myProductsSubtitle;
+
+  /// Filter tab for all products
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// Filter tab for active products
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get filterActive;
+
+  /// Filter tab for draft products
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get filterDraft;
+
+  /// Filter tab for hidden products
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get filterHidden;
+
+  /// Status badge for active products
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get statusActive;
+
+  /// Status badge for draft products
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get statusDraft;
+
+  /// Status badge for hidden products
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get statusHidden;
+
+  /// Label when product price is not specified
+  ///
+  /// In en, this message translates to:
+  /// **'Price not set'**
+  String get priceNotSet;
+
+  /// Indicator on draft cards that product details are incomplete
+  ///
+  /// In en, this message translates to:
+  /// **'Needs price or details'**
+  String get draftNeedsCompletion;
+
+  /// Title when active filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'No active products'**
+  String get noActiveProductsTitle;
+
+  /// Subtitle when active filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'Products ready for listing will appear here'**
+  String get noActiveProductsSubtitle;
+
+  /// Title when draft filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'No draft products'**
+  String get noDraftProductsTitle;
+
+  /// Subtitle when draft filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'Products that still need details will appear here'**
+  String get noDraftProductsSubtitle;
+
+  /// Title when hidden filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'No hidden products'**
+  String get noHiddenProductsTitle;
+
+  /// Subtitle when hidden filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'Products you temporarily hide will appear here'**
+  String get noHiddenProductsSubtitle;
+
+  /// Button to clear filters and view all products
+  ///
+  /// In en, this message translates to:
+  /// **'Show All Products'**
+  String get showAllProducts;
+
+  /// Error title when product loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load your products'**
+  String get unableToLoadProducts;
+
+  /// Error subtitle when product loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again'**
+  String get unableToLoadSubtitle;
+
+  /// Error message when user is not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in to view your products'**
+  String get notAuthenticatedMessage;
+
+  /// Retry button label
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// Action button to hide a product
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hideAction;
+
+  /// Action button to activate/show a product
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get showAction;
+
+  /// Action button to delete a product
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteAction;
+
+  /// Title of delete confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Product?'**
+  String get deleteProductTitle;
+
+  /// Body message of delete confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this product? This action cannot be undone.'**
+  String get deleteProductConfirmation;
+
+  /// Feedback message when product is hidden
+  ///
+  /// In en, this message translates to:
+  /// **'Product hidden'**
+  String get productHiddenSuccess;
+
+  /// Feedback message when product is activated
+  ///
+  /// In en, this message translates to:
+  /// **'Product marked active'**
+  String get productActivatedSuccess;
+
+  /// Feedback message when product is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Product deleted'**
+  String get productDeletedSuccess;
+
+  /// Error feedback when updating product status fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update product. Please try again.'**
+  String get productActionFailed;
+
+  /// Error feedback when deleting product fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to delete product. Please try again.'**
+  String get productDeleteFailed;
 }
 
 class _AppLocalizationsDelegate

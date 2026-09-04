@@ -4,7 +4,7 @@ PRODUCER PRODUCT MANAGEMENT MODULE
 
 STATUS
 ------------------------------------------------------------
-STEP 6B.1 DATABASE FOUNDATION SPECIFIED (MIGRATION 009)
+STEP 6B PRODUCER PRODUCT MANAGEMENT MODULE IMPLEMENTED & VERIFIED
 
 
 DATABASE FOUNDATION ARCHITECTURE (STEP 6B.1)
@@ -49,3 +49,85 @@ DATABASE FOUNDATION ARCHITECTURE (STEP 6B.1)
    - Base table stores strictly canonical product attributes.
    - Zero speculative AI prompts, embeddings, audio blobs, or marketing metrics in the schema.
    - Future AI Studio and voice guidance will map directly to these canonical columns.
+
+
+DART DOMAIN, SERVICE & PROVIDER FOUNDATION (STEP 6B.2)
+------------------------------------------------------------
+1. ProducerProduct Domain Model:
+   - File: lib/producer_section/products/models/producer_product.dart
+   - Immutable data model with const constructor and copyWith support.
+   - Exact mapping to PostgreSQL public.products schema columns.
+   - Monetary Representation (Step 6B.2A): PostgreSQL stores NUMERIC(12, 2); Dart domain stores exact integer paise (`int? pricePaise`, where ₹1 = 100 paise), avoiding floating-point precision hazards.
+   - Service/model boundary converts deterministically: string/num to paise on read, and paise to two-decimal string on write.
+   - Currency formatting remains strictly a presentation/localization concern.
+   - Images represented as List<String> storing storage references.
+   - Original Unicode strings preserved without modification.
+
+2. ProductStatus Enum Mapping:
+   - Values: draft <-> 'draft', active <-> 'active', hidden <-> 'hidden'.
+   - Controlled FormatException thrown on unknown or malformed database status.
+   - Zero silent fallback to draft to protect data integrity.
+
+3. ProducerProductService:
+   - File: lib/producer_section/products/services/producer_product_service.dart
+   - Responsibilities: fetchProducts (ordered by created_at DESC), updateProductStatus, and hard deleteProduct.
+   - Authenticated Ownership: Scoped strictly to auth.uid() = producer_id.
+   - Exception model: ProductAuthException (when unauthenticated) and ProductOperationException (sanitized errors).
+
+4. ProducerProductsProvider:
+   - File: lib/producer_section/products/providers/producer_products_provider.dart
+   - Responsibilities: Owns full product list, visible filtered list, loading lifecycle, and error state.
+   - Filter Strategy: Local in-memory filtering across All, Active, Draft, and Hidden. Avoids redundant server round-trips upon tab switching.
+   - Loading & Error States: Truthfully distinguishes initial, loading, loaded empty, and loaded with items. Safe categorized error enum (none, notAuthenticated, loadFailed, updateFailed, deleteFailed) prevents raw Postgres strings in UI.
+   - Zero UI Coupling: Presentation-independent (no BuildContext, widgets, or localization dependencies).
+
+5. Offline-Test Dependency Injection:
+   - Abstract contract IProducerProductService allows injecting mock/fake services.
+   - 100% offline, deterministic testing with zero live Supabase requirement.
+
+6. Boundaries:
+   - Storage Boundary: Still deferred to Step 6C (images are raw string references only).
+   - Buyer Boundary: 100% isolated. Zero imports from buyer_section or Buyer mock data.
+
+
+MY PRODUCTS LISTING UI ARCHITECTURE (STEP 6B.3)
+------------------------------------------------------------
+1. Information Hierarchy:
+   - Header: Localized title ("My Products") and meaningful subtitle ("Manage the products you make and sell").
+   - Add Product Action: Prominent touch-friendly button (calls existing placeholder route without implementing form).
+   - Filter Tabs: All, Active, Draft, Hidden.
+   - Product Cards: Visual image area/placeholder, title, price (or "Price not set"), category badge, status badge, and contextual action buttons.
+
+2. Responsive Layouts:
+   - Phone (< 640px): 1-column list with 16dp horizontal padding and touch-friendly (>=48dp) targets.
+   - Tablet (640px - 1024px): 2-column grid inside existing NavigationRail shell with 24dp padding.
+   - Desktop (>= 1024px): 3-column centered grid constrained to 1200px max width inside existing left sidebar.
+
+3. Filter Behavior:
+   - Pure in-memory filtering via ProducerProductsProvider.
+   - Switching filters changes visible cards instantaneously without network round-trips.
+
+4. Empty vs Filtered-Empty vs Error States:
+   - True Zero-Products Empty: Friendly craft illustration, "No products added yet", and prominent "+ Add Product" button.
+   - Filtered Empty: Distinct lighter message per filter ("No active/draft/hidden products") with "Show All Products" button to return to All.
+   - Error State: Sanitized title and message with "Retry" button. Never shows raw Postgres or exception strings.
+
+5. Image Placeholder Boundary:
+   - Supabase Storage remains Step 6C work.
+   - Missing or unresolved image paths render a polished local Material inventory placeholder (no network images, no picsum).
+
+6. Supported Actions & Truthful Semantics (Step 6B.3A):
+   - Active: Complete and ready for listing in Producer management. Under Migration 009, ALL products remain strictly owner-only (auth.uid() = producer_id); active products are NOT yet readable by Buyer accounts. My Products UI intentionally does not claim Buyer visibility. Future Buyer marketplace access requires a dedicated later migration.
+   - Hidden: Paused/hidden by producer in Producer product management (e.g. temporarily delisted from the active-ready list). Does NOT claim prior Buyer visibility.
+   - Active -> Hidden ("Hide"): Pauses product in producer management (moves to hidden list).
+   - Hidden -> Active ("Show"): Marks product active/ready for listing with DB check constraint enforcement.
+   - Delete: Triggered via delete icon; requires explicit confirmation dialog before invoking provider.
+   - Draft Activation / Editing: Intentionally deferred. Draft cards truthfully state "Needs price or details" without premature activation.
+
+7. Localization & Themes:
+   - Full English, Hindi, and Punjabi support across all labels, badges, empty states, and feedback toasts.
+   - ColorScheme-aware styling; verified readable in both Light and Dark modes.
+   - Accessible touch targets, no color-only status indicators, and no technical jargon or misleading Buyer-visibility claims.
+
+8. Add Product Route:
+   - Add Product form and Supabase Storage image upload remain Step 6C.
