@@ -5,6 +5,7 @@ import '../../buyer_section/screens/shared/otp_screen.dart';
 import '../../buyer_section/onboarding/buyer_onboarding_screen.dart';
 import '../../buyer_section/onboarding/buyer_verification_screen.dart';
 import '../../buyer_section/home/buyer_main_screen.dart';
+import '../../buyer_section/marketplace/marketplace_search_screen.dart';
 
 import '../auth/role_selection_screen.dart';
 import '../../producer_section/auth/producer_login_screen.dart';
@@ -47,7 +48,7 @@ class AppRouter {
       case homeRoute:
         return MaterialPageRoute(builder: (_) => const BuyerMainScreen());
       case marketplaceRoute:
-        return MaterialPageRoute(builder: (_) => const PlaceholderScreen(title: 'Marketplace'));
+        return MaterialPageRoute(builder: (_) => const MarketplaceSearchScreen());
       case productDetailRoute:
         return MaterialPageRoute(builder: (_) => const PlaceholderScreen(title: 'Product Detail'));
       case postRequirementRoute:

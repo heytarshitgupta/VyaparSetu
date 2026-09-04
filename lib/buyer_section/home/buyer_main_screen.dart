@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../screens/shared/placeholder_screen.dart';
+import '../marketplace/marketplace_search_screen.dart';
 import 'tabs/buyer_home_tab.dart';
 
 class BuyerMainScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class _BuyerMainScreenState extends State<BuyerMainScreen> {
 
   final List<Widget> _tabs = [
     const BuyerHomeTab(),
-    const PlaceholderScreen(title: 'Search'),
+    const MarketplaceSearchScreen(),
     const PlaceholderScreen(title: 'My Requests'),
     const PlaceholderScreen(title: 'Profile'),
   ];

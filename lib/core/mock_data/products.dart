@@ -6,6 +6,7 @@ class Product {
   final double price;
   final String imageUrl;
   final String category;
+  final String capacity;
 
   const Product({
     required this.id,
@@ -15,6 +16,7 @@ class Product {
     required this.price,
     required this.imageUrl,
     required this.category,
+    required this.capacity,
   });
 }
 
@@ -27,6 +29,7 @@ final List<Product> mockProducts = [
     price: 1250.0,
     imageUrl: 'https://picsum.photos/seed/p1/400/400',
     category: 'Textiles',
+    capacity: '100 pcs available',
   ),
   const Product(
     id: 'p2',
@@ -36,6 +39,7 @@ final List<Product> mockProducts = [
     price: 350.0,
     imageUrl: 'https://picsum.photos/seed/p2/400/400',
     category: 'Spices',
+    capacity: '50kg available',
   ),
   const Product(
     id: 'p3',
@@ -45,6 +49,7 @@ final List<Product> mockProducts = [
     price: 850.0,
     imageUrl: 'https://picsum.photos/seed/p3/400/400',
     category: 'Handicrafts',
+    capacity: '20 pcs available',
   ),
   const Product(
     id: 'p4',
@@ -54,6 +59,7 @@ final List<Product> mockProducts = [
     price: 600.0,
     imageUrl: 'https://picsum.photos/seed/p4/400/400',
     category: 'Food',
+    capacity: '150 bottles available',
   ),
   const Product(
     id: 'p5',
@@ -63,6 +69,7 @@ final List<Product> mockProducts = [
     price: 450.0,
     imageUrl: 'https://picsum.photos/seed/p5/400/400',
     category: 'Handicrafts',
+    capacity: '30 pcs available',
   ),
   const Product(
     id: 'p6',
@@ -72,5 +79,6 @@ final List<Product> mockProducts = [
     price: 550.0,
     imageUrl: 'https://picsum.photos/seed/p6/400/400',
     category: 'Food',
+    capacity: '200 Liters available',
   ),
 ];

@@ -50,7 +50,9 @@ class BuyerHomeTab extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, '/marketplace');
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 decoration: BoxDecoration(
@@ -77,7 +79,7 @@ class BuyerHomeTab extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           child: SizedBox(
-            height: 250,
+            height: 310,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -123,7 +125,7 @@ class BuyerHomeTab extends StatelessWidget {
               crossAxisCount: 2,
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
-              childAspectRatio: 0.65,
+              childAspectRatio: 0.52,
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) {
