@@ -70,6 +70,41 @@ MIGRATION LOG
      * Masked PAN ******234F persists correctly after page reload; raw PAN is never stored.
 
 9. 009_create_products_schema.sql
-   - Status: READY FOR EXECUTION in Supabase SQL Editor (Step 6B.1).
+   - Status: EXECUTED AND LIVE VERIFIED in Supabase SQL Editor (Step 6B.1B).
    - Contains: Creates public.product_status enum ('draft', 'active', 'hidden'), public.products table with FK to public.producer_profiles(id) ON DELETE CASCADE, defensive check constraints for non-empty name and positive price (active requires price, name >= 2, category >= 2), automated updated_at trigger, indexes on producer_id, (producer_id, status), and created_at, and strict owner-only RLS policies (SELECT, INSERT, UPDATE, DELETE strictly scoped to auth.uid() = producer_id). Active products remain owner-only in this milestone; Buyer marketplace access and Supabase Storage bucket integration are explicitly deferred.
+
+10. 010_create_product_images_storage.sql
+   - Status: EXECUTED — initial direct ownership lookup exposed valid-owner blocker (Step 6C.3A).
+   - Notes: Created dedicated private 'product-images' Storage bucket (public = false), 5 MB file size limit (5242880 bytes), and allowed MIME types (image/jpeg, image/png, image/webp). Enforces 3-segment path contract: USER_UUID/PRODUCT_UUID/FILENAME. Live denial tests passed for cross-user spoofing, unowned products, malformed product IDs, invalid path depths, disallowed MIME types, and oversized files. However, valid owner upload was blocked by nested cross-table RLS evaluation inside storage.objects policies. Resolved and superseded by Migration 011.
+
+11. 011_fix_product_image_ownership_policy.sql
+   - Status: EXECUTED + VERIFIED (Step 6C.3B).
+   - Notes: Successfully applied via Supabase SQL Editor and verified live against real authenticated session and live Storage API.
+   - Architectural Summary:
+     * Creates isolated 'private' schema with USAGE granted only to authenticated. Schema is not exposed to PostgREST API.
+     * Introduces hardened, non-exposed SECURITY DEFINER helper private.producer_owns_product(p_product_id_text text) with search_path = '', safe text comparison (avoiding 22P02 invalid UUID syntax errors on malformed paths), returning boolean only, strictly deriving caller identity via auth.uid().
+     * REVOKEs EXECUTE from PUBLIC and anon; GRANTs EXECUTE to authenticated.
+     * Authorization Boundary Note: Future Buyer accounts may share the Supabase 'authenticated' database role; access to product images is strictly governed by Storage RLS policies requiring first folder = auth.uid()::text AND second folder owned by auth.uid() via private.producer_owns_product().
+     * Replaces storage.objects RLS policies (product_images_insert_own, product_images_select_own, product_images_delete_own).
+     * Strictly preserves double-ownership authorization (never weakened to folder-only authorization).
+     * No UPDATE/upsert policy (replacements require new INSERT + old DELETE).
+     * Delete Lifecycle Constraint: Because Storage DELETE authorization verifies product ownership against public.products, storage images must be deleted before deleting the parent product database record.
+     * Public.products schema and storage schema structure remained untouched.
+   - Live Verification Results (Step 6C.3B):
+     * Private bucket (public = false): VERIFIED (anon read denied with NoSuchKey / not_found).
+     * 5 MB file size limit: VERIFIED (oversized upload blocked with 413 EntityTooLarge).
+     * Allowed MIME allowlist (image/jpeg, image/png, image/webp): VERIFIED (application/pdf blocked with 415 InvalidMimeType).
+     * Valid owner upload to owned product: VERIFIED (HTTP 200 OK, valid storage key returned).
+     * Owner private read and signed URL generation: VERIFIED (HTTP 200 OK).
+     * Owner delete: VERIFIED (HTTP 200 OK).
+     * Spoofed user-folder upload attempt: VERIFIED (denied with 403 AccessDenied).
+     * Nonexistent product folder upload attempt: VERIFIED (denied with 403 AccessDenied).
+     * Malformed product folder text: VERIFIED (denied with 403 AccessDenied safely without PostgreSQL 22P02 error).
+     * Anonymous read / upload: VERIFIED (denied).
+     * Invalid path depth (1 folder shallow or 3 folders deep): VERIFIED (denied with 403 AccessDenied).
+     * Overwrite / upsert attempt: VERIFIED (denied with 403 AccessDenied due to no UPDATE policy).
+     * True second-user runtime test: Explicitly noted — true second-user runtime ownership test not executed as only one producer account currently exists in development DB.
+     * Delete lifecycle constraint: Documented — image cleanup must precede parent product row deletion under current policy design.
+     * Double-ownership policies: Strictly preserved, zero policy weakening.
+     * Test data cleanup: Storage diagnostic objects deleted first, temporary product deleted second. Zero test artifacts remain.
 
