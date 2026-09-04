@@ -4,13 +4,48 @@ PRODUCER PRODUCT MANAGEMENT MODULE
 
 STATUS
 ------------------------------------------------------------
-NOT YET IMPLEMENTED
+STEP 6B.1 DATABASE FOUNDATION SPECIFIED (MIGRATION 009)
 
 
-PLANNED SCOPE
+DATABASE FOUNDATION ARCHITECTURE (STEP 6B.1)
 ------------------------------------------------------------
-1. Product catalog management (Create, Read, Update, Delete).
-2. Fields: Title, description, category, unit price (INR), minimum order quantity (MOQ), available stock/batch size, production lead time, and photos.
-3. Image capture from mobile camera or gallery with on-device compression before upload.
-4. Supabase storage integration with public image CDN caching.
-5. Future AI Studio hooks for background cleanup and multilingual product copywriting.
+1. Canonical Schema:
+   - Table: public.products
+   - Primary Key: id UUID DEFAULT gen_random_uuid()
+   - Ownership FK: producer_id UUID NOT NULL REFERENCES public.producer_profiles(id) ON DELETE CASCADE
+   - Identity Relationship: producer_profiles.id == profiles.id == auth.users.id. Only verified/registered producers can own products.
+   - Core Fields: name, description, category, price, unit, images, status, created_at, updated_at.
+
+2. Product Lifecycle States:
+   - Exactly 3 states: 'draft', 'active', 'hidden'.
+   - 'draft': Work-in-progress, unlisted, visible only to owner.
+   - 'active': Completed product, ready for future discovery, visible only to owner in Step 6B.
+   - 'hidden': Temporarily delisted by producer (e.g. out of stock), visible only to owner.
+   - No premature moderation workflows ('under_review', 'needs_changes', 'rejected') fabricated.
+
+3. Pricing & Currency Rule:
+   - Type: NUMERIC(12, 2) in INR (accommodates up to ₹9,999,999,999.99 with exact paise precision).
+   - Drafts: Price may be NULL while incomplete.
+   - Positive Price: If price is provided, it must be > 0.
+   - Active Requirement: An 'active' product MUST have a valid positive price (> 0).
+
+4. Text & Unicode Preservation:
+   - Fields: name, description, category, unit.
+   - Rule: Original user-entered Unicode text (English, Hindi, Punjabi, etc.) is preserved as-is.
+   - Zero destructive overwriting with AI-generated or translated text.
+
+5. Image Reference Strategy:
+   - Field: images TEXT[] NOT NULL DEFAULT '{}'.
+   - Storage-relative paths or references. Zero fake remote URLs.
+   - Storage Bucket: Dedicated 'product-images' bucket and secure upload policies explicitly deferred to Step 6C.
+
+6. Security & Row Level Security (RLS):
+   - RLS strictly enabled on public.products.
+   - SELECT, INSERT, UPDATE, DELETE strictly scoped to auth.uid() = producer_id.
+   - Active products remain owner-only in Step 6B. Public/Buyer discovery deferred.
+   - Hard Delete adopted for prototype simplicity.
+
+7. AI & Voice Data Boundary:
+   - Base table stores strictly canonical product attributes.
+   - Zero speculative AI prompts, embeddings, audio blobs, or marketing metrics in the schema.
+   - Future AI Studio and voice guidance will map directly to these canonical columns.

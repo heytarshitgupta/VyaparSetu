@@ -129,6 +129,16 @@ This log records permanent architectural, design, and structural decisions made 
   * Voice-ready architecture: action handlers (selectDestination, openAddProduct, openWhatBuyersWant) decoupled for identical invocation by button taps or future voice commands. Microphone/speech packages deferred.
   * Tested viewports across 320px, 390px, 768px, and 1280px with zero RenderFlex overflows in any language or theme.
   * Preserved 100% Buyer isolation (lib/buyer_section/ diff is strictly zero). 65/65 unit and widget tests passing.
+- Step 6B.1 Producer Products Database Foundation:
+  * Canonical Schema & Ownership: Migration 009_create_products_schema.sql created. Table public.products references public.producer_profiles(id) ON DELETE CASCADE. Enforces that only registered producers can own products, directly matching auth.uid() without expensive subqueries or client spoofing vectors.
+  * Three-State Lifecycle: Enforced product_status ENUM ('draft', 'active', 'hidden'). Deferred administrative moderation workflows ('under_review', 'needs_changes') until administrative review capabilities exist.
+  * Pricing Rule & Currency Precision: Configured NUMERIC(12, 2) for INR currency math. Price is nullable for drafts, must be positive (> 0) if provided, and is strictly required for 'active' products via check constraints.
+  * Hard Delete Decision: Adopted hard DELETE with strict owner-only RLS policy (USING auth.uid() = producer_id). Avoids synthetic 'deleted' status cluttering prototype queries.
+  * Owner-Only RLS for Step 6B: SELECT, INSERT, UPDATE, and DELETE policies strictly limit access to the owning producer. Active products are NOT publicly readable yet; Buyer marketplace discovery access is explicitly deferred to a separate migration.
+  * Storage Boundary Deferred: No Supabase Storage buckets or upload policies created in Step 6B.1. The images column uses a forward-compatible TEXT[] array storing relative paths, defaulting to '{}'. Real storage bucket creation is deferred to Step 6C.
+  * Canonical Base Data & AI Boundary: Speculative AI prompts, voice audio blobs, or marketing analytics are strictly excluded from base product columns. Future voice/AI tools will map directly to canonical fields (name, description, category, price, unit, images).
+  * Unicode Text Preservation: User-entered name, description, category, and unit maintain original Unicode input (English, Hindi, Punjabi) without destructive translation overwrite.
+  * Buyer Module Isolation Preserved: Zero modifications to lib/buyer_section/.
 
 
 

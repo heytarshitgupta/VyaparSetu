@@ -69,3 +69,7 @@ MIGRATION LOG
      * Different-PAN submission (ABCDE5678G) returns 'already_verified_conflict' and protects original verified artifacts from overwrite.
      * Masked PAN ******234F persists correctly after page reload; raw PAN is never stored.
 
+9. 009_create_products_schema.sql
+   - Status: READY FOR EXECUTION in Supabase SQL Editor (Step 6B.1).
+   - Contains: Creates public.product_status enum ('draft', 'active', 'hidden'), public.products table with FK to public.producer_profiles(id) ON DELETE CASCADE, defensive check constraints for non-empty name and positive price (active requires price, name >= 2, category >= 2), automated updated_at trigger, indexes on producer_id, (producer_id, status), and created_at, and strict owner-only RLS policies (SELECT, INSERT, UPDATE, DELETE strictly scoped to auth.uid() = producer_id). Active products remain owner-only in this milestone; Buyer marketplace access and Supabase Storage bucket integration are explicitly deferred.
+
