@@ -575,4 +575,51 @@ class AppLocalizationsPa extends AppLocalizations {
   @override
   String get nextStageDescription =>
       'ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਲੋੜਾਂ ਅਤੇ ਉਤਪਾਦਾਂ ਤੱਕ ਸਿੱਧੀ ਪਹੁੰਚ';
+
+  @override
+  String welcomeProducer(String name) {
+    return 'ਜੀ ਆਇਆਂ ਨੂੰ, $name';
+  }
+
+  @override
+  String get producerDefaultName => 'ਉਤਪਾਦਕ';
+
+  @override
+  String get producerHomeSubtitle =>
+      'ਆਪਣੀ ਕਾਰੀਗਰੀ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ ਅਤੇ ਖਰੀਦਦਾਰਾਂ ਨਾਲ ਜੁੜੋ';
+
+  @override
+  String get addProductActionSubtitle =>
+      'ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਦਿਖਾਓ ਕਿ ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਹੋ';
+
+  @override
+  String get myProductsShortcutSubtitle => 'ਆਪਣੇ ਸ਼ਾਮਲ ਕੀਤੇ ਉਤਪਾਦ ਵੇਖੋ';
+
+  @override
+  String get buyerNeedsShortcutSubtitle => 'ਵੇਖੋ ਕਿ ਖਰੀਦਦਾਰ ਕੀ ਲੱਭ ਰਹੇ ਹਨ';
+
+  @override
+  String get whatBuyersWantShortcutSubtitle =>
+      'ਵੇਖੋ ਕਿ ਲੋਕ ਕਿਹੜੇ ਉਤਪਾਦ ਚਾਹੁੰਦੇ ਹਨ';
+
+  @override
+  String get noProductsListedTitle => 'ਅਜੇ ਤੱਕ ਕੋਈ ਉਤਪਾਦ ਸ਼ਾਮਲ ਨਹੀਂ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get noProductsListedSubtitle =>
+      'ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਆਪਣੀ ਕਾਰੀਗਰੀ ਦਿਖਾਉਣ ਲਈ ਆਪਣਾ ਪਹਿਲਾ ਉਤਪਾਦ ਸ਼ਾਮਲ ਕਰੋ';
+
+  @override
+  String get buyerNeedsWaitingTitle =>
+      'ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਲੋੜਾਂ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੀਆਂ';
+
+  @override
+  String get buyerNeedsWaitingSubtitle =>
+      'ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਮੰਗਾਂ ਉਪਲਬਧ ਹੋਣ \'ਤੇ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੀਆਂ';
+
+  @override
+  String get featureComingSoon => 'ਇਹ ਸੁਵਿਧਾ ਅਗਲੇ ਅਪਡੇਟ ਵਿੱਚ ਉਪਲਬਧ ਹੋਵੇਗੀ';
+
+  @override
+  String get signOutAction => 'ਸਾਈਨ ਆਉਟ';
 }

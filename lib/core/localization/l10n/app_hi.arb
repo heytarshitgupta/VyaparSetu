@@ -190,5 +190,18 @@
   "profileStatus": "प्रोफाइल स्थिति",
   "readyForSubmission": "जमा करने के लिए तैयार",
   "nextStage": "अगला चरण",
-  "nextStageDescription": "खरीदारों की जरूरतों और उत्पादों तक सीधी पहुंच"
+  "nextStageDescription": "खरीदारों की जरूरतों और उत्पादों तक सीधी पहुंच",
+  "welcomeProducer": "नमस्ते, {name}",
+  "producerDefaultName": "उत्पादक",
+  "producerHomeSubtitle": "अपनी कारीगरी का प्रबंधन करें और खरीदारों से जुड़ें",
+  "addProductActionSubtitle": "खरीदारों को दिखाएं कि आप क्या बनाते हैं",
+  "myProductsShortcutSubtitle": "अपने जोड़े हुए उत्पाद देखें",
+  "buyerNeedsShortcutSubtitle": "देखें कि खरीदार क्या खोज रहे हैं",
+  "whatBuyersWantShortcutSubtitle": "देखें कि लोग कौन से उत्पाद चाहते हैं",
+  "noProductsListedTitle": "अभी तक कोई उत्पाद नहीं जोड़ा गया",
+  "noProductsListedSubtitle": "खरीदारों को अपनी कारीगरी दिखाने के लिए अपना पहला उत्पाद जोड़ें",
+  "buyerNeedsWaitingTitle": "खरीदारों की जरूरतें यहाँ दिखेंगी",
+  "buyerNeedsWaitingSubtitle": "खरीदारों की मांगें उपलब्ध होने पर यहाँ दिखाई देंगी",
+  "featureComingSoon": "यह सुविधा अगले अपडेट में उपलब्ध होगी",
+  "signOutAction": "साइन आउट"
 }

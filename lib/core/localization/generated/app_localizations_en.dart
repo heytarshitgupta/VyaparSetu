@@ -581,4 +581,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nextStageDescription => 'Direct access to Buyer Needs & Products';
+
+  @override
+  String welcomeProducer(String name) {
+    return 'Welcome, $name';
+  }
+
+  @override
+  String get producerDefaultName => 'Producer';
+
+  @override
+  String get producerHomeSubtitle =>
+      'Manage your craft and connect with buyers';
+
+  @override
+  String get addProductActionSubtitle => 'Show buyers what you make';
+
+  @override
+  String get myProductsShortcutSubtitle => 'See the products you have added';
+
+  @override
+  String get buyerNeedsShortcutSubtitle => 'See what buyers are looking for';
+
+  @override
+  String get whatBuyersWantShortcutSubtitle => 'See what products people want';
+
+  @override
+  String get noProductsListedTitle => 'No products added yet';
+
+  @override
+  String get noProductsListedSubtitle =>
+      'Add your first product so buyers can discover your craft';
+
+  @override
+  String get buyerNeedsWaitingTitle => 'Buyer needs will appear here';
+
+  @override
+  String get buyerNeedsWaitingSubtitle =>
+      'Buyer requests will be listed here when available';
+
+  @override
+  String get featureComingSoon =>
+      'This feature will be available in the next update';
+
+  @override
+  String get signOutAction => 'Sign Out';
 }

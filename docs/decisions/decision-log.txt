@@ -118,6 +118,18 @@ This log records permanent architectural, design, and structural decisions made 
   * Codified Three-Tier Localization Rule: Fixed UI (Flutter ARB), Known Structured Data (Canonical IDs + Localized datasets), User-Generated Text (Original preserved + optional confirmed translation).
   * Documented post-onboarding UX: AppBar top controls retire after onboarding; preferences load automatically on startup and are managed via My Profile -> Settings.
   * All 54 unit and widget tests passing, flutter analyze 0 errors/0 warnings, Buyer diff is zero.
+- Step 6A Responsive Producer Home + App Shell:
+  * Established responsive Producer App Shell (ProducerMainScreen) with IndexedStack: Phone (<640px) uses Material 3 bottom NavigationBar, Tablet (640-1024px) uses NavigationRail, Desktop (>1024px) uses an expanded permanent left navigation sidebar.
+  * Locked 4 primary destinations: Home, My Products, Buyer Needs, My Profile.
+  * Designated "Add Product" strictly as a prominent action (not a permanent nav destination) and "What Buyers Want" as a Home feature card (not a nav destination).
+  * Built ProducerHomeTab with clear visual hierarchy: (A) Friendly Identity Area with real artisan data, (B) Dominant primary hero "+ Add Product" action ("Show buyers what you make"), (C) Important shortcuts for My Products, Buyer Needs, and What Buyers Want, (D) Truthful supporting status cards ("No products added yet", "Buyer needs will appear here") with ZERO fabricated analytics, earnings, or market statistics.
+  * Adhered strictly to low-digital-literacy UX: large touch targets (min 48x48dp), plain-language labels, icon+text pairings, and high-contrast visual indicators.
+  * Localized 100% from day one across English, Hindi (Devanagari), and Punjabi (Gurmukhi) using Flutter ARB architecture.
+  * Fully theme-safe: utilizes Theme.of(context).colorScheme with zero hardcoded colors; verified high contrast in Light and Dark modes.
+  * Voice-ready architecture: action handlers (selectDestination, openAddProduct, openWhatBuyersWant) decoupled for identical invocation by button taps or future voice commands. Microphone/speech packages deferred.
+  * Tested viewports across 320px, 390px, 768px, and 1280px with zero RenderFlex overflows in any language or theme.
+  * Preserved 100% Buyer isolation (lib/buyer_section/ diff is strictly zero). 65/65 unit and widget tests passing.
+
 
 
 

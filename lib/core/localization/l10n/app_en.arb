@@ -705,5 +705,62 @@
   "nextStageDescription": "Direct access to Buyer Needs & Products",
   "@nextStageDescription": {
     "description": "Value describing direct access after onboarding"
+  },
+  "welcomeProducer": "Welcome, {name}",
+  "@welcomeProducer": {
+    "description": "Greeting with producer name",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "producerDefaultName": "Producer",
+  "@producerDefaultName": {
+    "description": "Default fallback name for producer"
+  },
+  "producerHomeSubtitle": "Manage your craft and connect with buyers",
+  "@producerHomeSubtitle": {
+    "description": "Subtitle below producer greeting on Home"
+  },
+  "addProductActionSubtitle": "Show buyers what you make",
+  "@addProductActionSubtitle": {
+    "description": "Subtitle on the primary Add Product action card"
+  },
+  "myProductsShortcutSubtitle": "See the products you have added",
+  "@myProductsShortcutSubtitle": {
+    "description": "Subtitle for My Products shortcut"
+  },
+  "buyerNeedsShortcutSubtitle": "See what buyers are looking for",
+  "@buyerNeedsShortcutSubtitle": {
+    "description": "Subtitle for Buyer Needs shortcut"
+  },
+  "whatBuyersWantShortcutSubtitle": "See what products people want",
+  "@whatBuyersWantShortcutSubtitle": {
+    "description": "Subtitle for What Buyers Want shortcut"
+  },
+  "noProductsListedTitle": "No products added yet",
+  "@noProductsListedTitle": {
+    "description": "Title for empty products status card"
+  },
+  "noProductsListedSubtitle": "Add your first product so buyers can discover your craft",
+  "@noProductsListedSubtitle": {
+    "description": "Subtitle for empty products status card"
+  },
+  "buyerNeedsWaitingTitle": "Buyer needs will appear here",
+  "@buyerNeedsWaitingTitle": {
+    "description": "Title for waiting buyer needs status card"
+  },
+  "buyerNeedsWaitingSubtitle": "Buyer requests will be listed here when available",
+  "@buyerNeedsWaitingSubtitle": {
+    "description": "Subtitle for waiting buyer needs status card"
+  },
+  "featureComingSoon": "This feature will be available in the next update",
+  "@featureComingSoon": {
+    "description": "Description on placeholder destinations"
+  },
+  "signOutAction": "Sign Out",
+  "@signOutAction": {
+    "description": "Sign out button label"
   }
 }

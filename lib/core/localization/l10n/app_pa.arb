@@ -190,5 +190,18 @@
   "profileStatus": "ਪ੍ਰੋਫਾਈਲ ਸਥਿਤੀ",
   "readyForSubmission": "ਜਮ੍ਹਾਂ ਕਰਨ ਲਈ ਤਿਆਰ",
   "nextStage": "ਅਗਲਾ ਕਦਮ",
-  "nextStageDescription": "ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਲੋੜਾਂ ਅਤੇ ਉਤਪਾਦਾਂ ਤੱਕ ਸਿੱਧੀ ਪਹੁੰਚ"
+  "nextStageDescription": "ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਲੋੜਾਂ ਅਤੇ ਉਤਪਾਦਾਂ ਤੱਕ ਸਿੱਧੀ ਪਹੁੰਚ",
+  "welcomeProducer": "ਜੀ ਆਇਆਂ ਨੂੰ, {name}",
+  "producerDefaultName": "ਉਤਪਾਦਕ",
+  "producerHomeSubtitle": "ਆਪਣੀ ਕਾਰੀਗਰੀ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ ਅਤੇ ਖਰੀਦਦਾਰਾਂ ਨਾਲ ਜੁੜੋ",
+  "addProductActionSubtitle": "ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਦਿਖਾਓ ਕਿ ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਹੋ",
+  "myProductsShortcutSubtitle": "ਆਪਣੇ ਸ਼ਾਮਲ ਕੀਤੇ ਉਤਪਾਦ ਵੇਖੋ",
+  "buyerNeedsShortcutSubtitle": "ਵੇਖੋ ਕਿ ਖਰੀਦਦਾਰ ਕੀ ਲੱਭ ਰਹੇ ਹਨ",
+  "whatBuyersWantShortcutSubtitle": "ਵੇਖੋ ਕਿ ਲੋਕ ਕਿਹੜੇ ਉਤਪਾਦ ਚਾਹੁੰਦੇ ਹਨ",
+  "noProductsListedTitle": "ਅਜੇ ਤੱਕ ਕੋਈ ਉਤਪਾਦ ਸ਼ਾਮਲ ਨਹੀਂ ਕੀਤਾ ਗਿਆ",
+  "noProductsListedSubtitle": "ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਆਪਣੀ ਕਾਰੀਗਰੀ ਦਿਖਾਉਣ ਲਈ ਆਪਣਾ ਪਹਿਲਾ ਉਤਪਾਦ ਸ਼ਾਮਲ ਕਰੋ",
+  "buyerNeedsWaitingTitle": "ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਲੋੜਾਂ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੀਆਂ",
+  "buyerNeedsWaitingSubtitle": "ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਮੰਗਾਂ ਉਪਲਬਧ ਹੋਣ 'ਤੇ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੀਆਂ",
+  "featureComingSoon": "ਇਹ ਸੁਵਿਧਾ ਅਗਲੇ ਅਪਡੇਟ ਵਿੱਚ ਉਪਲਬਧ ਹੋਵੇਗੀ",
+  "signOutAction": "ਸਾਈਨ ਆਉਟ"
 }

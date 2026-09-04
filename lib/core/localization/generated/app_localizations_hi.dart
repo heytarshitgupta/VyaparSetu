@@ -574,4 +574,50 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get nextStageDescription =>
       'खरीदारों की जरूरतों और उत्पादों तक सीधी पहुंच';
+
+  @override
+  String welcomeProducer(String name) {
+    return 'नमस्ते, $name';
+  }
+
+  @override
+  String get producerDefaultName => 'उत्पादक';
+
+  @override
+  String get producerHomeSubtitle =>
+      'अपनी कारीगरी का प्रबंधन करें और खरीदारों से जुड़ें';
+
+  @override
+  String get addProductActionSubtitle =>
+      'खरीदारों को दिखाएं कि आप क्या बनाते हैं';
+
+  @override
+  String get myProductsShortcutSubtitle => 'अपने जोड़े हुए उत्पाद देखें';
+
+  @override
+  String get buyerNeedsShortcutSubtitle => 'देखें कि खरीदार क्या खोज रहे हैं';
+
+  @override
+  String get whatBuyersWantShortcutSubtitle =>
+      'देखें कि लोग कौन से उत्पाद चाहते हैं';
+
+  @override
+  String get noProductsListedTitle => 'अभी तक कोई उत्पाद नहीं जोड़ा गया';
+
+  @override
+  String get noProductsListedSubtitle =>
+      'खरीदारों को अपनी कारीगरी दिखाने के लिए अपना पहला उत्पाद जोड़ें';
+
+  @override
+  String get buyerNeedsWaitingTitle => 'खरीदारों की जरूरतें यहाँ दिखेंगी';
+
+  @override
+  String get buyerNeedsWaitingSubtitle =>
+      'खरीदारों की मांगें उपलब्ध होने पर यहाँ दिखाई देंगी';
+
+  @override
+  String get featureComingSoon => 'यह सुविधा अगले अपडेट में उपलब्ध होगी';
+
+  @override
+  String get signOutAction => 'साइन आउट';
 }

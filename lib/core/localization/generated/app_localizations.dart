@@ -1179,6 +1179,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Direct access to Buyer Needs & Products'**
   String get nextStageDescription;
+
+  /// Greeting with producer name
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, {name}'**
+  String welcomeProducer(String name);
+
+  /// Default fallback name for producer
+  ///
+  /// In en, this message translates to:
+  /// **'Producer'**
+  String get producerDefaultName;
+
+  /// Subtitle below producer greeting on Home
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your craft and connect with buyers'**
+  String get producerHomeSubtitle;
+
+  /// Subtitle on the primary Add Product action card
+  ///
+  /// In en, this message translates to:
+  /// **'Show buyers what you make'**
+  String get addProductActionSubtitle;
+
+  /// Subtitle for My Products shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'See the products you have added'**
+  String get myProductsShortcutSubtitle;
+
+  /// Subtitle for Buyer Needs shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'See what buyers are looking for'**
+  String get buyerNeedsShortcutSubtitle;
+
+  /// Subtitle for What Buyers Want shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'See what products people want'**
+  String get whatBuyersWantShortcutSubtitle;
+
+  /// Title for empty products status card
+  ///
+  /// In en, this message translates to:
+  /// **'No products added yet'**
+  String get noProductsListedTitle;
+
+  /// Subtitle for empty products status card
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first product so buyers can discover your craft'**
+  String get noProductsListedSubtitle;
+
+  /// Title for waiting buyer needs status card
+  ///
+  /// In en, this message translates to:
+  /// **'Buyer needs will appear here'**
+  String get buyerNeedsWaitingTitle;
+
+  /// Subtitle for waiting buyer needs status card
+  ///
+  /// In en, this message translates to:
+  /// **'Buyer requests will be listed here when available'**
+  String get buyerNeedsWaitingSubtitle;
+
+  /// Description on placeholder destinations
+  ///
+  /// In en, this message translates to:
+  /// **'This feature will be available in the next update'**
+  String get featureComingSoon;
+
+  /// Sign out button label
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get signOutAction;
 }
 
 class _AppLocalizationsDelegate
