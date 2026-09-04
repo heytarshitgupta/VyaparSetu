@@ -8,6 +8,7 @@ import 'package:buyer_section/core/services/preferences_service.dart';
 import 'package:buyer_section/core/theme/app_theme.dart';
 import 'package:buyer_section/core/theme/theme_provider.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product.dart';
+import 'package:buyer_section/producer_section/products/models/producer_product_draft.dart';
 import 'package:buyer_section/producer_section/products/producer_products_tab.dart';
 import 'package:buyer_section/producer_section/products/providers/producer_products_provider.dart';
 import 'package:buyer_section/producer_section/products/services/producer_product_service.dart';
@@ -21,6 +22,27 @@ class FakeProducerProductService implements IProducerProductService {
   FakeProducerProductService({
     List<ProducerProduct>? initialProducts,
   }) : productsToReturn = initialProducts != null ? List.from(initialProducts) : [];
+
+  @override
+  Future<ProducerProduct> createDraft(ProducerProductDraft draft) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ProducerProduct> updateDraft({
+    required String productId,
+    required ProducerProductDraft draft,
+  }) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ProducerProduct> updateProductImages({
+    required String productId,
+    required List<String> imagePaths,
+  }) async {
+    throw UnimplementedError();
+  }
 
   @override
   Future<List<ProducerProduct>> fetchProducts({ProductStatus? statusFilter}) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'product_price_parser.dart';
 
 /// Lifecycle statuses for a product in VyaparSetu.
 /// Maps 1:1 with remote PostgreSQL enum `public.product_status`.
@@ -170,92 +171,15 @@ class ProducerProduct {
   /// Handles String representations deterministically without floating-point math.
   /// Handles `num` by formatting to fixed 2 decimal places before parsing.
   /// Throws [FormatException] if the value is malformed or invalid.
-  static int? parsePriceToPaise(dynamic value) {
-    if (value == null) return null;
-
-    final String text;
-    if (value is num) {
-      if (value.isNaN || value.isInfinite) {
-        throw FormatException('Invalid numeric value: $value');
-      }
-      text = value.toStringAsFixed(2);
-    } else if (value is String) {
-      text = value.trim();
-      if (text.isEmpty) return null;
-    } else {
-      throw FormatException('Cannot parse price from type: ${value.runtimeType}');
-    }
-
-    final parts = text.split('.');
-    if (parts.length > 2) {
-      throw FormatException('Malformed monetary string with multiple decimal points: "$text"');
-    }
-
-    final wholeStr = parts[0].trim();
-    if (wholeStr.isEmpty && parts.length == 1) {
-      throw FormatException('Empty whole price: "$text"');
-    }
-
-    bool isNegative = false;
-    String cleanWhole = wholeStr;
-    if (cleanWhole.startsWith('-')) {
-      isNegative = true;
-      cleanWhole = cleanWhole.substring(1);
-    } else if (cleanWhole.startsWith('+')) {
-      cleanWhole = cleanWhole.substring(1);
-    }
-
-    final whole = cleanWhole.isEmpty ? 0 : int.tryParse(cleanWhole);
-    if (whole == null) {
-      throw FormatException('Malformed whole portion in price: "$text"');
-    }
-
-    int fraction = 0;
-    if (parts.length == 2) {
-      final fracStr = parts[1].trim();
-      if (fracStr.isEmpty) {
-        fraction = 0;
-      } else if (fracStr.length == 1) {
-        final d = int.tryParse(fracStr);
-        if (d == null) throw FormatException('Malformed fraction in price: "$text"');
-        fraction = d * 10;
-      } else if (fracStr.length == 2) {
-        final d = int.tryParse(fracStr);
-        if (d == null) throw FormatException('Malformed fraction in price: "$text"');
-        fraction = d;
-      } else {
-        // If extra decimal places are present, verify they are only trailing zeroes
-        final d = int.tryParse(fracStr.substring(0, 2));
-        final remainder = fracStr.substring(2);
-        final remInt = int.tryParse(remainder);
-        if (d == null || remInt == null || remInt != 0) {
-          throw FormatException('Price exceeds 2-decimal precision (NUMERIC(12,2)): "$text"');
-        }
-        fraction = d;
-      }
-    }
-
-    final totalPaise = (whole * 100) + fraction;
-    return isNegative ? -totalPaise : totalPaise;
-  }
+  /// Parses PostgreSQL NUMERIC(12, 2) representation into integer paise.
+  /// Delegates to canonical [ProductPriceParser.parseDbValueToPaise].
+  static int? parsePriceToPaise(dynamic value) =>
+      ProductPriceParser.parseDbValueToPaise(value);
 
   /// Converts integer paise back to an exact two-decimal string for Supabase / PostgreSQL.
-  ///
-  /// Examples:
-  /// - null -> null
-  /// - 1 -> "0.01"
-  /// - 100 -> "1.00"
-  /// - 1050 -> "10.50"
-  /// - 125050 -> "1250.50"
-  static String? paiseToDecimalString(int? paise) {
-    if (paise == null) return null;
-    final isNegative = paise < 0;
-    final absPaise = paise.abs();
-    final whole = absPaise ~/ 100;
-    final fraction = absPaise % 100;
-    final formatted = '$whole.${fraction.toString().padLeft(2, '0')}';
-    return isNegative ? '-$formatted' : formatted;
-  }
+  /// Delegates to canonical [ProductPriceParser.paiseToDecimalString].
+  static String? paiseToDecimalString(int? paise) =>
+      ProductPriceParser.paiseToDecimalString(paise);
 
   /// Parses PostgreSQL TEXT[] array into `List<String>`.
   static List<String> _parseImages(dynamic value) {

@@ -131,3 +131,69 @@ MY PRODUCTS LISTING UI ARCHITECTURE (STEP 6B.3)
 
 8. Add Product Route:
    - Add Product form and Supabase Storage image upload remain Step 6C.
+
+
+ADD PRODUCT DART DOMAIN, SERVICE & PROVIDER FOUNDATION (STEP 6C.4)
+------------------------------------------------------------
+1. ProducerProductDraft Domain Model:
+   - File: lib/producer_section/products/models/producer_product_draft.dart
+   - Purpose: Dedicated mutable/editable form draft state, strictly decoupled from canonical persisted ProducerProduct rows.
+   - Defaults: name = '', category = '', description = '', pricePaise = null, unit = 'piece', images = const [].
+   - Boundaries: Zero platform-specific types (no XFile, File, Uint8List, base64, or signed URLs). Only stable Storage object paths in images.
+
+2. Centralized Exact Price Handling (ProductPriceParser):
+   - File: lib/producer_section/products/models/product_price_parser.dart
+   - Rule: Strictly integer paise (int? pricePaise). ZERO double parsing.
+   - Parsing: Converts UI rupee text to paise (e.g. "1250" -> 125000, "1250.5" -> 125050, "0.01" -> 1).
+   - Strict Rejections: Rejects zero ("0", "0.00"), negative values, >2 decimal places, alphabetic input, multiple decimal points, and values above Migration 009 NUMERIC(12, 2) maximum (₹9,999,999,999.99 = 999,999,999,999 paise).
+   - Serialization: paiseToDecimalString converts paise to exact 2-decimal string for Supabase NUMERIC(12,2).
+
+3. Create vs Update Draft Lifecycle:
+   - createDraft: Requires authenticated user, forces producer_id = auth.uid(), forces status = draft, inserts allowed draft columns only.
+   - updateDraft: Owner-scoped (id = productId AND producer_id = auth.uid()). Updates editable draft fields only. Does NOT modify producer_id, status, or images.
+   - updateProductImages: Owner-scoped update specifically for stable Storage object paths.
+
+4. Prerequisite: Product Must Exist Before Photo Upload:
+   - Migration 011 Storage RLS strictly verifies:
+     (1) First folder = auth.uid()::text
+     (2) Second folder = owned product verified via private.producer_owns_product().
+   - Therefore, a product record must be persisted in public.products BEFORE any photo can be uploaded to Storage.
+   - In Step Navigation, advancing into Step 3 (Photos) automatically creates or syncs the draft record to ensure an authentic productId is available.
+
+5. Image Storage Service Separation:
+   - File: lib/producer_section/products/services/producer_product_image_service.dart
+   - Contract: IProducerProductImageService
+   - Bucket: Strictly private 'product-images' bucket (no caller-controlled bucket).
+   - Filename Generation: Injectable SecureRandomFilenameGenerator creates 32-character collision-resistant hex names without user input or external packages.
+   - Canonical MIME & Extension: Upload takes declared Content-Type, normalizes and validates it against allowlist (image/jpeg -> jpg, image/png -> png, image/webp -> webp), and internally derives the object extension. Caller cannot mismatch MIME and extension.
+   - Validation Truthfulness: Declared MIME and 5 MB size checks are client and bucket allowlist checks; they are NOT cryptographic/encoded image byte sniffing.
+   - Path Contract: Stable relative Storage object paths strictly shaped as `<auth.uid()>/<productId>/<generated-filename>.<ext>` (3 segments). Validated client-side: public/signed URLs, file://, data URIs, bucket prefixes, and invalid segment counts are rejected.
+   - Upsert: Strictly upsert = false (matches Migration 010/011 where no UPDATE policy exists).
+   - Return Value: Returns stable relative Storage object path (NOT signed URL, NOT local path).
+
+6. Private Image Viewing & Signed URLs:
+   - Storage service provides createSignedImageUrl(storagePath, expiresInSeconds).
+   - Short-lived signed URLs are generated on-demand for private viewing; they are NEVER persisted in public.products or ProducerProduct.images.
+
+7. No DB / Storage Atomic Transaction & Compensating Actions:
+   - Supabase Storage and PostgreSQL are distinct backend services without distributed 2PC transactions.
+   - If Storage upload succeeds but subsequent database image update fails, client/service architecture is designed to trigger compensating Storage deletion.
+
+8. Product Delete Lifecycle Order: Storage First -> DB Second:
+   - Storage DELETE policy verifies product ownership through private.producer_owns_product against public.products.
+   - If database row is deleted first, ownership evidence is lost and Storage images become permanently undeletable orphaned files.
+   - Fail-Safe Cases:
+     * CASE A (no images): Deletes owned DB row normally.
+     * CASE B (images present + image service available): Deletes all referenced Storage images first. Only if ALL succeed is the DB row deleted.
+     * CASE C (images present + NO image service): DO NOT delete DB row. Throws typed ProductOperationException to preserve DB row and image references for retry.
+   - Partial Storage Delete Failure:
+     If deleting image A succeeds and B fails, DB row is NOT deleted. DB + Storage deletion is not atomic, but preserving the DB row retains ownership evidence for remaining files and allows retry/recovery.
+   - Runtime Wiring:
+     ProducerProductService default constructor wires ProducerProductImageService so My Products deletion at runtime possesses Storage cleanup capability.
+
+9. Voice & AI Readiness:
+   - Canonical field setters on AddProductProvider (setName, setCategory, setDescription, setPriceFromPaise, setPriceFromRupeesText, setUnit, addImagePath) serve as the unified write path for future keyboard forms, voice extraction, and AI Studio suggestions.
+
+10. Current Status:
+    - Photos and Add Product wizard form remain unwired to UI in this step.
+    - Foundation is fully verified offline with 100% deterministic test coverage.
