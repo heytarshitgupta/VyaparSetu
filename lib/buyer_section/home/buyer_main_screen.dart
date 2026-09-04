@@ -3,6 +3,8 @@ import '../../../core/theme/app_colors.dart';
 import '../screens/shared/placeholder_screen.dart';
 import '../marketplace/marketplace_search_screen.dart';
 import 'tabs/buyer_home_tab.dart';
+import '../profile/buyer_profile_screen.dart';
+import '../my_requests/buyer_requests_screen.dart';
 
 class BuyerMainScreen extends StatefulWidget {
   const BuyerMainScreen({super.key});
@@ -17,8 +19,8 @@ class _BuyerMainScreenState extends State<BuyerMainScreen> {
   final List<Widget> _tabs = [
     const BuyerHomeTab(),
     const MarketplaceSearchScreen(),
-    const PlaceholderScreen(title: 'My Requests'),
-    const PlaceholderScreen(title: 'Profile'),
+    const BuyerRequestsScreen(),
+    const BuyerProfileScreen(),
   ];
 
   @override

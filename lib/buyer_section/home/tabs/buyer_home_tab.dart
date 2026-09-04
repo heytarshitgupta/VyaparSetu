@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/mock_data/products.dart';
-import '../../../../core/mock_data/requests.dart';
+import '../../../core/mock_data/products.dart';
+import '../../../core/mock_data/requests.dart';
+import '../../../core/routes/app_router.dart';
+import '../../../core/widgets/empty_state_widget.dart';
 import '../../onboarding/buyer_profile_provider.dart';
 import '../widgets/product_card.dart';
 import '../widgets/request_summary_card.dart';
@@ -40,8 +42,10 @@ class BuyerHomeTab extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.notifications_outlined, color: AppColors.primary),
-              onPressed: () {},
+              icon: const Icon(Icons.notifications_none, color: AppColors.primary),
+              onPressed: () {
+                Navigator.pushNamed(context, AppRouter.notificationsRoute);
+              },
             ),
             const SizedBox(width: 8),
           ],
@@ -56,8 +60,8 @@ class BuyerHomeTab extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(16),
+                  color: AppColors.background,
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.border),
                 ),
                 child: Row(
@@ -78,20 +82,22 @@ class BuyerHomeTab extends StatelessWidget {
           ),
         ),
         SliverToBoxAdapter(
-          child: SizedBox(
-            height: 310,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: mockProducts.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: ProductCard(product: mockProducts[index]),
-                );
-              },
-            ),
-          ),
+          child: mockProducts.isEmpty
+              ? const EmptyStateWidget(title: 'No Products', subtitle: 'No local products found.', icon: Icons.inventory_2_outlined)
+              : SizedBox(
+                  height: 310,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: mockProducts.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: ProductCard(product: mockProducts[index]),
+                      );
+                    },
+                  ),
+                ),
         ),
         SliverToBoxAdapter(
           child: Padding(
@@ -100,17 +106,19 @@ class BuyerHomeTab extends StatelessWidget {
           ),
         ),
         SliverToBoxAdapter(
-          child: SizedBox(
-            height: 140,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: mockRequests.length,
-              itemBuilder: (context, index) {
-                return RequestSummaryCard(request: mockRequests[index]);
-              },
-            ),
-          ),
+          child: mockRequests.isEmpty
+              ? const EmptyStateWidget(title: 'No Requests', subtitle: 'You haven\'t made any requests yet.', icon: Icons.list_alt_outlined)
+              : SizedBox(
+                  height: 140,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: mockRequests.length,
+                    itemBuilder: (context, index) {
+                      return RequestSummaryCard(request: mockRequests[index]);
+                    },
+                  ),
+                ),
         ),
         SliverToBoxAdapter(
           child: Padding(

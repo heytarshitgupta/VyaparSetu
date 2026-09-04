@@ -155,7 +155,7 @@ class _MarketplaceSearchScreenState extends State<MarketplaceSearchScreen> {
       label: Text(label),
       backgroundColor: AppColors.surface,
       side: const BorderSide(color: AppColors.border),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       onPressed: () => _showFilterSheet(context, label),
     );
   }

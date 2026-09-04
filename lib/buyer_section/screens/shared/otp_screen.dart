@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../core/widgets/primary_button.dart';
 import '../../../core/routes/app_router.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_top_bar_controls.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -32,45 +33,121 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Verify OTP'),
         elevation: 0,
         backgroundColor: Colors.transparent,
+        actions: const [
+          AppTopBarControls(showLabels: false),
+          SizedBox(width: 8),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Enter the 4-digit code',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Code sent to your mobile number.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 32),
-            TextField(
-              controller: _otpController,
-              keyboardType: TextInputType.number,
-              maxLength: 4,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineLarge,
-              decoration: const InputDecoration(
-                counterText: '',
-                hintText: '0000',
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 460),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Enter the 4-digit code',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Code sent to your mobile number.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.65),
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  
+                  TextField(
+                    controller: _otpController,
+                    keyboardType: TextInputType.number,
+                    maxLength: 4,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 16,
+                    ),
+                    decoration: InputDecoration(
+                      counterText: '',
+                      hintText: '0000',
+                      hintStyle: TextStyle(
+                        fontSize: 32,
+                        letterSpacing: 16,
+                        color: Theme.of(context).dividerColor,
+                      ),
+                      filled: true,
+                      fillColor: AppColors.surface,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                      ),
+                    ),
+                    onChanged: (_) => setState(() {}),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  SizedBox(
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: _otpController.text.length == 4 && !_isLoading ? _verifyOtp : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: _isLoading 
+                        ? const SizedBox(
+                            width: 22, height: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2.5, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                          )
+                        : const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Verify',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Icon(Icons.check_circle_outline, size: 18),
+                            ],
+                          ),
+                    ),
+                  ),
+                ],
               ),
-              onChanged: (_) => setState(() {}),
             ),
-            const SizedBox(height: 24),
-            PrimaryButton(
-              text: 'Verify',
-              isLoading: _isLoading,
-              onPressed: _otpController.text.length == 4 ? _verifyOtp : null,
-            ),
-          ],
+          ),
         ),
       ),
     );
