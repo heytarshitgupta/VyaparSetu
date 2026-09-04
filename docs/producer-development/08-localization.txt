@@ -1,0 +1,219 @@
+VYAPARSETU — PRODUCER LOCALIZATION FOUNDATION
+============================================================
+
+1. LOCALIZATION ARCHITECTURE
+============================================================
+The application utilizes Flutter's official internationalization system:
+- Configuration via l10n.yaml.
+- Translation source files in ARB format:
+  * lib/core/localization/l10n/app_en.arb (English - Template & Fallback)
+  * lib/core/localization/l10n/app_hi.arb (Hindi - Devanagari script)
+  * lib/core/localization/l10n/app_pa.arb (Punjabi - Gurmukhi script)
+- Code generator compiles type-safe localizations into:
+  * lib/core/localization/generated/app_localizations.dart
+  * lib/core/localization/generated/app_localizations_en.dart
+  * lib/core/localization/generated/app_localizations_hi.dart
+  * lib/core/localization/generated/app_localizations_pa.dart
+- MaterialApp integration in lib/main.dart provides AppLocalizations.supportedLocales
+  and AppLocalizations.localizationsDelegates.
+- English ('en') is configured as the default and fallback locale.
+
+2. SUPPORTED PROTOTYPE LANGUAGES & EXPANDABILITY
+============================================================
+Currently supported prototype languages:
+1. English (en)
+2. Hindi (hi) — हिन्दी
+3. Punjabi (pa) — ਪੰਜਾਬੀ
+
+The architecture is designed to expand to additional scheduled Indian languages
+(e.g., Bengali, Marathi, Telugu, Tamil, Gujarati, Kannada, Odia, Malayalam, Assamese)
+by adding standard app_<lang>.arb files to lib/core/localization/l10n/ and updating
+the AppLanguage enum.
+
+3. INITIAL FOUNDATIONAL STRING SET
+============================================================
+Initial core strings available for upcoming screens:
+- home (Home / होम / ਹੋਮ)
+- myProducts (My Products / मेरे उत्पाद / ਮੇਰੇ ਉਤਪਾਦ)
+- addProduct (Add Product / उत्पाद जोड़ें / ਉਤਪਾਦ ਸ਼ਾਮਲ ਕਰੋ)
+- buyerNeeds (Buyer Needs / खरीदारों की जरूरतें / ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਲੋੜਾਂ)
+- whatBuyersWant (What Buyers Want / खरीदार क्या चाहते हैं / ਖਰੀਦਦਾਰ ਕੀ ਚਾਹੁੰਦੇ ਹਨ)
+- myProfile (My Profile / मेरी प्रोफाइल / ਮੇਰੀ ਪ੍ਰੋਫਾਈਲ)
+- settings (Settings / सेटिंग्स / ਸੈਟਿੰਗਾਂ)
+- welcome (Welcome / स्वागत है / ਜੀ ਆਇਆਂ ਨੂੰ)
+- continueButton (Continue / आगे बढ़ें / ਅੱਗੇ ਵਧੋ)
+- back (Back / पीछे जाएं / ਪਿੱਛੇ ਜਾਓ)
+- save (Save / सहेजें / ਸੰਭਾਲੋ)
+- cancel (Cancel / रद्द करें / ਰੱਦ ਕਰੋ)
+- verify (Verify / सत्यापित करें / ਤਸਦੀਕ ਕਰੋ)
+- verified (Verified / सत्यापित / ਤਸਦੀਕਸ਼ੁਦਾ)
+- notVerified (Not Verified / सत्यापित नहीं / ਤਸਦੀਕ ਨਹੀਂ ਹੋਇਆ)
+
+All translated with natural, grassroots phrasing in native scripts.
+
+4. APP LANGUAGE VS VOICE GUIDANCE LANGUAGE SEPARATION
+============================================================
+Two distinct concepts are maintained in LanguageProvider:
+- App Language (AppLanguage):
+  * Controls all visible text in the application interface.
+  * Updates MaterialApp locale and triggers immediate UI rebuilds.
+- Voice Guidance Language (VoiceLanguage):
+  * Will control future audio playback, speech prompts, and text-to-speech (TTS).
+  * Maintained as an independent setting so a user can visually navigate in one language
+    while hearing voice guidance in another (or keep preferred regional dialects).
+  * TTS and voice services are intentionally deferred and not implemented in Step 5A.
+
+5. NEW SCREENS & ONBOARDING MIGRATION POLICY
+============================================================
+- New Producer screens (e.g. Dashboard, Product Catalog, Market Radar) MUST use
+  AppLocalizations.of(context)! rather than hard-coding user-facing strings.
+- Existing onboarding screens (Steps 1–4) are NOT required to be migrated in this
+  milestone, preventing regressions to existing tested onboarding flows.
+- Language switcher widget (LanguageSwitcherWidget) is modular and reusable across
+  app bars, menus, and future settings screens.
+
+6. CORE UX LANGUAGE & LOW-LITERACY NAMING PRINCIPLE
+============================================================
+- Principle: A page or action name must clearly tell the producer what they will find
+  or what will happen after tapping it.
+- UI labels prioritize clarity and immediate understanding over branding or startup jargon.
+- Avoid fancy, technical, startup-style, analytics-style, or English-heavy terminology.
+- Technical module names can differ from visible page names. Internal architecture, code,
+  and SIH documentation may retain technical module names while UI labels remain simple.
+- Simple native-language wording in natural phrasing is preferred; avoid literal translations
+  of technical English terms.
+
+Guideline mapping examples:
+- Internal: AI Product Studio
+  User-facing: Add Product / Improve Product Photo
+- Internal: Market Radar
+  User-facing: What Buyers Want
+- Internal: Pricing Assistant
+  User-facing: Set a Good Price
+- Internal: Catalogue
+  User-facing: My Products
+- Internal: Buyer Request Matching
+  User-facing: Buyer Needs / Matching Buyers
+
+7. PRODUCER AUTH & ROLE SELECTION LOCALIZATION (STEP 5B.1)
+============================================================
+- Welcome / Role Selection (RoleSelectionScreen), Producer Sign In (ProducerLoginScreen),
+  and Producer Sign Up (ProducerSignupScreen) are fully localized in English, Hindi,
+  and Punjabi.
+- Pre-login availability: Language can be switched before login at any time using
+  AppTopBarControls located in the AppBar actions.
+- Meaning-First Translation Rule: Translations convey the direct user action and meaning
+  rather than literal dictionary translations.
+  * Internal: Role Selection -> UI: "Choose how you want to continue:" / "चुनें कि आप ऐप का उपयोग कैसे करना चाहते हैं:" / "ਚੁਣੋ ਕਿ ਤੁਸੀਂ ਐਪ ਦੀ ਵਰਤੋਂ ਕਿਵੇਂ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ:"
+  * Internal: Producer Role -> UI: "I Make & Sell Products" / "मैं सामान बनाता और बेचता हूँ" / "ਮੈਂ ਸਾਮਾਨ ਬਣਾਉਂਦਾ ਅਤੇ ਵੇਚਦਾ ਹਾਂ"
+  * Internal: Buyer Role -> UI: "I Want to Buy Products" / "मुझे उत्पाद खरीदने हैं" / "ਮੈਂ ਉਤਪਾਦ ਖਰੀਦਣਾ ਚਾਹੁੰਦਾ ਹਾਂ"
+  * Internal: Producer Login -> UI: "Sign In" / "लॉग इन करें" / "ਲੌਗ ਇਨ ਕਰੋ"
+  * Internal: Producer Signup -> UI: "Create Account" / "खाता बनाएं" / "ਖਾਤਾ ਬਣਾਓ"
+- Instant Switching & Form State Preservation:
+  * Locale and Theme switching happen entirely reactive in-memory via Provider and MaterialApp.
+  * No page reload, navigation recreation, or screen restart occurs.
+  * Entered form values (e.g. name, email, password) are strictly preserved across
+    language and appearance toggles.
+
+8. PRODUCER ONBOARDING 5-STEP LOCALIZATION (STEP 5B.2)
+============================================================
+- Complete 5-Step Producer Onboarding Localization:
+  All 5 steps, navigation headers, buttons, form fields, validation messages, dialogs,
+  badges, and review screens are localized across English, Hindi, and Punjabi.
+
+- Step Titles & Subtitles Across Languages:
+  * Step 1: About You / Your name and contact info
+    - HI: आपके बारे में / आपका नाम और संपर्क विवरण
+    - PA: ਤੁਹਾਡੇ ਬਾਰੇ / ਤੁਹਾਡਾ ਨਾਮ ਅਤੇ ਸੰਪਰਕ ਵੇਰਵੇ
+  * Step 2: Your Work / What you make and sell
+    - HI: आपका काम / आप क्या बनाते और बेचते हैं
+    - PA: ਤੁਹਾਡਾ ਕੰਮ / ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਅਤੇ ਵੇਚਦੇ ਹੋ
+  * Step 3: Your Address / Where your workshop is based
+    - HI: काम का पता / आपकी कार्यशाला या दुकान का पता
+    - PA: ਕੰਮ ਦਾ ਪਤਾ / ਤੁਹਾਡੀ ਵਰਕਸ਼ਾਪ ਜਾਂ ਦੁਕਾਨ ਦਾ ਪਤਾ
+  * Step 4: Verification / Identity and business details
+    - HI: सत्यापन / पहचान और कार्य विवरण
+    - PA: ਤਸਦੀਕ / ਪਛਾਣ ਅਤੇ ਕੰਮ ਦੇ ਵੇਰਵੇ
+  * Step 5: Check & Submit / Confirm and start selling
+    - HI: जांचें और जमा करें / पुष्टि करें और बेचना शुरू करें
+    - PA: ਜਾਂਚੋ ਅਤੇ ਜਮ੍ਹਾਂ ਕਰੋ / ਪੁਸ਼ਟੀ ਕਰੋ ਅਤੇ ਵੇਚਣਾ ਸ਼ੁਰੂ ਕਰੋ
+
+- Meaning-First & Low-Literacy Translation Principles:
+  * Rather than literal dictionary translations, wording describes what the artisan actually does.
+  * Avoided high Sanskritized Hindi or formal archaic Punjabi.
+  * Did not force English tech terms ("Onboarding", "Compliance", "Catalog", "KYC") on rural artisans.
+  * Used grounded, practical phrasing: "काम का पता" instead of "व्यावसायिक परिसर स्थान", "जांचें और जमा करें" instead of "अंतिम आवेदन सत्यापन".
+
+- Step Details Localized:
+  * Step 1 (Basic Details): Full Name, Email Read-Only badge, Phone number with verified status or contact editing.
+  * Step 2 (Your Work / Business & Craft): Business/Shop name, Standard craft categories (Handicrafts, Textiles, Pottery, Woodwork, Metalwork, Leatherwork, Jewelry, Painting, Food Products, Other), custom craft input, craft bio.
+  * Step 3 (Your Address / Workshop Location): State dropdown, District, City/Village ("शहर या गाँव"), Pincode ("पिन कोड"), Street address ("दुकान या कार्यशाला का पता").
+  * Step 4 (Verification / Identity & Compliance): PAN verification card with prototype simulated badge, name, DOB, masked PAN persistence; Aadhaar info card and modal dialog clearly stating official UIDAI verification is not enabled; GST registration Yes/No toggle with under-threshold micro-producer guidance.
+  * Step 5 (Check & Submit): Review card, profile status, next stage explanation, submission snackbar.
+
+- Form State & Step Preservation:
+  * Rebuilding on language or appearance toggles triggers build() without recreating State.
+  * Entered form values, current step index, and selected categories are 100% preserved.
+
+- Dark Mode & Responsive Layout:
+  * Themed using Theme.of(context) (surface, onSurface, dividerColor, scaffoldBackgroundColor).
+  * Tested without RenderFlex overflows down to narrow 320px mobile viewport.
+
+9. LOCALIZED LOCATION DATA ARCHITECTURE (STEP 5B.3)
+============================================================
+- Separation of Location Concerns:
+  A. Canonical Geographic Identity:
+     * Known geographic entities are identified internally by canonical state/UT codes based on standard abbreviations (e.g. 'PB' for Punjab).
+     * Application logic, state management, and backend payloads never rely on translated display text.
+  B. Localized Display Names:
+     * Display names are rendered dynamically based on active locale (en -> Punjab, hi -> पंजाब, pa -> ਪੰਜਾਬ).
+     * Live language switching changes only the visible label; the canonical state selection ('PB') remains unchanged.
+  C. Free-form User-Entered Address:
+     * Inputs like City / Village, Street Address, and District remain free-form text.
+     * The producer may enter text in Gurmukhi (Punjabi), Devanagari (Hindi), English, or mixed scripts.
+     * What the producer enters is preserved exactly with zero automatic rewriting.
+
+- Deterministic Static Location Dataset:
+  * Established IndianState model and IndianStates dataset (lib/core/location/indian_states.dart).
+  * Contains all 36 Indian States and Union Territories with canonical Indian state/UT codes, English, Hindi, and Punjabi names.
+  * Verified for Punjab:
+    - Canonical: PB
+    - English: Punjab
+    - Hindi: पंजाब
+    - Punjabi: ਪੰਜਾਬ
+  * 100% deterministic, offline, and synchronous. No runtime AI, translation APIs, or network calls.
+
+- Cascading District Architecture (Future Milestone):
+  * Current status: District is a free-text input field with validation.
+  * No incomplete or fabricated India-wide district dataset was added.
+  * Target architecture: State Selected -> Fetch/Filter District options for State -> Canonical District ID/Code -> Localized Display Name.
+
+- Free-form Address as Source of Truth & Future Translation Confirmation UX:
+  * Original user-entered address is the immutable source of truth:
+    - original_text
+    - original_language
+    - normalized_or_translated_english (derived only)
+  * Future AI translation flow:
+    Producer enters address in Punjabi/Hindi -> Original preserved -> Translation service generates suggested English version ->
+    Show both to producer ("Is this correct?") -> Producer confirms or edits -> Store confirmed derived version.
+  * Never silently overwrite the producer's original address.
+
+- Three-Tier Localization Architecture Rule:
+  * Tier 1: Fixed App UI (buttons, page titles, field labels, navigation)
+    -> Flutter ARB localization. Deterministic, reviewed, no runtime AI, zero API cost.
+  * Tier 2: Known Structured Data (states, districts, craft categories)
+    -> Canonical IDs + reviewed localized display names. Deterministic local/backend dataset, no runtime AI.
+  * Tier 3: User-Generated Text (address, product bio, custom craft name)
+    -> Preserve original text. Future optional translation/normalization with user confirmation.
+    -> AI/translation service only where useful; never overwrite original automatically.
+
+- Post-Onboarding Language/Theme UX Decision:
+  * Pre-Onboarding / Onboarding: Language and appearance controls are easily accessible in AppBar top controls.
+  * Post-Onboarding: Do NOT place language/theme switchers in every page AppBar.
+  * The application loads saved preferences automatically from PreferencesService on startup.
+  * In the main producer app, language and theme settings are managed in My Profile -> Settings.
+  * Language and appearance selections continue saving immediately to local preferences on change.
+
+
+
+

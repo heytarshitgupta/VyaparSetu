@@ -1,0 +1,709 @@
+{
+  "@@locale": "en",
+  "appTitle": "VyaparSetu",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "appSubtitle": "Connecting artisan producers directly with commercial buyers across India",
+  "@appSubtitle": {
+    "description": "Brand subtitle describing purpose"
+  },
+  "chooseHowToContinue": "Choose how you want to continue:",
+  "@chooseHowToContinue": {
+    "description": "Role selection prompt"
+  },
+  "roleBuyerTitle": "I Want to Buy Products",
+  "@roleBuyerTitle": {
+    "description": "Role option for buyers"
+  },
+  "roleBuyerDescription": "Discover products and connect with producers",
+  "@roleBuyerDescription": {
+    "description": "Description for buyer role"
+  },
+  "roleProducerTitle": "I Make & Sell Products",
+  "@roleProducerTitle": {
+    "description": "Role option for artisan producers"
+  },
+  "roleProducerDescription": "Create your profile and reach more buyers",
+  "@roleProducerDescription": {
+    "description": "Description for producer role"
+  },
+  "roleSelectionFooter": "You can switch or register anytime with your phone or email.",
+  "@roleSelectionFooter": {
+    "description": "Footer note on role selection"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Navigation item for home"
+  },
+  "myProducts": "My Products",
+  "@myProducts": {
+    "description": "Navigation item or header for producer products"
+  },
+  "addProduct": "Add Product",
+  "@addProduct": {
+    "description": "Button to add a new product"
+  },
+  "buyerNeeds": "Buyer Needs",
+  "@buyerNeeds": {
+    "description": "Navigation item for incoming buyer requirements and orders"
+  },
+  "whatBuyersWant": "What Buyers Want",
+  "@whatBuyersWant": {
+    "description": "Navigation item for market demand and high-selling craft insights"
+  },
+  "myProfile": "My Profile",
+  "@myProfile": {
+    "description": "Navigation item or header for producer profile"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Navigation item or header for app settings"
+  },
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Greeting on dashboard or home"
+  },
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Generic continue action button"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Generic back action button"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Generic save action button"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Generic cancel action button"
+  },
+  "verify": "Verify",
+  "@verify": {
+    "description": "Generic verify action button"
+  },
+  "verified": "Verified",
+  "@verified": {
+    "description": "Badge or status label for verified status"
+  },
+  "notVerified": "Not Verified",
+  "@notVerified": {
+    "description": "Badge or status label for unverified status"
+  },
+  "signInTitle": "Sign In",
+  "@signInTitle": {
+    "description": "Header for sign in screen"
+  },
+  "signInSubtitle": "Sign in to manage your products, view buyer needs, and track orders.",
+  "@signInSubtitle": {
+    "description": "Subtitle on sign in screen"
+  },
+  "createAccountTitle": "Create Account",
+  "@createAccountTitle": {
+    "description": "Header for create account screen"
+  },
+  "createAccountSubtitle": "Start your journey as an artisan producer and reach direct commercial buyers.",
+  "@createAccountSubtitle": {
+    "description": "Subtitle on create account screen"
+  },
+  "fullName": "Full Name",
+  "@fullName": {
+    "description": "Full name field label"
+  },
+  "fullNameHint": "e.g. Ramesh Kumar",
+  "@fullNameHint": {
+    "description": "Hint for full name input"
+  },
+  "emailAddress": "Email Address",
+  "@emailAddress": {
+    "description": "Email address label"
+  },
+  "emailHint": "producer@example.com",
+  "@emailHint": {
+    "description": "Hint for email address input"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password label"
+  },
+  "passwordHint": "Enter your password",
+  "@passwordHint": {
+    "description": "Hint for password input"
+  },
+  "createPasswordHint": "Create a password (min 6 characters)",
+  "@createPasswordHint": {
+    "description": "Hint when creating new password"
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "Confirm password label"
+  },
+  "confirmPasswordHint": "Re-enter your password",
+  "@confirmPasswordHint": {
+    "description": "Hint for confirm password input"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "signInWithPhone": "Sign in with Phone OTP",
+  "@signInWithPhone": {
+    "description": "Button for alternate phone sign in"
+  },
+  "signUpWithPhone": "Sign up with Phone OTP",
+  "@signUpWithPhone": {
+    "description": "Button for alternate phone sign up"
+  },
+  "newHere": "New here? ",
+  "@newHere": {
+    "description": "Prompt for new users without account"
+  },
+  "alreadyHaveAccount": "Already have an account? ",
+  "@alreadyHaveAccount": {
+    "description": "Prompt for users with existing account"
+  },
+  "enterFullName": "Please enter your full name",
+  "@enterFullName": {
+    "description": "Validation error for missing full name"
+  },
+  "nameTooShort": "Name must be at least 2 characters",
+  "@nameTooShort": {
+    "description": "Validation error for short name"
+  },
+  "enterEmail": "Please enter your email address",
+  "@enterEmail": {
+    "description": "Validation error for missing email"
+  },
+  "enterValidEmail": "Please enter a valid email address",
+  "@enterValidEmail": {
+    "description": "Validation error for invalid email"
+  },
+  "enterPassword": "Please enter your password",
+  "@enterPassword": {
+    "description": "Validation error for missing password"
+  },
+  "createPassword": "Please create a password",
+  "@createPassword": {
+    "description": "Validation error when creating password"
+  },
+  "passwordTooShort": "Password must be at least 6 characters",
+  "@passwordTooShort": {
+    "description": "Validation error for short password"
+  },
+  "confirmYourPassword": "Please confirm your password",
+  "@confirmYourPassword": {
+    "description": "Validation error for missing confirm password"
+  },
+  "passwordsDoNotMatch": "Passwords do not match",
+  "@passwordsDoNotMatch": {
+    "description": "Validation error when passwords differ"
+  },
+  "phoneFeatureUpcoming": "Phone login will be available in the next update.",
+  "@phoneFeatureUpcoming": {
+    "description": "Notice for upcoming phone login feature"
+  },
+  "forgotPasswordUpcoming": "Password recovery will be available in a future update.",
+  "@forgotPasswordUpcoming": {
+    "description": "Notice for upcoming password recovery"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Label for language selector"
+  },
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Label for appearance or theme selector"
+  },
+  "chooseAppearance": "Choose appearance",
+  "@chooseAppearance": {
+    "description": "Title for appearance selection sheet"
+  },
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Light appearance mode"
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Dark appearance mode"
+  },
+  "themeSystem": "Use phone setting",
+  "@themeSystem": {
+    "description": "Appearance mode following system/phone setting"
+  },
+
+  "producerSetup": "Producer Setup",
+  "@producerSetup": {
+    "description": "Screen title for producer onboarding"
+  },
+  "exit": "Exit",
+  "@exit": {
+    "description": "Exit button label"
+  },
+  "stepOf": "Step {current} of {total}",
+  "@stepOf": {
+    "description": "Progress step indicator",
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "percentCompleted": "{percent}% Completed",
+  "@percentCompleted": {
+    "description": "Progress percentage indicator",
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "submitApplication": "Submit Application",
+  "@submitApplication": {
+    "description": "Final submit button on onboarding"
+  },
+  "onboardingReviewSubmitted": "Onboarding review submitted. Full submission will be finalized in upcoming steps.",
+  "@onboardingReviewSubmitted": {
+    "description": "Snackbar shown upon onboarding completion"
+  },
+
+  "step1Title": "About You",
+  "@step1Title": {
+    "description": "Step 1 simplified title"
+  },
+  "step1Subtitle": "Your name and contact info",
+  "@step1Subtitle": {
+    "description": "Step 1 simplified subtitle"
+  },
+  "step2Title": "Your Work",
+  "@step2Title": {
+    "description": "Step 2 simplified title"
+  },
+  "step2Subtitle": "What you make and sell",
+  "@step2Subtitle": {
+    "description": "Step 2 simplified subtitle"
+  },
+  "step3Title": "Your Address",
+  "@step3Title": {
+    "description": "Step 3 simplified title"
+  },
+  "step3Subtitle": "Where your workshop is based",
+  "@step3Subtitle": {
+    "description": "Step 3 simplified subtitle"
+  },
+  "step4Title": "Verification",
+  "@step4Title": {
+    "description": "Step 4 simplified title"
+  },
+  "step4Subtitle": "Identity and business details",
+  "@step4Subtitle": {
+    "description": "Step 4 simplified subtitle"
+  },
+  "step5Title": "Check & Submit",
+  "@step5Title": {
+    "description": "Step 5 simplified title"
+  },
+  "step5Subtitle": "Confirm and start selling",
+  "@step5Subtitle": {
+    "description": "Step 5 simplified subtitle"
+  },
+
+  "step1Header": "Artisan Basic Details",
+  "@step1Header": {
+    "description": "Header inside Step 1 card"
+  },
+  "step1Description": "Confirm your primary name and contact information for buyer communications.",
+  "@step1Description": {
+    "description": "Description inside Step 1 card"
+  },
+  "fullNameLabel": "Full Name *",
+  "@fullNameLabel": {
+    "description": "Full name input label with required star"
+  },
+  "enterFullNameHint": "Enter your full name",
+  "@enterFullNameHint": {
+    "description": "Full name input hint"
+  },
+  "fullNameHelper": "Your name as you want it shown on VyaparSetu",
+  "@fullNameHelper": {
+    "description": "Full name helper text"
+  },
+  "emailAddressLogin": "Email Address (Login)",
+  "@emailAddressLogin": {
+    "description": "Email address label showing login association"
+  },
+  "notProvided": "Not provided",
+  "@notProvided": {
+    "description": "Placeholder when data is not provided"
+  },
+  "readOnly": "Read Only",
+  "@readOnly": {
+    "description": "Badge indicating non-editable field"
+  },
+  "emailHelper": "Your login email is managed through your account",
+  "@emailHelper": {
+    "description": "Helper explaining read-only email"
+  },
+  "verifiedLoginPhone": "Verified Login Phone",
+  "@verifiedLoginPhone": {
+    "description": "Label when phone was verified at auth"
+  },
+  "contactPhoneNumber": "Contact Phone Number",
+  "@contactPhoneNumber": {
+    "description": "Label for contact phone"
+  },
+  "verifiedAuth": "Verified Auth",
+  "@verifiedAuth": {
+    "description": "Badge for auth-verified phone"
+  },
+  "verifiedPhoneHelper": "This phone number is verified and tied to your login credentials",
+  "@verifiedPhoneHelper": {
+    "description": "Helper for verified phone"
+  },
+  "enter10DigitPhoneHint": "Enter 10-digit mobile number",
+  "@enter10DigitPhoneHint": {
+    "description": "Hint for contact phone"
+  },
+  "contactPhoneHelper": "Used to contact you about your business (Contact phone only)",
+  "@contactPhoneHelper": {
+    "description": "Helper for contact phone"
+  },
+
+  "step2Header": "Business & Craft Details",
+  "@step2Header": {
+    "description": "Header inside Step 2 card"
+  },
+  "step2Description": "Tell buyers about your enterprise, workshop, or home-based artisanal work.",
+  "@step2Description": {
+    "description": "Description inside Step 2 card"
+  },
+  "businessNameLabel": "Business / Workshop Name *",
+  "@businessNameLabel": {
+    "description": "Business name input label with required star"
+  },
+  "businessNameHint": "e.g. Sharma Pickles, Punjab Phulkari Works",
+  "@businessNameHint": {
+    "description": "Business name input hint"
+  },
+  "businessNameHelper": "Name of your business, workshop, or home-based work",
+  "@businessNameHelper": {
+    "description": "Business name helper text"
+  },
+  "craftCategoryLabel": "Craft / Product Category *",
+  "@craftCategoryLabel": {
+    "description": "Craft category label with star"
+  },
+  "craftCategoryHelper": "Select your main product category so commercial buyers can find you easily",
+  "@craftCategoryHelper": {
+    "description": "Craft category helper"
+  },
+  "specifyCategory": "Specify Your Category *",
+  "@specifyCategory": {
+    "description": "Custom category label with star"
+  },
+  "specifyCategoryHint": "e.g. Bamboo Crafts, Clay Pottery, Stone Carving",
+  "@specifyCategoryHint": {
+    "description": "Custom category hint"
+  },
+  "specifyCategoryHelper": "Enter your custom artisanal or product category",
+  "@specifyCategoryHelper": {
+    "description": "Custom category helper"
+  },
+  "shortDescriptionLabel": "Short Description (Optional)",
+  "@shortDescriptionLabel": {
+    "description": "Bio description label"
+  },
+  "shortDescriptionHint": "Tell buyers what you make in a few words (e.g. handwoven cotton stoles using organic natural dyes)",
+  "@shortDescriptionHint": {
+    "description": "Bio description hint"
+  },
+  "shortDescriptionHelper": "Tell buyers what you make in a few words",
+  "@shortDescriptionHelper": {
+    "description": "Bio description helper"
+  },
+
+  "catFood": "Food & Homemade Products",
+  "@catFood": { "description": "Category: Food" },
+  "catHandicrafts": "Handicrafts",
+  "@catHandicrafts": { "description": "Category: Handicrafts" },
+  "catHandloom": "Handloom & Textiles",
+  "@catHandloom": { "description": "Category: Handloom" },
+  "catClothing": "Clothing & Embroidery",
+  "@catClothing": { "description": "Category: Clothing" },
+  "catJewellery": "Jewellery & Accessories",
+  "@catJewellery": { "description": "Category: Jewellery" },
+  "catWoodwork": "Woodwork",
+  "@catWoodwork": { "description": "Category: Woodwork" },
+  "catMetalCraft": "Metal Craft",
+  "@catMetalCraft": { "description": "Category: Metal" },
+  "catHomeDecor": "Home Decor",
+  "@catHomeDecor": { "description": "Category: Home Decor" },
+  "catBeauty": "Beauty / Personal Care",
+  "@catBeauty": { "description": "Category: Beauty" },
+  "catOther": "Other",
+  "@catOther": { "description": "Category: Other" },
+
+  "step3Header": "Workshop Location",
+  "@step3Header": {
+    "description": "Header inside Step 3 card"
+  },
+  "step3Description": "Provide your workshop or home production address so commercial buyers can calculate logistics and pickup.",
+  "@step3Description": {
+    "description": "Description inside Step 3 card"
+  },
+  "stateLabel": "State / Union Territory *",
+  "@stateLabel": {
+    "description": "State dropdown label with required star"
+  },
+  "selectStateHint": "Select your state or union territory",
+  "@selectStateHint": {
+    "description": "State dropdown hint"
+  },
+  "districtLabel": "District *",
+  "@districtLabel": {
+    "description": "District label with star"
+  },
+  "districtHint": "e.g. Jaipur, Ludhiana",
+  "@districtHint": {
+    "description": "District hint"
+  },
+  "districtHelper": "District where you make your products",
+  "@districtHelper": {
+    "description": "District helper text"
+  },
+  "cityVillageLabel": "City / Village *",
+  "@cityVillageLabel": {
+    "description": "City or village label with star"
+  },
+  "cityVillageHint": "e.g. Sanganer, Khanna",
+  "@cityVillageHint": {
+    "description": "City or village hint"
+  },
+  "cityVillageHelper": "Your city, town, or village",
+  "@cityVillageHelper": {
+    "description": "City or village helper"
+  },
+  "pincodeLabel": "Pincode *",
+  "@pincodeLabel": {
+    "description": "Pincode label with star"
+  },
+  "pincodeHint": "e.g. 302029",
+  "@pincodeHint": {
+    "description": "Pincode hint"
+  },
+  "pincodeHelper": "6-digit postal PIN code (cannot start with 0)",
+  "@pincodeHelper": {
+    "description": "Pincode helper"
+  },
+  "addressLabel": "Workshop / Business Address *",
+  "@addressLabel": {
+    "description": "Address label with star"
+  },
+  "addressHint": "Street, landmark, lane, or house/unit details...",
+  "@addressHint": {
+    "description": "Address hint"
+  },
+  "addressHelper": "Where you make or manage your products",
+  "@addressHelper": {
+    "description": "Address helper"
+  },
+
+  "step4Header": "Identity & Compliance",
+  "@step4Header": {
+    "description": "Header inside Step 4 card"
+  },
+  "step4Description": "Verify your details to build trust with buyers.",
+  "@step4Description": {
+    "description": "Description inside Step 4 card"
+  },
+  "demoDisclosure": "Demo verification environment • Verification is simulated in this prototype.",
+  "@demoDisclosure": {
+    "description": "Disclosure banner in Step 4"
+  },
+  "panVerification": "PAN Verification",
+  "@panVerification": {
+    "description": "Title for PAN card in unverified state"
+  },
+  "panVerified": "PAN Verified",
+  "@panVerified": {
+    "description": "Title for PAN card in verified state"
+  },
+  "secureIdentityVerification": "Secure identity verification",
+  "@secureIdentityVerification": {
+    "description": "Subtitle for PAN card unverified"
+  },
+  "verifiedInDemoEnvironment": "Verified in demo verification environment",
+  "@verifiedInDemoEnvironment": {
+    "description": "Subtitle for PAN card verified"
+  },
+  "verifiedPan": "Verified PAN",
+  "@verifiedPan": {
+    "description": "Label for verified PAN box"
+  },
+  "editDetails": "Edit Details",
+  "@editDetails": {
+    "description": "Action to reset and re-enter PAN"
+  },
+  "panSecurityNote": "Your PAN details are securely verified. Plaintext PAN is never stored.",
+  "@panSecurityNote": {
+    "description": "Security note under verified PAN"
+  },
+  "panNumberLabel": "PAN Number *",
+  "@panNumberLabel": {
+    "description": "PAN number input label with star"
+  },
+  "panNumberHint": "ABCDE1234F",
+  "@panNumberHint": {
+    "description": "PAN number input hint"
+  },
+  "panNumberHelper": "10-character alphanumeric PAN",
+  "@panNumberHelper": {
+    "description": "PAN number helper"
+  },
+  "nameAsPerPanLabel": "Name as per PAN *",
+  "@nameAsPerPanLabel": {
+    "description": "Name as per PAN label with star"
+  },
+  "nameAsPerPanHint": "Enter name as shown on PAN card",
+  "@nameAsPerPanHint": {
+    "description": "Name as per PAN hint"
+  },
+  "nameAsPerPanHelper": "Must match official PAN records",
+  "@nameAsPerPanHelper": {
+    "description": "Name as per PAN helper"
+  },
+  "dobLabel": "Date of Birth *",
+  "@dobLabel": {
+    "description": "Date of birth label with star"
+  },
+  "selectDobHint": "Select Date of Birth (DD/MM/YYYY)",
+  "@selectDobHint": {
+    "description": "Date of birth picker hint"
+  },
+  "panPrivacyShield": "Your PAN number is used only for verification and is not stored in plain text.",
+  "@panPrivacyShield": {
+    "description": "Privacy shield note above PAN verify button"
+  },
+  "verifyPan": "Verify PAN",
+  "@verifyPan": {
+    "description": "PAN verify button label"
+  },
+  "checkingDetails": "Checking Details...",
+  "@checkingDetails": {
+    "description": "Button label during verification"
+  },
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Button label when verification failed"
+  },
+
+  "aadhaarVerification": "Aadhaar Verification",
+  "@aadhaarVerification": {
+    "description": "Title for Aadhaar card"
+  },
+  "aadhaarSubtitle": "Identity verification via authorized service",
+  "@aadhaarSubtitle": {
+    "description": "Subtitle for Aadhaar card"
+  },
+  "aadhaarDescription": "Verify your identity using Aadhaar. Fast, secure, and helps build trust with commercial buyers.",
+  "@aadhaarDescription": {
+    "description": "Description on Aadhaar card"
+  },
+  "verifyAadhaar": "Verify Aadhaar",
+  "@verifyAadhaar": {
+    "description": "Button label to open Aadhaar dialog"
+  },
+  "aadhaarDialogContent": "Aadhaar verification will be available through an authorized verification service. It is not enabled in this prototype.",
+  "@aadhaarDialogContent": {
+    "description": "Content of Aadhaar dialog"
+  },
+  "gotIt": "Got It",
+  "@gotIt": {
+    "description": "Action button on Aadhaar dialog"
+  },
+
+  "gstRegistration": "GST Registration",
+  "@gstRegistration": {
+    "description": "Title for GST card"
+  },
+  "gstDeclared": "Declared GST registration",
+  "@gstDeclared": {
+    "description": "Subtitle when GST registered is declared"
+  },
+  "gstStatusSubtitle": "Business tax registration status",
+  "@gstStatusSubtitle": {
+    "description": "Subtitle when GST is not declared"
+  },
+  "areYouGstRegistered": "Are you registered for GST? *",
+  "@areYouGstRegistered": {
+    "description": "Question for GST registration"
+  },
+  "yes": "Yes",
+  "@yes": {
+    "description": "Yes choice"
+  },
+  "no": "No",
+  "@no": {
+    "description": "No choice"
+  },
+  "gstNotRegisteredNotice": "GST not registered. Micro-producers below registration thresholds can continue without GST.",
+  "@gstNotRegisteredNotice": {
+    "description": "Information box when No is chosen for GST"
+  },
+  "gstinNumberLabel": "GSTIN Number *",
+  "@gstinNumberLabel": {
+    "description": "GSTIN number label with star"
+  },
+  "gstinHint": "07AAAAA0000A1Z5",
+  "@gstinHint": {
+    "description": "GSTIN input hint"
+  },
+  "gstinHelper": "15-character alphanumeric GSTIN",
+  "@gstinHelper": {
+    "description": "GSTIN helper text"
+  },
+  "verifyGstin": "Verify GSTIN",
+  "@verifyGstin": {
+    "description": "Button to format-check GSTIN"
+  },
+  "gstUpcomingNotice": "GST verification integration will be added next.",
+  "@gstUpcomingNotice": {
+    "description": "Information message after format-checking GSTIN"
+  },
+
+  "badgeNotVerified": "Not Verified",
+  "@badgeNotVerified": { "description": "Verification badge: not verified" },
+  "badgeChecking": "Checking...",
+  "@badgeChecking": { "description": "Verification badge: checking" },
+  "badgeVerified": "Verified",
+  "@badgeVerified": { "description": "Verification badge: verified" },
+  "badgeCouldNotVerify": "Could Not Verify",
+  "@badgeCouldNotVerify": { "description": "Verification badge: could not verify" },
+  "badgeComingSoon": "Coming Soon",
+  "@badgeComingSoon": { "description": "Verification badge: coming soon" },
+  "badgeNotRegistered": "Not Registered",
+  "@badgeNotRegistered": { "description": "Verification badge: not registered" },
+
+  "step5CardTitle": "Review & Submit Onboarding",
+  "@step5CardTitle": {
+    "description": "Title on Step 5 review card"
+  },
+  "step5CardDescription": "Review your profile setup before submitting. You can edit your craft catalog anytime from your dashboard.",
+  "@step5CardDescription": {
+    "description": "Description on Step 5 review card"
+  },
+  "profileStatus": "Profile Status",
+  "@profileStatus": {
+    "description": "Label for profile status in review"
+  },
+  "readyForSubmission": "Ready for Submission",
+  "@readyForSubmission": {
+    "description": "Value for ready for submission"
+  },
+  "nextStage": "Next Stage",
+  "@nextStage": {
+    "description": "Label for next stage in review"
+  },
+  "nextStageDescription": "Direct access to Buyer Needs & Products",
+  "@nextStageDescription": {
+    "description": "Value describing direct access after onboarding"
+  }
+}

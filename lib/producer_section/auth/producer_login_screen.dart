@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../core/auth/auth_exception_handler.dart';
 import '../../core/auth/auth_service.dart';
+import '../../core/localization/generated/app_localizations.dart';
 import '../../core/routes/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/widgets/app_top_bar_controls.dart';
 import 'services/producer_auth_service.dart';
 import 'widgets/producer_auth_text_field.dart';
 
@@ -67,26 +69,14 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
             );
           }
         } else {
-          // If rejected (e.g. Buyer account or incomplete setup), display the user-friendly message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(validation.message),
-              backgroundColor: AppColors.error,
-              duration: const Duration(seconds: 5),
-            ),
-          );
+          await AuthService.instance.signOut();
+          if (!mounted) return;
+          _showError(validation.message);
         }
       }
-    } catch (error) {
+    } catch (e) {
       if (!mounted) return;
-      final errorMessage = AuthExceptionHandler.getErrorMessage(error);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: AppColors.error,
-          duration: const Duration(seconds: 4),
-        ),
-      );
+      _showError(AuthExceptionHandler.getErrorMessage(e));
     } finally {
       if (mounted) {
         setState(() {
@@ -96,19 +86,28 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
     }
   }
 
-  void _showForgotPasswordPlaceholder() {
+  void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Password recovery will be available in a future update.'),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.error,
+      ),
+    );
+  }
+
+  void _showForgotPasswordPlaceholder(AppLocalizations? l10n) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n?.forgotPasswordUpcoming ?? 'Password recovery will be available in a future update.'),
         backgroundColor: AppColors.primaryLight,
       ),
     );
   }
 
-  void _showPhoneOtpPlaceholder() {
+  void _showPhoneOtpPlaceholder(AppLocalizations? l10n) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Phone OTP login for Producers is planned for the next phase.'),
+      SnackBar(
+        content: Text(l10n?.phoneFeatureUpcoming ?? 'Phone login will be available in the next update.'),
         backgroundColor: AppColors.primaryLight,
       ),
     );
@@ -116,19 +115,26 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             }
           },
         ),
+        actions: const [
+          AppTopBarControls(),
+          SizedBox(width: 16),
+        ],
       ),
       body: SafeArea(
         child: Center(
@@ -156,18 +162,18 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                             color: AppColors.highlightAccent.withValues(alpha: 0.4),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.storefront_outlined,
                               size: 16,
                               color: AppColors.accent,
                             ),
-                            SizedBox(width: 6),
+                            const SizedBox(width: 6),
                             Text(
-                              'I Make & Sell Products',
-                              style: TextStyle(
+                              l10n?.roleProducerTitle ?? 'I Make & Sell Products',
+                              style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.accent,
@@ -180,21 +186,21 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                     const SizedBox(height: 16),
 
                     // Heading
-                    const Text(
-                      'Producer Login',
+                    Text(
+                      l10n?.signInTitle ?? 'Sign In',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
+                        color: theme.colorScheme.onSurface,
                         letterSpacing: -0.5,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Sign in to manage your artisanal catalog, view buyer demands, and track orders.',
+                    Text(
+                      l10n?.signInSubtitle ?? 'Sign in to manage your products, view buyer needs, and track orders.',
                       style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                         height: 1.4,
                       ),
                     ),
@@ -203,18 +209,18 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                     // Email Field
                     ProducerAuthTextField(
                       controller: _emailController,
-                      label: 'Email Address',
-                      hint: 'producer@example.com',
+                      label: l10n?.emailAddress ?? 'Email Address',
+                      hint: l10n?.emailHint ?? 'producer@example.com',
                       prefixIcon: Icons.email_outlined,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your email address';
+                          return l10n?.enterEmail ?? 'Please enter your email address';
                         }
                         final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
                         if (!emailRegex.hasMatch(value.trim())) {
-                          return 'Please enter a valid email address';
+                          return l10n?.enterValidEmail ?? 'Please enter a valid email address';
                         }
                         return null;
                       },
@@ -224,8 +230,8 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                     // Password Field
                     ProducerAuthTextField(
                       controller: _passwordController,
-                      label: 'Password',
-                      hint: 'Enter your password',
+                      label: l10n?.password ?? 'Password',
+                      hint: l10n?.passwordHint ?? 'Enter your password',
                       prefixIcon: Icons.lock_outline,
                       obscureText: _obscurePassword,
                       textInputAction: TextInputAction.done,
@@ -235,7 +241,7 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                           _obscurePassword
                               ? Icons.visibility_off_outlined
                               : Icons.visibility_outlined,
-                          color: AppColors.textSecondary,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                         onPressed: () {
                           setState(() {
@@ -245,10 +251,10 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
+                          return l10n?.enterPassword ?? 'Please enter your password';
                         }
                         if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
+                          return l10n?.passwordTooShort ?? 'Password must be at least 6 characters';
                         }
                         return null;
                       },
@@ -259,18 +265,18 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: _showForgotPasswordPlaceholder,
+                        onPressed: () => _showForgotPasswordPlaceholder(l10n),
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(0, 32),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: const Text(
-                          'Forgot Password?',
+                        child: Text(
+                          l10n?.forgotPassword ?? 'Forgot Password?',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
+                            color: theme.colorScheme.primary,
                           ),
                         ),
                       ),
@@ -283,7 +289,7 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                       child: ElevatedButton(
                         onPressed: _isLoading ? null : _handleLogin,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: theme.colorScheme.primary,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -299,18 +305,18 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                 ),
                               )
-                            : const Row(
+                            : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Sign In as Producer',
-                                    style: TextStyle(
+                                    l10n?.signInTitle ?? 'Sign In',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(width: 8),
-                                  Icon(Icons.arrow_forward, size: 18),
+                                  const SizedBox(width: 8),
+                                  const Icon(Icons.arrow_forward, size: 18),
                                 ],
                               ),
                       ),
@@ -319,12 +325,12 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
 
                     // Alternate Auth Method (Phone OTP Placeholder)
                     OutlinedButton.icon(
-                      onPressed: _showPhoneOtpPlaceholder,
+                      onPressed: () => _showPhoneOtpPlaceholder(l10n),
                       icon: const Icon(Icons.phone_android_outlined, size: 18),
-                      label: const Text('Sign in with Phone OTP'),
+                      label: Text(l10n?.signInWithPhone ?? 'Sign in with Phone OTP'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.textPrimary,
-                        side: const BorderSide(color: AppColors.border),
+                        foregroundColor: theme.colorScheme.onSurface,
+                        side: BorderSide(color: theme.dividerColor),
                         minimumSize: const Size.fromHeight(48),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -338,11 +344,11 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                       alignment: WrapAlignment.center,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        const Text(
-                          'New Producer? ',
+                        Text(
+                          l10n?.newHere ?? 'New here? ',
                           style: TextStyle(
                             fontSize: 14,
-                            color: AppColors.textSecondary,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                           ),
                         ),
                         TextButton(
@@ -354,12 +360,12 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
                             minimumSize: const Size(0, 32),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                          child: const Text(
-                            'Create Producer Account',
+                          child: Text(
+                            l10n?.createAccountTitle ?? 'Create Account',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.primary,
+                              color: theme.colorScheme.primary,
                             ),
                           ),
                         ),

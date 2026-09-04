@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../core/auth/auth_exception_handler.dart';
 import '../../core/auth/auth_service.dart';
+import '../../core/localization/generated/app_localizations.dart';
 import '../../core/routes/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/widgets/app_top_bar_controls.dart';
 import 'services/producer_auth_service.dart';
 import 'widgets/producer_auth_text_field.dart';
 
@@ -120,10 +122,10 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
     }
   }
 
-  void _showPhoneSignupPlaceholder() {
+  void _showPhoneSignupPlaceholder(AppLocalizations? l10n) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Phone OTP signup for Producers is planned for the next phase.'),
+      SnackBar(
+        content: Text(l10n?.phoneFeatureUpcoming ?? 'Phone login will be available in the next update.'),
         backgroundColor: AppColors.primaryLight,
       ),
     );
@@ -131,19 +133,26 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             }
           },
         ),
+        actions: const [
+          AppTopBarControls(),
+          SizedBox(width: 16),
+        ],
       ),
       body: SafeArea(
         child: Center(
@@ -171,18 +180,18 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                             color: AppColors.highlightAccent.withValues(alpha: 0.4),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.handshake_outlined,
                               size: 16,
                               color: AppColors.accent,
                             ),
-                            SizedBox(width: 6),
+                            const SizedBox(width: 6),
                             Text(
-                              'I Make & Sell Products',
-                              style: TextStyle(
+                              l10n?.roleProducerTitle ?? 'I Make & Sell Products',
+                              style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.accent,
@@ -195,21 +204,21 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                     const SizedBox(height: 16),
 
                     // Heading
-                    const Text(
-                      'Create Producer Account',
+                    Text(
+                      l10n?.createAccountTitle ?? 'Create Account',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
+                        color: theme.colorScheme.onSurface,
                         letterSpacing: -0.5,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Start your journey as a verified artisan producer and reach direct commercial buyers.',
+                    Text(
+                      l10n?.createAccountSubtitle ?? 'Start your journey as an artisan producer and reach direct commercial buyers.',
                       style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                         height: 1.4,
                       ),
                     ),
@@ -218,17 +227,17 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                     // Full Name Field
                     ProducerAuthTextField(
                       controller: _fullNameController,
-                      label: 'Full Name',
-                      hint: 'e.g. Ramesh Kumar',
+                      label: l10n?.fullName ?? 'Full Name',
+                      hint: l10n?.fullNameHint ?? 'e.g. Ramesh Kumar',
                       prefixIcon: Icons.person_outline,
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your full name';
+                          return l10n?.enterFullName ?? 'Please enter your full name';
                         }
                         if (value.trim().length < 2) {
-                          return 'Name must be at least 2 characters';
+                          return l10n?.nameTooShort ?? 'Name must be at least 2 characters';
                         }
                         return null;
                       },
@@ -238,18 +247,18 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                     // Email Field
                     ProducerAuthTextField(
                       controller: _emailController,
-                      label: 'Email Address',
-                      hint: 'producer@example.com',
+                      label: l10n?.emailAddress ?? 'Email Address',
+                      hint: l10n?.emailHint ?? 'producer@example.com',
                       prefixIcon: Icons.email_outlined,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your email address';
+                          return l10n?.enterEmail ?? 'Please enter your email address';
                         }
                         final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
                         if (!emailRegex.hasMatch(value.trim())) {
-                          return 'Please enter a valid email address';
+                          return l10n?.enterValidEmail ?? 'Please enter a valid email address';
                         }
                         return null;
                       },
@@ -259,8 +268,8 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                     // Password Field
                     ProducerAuthTextField(
                       controller: _passwordController,
-                      label: 'Password',
-                      hint: 'Create a password (min 6 characters)',
+                      label: l10n?.password ?? 'Password',
+                      hint: l10n?.createPasswordHint ?? 'Create a password (min 6 characters)',
                       prefixIcon: Icons.lock_outline,
                       obscureText: _obscurePassword,
                       textInputAction: TextInputAction.next,
@@ -269,7 +278,7 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                           _obscurePassword
                               ? Icons.visibility_off_outlined
                               : Icons.visibility_outlined,
-                          color: AppColors.textSecondary,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                         onPressed: () {
                           setState(() {
@@ -279,10 +288,10 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please create a password';
+                          return l10n?.createPassword ?? 'Please create a password';
                         }
                         if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
+                          return l10n?.passwordTooShort ?? 'Password must be at least 6 characters';
                         }
                         return null;
                       },
@@ -292,8 +301,8 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                     // Confirm Password Field
                     ProducerAuthTextField(
                       controller: _confirmPasswordController,
-                      label: 'Confirm Password',
-                      hint: 'Re-enter your password',
+                      label: l10n?.confirmPassword ?? 'Confirm Password',
+                      hint: l10n?.confirmPasswordHint ?? 'Re-enter your password',
                       prefixIcon: Icons.lock_outline,
                       obscureText: _obscureConfirmPassword,
                       textInputAction: TextInputAction.done,
@@ -303,7 +312,7 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                           _obscureConfirmPassword
                               ? Icons.visibility_off_outlined
                               : Icons.visibility_outlined,
-                          color: AppColors.textSecondary,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                         onPressed: () {
                           setState(() {
@@ -313,10 +322,10 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please confirm your password';
+                          return l10n?.confirmYourPassword ?? 'Please confirm your password';
                         }
                         if (value != _passwordController.text) {
-                          return 'Passwords do not match';
+                          return l10n?.passwordsDoNotMatch ?? 'Passwords do not match';
                         }
                         return null;
                       },
@@ -329,7 +338,7 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                       child: ElevatedButton(
                         onPressed: _isLoading ? null : _handleSignup,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: theme.colorScheme.primary,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -345,18 +354,18 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                 ),
                               )
-                            : const Row(
+                            : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Create Producer Account',
-                                    style: TextStyle(
+                                    l10n?.createAccountTitle ?? 'Create Account',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(width: 8),
-                                  Icon(Icons.check_circle_outline, size: 18),
+                                  const SizedBox(width: 8),
+                                  const Icon(Icons.check_circle_outline, size: 18),
                                 ],
                               ),
                       ),
@@ -365,12 +374,12 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
 
                     // Alternate Auth Method (Phone OTP Placeholder)
                     OutlinedButton.icon(
-                      onPressed: _showPhoneSignupPlaceholder,
+                      onPressed: () => _showPhoneSignupPlaceholder(l10n),
                       icon: const Icon(Icons.phone_android_outlined, size: 18),
-                      label: const Text('Sign up with Phone OTP'),
+                      label: Text(l10n?.signUpWithPhone ?? 'Sign up with Phone OTP'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.textPrimary,
-                        side: const BorderSide(color: AppColors.border),
+                        foregroundColor: theme.colorScheme.onSurface,
+                        side: BorderSide(color: theme.dividerColor),
                         minimumSize: const Size.fromHeight(48),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -384,11 +393,11 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                       alignment: WrapAlignment.center,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        const Text(
-                          'Already have an account? ',
+                        Text(
+                          l10n?.alreadyHaveAccount ?? 'Already have an account? ',
                           style: TextStyle(
                             fontSize: 14,
-                            color: AppColors.textSecondary,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                           ),
                         ),
                         TextButton(
@@ -407,12 +416,12 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
                             minimumSize: const Size(0, 32),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                          child: const Text(
-                            'Producer Login',
+                          child: Text(
+                            l10n?.signInTitle ?? 'Sign In',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.primary,
+                              color: theme.colorScheme.primary,
                             ),
                           ),
                         ),

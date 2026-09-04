@@ -2,20 +2,47 @@ import 'package:flutter/material.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/routes/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/localization/generated/app_localizations.dart';
+import '../../core/widgets/app_top_bar_controls.dart';
 import '../auth/services/producer_auth_service.dart';
+import '../verification/producer_verification_service.dart';
 import 'producer_onboarding_provider.dart';
 import 'steps/basic_details_step.dart';
+import 'steps/business_craft_step.dart';
+import 'steps/identity_compliance_step.dart';
+import 'steps/location_details_step.dart';
 import 'widgets/onboarding_navigation_buttons.dart';
 import 'widgets/onboarding_progress_header.dart';
 
 class ProducerOnboardingScreen extends StatefulWidget {
   final ProducerOnboardingProvider? provider;
   final Future<void> Function({required String fullName, String? phone})? step1Saver;
+  final Future<void> Function({
+    required String businessName,
+    required String craftCategory,
+    String? bio,
+  })? step2Saver;
+  final Future<void> Function({
+    required String state,
+    required String district,
+    required String city,
+    required String pincode,
+    required String address,
+  })? step3Saver;
+  final Future<void> Function({
+    required int expectedCurrentStep,
+    required int nextStep,
+  })? stepAdvancer;
+  final ProducerVerificationService? verificationService;
 
   const ProducerOnboardingScreen({
     super.key,
     this.provider,
     this.step1Saver,
+    this.step2Saver,
+    this.step3Saver,
+    this.stepAdvancer,
+    this.verificationService,
   });
 
   @override
@@ -32,6 +59,15 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
     if (widget.step1Saver != null) {
       _provider.step1Saver = widget.step1Saver;
     }
+    if (widget.step2Saver != null) {
+      _provider.step2Saver = widget.step2Saver;
+    }
+    if (widget.step3Saver != null) {
+      _provider.step3Saver = widget.step3Saver;
+    }
+    if (widget.stepAdvancer != null) {
+      _provider.stepAdvancer = widget.stepAdvancer;
+    }
     _provider.addListener(_onProviderUpdate);
     _loadInitialData();
   }
@@ -40,8 +76,13 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
     try {
       final user = AuthService.instance.currentUser;
       final profile = await ProducerAuthService.instance.fetchProfile();
+      final producerProfile = await ProducerAuthService.instance.fetchProducerProfile();
       if (mounted) {
-        _provider.initializeFromProfile(profile: profile, user: user);
+        _provider.initializeFromProfile(
+          profile: profile,
+          producerProfile: producerProfile,
+          user: user,
+        );
       }
     } catch (_) {
       // Fallback: provider maintains default empty state
@@ -61,14 +102,54 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
     super.dispose();
   }
 
+  String _getLocalizedStepTitle(BuildContext context, int step) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) return _provider.currentStepTitle;
+    switch (step) {
+      case 0:
+        return l10n.step1Title;
+      case 1:
+        return l10n.step2Title;
+      case 2:
+        return l10n.step3Title;
+      case 3:
+        return l10n.step4Title;
+      case 4:
+        return l10n.step5Title;
+      default:
+        return _provider.currentStepTitle;
+    }
+  }
+
+  String _getLocalizedStepSubtitle(BuildContext context, int step) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) return _provider.currentStepSubtitle;
+    switch (step) {
+      case 0:
+        return l10n.step1Subtitle;
+      case 1:
+        return l10n.step2Subtitle;
+      case 2:
+        return l10n.step3Subtitle;
+      case 3:
+        return l10n.step4Subtitle;
+      case 4:
+        return l10n.step5Subtitle;
+      default:
+        return _provider.currentStepSubtitle;
+    }
+  }
+
   void _handleSubmit() {
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Text(
-          'Onboarding review submitted. Full submission will be finalized in upcoming steps.',
+          l10n?.onboardingReviewSubmitted ??
+              'Onboarding review submitted. Full submission will be finalized in upcoming steps.',
         ),
         backgroundColor: AppColors.primary,
-        duration: Duration(seconds: 4),
+        duration: const Duration(seconds: 4),
       ),
     );
     Navigator.pushReplacementNamed(context, AppRouter.producerHomeRoute);
@@ -81,6 +162,18 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
       if (saved) {
         _provider.nextStep();
       }
+    } else if (_provider.currentStep == 1) {
+      // Step 2: Validate and persist to public.producer_profiles
+      final saved = await _provider.saveStep2();
+      if (saved) {
+        _provider.nextStep();
+      }
+    } else if (_provider.currentStep == 2) {
+      // Step 3: Validate and persist to public.producer_profiles
+      final saved = await _provider.saveStep3();
+      if (saved) {
+        _provider.nextStep();
+      }
     } else if (_provider.isLastStep) {
       _handleSubmit();
     } else {
@@ -90,40 +183,76 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
+    final isNarrow = MediaQuery.sizeOf(context).width < 360;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
-          'Producer Setup',
-          style: TextStyle(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w700,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            l10n?.producerSetup ?? 'Producer Setup',
+            style: TextStyle(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          TextButton.icon(
-            onPressed: () async {
-              await AuthService.instance.signOut();
-              if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  AppRouter.producerLoginRoute,
-                  (route) => false,
-                );
-              }
-            },
-            icon: const Icon(Icons.logout, size: 16, color: AppColors.textSecondary),
-            label: const Text(
-              'Exit',
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
+          const AppTopBarControls(showLabels: false),
+          const SizedBox(width: 4),
+          if (isNarrow)
+            IconButton(
+              onPressed: () async {
+                await AuthService.instance.signOut();
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppRouter.producerLoginRoute,
+                    (route) => false,
+                  );
+                }
+              },
+              icon: Icon(
+                Icons.logout,
+                size: 20,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+              ),
+              tooltip: l10n?.exit ?? 'Exit',
+            )
+          else
+            TextButton.icon(
+              onPressed: () async {
+                await AuthService.instance.signOut();
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppRouter.producerLoginRoute,
+                    (route) => false,
+                  );
+                }
+              },
+              icon: Icon(
+                Icons.logout,
+                size: 16,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+              ),
+              label: Text(
+                l10n?.exit ?? 'Exit',
+                style: TextStyle(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
+          const SizedBox(width: 4),
         ],
       ),
       body: SafeArea(
@@ -139,8 +268,8 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
                   OnboardingProgressHeader(
                     currentStep: _provider.currentStep,
                     totalSteps: ProducerOnboardingProvider.totalSteps,
-                    title: _provider.currentStepTitle,
-                    subtitle: _provider.currentStepSubtitle,
+                    title: _getLocalizedStepTitle(context, _provider.currentStep),
+                    subtitle: _getLocalizedStepSubtitle(context, _provider.currentStep),
                   ),
                   const SizedBox(height: 20),
 
@@ -169,54 +298,34 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
   }
 
   Widget _buildStepContent(int step) {
+    final l10n = AppLocalizations.of(context);
     switch (step) {
       case 0:
         return BasicDetailsStep(provider: _provider);
       case 1:
-        return _buildStepCard(
-          icon: Icons.storefront_outlined,
-          title: 'Business & Craft Category',
-          description:
-              'Select your artisanal craft specializations, workshop name, and primary product materials.',
-          fields: [
-            _buildInfoTile('Craft Category', 'Handloom Textiles / Pottery / Woodcraft'),
-            _buildInfoTile('Workshop Name', 'e.g. Ramesh Handloom Creations'),
-            _buildInfoTile('Experience', '5+ Years of Craftsmanship'),
-          ],
-        );
+        return BusinessCraftStep(provider: _provider);
       case 2:
-        return _buildStepCard(
-          icon: Icons.location_on_outlined,
-          title: 'Workshop Location',
-          description:
-              'Enter your workshop or unit address so verified commercial buyers can calculate logistics and shipping.',
-          fields: [
-            _buildInfoTile('State & District', 'Rajasthan / Jaipur'),
-            _buildInfoTile('City / Village', 'Sanganer'),
-            _buildInfoTile('Pincode', '302029'),
-          ],
-        );
+        return LocationDetailsStep(provider: _provider);
       case 3:
-        return _buildStepCard(
-          icon: Icons.verified_user_outlined,
-          title: 'Identity & Artisan Compliance',
-          description:
-              'Verify your artisan status with government-recognized ID (Artisan Card, Udyam MSME, or Aadhaar).',
-          fields: [
-            _buildInfoTile('Verification ID', 'Artisan Pehchan Card / Udyam'),
-            _buildInfoTile('Status', 'Pending verification workflow in Step 4B'),
-            _buildInfoTile('Privacy', 'Private & encrypted strictly for verification'),
-          ],
+        return IdentityComplianceStep(
+          provider: _provider,
+          verificationService: widget.verificationService,
         );
       case 4:
         return _buildStepCard(
           icon: Icons.assignment_turned_in_outlined,
-          title: 'Review & Submit Onboarding',
-          description:
+          title: l10n?.step5CardTitle ?? 'Review & Submit Onboarding',
+          description: l10n?.step5CardDescription ??
               'Review your profile setup before submitting. You can edit your craft catalog anytime from your dashboard.',
           fields: [
-            _buildInfoTile('Profile Status', 'Ready for Submission'),
-            _buildInfoTile('Next Stage', 'Direct access to Buyer Requests & AI Studio'),
+            _buildInfoTile(
+              l10n?.profileStatus ?? 'Profile Status',
+              l10n?.readyForSubmission ?? 'Ready for Submission',
+            ),
+            _buildInfoTile(
+              l10n?.nextStage ?? 'Next Stage',
+              l10n?.nextStageDescription ?? 'Direct access to Buyer Needs & Products',
+            ),
           ],
         );
       default:
@@ -230,12 +339,13 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
     required String description,
     required List<Widget> fields,
   }) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,19 +355,19 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, size: 24, color: AppColors.primary),
+                child: Icon(icon, size: 24, color: theme.colorScheme.primary),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -266,14 +376,14 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
           const SizedBox(height: 12),
           Text(
             description,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
               height: 1.4,
             ),
           ),
           const SizedBox(height: 18),
-          const Divider(),
+          Divider(color: theme.dividerColor),
           const SizedBox(height: 8),
           ...fields,
         ],
@@ -282,6 +392,7 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
   }
 
   Widget _buildInfoTile(String label, String value) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -291,19 +402,19 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
             width: 130,
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textSecondary,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: AppColors.textPrimary,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),

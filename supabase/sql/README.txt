@@ -31,3 +31,41 @@ MIGRATION LOG
 5. 005_expand_producer_onboarding_schema.sql
    - Status: EXECUTED in Supabase SQL Editor (Step 4B0.3).
    - Contains: Expands public.producer_profiles for Onboarding & Compliance. Creates gst_verification_status enum. Enforces strict trust boundaries: explicitly REVOKES direct client INSERT/UPDATE on onboarding_status (granted in 001); restricts client writes to declared inputs (gst_registered, gstin); keeps all identity artifacts (pan_last4, pan_hash, aadhaar_last4, aadhaar_verification_reference) and verification statuses strictly backend-only. Prohibits storage of raw Aadhaar.
+
+6. 006_pan_verification_prototype.sql
+   - Status: EXECUTED in Supabase SQL Editor (Step 4E2.3 / Step 4E2.4).
+   - Contains: Secure SECURITY DEFINER function public.verify_producer_pan_prototype(p_pan TEXT, p_name TEXT, p_dob DATE) RETURNS JSONB.
+   - Security & Correctness:
+     * Uses auth.uid() exclusively; enforces search_path = ''.
+     * Acquired FOR UPDATE row lock on caller's producer_profiles record.
+     * Protection of Verified Identity: If caller is already verified, a matching PAN returns idempotent success ('already_verified'); a different or failing PAN returns 'already_verified_conflict' and NEVER destroys, erases, or alters verified artifacts.
+     * Simulated rejection only applies to unverified or rejected accounts.
+     * Raw PAN is never persisted and never returned.
+     * Prototype Fingerprint Note: pg_catalog.sha256((v_pan || ':' || v_uid::TEXT)::BYTEA) is a prototype pseudonymous integrity fingerprint, not encryption or offline-secure protection. Production systems must use server-secret HMAC or tokenization vaults.
+     * Runtime Note: Execution revealed secondary 42883 on pg_catalog.trim(text) inside the function body (which requires pg_catalog.btrim like Migration 007). Client error handling safely caught and sanitized the database error in UI without crashing.
+
+7. 007_resumable_producer_onboarding.sql
+   - Status: EXECUTED in Supabase SQL Editor (Step 4E2.4).
+   - Contains: Adds onboarding_step SMALLINT NOT NULL DEFAULT 1 (CHECK 1 to 5) to public.producer_profiles. Deterministically backfills existing producer records based on saved drafts (Step 3 location -> 4, Step 2 craft -> 3, Step 1 basic -> 2, completed -> 5). Creates trusted public.advance_producer_onboarding_step(expected_current_step, next_step) SECURITY DEFINER RPC.
+   - Security & Correctness:
+     * Server-authoritative; no direct client UPDATE on onboarding_step (verified 42501).
+     * Uses SELECT ... FOR UPDATE row locking.
+     * Strictly enforces expected_current_step: guards against stale state and enforces single-step progression (next = expected + 1).
+     * Server-Side Prerequisites: Validates saved database data (1->2 checks profiles.full_name; 2->3 checks producer_profiles business_name & craft_category; 3->4 checks location fields & pincode format using pg_catalog.btrim). Prevents skipping via repeated RPC calls.
+     * Step 4 -> 5 Blocked: Verified live; returns 'identity_compliance_incomplete' with onboarding_step remaining 4.
+     * Lifecycle Protection: If onboarding_status = 'completed', returns 'already_completed' without mutation. Never sets completed status.
+     * Runtime Verified: Existing test producer was accurately backfilled to Step 4. Refreshing the browser or navigating Back preserves server progress at Step 4.
+
+8. 008_fix_pan_verification_trim.sql
+   - Status: EXECUTED in Supabase SQL Editor (Step 4E2.6).
+   - Purpose: Migration 006 executed successfully in Supabase, but calling verify_producer_pan_prototype at runtime revealed an invalid pg_catalog.trim(text) call that raised PostgreSQL error 42883. Migration 008 replaced public.verify_producer_pan_prototype(TEXT, TEXT, DATE) using pg_catalog.btrim while leaving historical migrations 006 and 007 untouched.
+   - Contains:
+     * Replaces verify_producer_pan_prototype with pg_catalog.btrim for input normalization.
+     * Preserves all approved security behavior: auth.uid() identity, producer role check, row locking (FOR UPDATE), PAN regex, name/DOB checks, prototype SHA-256 fingerprint, already_verified idempotency, already_verified_conflict protection, and unlogged raw PAN memory boundaries.
+     * Reapplies REVOKE ALL from PUBLIC, anon and GRANT EXECUTE to authenticated.
+   - Runtime Verified (Step 4E2.6):
+     * Successful verification with demo PAN ABCDE1234F: pan_last4 set to '234F', pan_hash set to 64 hex characters, pan_verification_status = 'verified'.
+     * Same-PAN submission returns 'already_verified' idempotently without data mutation.
+     * Different-PAN submission (ABCDE5678G) returns 'already_verified_conflict' and protects original verified artifacts from overwrite.
+     * Masked PAN ******234F persists correctly after page reload; raw PAN is never stored.
+

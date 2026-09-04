@@ -37,3 +37,85 @@ B. Overall Producer Status (producer_profiles.verification_status):
   * gst_verification_status defaults to 'not_applicable' when gst_registered = FALSE.
 - Protected Verification Outcomes & Onboarding Status:
   * pan_verification_status, aadhaar_verification_status, gst_verification_status, address_verification_status, verification_status, and onboarding_status are strictly omitted from client write grants and can only be updated by trusted backend/admin logic.
+
+
+3. STEP 4E1 — IDENTITY & COMPLIANCE UI & PAN VERIFICATION FOUNDATION
+------------------------------------------------------------
+A. Implementation Status:
+- IMPLEMENTED:
+  * Identity & Compliance screen foundation (IdentityComplianceStep).
+  * Reusable low-literacy friendly verification status badge (VerificationStatusBadge).
+  * PAN input UI (10-character alphanumeric, auto-uppercase, no spaces, length limit 10).
+  * PAN regex validation (^[A-Z]{5}[0-9]{4}[A-Z]$).
+  * Name as per PAN input (prefilled from display full name, editable, 2-120 chars).
+  * Date of Birth input via date picker (bounded to historical dates, no future dates).
+  * Transparent privacy disclosure note: "Your PAN number is used only for verification and is not stored in plain text."
+  * Prototype disclosure banner: "Demo verification environment • Verification is simulated in this prototype."
+  * Unavailable cards for upcoming stages: Aadhaar Identity, GST Details, Workshop Address (all badged 'Coming Soon').
+
+- SIMULATED / NOT YET IMPLEMENTED:
+  * PAN verification result workflow (simulated result logic planned for Step 4E2).
+  * Government / external verification API integrations (Income Tax Department, NSDL, Protean). Prototype does NOT claim external authority verification.
+
+- NOT IMPLEMENTED:
+  * Aadhaar verification workflow.
+  * GSTIN verification workflow.
+  * Workshop address verification / physical document upload.
+  * Review & Submit (onboarding completion).
+
+B. Raw PAN Handling & Transient Memory Rule:
+- Raw PAN is NEVER stored in ProducerOnboardingProvider.
+- Raw PAN is NEVER persisted to Supabase database, local storage, SharedPreferences, or files.
+- Raw PAN is NEVER logged or printed.
+- Raw PAN resides strictly in transient local TextEditingController memory during verification input.
+
+
+4. STEP 4E2 — SECURE SIMULATED PAN VERIFICATION WORKFLOW
+------------------------------------------------------------
+A. Architecture & Boundary Distinction:
+- REAL (Production Architecture Guaranteed):
+  * Authenticated Supabase request: Caller identity is derived exclusively via auth.uid() inside a SECURITY DEFINER function.
+  * Backend authorization: RPC asserts caller has 'producer' role in public.profiles and exists in public.producer_profiles.
+  * Trust boundaries: Direct client write privileges on pan_last4, pan_hash, and pan_verification_status remain completely revoked.
+  * Zero Raw PAN persistence: Plaintext 10-character PAN is NEVER stored in any database column, provider state, file, or log.
+  * Trusted status updates: Successful or rejected outcomes are strictly computed and updated within the backend RPC.
+  * Safe masking: Only masked identifier (e.g. '******234F') is returned to the client and presented in the UI.
+
+- SIMULATED (Prototype Environment Scope):
+  * Existence in government records: In this hackathon prototype, verification is simulated using deterministic demo evaluation rules rather than querying live Income Tax Department / NSDL / Protean registries.
+  * Person match: Name/DOB matching is syntactically checked against format rules, not cross-referenced with a government database.
+  * Extensibility: A live authorized PAN provider / GSTN sandbox API can seamlessly replace the internal simulation logic within verify_producer_pan_prototype without modifying client UI or data models.
+
+B. Deterministic Demo Simulator Rule:
+- Valid Input Criteria:
+  * PAN normalized: UPPER(TRIM(p_pan)) matching ^[A-Z]{5}[0-9]{4}[A-Z]$
+  * Name length: 2–120 characters
+  * Date of Birth: Historical date (1900-01-01 <= p_dob <= CURRENT_DATE)
+- Demo Evaluation Outcome:
+  * Rejection Condition: PAN starting with 'FAIL' (e.g. FAILA1234B) OR having 4th character 'X' (e.g. ABCXE1234F) simulates a rejected verification (pan_verification_status = 'rejected', message = 'PAN details could not be verified with records in demo registry.').
+  * Success Condition: All other valid PANs simulate successful verification (pan_verification_status = 'verified', computes pan_last4 = RIGHT(pan, 4), computes pan_hash = SHA-256 hex digest, returns masked_pan = '******' || pan_last4).
+
+C. Flutter Integration (ProducerVerificationService):
+- Dedicated service encapsulates Supabase RPC invocations.
+- Sanitizes all exceptions: Network or database failures return user-friendly errors ("Unable to complete verification at this time. Please try again.") without exposing internal PostgreSQL errors.
+- UI state progression: Not Verified -> Checking... -> Verified (or Could Not Verify).
+- Loading state: Disables duplicate Verify taps with loading spinner.
+- Success state: Replaces input form with green verified card showing only masked identifier ('******234F') and allows "Edit Details" if desired. Raw PAN is cleared from controller.
+
+D. Step 4E3 — Aadhaar & GST UI Preparation:
+- Aadhaar Verification Status:
+  * Official / genuine Aadhaar verification is deferred to upcoming phases.
+  * No raw 12-digit Aadhaar numbers are collected or persisted in this prototype.
+  * Tapping 'Verify Aadhaar' provides a clean informational popup stating that verification will be enabled via an authorized verification service.
+- GST Registration Status:
+  * Prepared for future genuine verification integration.
+  * Producer indicates whether registered ('Yes' or 'No').
+  * Non-registered producers see simple guidance: 'GST not registered. Micro-producers below registration thresholds can continue without GST.'
+  * No legal intra-state or national selling assumption is enforced yet.
+  * Registered producers provide 15-character GSTIN (validated via client regex).
+  * Tapping 'Verify GSTIN' provides informational message ('GST verification integration will be added next.') and preserves 'Not Verified' status without simulated verification.
+- Address Verification:
+  * Removed from Identity & Compliance (Step 4) MVP UI. Producer's physical location details remain mandatory in Step 3.
+
+
+

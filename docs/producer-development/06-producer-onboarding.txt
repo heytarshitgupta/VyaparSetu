@@ -4,17 +4,20 @@ PRODUCER ONBOARDING
 
 STATUS
 ------------------------------------------------------------
-IMPLEMENTED (Step 4A, 4B0, & 4B1):
+IMPLEMENTED (Step 4A, 4B0, 4B1, 4C, 4D, & 4E1):
 - Step 4A: Multi-step onboarding shell, progress header, navigation buttons, and post-auth routing based on onboarding_status ('not_started' / 'in_progress' -> '/producer_onboarding', 'completed' -> '/producer_home').
 - Step 4B0: Data model expanded and hardened in Migration 005 to cover all planned onboarding steps with strict trust boundaries. Onboarding status transitions are strictly protected and cannot be self-declared by the client.
 - Step 4B1: Step 1 (Basic Details) form implemented, prefilled from profiles/auth, validated, and persisted to public.profiles.
+- Step 4C: Step 2 (Craft & Business Details) form implemented with single-category selection chips, custom category support for 'Other', short description bio, validation, and persistence to public.producer_profiles.
+- Step 4D: Step 3 (Location Details) form implemented with State dropdown, District, City / Village, strict Indian Pincode validation (^[1-9][0-9]{5}$), multi-line workshop address, validation, prefill, and persistence to public.producer_profiles.
+- Step 4E1: Step 4 (Identity & Compliance) UI foundation implemented with active simulated PAN card, uppercase regex validation (^[A-Z]{5}[0-9]{4}[A-Z]$), prefilled PAN name, date picker DOB, privacy notice, demo disclosure banner, and unavailable badges for Aadhaar, GST, and Address.
 
-NOT IMPLEMENTED YET (Planned for Step 4B2+):
-- Step 2: Craft & Business Details form
-- Step 3: Location Details form
-- Step 4: Identity & Compliance (Aadhaar / PAN / GST verification workflows)
+NOT IMPLEMENTED YET (Planned for Step 4E2+ / Step 4F):
+- Step 4E2: Simulated PAN verification result workflow and backend state transitions
+- Step 4E3+: Aadhaar / GST / Address verification workflows
 - Step 5: Review & Submit (Trusted backend RPC for transitioning onboarding_status -> 'completed')
-- Document uploads to Supabase Storage
+- Address verification workflow & document upload
+- GPS / location permission APIs
 
 
 1. STEP 1 (BASIC DETAILS) IMPLEMENTATION & SOURCE OF TRUTH
@@ -43,9 +46,231 @@ D. Step 1 Navigation & Persistence Behavior:
 - Draft values survive forward and backward step navigation via ProducerOnboardingProvider.
 
 
-2. SECURITY & TRUST BOUNDARIES
+2. STEP 2 (BUSINESS & CRAFT DETAILS) IMPLEMENTATION & BEHAVIOR
+------------------------------------------------------------
+A. Business / Workshop Name:
+- Mapped to: public.producer_profiles.business_name.
+- Prefill: producer_profiles.business_name.
+- Validation: Required, trimmed, 2–120 characters.
+- Helper text: "Name of your business, workshop, or home-based work".
+
+B. Craft / Product Category:
+- Mapped to: public.producer_profiles.craft_category.
+- UI: Single primary category selection using visual ChoiceChips with icons.
+- Standard Categories: Food & Homemade Products, Handicrafts, Handloom & Textiles, Clothing & Embroidery, Jewellery & Accessories, Woodwork, Metal Craft, Home Decor, Beauty / Personal Care, Other.
+- 'Other' Option: Displays dedicated input for custom artisanal/product category (2–60 characters).
+- Prefill: Known standard categories pre-select the corresponding chip; custom values select 'Other' and populate the custom category field.
+
+C. Short Description:
+- Mapped to: public.producer_profiles.bio.
+- Prefill: producer_profiles.bio.
+- Validation: Optional, trimmed, max 500 characters. Live character counter displayed.
+- Helper text: "Tell buyers what you make in a few words".
+
+D. Step 2 Navigation & Persistence Behavior:
+- Tapping Continue validates business name, category, and bio length, then calls ProducerAuthService.updateBusinessProfile to update public.producer_profiles.
+- Only after successful save does the wizard advance to Step 3 (Location Details).
+- If persistence fails, user stays on Step 2 with entered values preserved and a friendly error message.
+- All values survive forward (Step 3) and backward (Step 1) navigation.
+
+
+3. STEP 3 (LOCATION DETAILS) IMPLEMENTATION & BEHAVIOR
+------------------------------------------------------------
+A. State:
+- Mapped to: public.producer_profiles.state.
+- UI: Dropdown selection populated with standard list of 36 Indian States and Union Territories.
+- Validation: Required selection.
+
+B. District:
+- Mapped to: public.producer_profiles.district.
+- Validation: Required, trimmed, 2–100 characters.
+- Helper text: "District where you make your products".
+
+C. City / Village:
+- Mapped to: public.producer_profiles.city.
+- Validation: Required, trimmed, 2–100 characters.
+- Helper text: "Your city, town, or village".
+
+D. Pincode:
+- Mapped to: public.producer_profiles.pincode.
+- UI: Numeric keyboard, 6 digits max.
+- Validation: Matches database constraint chk_producer_pincode (^[1-9][0-9]{5}$). Must be exactly 6 digits and cannot start with 0.
+
+E. Workshop / Business Address:
+- Mapped to: public.producer_profiles.address.
+- UI: Multi-line text field with live character counter (X/300).
+- Validation: Required, trimmed, 5–300 characters.
+- Helper text: "Where you make or manage your products".
+
+F. Step 3 Navigation & Persistence Behavior:
+- Tapping Continue validates all location fields, then calls ProducerAuthService.updateLocationProfile to update public.producer_profiles.
+- Only after successful save does the wizard advance to Step 4 (Identity & Compliance).
+- If persistence fails, user stays on Step 3 with entered values preserved and a friendly error message.
+- address_verification_status remains strictly untouched and non-client-writable.
+- All values survive forward (Step 4) and backward (Step 2, Step 1) navigation.
+
+
+4. SECURITY & TRUST BOUNDARIES
 ------------------------------------------------------------
 - Client-Writable Fields: business_name, craft_category, bio, state, district, city, pincode, address, gst_registered, gstin, full_name, phone (contact).
 - Trusted-Backend-Only Fields: onboarding_status, pan_last4, pan_hash, pan_verification_status, aadhaar_last4, aadhaar_verification_reference, aadhaar_verification_status, gst_verification_status, address_verification_status, verification_status.
 - Direct Mutation Prohibited: Migration 005 explicitly revokes client INSERT/UPDATE privileges on onboarding_status.
 - Prohibited from Storage: Raw 12-digit Aadhaar numbers and plaintext PAN numbers.
+
+
+5. RUNTIME ISSUE RESOLUTION: UPDATED_AT COLUMN PRIVILEGE (42501)
+------------------------------------------------------------
+- Symptom: Real manual testing of Step 1 save failed with "Failed to save basic details".
+- Root Cause: Flutter client payload manually included 'updated_at': DateTime.now().toIso8601String(). In Migration 001, 'updated_at' was intentionally excluded from client UPDATE privileges (GRANT UPDATE only covers user-editable columns). PostgreSQL returned code 42501 (permission denied for column updated_at).
+- Fix Applied: Removed manual 'updated_at' from updateBasicProfile, updateBusinessProfile, and updateLocationProfile.
+- Database Authority: Database triggers trg_profiles_updated_at and trg_producer_profiles_updated_at execute handle_updated_at() to manage timestamps automatically with SECURITY DEFINER. No SQL schema migration was required.
+
+
+6. STEP 4E1 & 4E2 (IDENTITY & COMPLIANCE UI & SIMULATED PAN VERIFICATION)
+------------------------------------------------------------
+A. Overview:
+- Explanatory title: "Identity & Compliance"
+- Subtitle: "Verify your details to build trust with buyers."
+- Subtle prototype disclosure banner: "Demo verification environment • Verification is simulated in this prototype."
+
+B. Active Verification: PAN Card:
+- Fields:
+  * PAN Number: 10 characters, automatic uppercase conversion, no spaces, validated against regex ^[A-Z]{5}[0-9]{4}[A-Z]$.
+  * Name as per PAN: Prefilled from display full name, editable, 2–120 characters. Does NOT overwrite public.profiles.full_name.
+  * Date of Birth: Date picker input restricted to historical dates (no future dates permitted). Transient verification input only; not persisted.
+- Privacy Notice: "Your PAN number is used only for verification and is not stored in plain text."
+- Raw PAN Safety: Raw PAN is never stored in ProducerOnboardingProvider, never persisted, never logged, and never written to disk or analytics. It lives exclusively in the local TextEditingController.
+
+C. Step 4E2 Simulated Verification Workflow:
+- Dedicated Service: ProducerVerificationService calls SECURITY DEFINER RPC verify_producer_pan_prototype.
+- Backend Trust Boundary: Derives caller from auth.uid(), checks producer role, validates inputs, computes 4-character pan_last4 and 64-hex SHA-256 pan_hash, and updates producer_profiles.pan_verification_status without client write privileges.
+- Deterministic Evaluation Rule: PANs starting with 'FAIL' or with 4th character 'X' simulate rejection; all other valid PANs simulate success.
+- UI Transitions:
+  * Checking: Button shows loading spinner and disables duplicate taps.
+  * Verified: Shows "PAN Verified" header, green border, masked PAN ('******234F'), and hides raw PAN input. Offers "Edit Details" option.
+  * Could Not Verify: Shows friendly error message and "Try Again" action button.
+- Exception Sanitization: Database and network errors are caught and masked with a clean user-facing message ("Unable to complete verification at this time. Please try again.").
+
+D. Unavailable Stage Cards (Badged 'Coming Soon'):
+- Aadhaar Identity Verification: Informs user that artisan verification will be enabled in upcoming stages with zero storage of raw 12-digit Aadhaar.
+- GST & Tax Compliance: Informs user that GSTIN declaration is optional for registered units and micro-producers below threshold can continue without GST.
+- Workshop Address Verification: Informs user of future physical proof or utility verification for commercial bulk shipments.
+
+
+7. STEP 4E2.1 — RESUMABLE PRODUCER ONBOARDING
+------------------------------------------------------------
+A. Architectural Motivation:
+- Micro-producers and artisans frequently navigate mobile browsers, experience connection drops, reload the application, or sign in across different devices.
+- Without server-authoritative progress tracking, reloading the app always forced the user back to Step 1 (Basic Details), creating severe friction.
+- Local-only solutions (SharedPreferences, localStorage) are strictly rejected because they do not survive cross-device usage or browser storage clearing and do not provide server-side trust.
+
+B. Authoritative Server State:
+- Column: public.producer_profiles.onboarding_step SMALLINT NOT NULL DEFAULT 1.
+- Constraint: chk_producer_onboarding_step CHECK (onboarding_step >= 1 AND onboarding_step <= 5).
+- Step Mapping:
+  * 1 = Basic Details (Step 1)
+  * 2 = Business / Craft Details (Step 2)
+  * 3 = Location Details (Step 3)
+  * 4 = Identity & Compliance (Step 4)
+  * 5 = Review & Submit (Step 5)
+
+C. Forward Progression & Trust Boundaries (Corrected Step 4E2.3):
+- Direct client UPDATE on onboarding_step is completely excluded.
+- Advancement occurs strictly through trusted SECURITY DEFINER RPC:
+  public.advance_producer_onboarding_step(expected_current_step, next_step)
+- Guarantees:
+  * Caller identity derived solely from auth.uid().
+  * Role check: Caller must be 'producer'.
+  * Row Lock: Uses SELECT ... FOR UPDATE to serialize concurrent requests.
+  * Expected Step Validation: Validates server_step = expected_current_step and next_step = expected_current_step + 1 (guards against stale state).
+  * Server-Side Prerequisites: Validates saved database records (1->2 requires profiles.full_name; 2->3 requires producer_profiles business_name & craft_category; 3->4 requires valid location fields and pincode).
+  * Step 4 -> 5 Blocked: Generic progression RPC rejects advancing past Step 4 ('identity_compliance_incomplete') because compliance completion rules are still evolving.
+  * Monotonic & Idempotent: If server step >= next_step, the RPC succeeds as a no-op ('already_advanced') and will never regress progress.
+  * Save-First Rule: Progress advances on the server ONLY after the corresponding step's form payload has been successfully persisted.
+  * Status Protection: The RPC does NOT and cannot set onboarding_status = 'completed'. If status is already completed, returns 'already_completed' without mutation.
+
+D. Backward Navigation:
+- If a producer reaches Step 4 and presses "Back" to inspect Step 3 or Step 2:
+  * In-memory UI step updates to allow reviewing or editing draft inputs.
+  * Persisted server progress in public.producer_profiles remains at Step 4.
+  * Re-saving Step 2 or Step 3 safely updates the respective form data without regressing onboarding_step.
+
+E. App Start & Refresh Restoration:
+- On screen load (ProducerOnboardingScreen._loadInitialData):
+  * ProducerAuthService.fetchProducerProfile() retrieves the persisted producer_profiles row.
+  * ProducerOnboardingProvider.initializeFromProfile() extracts onboarding_step (clamped 1 to 5) and restores _currentStep = onboarding_step - 1.
+  * The user resumes directly at their furthest completed step with all previously saved draft fields fully populated.
+- Completed Onboarding: If profiles.onboarding_status = 'completed', auth routing directs caller to /producer_home.
+
+F. Existing Data Backfill Rule (Corrected Migration 007):
+- For existing database records:
+  * If onboarding_status = 'completed' -> Step 5
+  * Else if Location details are complete (state, district >= 2 chars, city >= 2 chars, pincode ~ '^[1-9][0-9]{5}$', address >= 5 chars) -> Step 4
+  * Else if Business details are complete (business_name >= 2 chars, craft_category non-empty) -> Step 3
+  * Else if Profile full_name >= 2 characters -> Step 2
+  * Else -> Step 1
+- NOTE: PAN verification alone does NOT infer Step 5. Step 4 encompasses full identity and compliance.
+
+G. PAN Verification Security & Preservation (Corrected Migration 006):
+- Protection of Verified Identity: If caller has pan_verification_status = 'verified', a matching PAN returns 'already_verified' (idempotent success). A different or rejected PAN returns 'already_verified_conflict' and NEVER destroys, wipes, or regresses verified artifacts.
+- Prototype Fingerprint: pg_catalog.sha256((v_pan || ':' || v_uid::TEXT)::BYTEA) is a prototype pseudonymous integrity fingerprint, not encryption or offline-secure protection. Production architecture will replace this with server-secret HMAC or tokenization vaults.
+
+H. Step 4E2.4 — Runtime Verification Results:
+- Migration Execution Status:
+  * 006_pan_verification_prototype.sql: EXECUTED in Supabase SQL Editor.
+  * 007_resumable_producer_onboarding.sql: EXECUTED in Supabase SQL Editor.
+- Database Schema Verification:
+  * public.producer_profiles.onboarding_step exists (SMALLINT, NOT NULL, DEFAULT 1, CHECK 1 to 5).
+  * Direct client updates to onboarding_step, onboarding_status, pan_last4, pan_hash, pan_verification_status blocked by PostgreSQL column permissions (42501).
+- Existing Producer Backfill Result:
+  * Test Producer (business 'Punjab Phulkari Works', Location complete) accurately backfilled to onboarding_step = 4, onboarding_status = 'not_started'.
+- Resumable Onboarding Behavior:
+  * Navigating Back in UI updates temporary view without regressing persisted onboarding_step in database.
+  * Reloading the browser restores progress directly to Step 4 (Identity & Compliance).
+- Step 4 -> 5 Progression Blocking:
+  * Calling advance_producer_onboarding_step(4, 5) live returns 'identity_compliance_incomplete' and keeps onboarding_step = 4. PAN verification alone does not conclude Step 4.
+I. Step 4E2.6 — Live PAN Flow Verification (Post-Migration 008):
+- Migration 008 Status: EXECUTED in Supabase SQL Editor.
+- Live PAN Simulated Verification:
+  * Tested live RPC with demo PAN ABCDE1234F. Successfully transitioned from Unverified to Verified.
+  * Verified database artifacts: pan_last4 = '234F', pan_hash is 64-hex SHA-256 hash, pan_verification_status = 'verified'.
+  * Confirmed raw PAN ABCDE1234F is NOT persisted in producer_profiles or profiles.
+- Same-PAN Idempotency:
+  * Submitting the same PAN returns 'already_verified' with pan_last4 = '234F' and masked_pan = '******234F'. Database records remain unchanged.
+- Different-PAN Conflict Protection:
+  * Submitting a different format-valid PAN (ABCDE5678G) against the verified account returns 'already_verified_conflict'.
+  * Database pan_last4 remains '234F', pan_hash remains original, and status remains 'verified'. Existing verified identity is never overwritten.
+- Refresh / Restart Behavior:
+  * Browser reload restores directly to Step 4. Masked PAN '******234F' displays with green 'Verified' badge. Raw PAN is never restored or prefilled into input fields.
+  * onboarding_step strictly remains 4; does not advance to Step 5.
+- Prototype Environment Notice:
+  * UI explicitly communicates: 'Demo verification environment • Verification is simulated in this prototype.' No false government-backed verification claims.
+
+J. Step 4E3 — Complete Identity & Compliance UI Structure:
+- Card Ordering:
+  1. PAN Verification (Simulated prototype verification with live RPC & masked display preserved)
+  2. Aadhaar Verification
+  3. GST Registration
+- Aadhaar Verification:
+  * Real Aadhaar verification is deferred.
+  * Zero 12-digit Aadhaar numbers are collected or stored in this prototype.
+  * Tapping 'Verify Aadhaar' presents an informative dialog explaining that Aadhaar verification will be available through an authorized verification partner and is disabled in this prototype.
+  * No government or UIDAI logos are displayed.
+- GST Registration UI:
+  * Prepared for future genuine verification integration.
+  * Asks 'Are you registered for GST?'.
+  * If 'No': Shows clear informational notice that micro-producers below registration thresholds can proceed without GST.
+  * No legal intra-state or national selling eligibility assumption is enforced at this stage.
+  * If 'Yes': Exposes 15-character uppercase GSTIN input with client validation regex (2 state digits + 10 PAN chars + 1 entity + 1 Z + 1 check).
+  * Tapping 'Verify GSTIN' performs format validation and displays informational message that GST verification integration will be added next.
+  * GST verification is NOT simulated and status remains 'Not Verified' (no client-side faking of verified status).
+- Workshop Address Verification Removal:
+  * Address Verification card is completely removed from Identity & Compliance (Step 4) MVP UI.
+  * The producer's physical business location fields (State, District, City/Village, Pincode, Address) remain fully intact and mandatory in Step 3 for discovery, logistics, and buyer confidence.
+
+
+
+
+
+
+
