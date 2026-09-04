@@ -1443,6 +1443,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to delete product. Please try again.'**
   String get productDeleteFailed;
+
+  /// Progress step indicator text
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String stepCount(int current, int total);
+
+  /// Title for Add Product Step 1
+  ///
+  /// In en, this message translates to:
+  /// **'What do you make?'**
+  String get addProductStep1Title;
+
+  /// Title for Add Product Step 2
+  ///
+  /// In en, this message translates to:
+  /// **'Price & Details'**
+  String get addProductStep2Title;
+
+  /// Title for Add Product Step 3
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photos & Save'**
+  String get addProductStep3Title;
+
+  /// Label for product name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Product name'**
+  String get productNameLabel;
+
+  /// Placeholder hint for product name
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Homemade Mango Pickle'**
+  String get productNameHint;
+
+  /// Validation error when continuing with empty product name
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a product name first'**
+  String get productNameRequired;
+
+  /// Label for category selector
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get categoryLabel;
+
+  /// Category option: Food
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get categoryFood;
+
+  /// Category option: Handicraft
+  ///
+  /// In en, this message translates to:
+  /// **'Handicraft'**
+  String get categoryHandicraft;
+
+  /// Category option: Clothing
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing'**
+  String get categoryClothing;
+
+  /// Category option: Home Products
+  ///
+  /// In en, this message translates to:
+  /// **'Home Products'**
+  String get categoryHome;
+
+  /// Category option: Beauty & Care
+  ///
+  /// In en, this message translates to:
+  /// **'Beauty & Care'**
+  String get categoryBeauty;
+
+  /// Category option: Jewellery
+  ///
+  /// In en, this message translates to:
+  /// **'Jewellery'**
+  String get categoryJewellery;
+
+  /// Category option: Other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get categoryOther;
+
+  /// Label for custom category text input
+  ///
+  /// In en, this message translates to:
+  /// **'Describe category'**
+  String get customCategoryLabel;
+
+  /// Label for measurement unit selector
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get unitLabel;
+
+  /// Unit option: Piece
+  ///
+  /// In en, this message translates to:
+  /// **'Piece'**
+  String get unitPiece;
+
+  /// Unit option: Kilogram
+  ///
+  /// In en, this message translates to:
+  /// **'Kilogram (kg)'**
+  String get unitKg;
+
+  /// Unit option: Gram
+  ///
+  /// In en, this message translates to:
+  /// **'Gram (g)'**
+  String get unitGram;
+
+  /// Unit option: Litre
+  ///
+  /// In en, this message translates to:
+  /// **'Litre (L)'**
+  String get unitLitre;
+
+  /// Unit option: Millilitre
+  ///
+  /// In en, this message translates to:
+  /// **'Millilitre (ml)'**
+  String get unitMl;
+
+  /// Unit option: Pack
+  ///
+  /// In en, this message translates to:
+  /// **'Pack'**
+  String get unitPack;
+
+  /// Unit option: Dozen
+  ///
+  /// In en, this message translates to:
+  /// **'Dozen'**
+  String get unitDozen;
+
+  /// Label for price input field
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get priceLabel;
+
+  /// Helper text for price input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the price for one unit'**
+  String get priceHelper;
+
+  /// Error text for invalid price input
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid price (e.g. 250 or 250.50)'**
+  String get priceInvalidError;
+
+  /// Label for description field
+  ///
+  /// In en, this message translates to:
+  /// **'Tell buyers about your product'**
+  String get descriptionLabel;
+
+  /// Helper text for description field
+  ///
+  /// In en, this message translates to:
+  /// **'What is it made from? What makes it special?'**
+  String get descriptionHelper;
+
+  /// Heading for photos step
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photos'**
+  String get addPhotosHeading;
+
+  /// Subtitle for photos step
+  ///
+  /// In en, this message translates to:
+  /// **'Photos help buyers see the quality of your craft'**
+  String get addPhotosSubtitle;
+
+  /// Temporary message indicating photo picker arrives in next step
+  ///
+  /// In en, this message translates to:
+  /// **'Photo selection will be added next'**
+  String get photoUploadComingNext;
+
+  /// Action button to save current product as a draft
+  ///
+  /// In en, this message translates to:
+  /// **'Save Draft'**
+  String get saveDraftAction;
+
+  /// Action button to mark product ready/active
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Ready'**
+  String get markReadyAction;
+
+  /// Guidance message explaining what is missing to mark product ready
+  ///
+  /// In en, this message translates to:
+  /// **'Add name, category, and price to mark ready'**
+  String get markReadyGuidance;
+
+  /// Feedback message when draft is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Draft saved'**
+  String get draftSavedMessage;
+
+  /// Feedback message when product is marked active/ready
+  ///
+  /// In en, this message translates to:
+  /// **'Product marked ready'**
+  String get productMarkedReadyMessage;
+
+  /// Error feedback when saving draft fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save draft. Please try again.'**
+  String get saveDraftFailed;
+
+  /// Error feedback when marking ready fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not mark ready. Please try again.'**
+  String get markReadyFailed;
 }
 
 class _AppLocalizationsDelegate

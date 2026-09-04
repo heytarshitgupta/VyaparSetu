@@ -11,7 +11,7 @@ import 'package:buyer_section/producer_section/home/models/producer_shell_profil
 import 'package:buyer_section/producer_section/home/producer_main_screen.dart';
 import 'package:buyer_section/producer_section/home/tabs/producer_home_tab.dart';
 import 'package:buyer_section/producer_section/opportunities/buyer_needs_tab.dart';
-import 'package:buyer_section/producer_section/products/add_product_placeholder_screen.dart';
+import 'package:buyer_section/producer_section/products/screens/add_product_screen.dart';
 import 'package:buyer_section/producer_section/products/producer_products_tab.dart';
 import 'package:buyer_section/producer_section/profile/producer_profile_tab.dart';
 
@@ -404,7 +404,7 @@ void main() {
       expect(whatBuyersWantCalled, isTrue);
     });
 
-    testWidgets('Tapping Add Product in shell opens AddProductPlaceholderScreen', (tester) async {
+    testWidgets('Tapping Add Product in shell opens AddProductScreen', (tester) async {
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
@@ -420,7 +420,7 @@ void main() {
       await tester.tap(find.text('Show buyers what you make'));
       await tester.pumpAndSettle();
 
-      expect(find.byType(AddProductPlaceholderScreen), findsOneWidget);
+      expect(find.byType(AddProductScreen), findsOneWidget);
     });
   });
 

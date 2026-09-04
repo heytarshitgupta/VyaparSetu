@@ -724,4 +724,128 @@ class AppLocalizationsPa extends AppLocalizations {
   @override
   String get productDeleteFailed =>
       'ਉਤਪਾਦ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String stepCount(int current, int total) {
+    return 'ਕਦਮ $current / $total';
+  }
+
+  @override
+  String get addProductStep1Title => 'ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਹੋ?';
+
+  @override
+  String get addProductStep2Title => 'ਕੀਮਤ ਅਤੇ ਵੇਰਵੇ';
+
+  @override
+  String get addProductStep3Title => 'ਫੋਟੋ ਸ਼ਾਮਲ ਕਰੋ ਅਤੇ ਸੰਭਾਲੋ';
+
+  @override
+  String get productNameLabel => 'ਉਤਪਾਦ ਦਾ ਨਾਮ';
+
+  @override
+  String get productNameHint => 'ਜਿਵੇਂ: ਘਰ ਦਾ ਬਣਿਆ ਅੰਬ ਦਾ ਅਚਾਰ';
+
+  @override
+  String get productNameRequired => 'ਕਿਰਪਾ ਕਰਕੇ ਪਹਿਲਾਂ ਉਤਪਾਦ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get categoryLabel => 'ਸ਼੍ਰੇਣੀ';
+
+  @override
+  String get categoryFood => 'ਖਾਣ-ਪੀਣ ਦੀਆਂ ਚੀਜ਼ਾਂ';
+
+  @override
+  String get categoryHandicraft => 'ਦਸਤਕਾਰੀ';
+
+  @override
+  String get categoryClothing => 'ਕੱਪੜੇ';
+
+  @override
+  String get categoryHome => 'ਘਰੇਲੂ ਸਾਮਾਨ';
+
+  @override
+  String get categoryBeauty => 'ਸੁੰਦਰਤਾ ਅਤੇ ਦੇਖਭਾਲ';
+
+  @override
+  String get categoryJewellery => 'ਗਹਿਣੇ';
+
+  @override
+  String get categoryOther => 'ਹੋਰ';
+
+  @override
+  String get customCategoryLabel => 'ਸ਼੍ਰੇਣੀ ਦੱਸੋ';
+
+  @override
+  String get unitLabel => 'ਮਾਤਰਾ ਇਕਾਈ';
+
+  @override
+  String get unitPiece => 'ਪੀਸ';
+
+  @override
+  String get unitKg => 'ਕਿਲੋਗ੍ਰਾਮ (kg)';
+
+  @override
+  String get unitGram => 'ਗ੍ਰਾਮ (g)';
+
+  @override
+  String get unitLitre => 'ਲੀਟਰ (L)';
+
+  @override
+  String get unitMl => 'ਮਿਲੀਲੀਟਰ (ml)';
+
+  @override
+  String get unitPack => 'ਪੈਕੇਟ';
+
+  @override
+  String get unitDozen => 'ਦਰਜਨ';
+
+  @override
+  String get priceLabel => 'ਕੀਮਤ';
+
+  @override
+  String get priceHelper => 'ਇੱਕ ਇਕਾਈ ਦੀ ਕੀਮਤ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get priceInvalidError =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ ਕੀਮਤ ਦਰਜ ਕਰੋ (ਜਿਵੇਂ: 250 ਜਾਂ 250.50)';
+
+  @override
+  String get descriptionLabel => 'ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਆਪਣੇ ਉਤਪਾਦ ਬਾਰੇ ਦੱਸੋ';
+
+  @override
+  String get descriptionHelper => 'ਇਹ ਕਿਸ ਚੀਜ਼ ਤੋਂ ਬਣਿਆ ਹੈ? ਇਸ ਵਿੱਚ ਕੀ ਖਾਸ ਹੈ?';
+
+  @override
+  String get addPhotosHeading => 'ਫੋਟੋ ਸ਼ਾਮਲ ਕਰੋ';
+
+  @override
+  String get addPhotosSubtitle =>
+      'ਫੋਟੋਆਂ ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਤੁਹਾਡੀ ਕਾਰੀਗਰੀ ਦੀ ਗੁਣਵੱਤਾ ਵੇਖਣ ਵਿੱਚ ਮਦਦ ਕਰਦੀਆਂ ਹਨ';
+
+  @override
+  String get photoUploadComingNext =>
+      'ਫੋਟੋ ਚੋਣ ਦੀ ਸਹੂਲਤ ਅਗਲੇ ਕਦਮ ਵਿੱਚ ਜੋੜੀ ਜਾਵੇਗੀ';
+
+  @override
+  String get saveDraftAction => 'ਡਰਾਫਟ ਸੰਭਾਲੋ';
+
+  @override
+  String get markReadyAction => 'ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਕਰੋ';
+
+  @override
+  String get markReadyGuidance => 'ਤਿਆਰ ਕਰਨ ਲਈ ਨਾਮ, ਸ਼੍ਰੇਣੀ ਅਤੇ ਕੀਮਤ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get draftSavedMessage => 'ਡਰਾਫਟ ਸੰਭਾਲਿਆ ਗਿਆ';
+
+  @override
+  String get productMarkedReadyMessage => 'ਉਤਪਾਦ ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get saveDraftFailed =>
+      'ਡਰਾਫਟ ਸੰਭਾਲਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String get markReadyFailed =>
+      'ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
 }

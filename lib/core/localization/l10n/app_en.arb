@@ -886,5 +886,169 @@
   "productDeleteFailed": "Unable to delete product. Please try again.",
   "@productDeleteFailed": {
     "description": "Error feedback when deleting product fails"
+  },
+  "stepCount": "Step {current} of {total}",
+  "@stepCount": {
+    "description": "Progress step indicator text",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "addProductStep1Title": "What do you make?",
+  "@addProductStep1Title": {
+    "description": "Title for Add Product Step 1"
+  },
+  "addProductStep2Title": "Price & Details",
+  "@addProductStep2Title": {
+    "description": "Title for Add Product Step 2"
+  },
+  "addProductStep3Title": "Add Photos & Save",
+  "@addProductStep3Title": {
+    "description": "Title for Add Product Step 3"
+  },
+  "productNameLabel": "Product name",
+  "@productNameLabel": {
+    "description": "Label for product name input field"
+  },
+  "productNameHint": "e.g. Homemade Mango Pickle",
+  "@productNameHint": {
+    "description": "Placeholder hint for product name"
+  },
+  "productNameRequired": "Please enter a product name first",
+  "@productNameRequired": {
+    "description": "Validation error when continuing with empty product name"
+  },
+  "categoryLabel": "Category",
+  "@categoryLabel": {
+    "description": "Label for category selector"
+  },
+  "categoryFood": "Food",
+  "@categoryFood": {
+    "description": "Category option: Food"
+  },
+  "categoryHandicraft": "Handicraft",
+  "@categoryHandicraft": {
+    "description": "Category option: Handicraft"
+  },
+  "categoryClothing": "Clothing",
+  "@categoryClothing": {
+    "description": "Category option: Clothing"
+  },
+  "categoryHome": "Home Products",
+  "@categoryHome": {
+    "description": "Category option: Home Products"
+  },
+  "categoryBeauty": "Beauty & Care",
+  "@categoryBeauty": {
+    "description": "Category option: Beauty & Care"
+  },
+  "categoryJewellery": "Jewellery",
+  "@categoryJewellery": {
+    "description": "Category option: Jewellery"
+  },
+  "categoryOther": "Other",
+  "@categoryOther": {
+    "description": "Category option: Other"
+  },
+  "customCategoryLabel": "Describe category",
+  "@customCategoryLabel": {
+    "description": "Label for custom category text input"
+  },
+  "unitLabel": "Unit",
+  "@unitLabel": {
+    "description": "Label for measurement unit selector"
+  },
+  "unitPiece": "Piece",
+  "@unitPiece": {
+    "description": "Unit option: Piece"
+  },
+  "unitKg": "Kilogram (kg)",
+  "@unitKg": {
+    "description": "Unit option: Kilogram"
+  },
+  "unitGram": "Gram (g)",
+  "@unitGram": {
+    "description": "Unit option: Gram"
+  },
+  "unitLitre": "Litre (L)",
+  "@unitLitre": {
+    "description": "Unit option: Litre"
+  },
+  "unitMl": "Millilitre (ml)",
+  "@unitMl": {
+    "description": "Unit option: Millilitre"
+  },
+  "unitPack": "Pack",
+  "@unitPack": {
+    "description": "Unit option: Pack"
+  },
+  "unitDozen": "Dozen",
+  "@unitDozen": {
+    "description": "Unit option: Dozen"
+  },
+  "priceLabel": "Price",
+  "@priceLabel": {
+    "description": "Label for price input field"
+  },
+  "priceHelper": "Enter the price for one unit",
+  "@priceHelper": {
+    "description": "Helper text for price input"
+  },
+  "priceInvalidError": "Please enter a valid price (e.g. 250 or 250.50)",
+  "@priceInvalidError": {
+    "description": "Error text for invalid price input"
+  },
+  "descriptionLabel": "Tell buyers about your product",
+  "@descriptionLabel": {
+    "description": "Label for description field"
+  },
+  "descriptionHelper": "What is it made from? What makes it special?",
+  "@descriptionHelper": {
+    "description": "Helper text for description field"
+  },
+  "addPhotosHeading": "Add Photos",
+  "@addPhotosHeading": {
+    "description": "Heading for photos step"
+  },
+  "addPhotosSubtitle": "Photos help buyers see the quality of your craft",
+  "@addPhotosSubtitle": {
+    "description": "Subtitle for photos step"
+  },
+  "photoUploadComingNext": "Photo selection will be added next",
+  "@photoUploadComingNext": {
+    "description": "Temporary message indicating photo picker arrives in next step"
+  },
+  "saveDraftAction": "Save Draft",
+  "@saveDraftAction": {
+    "description": "Action button to save current product as a draft"
+  },
+  "markReadyAction": "Mark Ready",
+  "@markReadyAction": {
+    "description": "Action button to mark product ready/active"
+  },
+  "markReadyGuidance": "Add name, category, and price to mark ready",
+  "@markReadyGuidance": {
+    "description": "Guidance message explaining what is missing to mark product ready"
+  },
+  "draftSavedMessage": "Draft saved",
+  "@draftSavedMessage": {
+    "description": "Feedback message when draft is saved"
+  },
+  "productMarkedReadyMessage": "Product marked ready",
+  "@productMarkedReadyMessage": {
+    "description": "Feedback message when product is marked active/ready"
+  },
+  "saveDraftFailed": "Could not save draft. Please try again.",
+  "@saveDraftFailed": {
+    "description": "Error feedback when saving draft fails"
+  },
+  "markReadyFailed": "Could not mark ready. Please try again.",
+  "@markReadyFailed": {
+    "description": "Error feedback when marking ready fails"
   }
 }

@@ -3,7 +3,9 @@ import '../../core/auth/auth_service.dart';
 import '../../core/localization/generated/app_localizations.dart';
 import '../auth/services/producer_auth_service.dart';
 import '../opportunities/buyer_needs_tab.dart';
-import '../products/add_product_placeholder_screen.dart';
+import '../products/providers/producer_products_provider.dart';
+import '../products/screens/add_product_screen.dart';
+import '../products/services/producer_product_service.dart';
 import '../products/producer_products_tab.dart';
 import '../profile/producer_profile_tab.dart';
 import 'models/producer_shell_profile.dart';
@@ -14,12 +16,16 @@ class ProducerMainScreen extends StatefulWidget {
   final int initialIndex;
   final ProducerShellProfile? initialProfile;
   final Future<ProducerShellProfile?> Function()? profileLoader;
+  final ProducerProductsProvider? productsProvider;
+  final IProducerProductService? productService;
 
   const ProducerMainScreen({
     super.key,
     this.initialIndex = 0,
     this.initialProfile,
     this.profileLoader,
+    this.productsProvider,
+    this.productService,
   });
 
   @override
@@ -29,15 +35,26 @@ class ProducerMainScreen extends StatefulWidget {
 class _ProducerMainScreenState extends State<ProducerMainScreen> {
   late int _currentIndex;
   ProducerShellProfile? _profile;
+  late final ProducerProductsProvider _productsProvider;
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
     _profile = widget.initialProfile;
+    _productsProvider = widget.productsProvider ??
+        ProducerProductsProvider(service: widget.productService);
     if (_profile == null) {
       _loadProfileOnce();
     }
+  }
+
+  @override
+  void dispose() {
+    if (widget.productsProvider == null) {
+      _productsProvider.dispose();
+    }
+    super.dispose();
   }
 
   Future<void> _loadProfileOnce() async {
@@ -89,12 +106,18 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
     }
   }
 
-  void openAddProduct() {
-    Navigator.of(context).push(
+  Future<void> openAddProduct() async {
+    final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (_) => const AddProductPlaceholderScreen(),
+        builder: (_) => AddProductScreen(
+          productService: widget.productService,
+        ),
       ),
     );
+
+    if (result == true) {
+      _productsProvider.loadProducts();
+    }
   }
 
   void openWhatBuyersWant() {
@@ -119,6 +142,8 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
         onOpenWhatBuyersWant: openWhatBuyersWant,
       ),
       ProducerProductsTab(
+        provider: _productsProvider,
+        service: widget.productService,
         onAddProduct: openAddProduct,
       ),
       const BuyerNeedsTab(),

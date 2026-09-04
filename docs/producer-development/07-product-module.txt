@@ -194,6 +194,63 @@ ADD PRODUCT DART DOMAIN, SERVICE & PROVIDER FOUNDATION (STEP 6C.4)
 9. Voice & AI Readiness:
    - Canonical field setters on AddProductProvider (setName, setCategory, setDescription, setPriceFromPaise, setPriceFromRupeesText, setUnit, addImagePath) serve as the unified write path for future keyboard forms, voice extraction, and AI Studio suggestions.
 
-10. Current Status:
-    - Photos and Add Product wizard form remain unwired to UI in this step.
+10. Step 6C.4 Completion:
     - Foundation is fully verified offline with 100% deterministic test coverage.
+
+
+ADD PRODUCT 3-STEP UI ARCHITECTURE (STEP 6C.5)
+------------------------------------------------------------
+1. 3-Step Guided Flow:
+   - File: lib/producer_section/products/screens/add_product_screen.dart
+   - Step 1: "What do you make?" (Product name text field with Unicode support, Category selectable chips with custom category option for "Other", Unit dropdown defaulting to 'piece').
+   - Step 2: "Price & Details" (Price with visual ₹ prefix using ProductPriceParser to parse into integer paise, multiline Description).
+   - Step 3: "Add Photos & Save" (4-photo visual grid, truthful temporary coming-next behavior for photo adding, Save Draft button, Mark Ready button).
+
+2. Provider Ownership & Canonical State:
+   - Exactly one AddProductProvider instance is created at the AddProductScreen boundary and provided to the widget tree.
+   - Provider draft is the canonical state. No duplicate local draft state in widgets.
+   - Text controllers sync bidirectionally with the provider draft.
+   - Form state and active step survive widget rebuilds, theme changes, and locale switches.
+
+3. Persistence Before Step 3:
+   - Clicking "Continue" from Step 2 automatically calls `provider.goToStep(3)`.
+   - `goToStep(3)` persists the draft (via `createDraft` on first save, or `updateDraft` if existing) before transitioning to Step 3.
+   - If persistence fails, the UI remains safely on Step 2 with a localized error toast and prevents advancing without a saved product ID.
+
+4. Save Draft Behavior:
+   - Calls `provider.saveDraft()`.
+   - Shows localized success SnackBar ("Draft saved").
+   - Pops route returning `true` to notify caller (My Products) to refresh product list.
+
+5. Mark Ready Behavior & Status Activation:
+   - Validates `provider.canMarkActive` (name >= 2 chars, category >= 2 chars, price > 0 paise; photos are NOT required).
+   - If incomplete, the "Mark Ready" button is disabled and guidance text clearly explains what fields are missing.
+   - When enabled, tapping invokes `provider.markReady()`.
+   - `markReady()` ensures any dirty draft changes are saved, then calls explicit `productService.updateProductStatus(id, ProductStatus.active)`.
+   - Shows localized success SnackBar ("Product marked ready") and pops route returning `true`.
+   - Under Migration 009, products remain owner-only; UI does not claim Buyer marketplace visibility.
+
+6. Photo UI Truthfulness:
+   - Displays a 4-photo grid with empty visual slots and an "Add Photo" action.
+   - Because image_picker and upload are scheduled for Step 6C.6, tapping "Add Photo" displays a truthful localized SnackBar: "Photo selection will be added next".
+   - Zero fake uploaded photos, fake storage paths, or dummy network URLs.
+
+7. Responsiveness & Accessibility:
+   - Phone (<640px): Full-width single-column layout, compact button column fallback on narrow displays (<360px), zero RenderFlex overflows.
+   - Tablet (640-1024px): Centered card layout with max width 640px.
+   - Desktop (>1024px): Centered elevated card layout constrained to 760px max width inside the producer shell.
+   - Step indicator displays both numerical/dot progress and localized "Step X of 3" text (does not rely on color alone).
+
+8. Refresh-on-Return Wiring:
+   - ProducerMainScreen owns a shared ProducerProductsProvider instance injected into ProducerProductsTab.
+   - All Add Product entry points (Home tab shortcut, My Products header, zero-products empty state CTA) use `openAddProduct()`.
+   - `openAddProduct()` awaits `Navigator.push(..., MaterialPageRoute(builder: (_) => AddProductScreen(...)))`.
+   - If result is `true` (successful Save Draft or Mark Ready), `_productsProvider.loadProducts()` is automatically triggered to display the new or updated product in My Products.
+
+9. Theme & Multi-Language Support:
+   - Fully localized in English, Hindi (Devanagari), and Punjabi (Gurmukhi).
+   - Fully compatible with Light, Dark, and System themes using ThemeData and ColorScheme.
+
+10. Current Limitation (Exit with Unsaved Draft):
+    - Normal back/pop navigation is preserved. There is currently no background autosave or discard confirmation modal. If producer exits before Step 2 Continue/Save Draft, in-memory draft is discarded.
+

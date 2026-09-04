@@ -726,4 +726,126 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get productDeleteFailed =>
       'Unable to delete product. Please try again.';
+
+  @override
+  String stepCount(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get addProductStep1Title => 'What do you make?';
+
+  @override
+  String get addProductStep2Title => 'Price & Details';
+
+  @override
+  String get addProductStep3Title => 'Add Photos & Save';
+
+  @override
+  String get productNameLabel => 'Product name';
+
+  @override
+  String get productNameHint => 'e.g. Homemade Mango Pickle';
+
+  @override
+  String get productNameRequired => 'Please enter a product name first';
+
+  @override
+  String get categoryLabel => 'Category';
+
+  @override
+  String get categoryFood => 'Food';
+
+  @override
+  String get categoryHandicraft => 'Handicraft';
+
+  @override
+  String get categoryClothing => 'Clothing';
+
+  @override
+  String get categoryHome => 'Home Products';
+
+  @override
+  String get categoryBeauty => 'Beauty & Care';
+
+  @override
+  String get categoryJewellery => 'Jewellery';
+
+  @override
+  String get categoryOther => 'Other';
+
+  @override
+  String get customCategoryLabel => 'Describe category';
+
+  @override
+  String get unitLabel => 'Unit';
+
+  @override
+  String get unitPiece => 'Piece';
+
+  @override
+  String get unitKg => 'Kilogram (kg)';
+
+  @override
+  String get unitGram => 'Gram (g)';
+
+  @override
+  String get unitLitre => 'Litre (L)';
+
+  @override
+  String get unitMl => 'Millilitre (ml)';
+
+  @override
+  String get unitPack => 'Pack';
+
+  @override
+  String get unitDozen => 'Dozen';
+
+  @override
+  String get priceLabel => 'Price';
+
+  @override
+  String get priceHelper => 'Enter the price for one unit';
+
+  @override
+  String get priceInvalidError =>
+      'Please enter a valid price (e.g. 250 or 250.50)';
+
+  @override
+  String get descriptionLabel => 'Tell buyers about your product';
+
+  @override
+  String get descriptionHelper =>
+      'What is it made from? What makes it special?';
+
+  @override
+  String get addPhotosHeading => 'Add Photos';
+
+  @override
+  String get addPhotosSubtitle =>
+      'Photos help buyers see the quality of your craft';
+
+  @override
+  String get photoUploadComingNext => 'Photo selection will be added next';
+
+  @override
+  String get saveDraftAction => 'Save Draft';
+
+  @override
+  String get markReadyAction => 'Mark Ready';
+
+  @override
+  String get markReadyGuidance => 'Add name, category, and price to mark ready';
+
+  @override
+  String get draftSavedMessage => 'Draft saved';
+
+  @override
+  String get productMarkedReadyMessage => 'Product marked ready';
+
+  @override
+  String get saveDraftFailed => 'Could not save draft. Please try again.';
+
+  @override
+  String get markReadyFailed => 'Could not mark ready. Please try again.';
 }

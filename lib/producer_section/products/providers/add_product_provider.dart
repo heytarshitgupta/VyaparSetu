@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../models/producer_product.dart';
 import '../models/producer_product_draft.dart';
 import '../models/product_price_parser.dart';
 import '../services/producer_product_image_service.dart';
@@ -202,6 +203,51 @@ class AddProductProvider extends ChangeNotifier {
       return false;
     } catch (_) {
       _errorMessage = 'Failed to save product draft. Please try again.';
+      return false;
+    } finally {
+      _isSaving = false;
+      notifyListeners();
+    }
+  }
+
+  /// Persists any unpersisted draft changes and explicitly transitions the
+  /// product status to [ProductStatus.active] via [_productService.updateProductStatus].
+  ///
+  /// Enforces prerequisites:
+  /// - [canMarkActive] must be true (name >= 2, category >= 2, price > 0).
+  /// - Draft must be persisted first.
+  ///
+  /// Returns true on success, false on failure (setting [errorMessage]).
+  Future<bool> markReady() async {
+    if (!canMarkActive) {
+      _errorMessage = 'Please complete name, category, and price first';
+      notifyListeners();
+      return false;
+    }
+
+    if (_persistedProductId == null || _isDirty) {
+      final saved = await saveDraft();
+      if (!saved) return false;
+    }
+
+    _isSaving = true;
+    clearError();
+    notifyListeners();
+
+    try {
+      await _productService.updateProductStatus(
+        productId: _persistedProductId!,
+        newStatus: ProductStatus.active,
+      );
+      return true;
+    } on ProductAuthException {
+      _errorMessage = 'Authentication required. Please log in again.';
+      return false;
+    } on ProductOperationException catch (e) {
+      _errorMessage = e.message;
+      return false;
+    } catch (_) {
+      _errorMessage = 'Failed to mark product ready. Please try again.';
       return false;
     } finally {
       _isSaving = false;

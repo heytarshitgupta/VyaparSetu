@@ -241,6 +241,30 @@ void main() {
       expect(provider.canMarkActive, isTrue);
     });
 
+    test('markReady fails when canMarkActive is false', () async {
+      provider.setName('Item');
+      // Category and price are missing
+      final success = await provider.markReady();
+      expect(success, isFalse);
+      expect(provider.hasError, isTrue);
+      expect(mockService.updateCalls, 0);
+    });
+
+    test('markReady persists draft and updates product status to active', () async {
+      provider.setName('Brass Diya');
+      provider.setCategory('Handicraft');
+      provider.setPriceFromPaise(35000);
+
+      expect(provider.canMarkActive, isTrue);
+
+      final success = await provider.markReady();
+      expect(success, isTrue);
+      expect(provider.isPersisted, isTrue);
+      final id = provider.persistedProductId!;
+      expect(mockService.products[id]?.status, ProductStatus.active);
+      expect(mockService.products[id]?.name, 'Brass Diya');
+    });
+
     test('reset clears state back to initial defaults', () async {
       provider.setName('Temp Item');
       await provider.saveDraft();
