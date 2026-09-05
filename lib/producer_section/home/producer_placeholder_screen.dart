@@ -3,6 +3,7 @@ import '../../core/auth/auth_service.dart';
 import '../../core/routes/app_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../auth/services/producer_auth_service.dart';
+import '../products/producer_market_intelligence_dashboard.dart';
 
 class ProducerPlaceholderScreen extends StatefulWidget {
   const ProducerPlaceholderScreen({super.key});
@@ -179,6 +180,9 @@ class _ProducerPlaceholderScreenState extends State<ProducerPlaceholderScreen> {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 28),
+
+                        const ProducerMarketIntelligenceDashboard(),
                         const SizedBox(height: 28),
 
                         // Sign Out Button
