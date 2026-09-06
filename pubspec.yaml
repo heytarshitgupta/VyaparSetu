@@ -70,6 +70,9 @@ flutter:
 
   assets:
     - .env
+    - assets/data/products.csv
+    - assets/data/customers.csv
+    - assets/data/sales.csv
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

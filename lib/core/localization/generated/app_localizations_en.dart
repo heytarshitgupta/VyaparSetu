@@ -581,4 +581,271 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nextStageDescription => 'Direct access to Buyer Needs & Products';
+
+  @override
+  String welcomeProducer(String name) {
+    return 'Welcome, $name';
+  }
+
+  @override
+  String get producerDefaultName => 'Producer';
+
+  @override
+  String get producerHomeSubtitle =>
+      'Manage your craft and connect with buyers';
+
+  @override
+  String get addProductActionSubtitle => 'Show buyers what you make';
+
+  @override
+  String get myProductsShortcutSubtitle => 'See the products you have added';
+
+  @override
+  String get buyerNeedsShortcutSubtitle => 'See what buyers are looking for';
+
+  @override
+  String get whatBuyersWantShortcutSubtitle => 'See what products people want';
+
+  @override
+  String get noProductsListedTitle => 'No products added yet';
+
+  @override
+  String get noProductsListedSubtitle =>
+      'Add your first product so buyers can discover your craft';
+
+  @override
+  String get buyerNeedsWaitingTitle => 'Buyer needs will appear here';
+
+  @override
+  String get buyerNeedsWaitingSubtitle =>
+      'Buyer requests will be listed here when available';
+
+  @override
+  String get featureComingSoon =>
+      'This feature will be available in the next update';
+
+  @override
+  String get signOutAction => 'Sign Out';
+
+  @override
+  String get myProductsSubtitle => 'Manage the products you make and sell';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterActive => 'Active';
+
+  @override
+  String get filterDraft => 'Draft';
+
+  @override
+  String get filterHidden => 'Hidden';
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusDraft => 'Draft';
+
+  @override
+  String get statusHidden => 'Hidden';
+
+  @override
+  String get priceNotSet => 'Price not set';
+
+  @override
+  String get draftNeedsCompletion => 'Needs price or details';
+
+  @override
+  String get noActiveProductsTitle => 'No active products';
+
+  @override
+  String get noActiveProductsSubtitle =>
+      'Products ready for listing will appear here';
+
+  @override
+  String get noDraftProductsTitle => 'No draft products';
+
+  @override
+  String get noDraftProductsSubtitle =>
+      'Products that still need details will appear here';
+
+  @override
+  String get noHiddenProductsTitle => 'No hidden products';
+
+  @override
+  String get noHiddenProductsSubtitle =>
+      'Products you temporarily hide will appear here';
+
+  @override
+  String get showAllProducts => 'Show All Products';
+
+  @override
+  String get unableToLoadProducts => 'We couldn\'t load your products';
+
+  @override
+  String get unableToLoadSubtitle =>
+      'Please check your connection and try again';
+
+  @override
+  String get notAuthenticatedMessage => 'Please sign in to view your products';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get hideAction => 'Hide';
+
+  @override
+  String get showAction => 'Show';
+
+  @override
+  String get deleteAction => 'Delete';
+
+  @override
+  String get deleteProductTitle => 'Delete Product?';
+
+  @override
+  String get deleteProductConfirmation =>
+      'Are you sure you want to delete this product? This action cannot be undone.';
+
+  @override
+  String get productHiddenSuccess => 'Product hidden';
+
+  @override
+  String get productActivatedSuccess => 'Product marked active';
+
+  @override
+  String get productDeletedSuccess => 'Product deleted';
+
+  @override
+  String get productActionFailed =>
+      'Unable to update product. Please try again.';
+
+  @override
+  String get productDeleteFailed =>
+      'Unable to delete product. Please try again.';
+
+  @override
+  String stepCount(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get addProductStep1Title => 'What do you make?';
+
+  @override
+  String get addProductStep2Title => 'Price & Details';
+
+  @override
+  String get addProductStep3Title => 'Add Photos & Save';
+
+  @override
+  String get productNameLabel => 'Product name';
+
+  @override
+  String get productNameHint => 'e.g. Homemade Mango Pickle';
+
+  @override
+  String get productNameRequired => 'Please enter a product name first';
+
+  @override
+  String get categoryLabel => 'Category';
+
+  @override
+  String get categoryFood => 'Food';
+
+  @override
+  String get categoryHandicraft => 'Handicraft';
+
+  @override
+  String get categoryClothing => 'Clothing';
+
+  @override
+  String get categoryHome => 'Home Products';
+
+  @override
+  String get categoryBeauty => 'Beauty & Care';
+
+  @override
+  String get categoryJewellery => 'Jewellery';
+
+  @override
+  String get categoryOther => 'Other';
+
+  @override
+  String get customCategoryLabel => 'Describe category';
+
+  @override
+  String get unitLabel => 'Unit';
+
+  @override
+  String get unitPiece => 'Piece';
+
+  @override
+  String get unitKg => 'Kilogram (kg)';
+
+  @override
+  String get unitGram => 'Gram (g)';
+
+  @override
+  String get unitLitre => 'Litre (L)';
+
+  @override
+  String get unitMl => 'Millilitre (ml)';
+
+  @override
+  String get unitPack => 'Pack';
+
+  @override
+  String get unitDozen => 'Dozen';
+
+  @override
+  String get priceLabel => 'Price';
+
+  @override
+  String get priceHelper => 'Enter the price for one unit';
+
+  @override
+  String get priceInvalidError =>
+      'Please enter a valid price (e.g. 250 or 250.50)';
+
+  @override
+  String get descriptionLabel => 'Tell buyers about your product';
+
+  @override
+  String get descriptionHelper =>
+      'What is it made from? What makes it special?';
+
+  @override
+  String get addPhotosHeading => 'Add Photos';
+
+  @override
+  String get addPhotosSubtitle =>
+      'Photos help buyers see the quality of your craft';
+
+  @override
+  String get photoUploadComingNext => 'Photo selection will be added next';
+
+  @override
+  String get saveDraftAction => 'Save Draft';
+
+  @override
+  String get markReadyAction => 'Mark Ready';
+
+  @override
+  String get markReadyGuidance => 'Add name, category, and price to mark ready';
+
+  @override
+  String get draftSavedMessage => 'Draft saved';
+
+  @override
+  String get productMarkedReadyMessage => 'Product marked ready';
+
+  @override
+  String get saveDraftFailed => 'Could not save draft. Please try again.';
+
+  @override
+  String get markReadyFailed => 'Could not mark ready. Please try again.';
 }

@@ -1179,6 +1179,504 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Direct access to Buyer Needs & Products'**
   String get nextStageDescription;
+
+  /// Greeting with producer name
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, {name}'**
+  String welcomeProducer(String name);
+
+  /// Default fallback name for producer
+  ///
+  /// In en, this message translates to:
+  /// **'Producer'**
+  String get producerDefaultName;
+
+  /// Subtitle below producer greeting on Home
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your craft and connect with buyers'**
+  String get producerHomeSubtitle;
+
+  /// Subtitle on the primary Add Product action card
+  ///
+  /// In en, this message translates to:
+  /// **'Show buyers what you make'**
+  String get addProductActionSubtitle;
+
+  /// Subtitle for My Products shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'See the products you have added'**
+  String get myProductsShortcutSubtitle;
+
+  /// Subtitle for Buyer Needs shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'See what buyers are looking for'**
+  String get buyerNeedsShortcutSubtitle;
+
+  /// Subtitle for What Buyers Want shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'See what products people want'**
+  String get whatBuyersWantShortcutSubtitle;
+
+  /// Title for empty products status card
+  ///
+  /// In en, this message translates to:
+  /// **'No products added yet'**
+  String get noProductsListedTitle;
+
+  /// Subtitle for empty products status card
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first product so buyers can discover your craft'**
+  String get noProductsListedSubtitle;
+
+  /// Title for waiting buyer needs status card
+  ///
+  /// In en, this message translates to:
+  /// **'Buyer needs will appear here'**
+  String get buyerNeedsWaitingTitle;
+
+  /// Subtitle for waiting buyer needs status card
+  ///
+  /// In en, this message translates to:
+  /// **'Buyer requests will be listed here when available'**
+  String get buyerNeedsWaitingSubtitle;
+
+  /// Description on placeholder destinations
+  ///
+  /// In en, this message translates to:
+  /// **'This feature will be available in the next update'**
+  String get featureComingSoon;
+
+  /// Sign out button label
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get signOutAction;
+
+  /// Subtitle for My Products header
+  ///
+  /// In en, this message translates to:
+  /// **'Manage the products you make and sell'**
+  String get myProductsSubtitle;
+
+  /// Filter tab for all products
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// Filter tab for active products
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get filterActive;
+
+  /// Filter tab for draft products
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get filterDraft;
+
+  /// Filter tab for hidden products
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get filterHidden;
+
+  /// Status badge for active products
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get statusActive;
+
+  /// Status badge for draft products
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get statusDraft;
+
+  /// Status badge for hidden products
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get statusHidden;
+
+  /// Label when product price is not specified
+  ///
+  /// In en, this message translates to:
+  /// **'Price not set'**
+  String get priceNotSet;
+
+  /// Indicator on draft cards that product details are incomplete
+  ///
+  /// In en, this message translates to:
+  /// **'Needs price or details'**
+  String get draftNeedsCompletion;
+
+  /// Title when active filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'No active products'**
+  String get noActiveProductsTitle;
+
+  /// Subtitle when active filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'Products ready for listing will appear here'**
+  String get noActiveProductsSubtitle;
+
+  /// Title when draft filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'No draft products'**
+  String get noDraftProductsTitle;
+
+  /// Subtitle when draft filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'Products that still need details will appear here'**
+  String get noDraftProductsSubtitle;
+
+  /// Title when hidden filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'No hidden products'**
+  String get noHiddenProductsTitle;
+
+  /// Subtitle when hidden filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'Products you temporarily hide will appear here'**
+  String get noHiddenProductsSubtitle;
+
+  /// Button to clear filters and view all products
+  ///
+  /// In en, this message translates to:
+  /// **'Show All Products'**
+  String get showAllProducts;
+
+  /// Error title when product loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load your products'**
+  String get unableToLoadProducts;
+
+  /// Error subtitle when product loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again'**
+  String get unableToLoadSubtitle;
+
+  /// Error message when user is not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in to view your products'**
+  String get notAuthenticatedMessage;
+
+  /// Retry button label
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// Action button to hide a product
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hideAction;
+
+  /// Action button to activate/show a product
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get showAction;
+
+  /// Action button to delete a product
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteAction;
+
+  /// Title of delete confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Product?'**
+  String get deleteProductTitle;
+
+  /// Body message of delete confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this product? This action cannot be undone.'**
+  String get deleteProductConfirmation;
+
+  /// Feedback message when product is hidden
+  ///
+  /// In en, this message translates to:
+  /// **'Product hidden'**
+  String get productHiddenSuccess;
+
+  /// Feedback message when product is activated
+  ///
+  /// In en, this message translates to:
+  /// **'Product marked active'**
+  String get productActivatedSuccess;
+
+  /// Feedback message when product is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Product deleted'**
+  String get productDeletedSuccess;
+
+  /// Error feedback when updating product status fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update product. Please try again.'**
+  String get productActionFailed;
+
+  /// Error feedback when deleting product fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to delete product. Please try again.'**
+  String get productDeleteFailed;
+
+  /// Progress step indicator text
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String stepCount(int current, int total);
+
+  /// Title for Add Product Step 1
+  ///
+  /// In en, this message translates to:
+  /// **'What do you make?'**
+  String get addProductStep1Title;
+
+  /// Title for Add Product Step 2
+  ///
+  /// In en, this message translates to:
+  /// **'Price & Details'**
+  String get addProductStep2Title;
+
+  /// Title for Add Product Step 3
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photos & Save'**
+  String get addProductStep3Title;
+
+  /// Label for product name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Product name'**
+  String get productNameLabel;
+
+  /// Placeholder hint for product name
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Homemade Mango Pickle'**
+  String get productNameHint;
+
+  /// Validation error when continuing with empty product name
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a product name first'**
+  String get productNameRequired;
+
+  /// Label for category selector
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get categoryLabel;
+
+  /// Category option: Food
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get categoryFood;
+
+  /// Category option: Handicraft
+  ///
+  /// In en, this message translates to:
+  /// **'Handicraft'**
+  String get categoryHandicraft;
+
+  /// Category option: Clothing
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing'**
+  String get categoryClothing;
+
+  /// Category option: Home Products
+  ///
+  /// In en, this message translates to:
+  /// **'Home Products'**
+  String get categoryHome;
+
+  /// Category option: Beauty & Care
+  ///
+  /// In en, this message translates to:
+  /// **'Beauty & Care'**
+  String get categoryBeauty;
+
+  /// Category option: Jewellery
+  ///
+  /// In en, this message translates to:
+  /// **'Jewellery'**
+  String get categoryJewellery;
+
+  /// Category option: Other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get categoryOther;
+
+  /// Label for custom category text input
+  ///
+  /// In en, this message translates to:
+  /// **'Describe category'**
+  String get customCategoryLabel;
+
+  /// Label for measurement unit selector
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get unitLabel;
+
+  /// Unit option: Piece
+  ///
+  /// In en, this message translates to:
+  /// **'Piece'**
+  String get unitPiece;
+
+  /// Unit option: Kilogram
+  ///
+  /// In en, this message translates to:
+  /// **'Kilogram (kg)'**
+  String get unitKg;
+
+  /// Unit option: Gram
+  ///
+  /// In en, this message translates to:
+  /// **'Gram (g)'**
+  String get unitGram;
+
+  /// Unit option: Litre
+  ///
+  /// In en, this message translates to:
+  /// **'Litre (L)'**
+  String get unitLitre;
+
+  /// Unit option: Millilitre
+  ///
+  /// In en, this message translates to:
+  /// **'Millilitre (ml)'**
+  String get unitMl;
+
+  /// Unit option: Pack
+  ///
+  /// In en, this message translates to:
+  /// **'Pack'**
+  String get unitPack;
+
+  /// Unit option: Dozen
+  ///
+  /// In en, this message translates to:
+  /// **'Dozen'**
+  String get unitDozen;
+
+  /// Label for price input field
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get priceLabel;
+
+  /// Helper text for price input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the price for one unit'**
+  String get priceHelper;
+
+  /// Error text for invalid price input
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid price (e.g. 250 or 250.50)'**
+  String get priceInvalidError;
+
+  /// Label for description field
+  ///
+  /// In en, this message translates to:
+  /// **'Tell buyers about your product'**
+  String get descriptionLabel;
+
+  /// Helper text for description field
+  ///
+  /// In en, this message translates to:
+  /// **'What is it made from? What makes it special?'**
+  String get descriptionHelper;
+
+  /// Heading for photos step
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photos'**
+  String get addPhotosHeading;
+
+  /// Subtitle for photos step
+  ///
+  /// In en, this message translates to:
+  /// **'Photos help buyers see the quality of your craft'**
+  String get addPhotosSubtitle;
+
+  /// Temporary message indicating photo picker arrives in next step
+  ///
+  /// In en, this message translates to:
+  /// **'Photo selection will be added next'**
+  String get photoUploadComingNext;
+
+  /// Action button to save current product as a draft
+  ///
+  /// In en, this message translates to:
+  /// **'Save Draft'**
+  String get saveDraftAction;
+
+  /// Action button to mark product ready/active
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Ready'**
+  String get markReadyAction;
+
+  /// Guidance message explaining what is missing to mark product ready
+  ///
+  /// In en, this message translates to:
+  /// **'Add name, category, and price to mark ready'**
+  String get markReadyGuidance;
+
+  /// Feedback message when draft is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Draft saved'**
+  String get draftSavedMessage;
+
+  /// Feedback message when product is marked active/ready
+  ///
+  /// In en, this message translates to:
+  /// **'Product marked ready'**
+  String get productMarkedReadyMessage;
+
+  /// Error feedback when saving draft fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save draft. Please try again.'**
+  String get saveDraftFailed;
+
+  /// Error feedback when marking ready fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not mark ready. Please try again.'**
+  String get markReadyFailed;
 }
 
 class _AppLocalizationsDelegate

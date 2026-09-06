@@ -575,4 +575,277 @@ class AppLocalizationsPa extends AppLocalizations {
   @override
   String get nextStageDescription =>
       'ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਲੋੜਾਂ ਅਤੇ ਉਤਪਾਦਾਂ ਤੱਕ ਸਿੱਧੀ ਪਹੁੰਚ';
+
+  @override
+  String welcomeProducer(String name) {
+    return 'ਜੀ ਆਇਆਂ ਨੂੰ, $name';
+  }
+
+  @override
+  String get producerDefaultName => 'ਉਤਪਾਦਕ';
+
+  @override
+  String get producerHomeSubtitle =>
+      'ਆਪਣੀ ਕਾਰੀਗਰੀ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ ਅਤੇ ਖਰੀਦਦਾਰਾਂ ਨਾਲ ਜੁੜੋ';
+
+  @override
+  String get addProductActionSubtitle =>
+      'ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਦਿਖਾਓ ਕਿ ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਹੋ';
+
+  @override
+  String get myProductsShortcutSubtitle => 'ਆਪਣੇ ਸ਼ਾਮਲ ਕੀਤੇ ਉਤਪਾਦ ਵੇਖੋ';
+
+  @override
+  String get buyerNeedsShortcutSubtitle => 'ਵੇਖੋ ਕਿ ਖਰੀਦਦਾਰ ਕੀ ਲੱਭ ਰਹੇ ਹਨ';
+
+  @override
+  String get whatBuyersWantShortcutSubtitle =>
+      'ਵੇਖੋ ਕਿ ਲੋਕ ਕਿਹੜੇ ਉਤਪਾਦ ਚਾਹੁੰਦੇ ਹਨ';
+
+  @override
+  String get noProductsListedTitle => 'ਅਜੇ ਤੱਕ ਕੋਈ ਉਤਪਾਦ ਸ਼ਾਮਲ ਨਹੀਂ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get noProductsListedSubtitle =>
+      'ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਆਪਣੀ ਕਾਰੀਗਰੀ ਦਿਖਾਉਣ ਲਈ ਆਪਣਾ ਪਹਿਲਾ ਉਤਪਾਦ ਸ਼ਾਮਲ ਕਰੋ';
+
+  @override
+  String get buyerNeedsWaitingTitle =>
+      'ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਲੋੜਾਂ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੀਆਂ';
+
+  @override
+  String get buyerNeedsWaitingSubtitle =>
+      'ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਮੰਗਾਂ ਉਪਲਬਧ ਹੋਣ \'ਤੇ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੀਆਂ';
+
+  @override
+  String get featureComingSoon =>
+      'This feature will be available in the next update';
+
+  @override
+  String get signOutAction => 'ਸਾਈਨ ਆਉਟ';
+
+  @override
+  String get myProductsSubtitle =>
+      'ਆਪਣੇ ਬਣਾਏ ਅਤੇ ਵੇਚੇ ਜਾਣ ਵਾਲੇ ਉਤਪਾਦਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ';
+
+  @override
+  String get filterAll => 'ਸਾਰੇ';
+
+  @override
+  String get filterActive => 'ਸਰਗਰਮ';
+
+  @override
+  String get filterDraft => 'ਡਰਾਫਟ';
+
+  @override
+  String get filterHidden => 'ਲੁਕਵੇਂ';
+
+  @override
+  String get statusActive => 'ਸਰਗਰਮ';
+
+  @override
+  String get statusDraft => 'ਡਰਾਫਟ';
+
+  @override
+  String get statusHidden => 'ਲੁਕਵਾਂ';
+
+  @override
+  String get priceNotSet => 'ਕੀਮਤ ਤੈਅ ਨਹੀਂ';
+
+  @override
+  String get draftNeedsCompletion => 'ਕੀਮਤ ਜਾਂ ਵੇਰਵੇ ਬਾਕੀ ਹਨ';
+
+  @override
+  String get noActiveProductsTitle => 'ਕੋਈ ਸਰਗਰਮ ਉਤਪਾਦ ਨਹੀਂ';
+
+  @override
+  String get noActiveProductsSubtitle => 'ਸੂਚੀ ਲਈ ਤਿਆਰ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
+
+  @override
+  String get noDraftProductsTitle => 'ਕੋਈ ਡਰਾਫਟ ਉਤਪਾਦ ਨਹੀਂ';
+
+  @override
+  String get noDraftProductsSubtitle =>
+      'ਅਧੂਰੇ ਉਤਪਾਦ ਜਿਨ੍ਹਾਂ \'ਤੇ ਕੰਮ ਬਾਕੀ ਹੈ, ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
+
+  @override
+  String get noHiddenProductsTitle => 'ਕੋਈ ਲੁਕਵਾਂ ਉਤਪਾਦ ਨਹੀਂ';
+
+  @override
+  String get noHiddenProductsSubtitle =>
+      'ਅਸਥਾਈ ਤੌਰ \'ਤੇ ਲੁਕਾਏ ਗਏ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
+
+  @override
+  String get showAllProducts => 'ਸਾਰੇ ਉਤਪਾਦ ਵੇਖੋ';
+
+  @override
+  String get unableToLoadProducts => 'ਅਸੀਂ ਤੁਹਾਡੇ ਉਤਪਾਦ ਲੋਡ ਨਹੀਂ ਕਰ ਸਕੇ';
+
+  @override
+  String get unableToLoadSubtitle =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਜਾਂਚੋ ਅਤੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ';
+
+  @override
+  String get notAuthenticatedMessage =>
+      'ਆਪਣੇ ਉਤਪਾਦ ਦੇਖਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਸਾਈਨ ਇਨ ਕਰੋ';
+
+  @override
+  String get retry => 'ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ';
+
+  @override
+  String get hideAction => 'ਲੁਕਾਓ';
+
+  @override
+  String get showAction => 'ਦਿਖਾਓ';
+
+  @override
+  String get deleteAction => 'ਹਟਾਓ';
+
+  @override
+  String get deleteProductTitle => 'ਉਤਪਾਦ ਹਟਾਓ?';
+
+  @override
+  String get deleteProductConfirmation =>
+      'ਕੀ ਤੁਸੀਂ ਸੱਚਮੁੱਚ ਇਸ ਉਤਪਾਦ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਹ ਕਾਰਵਾਈ ਵਾਪਸ ਨਹੀਂ ਲਈ ਜਾ ਸਕਦੀ।';
+
+  @override
+  String get productHiddenSuccess => 'ਉਤਪਾਦ ਲੁਕਾਇਆ ਗਿਆ';
+
+  @override
+  String get productActivatedSuccess => 'ਉਤਪਾਦ ਸਰਗਰਮ ਮਾਰਕ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get productDeletedSuccess => 'ਉਤਪਾਦ ਹਟਾਇਆ ਗਿਆ';
+
+  @override
+  String get productActionFailed =>
+      'ਉਤਪਾਦ ਅਪਡੇਟ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String get productDeleteFailed =>
+      'ਉਤਪਾਦ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String stepCount(int current, int total) {
+    return 'ਕਦਮ $current / $total';
+  }
+
+  @override
+  String get addProductStep1Title => 'ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਹੋ?';
+
+  @override
+  String get addProductStep2Title => 'ਕੀਮਤ ਅਤੇ ਵੇਰਵੇ';
+
+  @override
+  String get addProductStep3Title => 'ਫੋਟੋ ਸ਼ਾਮਲ ਕਰੋ ਅਤੇ ਸੰਭਾਲੋ';
+
+  @override
+  String get productNameLabel => 'ਉਤਪਾਦ ਦਾ ਨਾਮ';
+
+  @override
+  String get productNameHint => 'ਜਿਵੇਂ: ਘਰ ਦਾ ਬਣਿਆ ਅੰਬ ਦਾ ਅਚਾਰ';
+
+  @override
+  String get productNameRequired => 'ਕਿਰਪਾ ਕਰਕੇ ਪਹਿਲਾਂ ਉਤਪਾਦ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get categoryLabel => 'ਸ਼੍ਰੇਣੀ';
+
+  @override
+  String get categoryFood => 'ਖਾਣ-ਪੀਣ ਦੀਆਂ ਚੀਜ਼ਾਂ';
+
+  @override
+  String get categoryHandicraft => 'ਦਸਤਕਾਰੀ';
+
+  @override
+  String get categoryClothing => 'ਕੱਪੜੇ';
+
+  @override
+  String get categoryHome => 'ਘਰੇਲੂ ਸਾਮਾਨ';
+
+  @override
+  String get categoryBeauty => 'ਸੁੰਦਰਤਾ ਅਤੇ ਦੇਖਭਾਲ';
+
+  @override
+  String get categoryJewellery => 'ਗਹਿਣੇ';
+
+  @override
+  String get categoryOther => 'ਹੋਰ';
+
+  @override
+  String get customCategoryLabel => 'ਸ਼੍ਰੇਣੀ ਦੱਸੋ';
+
+  @override
+  String get unitLabel => 'ਮਾਤਰਾ ਇਕਾਈ';
+
+  @override
+  String get unitPiece => 'ਪੀਸ';
+
+  @override
+  String get unitKg => 'ਕਿਲੋਗ੍ਰਾਮ (kg)';
+
+  @override
+  String get unitGram => 'ਗ੍ਰਾਮ (g)';
+
+  @override
+  String get unitLitre => 'ਲੀਟਰ (L)';
+
+  @override
+  String get unitMl => 'ਮਿਲੀਲੀਟਰ (ml)';
+
+  @override
+  String get unitPack => 'ਪੈਕੇਟ';
+
+  @override
+  String get unitDozen => 'ਦਰਜਨ';
+
+  @override
+  String get priceLabel => 'ਕੀਮਤ';
+
+  @override
+  String get priceHelper => 'ਇੱਕ ਇਕਾਈ ਦੀ ਕੀਮਤ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get priceInvalidError =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ ਕੀਮਤ ਦਰਜ ਕਰੋ (ਜਿਵੇਂ: 250 ਜਾਂ 250.50)';
+
+  @override
+  String get descriptionLabel => 'ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਆਪਣੇ ਉਤਪਾਦ ਬਾਰੇ ਦੱਸੋ';
+
+  @override
+  String get descriptionHelper => 'ਇਹ ਕਿਸ ਚੀਜ਼ ਤੋਂ ਬਣਿਆ ਹੈ? ਇਸ ਵਿੱਚ ਕੀ ਖਾਸ ਹੈ?';
+
+  @override
+  String get addPhotosHeading => 'ਫੋਟੋ ਸ਼ਾਮਲ ਕਰੋ';
+
+  @override
+  String get addPhotosSubtitle =>
+      'ਫੋਟੋਆਂ ਖਰੀਦਦਾਰਾਂ ਨੂੰ ਤੁਹਾਡੀ ਕਾਰੀਗਰੀ ਦੀ ਗੁਣਵੱਤਾ ਵੇਖਣ ਵਿੱਚ ਮਦਦ ਕਰਦੀਆਂ ਹਨ';
+
+  @override
+  String get photoUploadComingNext =>
+      'ਫੋਟੋ ਚੋਣ ਦੀ ਸਹੂਲਤ ਅਗਲੇ ਕਦਮ ਵਿੱਚ ਜੋੜੀ ਜਾਵੇਗੀ';
+
+  @override
+  String get saveDraftAction => 'ਡਰਾਫਟ ਸੰਭਾਲੋ';
+
+  @override
+  String get markReadyAction => 'ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਕਰੋ';
+
+  @override
+  String get markReadyGuidance => 'ਤਿਆਰ ਕਰਨ ਲਈ ਨਾਮ, ਸ਼੍ਰੇਣੀ ਅਤੇ ਕੀਮਤ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get draftSavedMessage => 'ਡਰਾਫਟ ਸੰਭਾਲਿਆ ਗਿਆ';
+
+  @override
+  String get productMarkedReadyMessage => 'ਉਤਪਾਦ ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get saveDraftFailed =>
+      'ਡਰਾਫਟ ਸੰਭਾਲਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String get markReadyFailed =>
+      'ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
 }

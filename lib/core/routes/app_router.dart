@@ -19,7 +19,7 @@ import '../mock_data/responses.dart';
 import '../auth/role_selection_screen.dart';
 import '../../producer_section/auth/producer_login_screen.dart';
 import '../../producer_section/auth/producer_signup_screen.dart';
-import '../../producer_section/home/producer_placeholder_screen.dart';
+import '../../producer_section/home/producer_main_screen.dart';
 import '../../producer_section/onboarding/producer_onboarding_screen.dart';
 
 class AppRouter {
@@ -103,7 +103,7 @@ class AppRouter {
       case producerSignupRoute:
         return MaterialPageRoute(builder: (_) => const ProducerSignupScreen());
       case producerHomeRoute:
-        return MaterialPageRoute(builder: (_) => const ProducerPlaceholderScreen());
+        return MaterialPageRoute(builder: (_) => const ProducerMainScreen());
       case producerOnboardingRoute:
         return MaterialPageRoute(builder: (_) => const ProducerOnboardingScreen());
       default:

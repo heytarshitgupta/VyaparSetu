@@ -4,13 +4,253 @@ PRODUCER PRODUCT MANAGEMENT MODULE
 
 STATUS
 ------------------------------------------------------------
-NOT YET IMPLEMENTED
+STEP 6B PRODUCER PRODUCT MANAGEMENT MODULE IMPLEMENTED & VERIFIED
 
 
-PLANNED SCOPE
+DATABASE FOUNDATION ARCHITECTURE (STEP 6B.1)
 ------------------------------------------------------------
-1. Product catalog management (Create, Read, Update, Delete).
-2. Fields: Title, description, category, unit price (INR), minimum order quantity (MOQ), available stock/batch size, production lead time, and photos.
-3. Image capture from mobile camera or gallery with on-device compression before upload.
-4. Supabase storage integration with public image CDN caching.
-5. Future AI Studio hooks for background cleanup and multilingual product copywriting.
+1. Canonical Schema:
+   - Table: public.products
+   - Primary Key: id UUID DEFAULT gen_random_uuid()
+   - Ownership FK: producer_id UUID NOT NULL REFERENCES public.producer_profiles(id) ON DELETE CASCADE
+   - Identity Relationship: producer_profiles.id == profiles.id == auth.users.id. Only verified/registered producers can own products.
+   - Core Fields: name, description, category, price, unit, images, status, created_at, updated_at.
+
+2. Product Lifecycle States:
+   - Exactly 3 states: 'draft', 'active', 'hidden'.
+   - 'draft': Work-in-progress, unlisted, visible only to owner.
+   - 'active': Completed product, ready for future discovery, visible only to owner in Step 6B.
+   - 'hidden': Temporarily delisted by producer (e.g. out of stock), visible only to owner.
+   - No premature moderation workflows ('under_review', 'needs_changes', 'rejected') fabricated.
+
+3. Pricing & Currency Rule:
+   - Type: NUMERIC(12, 2) in INR (accommodates up to ₹9,999,999,999.99 with exact paise precision).
+   - Drafts: Price may be NULL while incomplete.
+   - Positive Price: If price is provided, it must be > 0.
+   - Active Requirement: An 'active' product MUST have a valid positive price (> 0).
+
+4. Text & Unicode Preservation:
+   - Fields: name, description, category, unit.
+   - Rule: Original user-entered Unicode text (English, Hindi, Punjabi, etc.) is preserved as-is.
+   - Zero destructive overwriting with AI-generated or translated text.
+
+5. Image Reference Strategy:
+   - Field: images TEXT[] NOT NULL DEFAULT '{}'.
+   - Storage-relative paths or references. Zero fake remote URLs.
+   - Storage Bucket: Dedicated 'product-images' bucket and secure upload policies explicitly deferred to Step 6C.
+
+6. Security & Row Level Security (RLS):
+   - RLS strictly enabled on public.products.
+   - SELECT, INSERT, UPDATE, DELETE strictly scoped to auth.uid() = producer_id.
+   - Active products remain owner-only in Step 6B. Public/Buyer discovery deferred.
+   - Hard Delete adopted for prototype simplicity.
+
+7. AI & Voice Data Boundary:
+   - Base table stores strictly canonical product attributes.
+   - Zero speculative AI prompts, embeddings, audio blobs, or marketing metrics in the schema.
+   - Future AI Studio and voice guidance will map directly to these canonical columns.
+
+
+DART DOMAIN, SERVICE & PROVIDER FOUNDATION (STEP 6B.2)
+------------------------------------------------------------
+1. ProducerProduct Domain Model:
+   - File: lib/producer_section/products/models/producer_product.dart
+   - Immutable data model with const constructor and copyWith support.
+   - Exact mapping to PostgreSQL public.products schema columns.
+   - Monetary Representation (Step 6B.2A): PostgreSQL stores NUMERIC(12, 2); Dart domain stores exact integer paise (`int? pricePaise`, where ₹1 = 100 paise), avoiding floating-point precision hazards.
+   - Service/model boundary converts deterministically: string/num to paise on read, and paise to two-decimal string on write.
+   - Currency formatting remains strictly a presentation/localization concern.
+   - Images represented as List<String> storing storage references.
+   - Original Unicode strings preserved without modification.
+
+2. ProductStatus Enum Mapping:
+   - Values: draft <-> 'draft', active <-> 'active', hidden <-> 'hidden'.
+   - Controlled FormatException thrown on unknown or malformed database status.
+   - Zero silent fallback to draft to protect data integrity.
+
+3. ProducerProductService:
+   - File: lib/producer_section/products/services/producer_product_service.dart
+   - Responsibilities: fetchProducts (ordered by created_at DESC), updateProductStatus, and hard deleteProduct.
+   - Authenticated Ownership: Scoped strictly to auth.uid() = producer_id.
+   - Exception model: ProductAuthException (when unauthenticated) and ProductOperationException (sanitized errors).
+
+4. ProducerProductsProvider:
+   - File: lib/producer_section/products/providers/producer_products_provider.dart
+   - Responsibilities: Owns full product list, visible filtered list, loading lifecycle, and error state.
+   - Filter Strategy: Local in-memory filtering across All, Active, Draft, and Hidden. Avoids redundant server round-trips upon tab switching.
+   - Loading & Error States: Truthfully distinguishes initial, loading, loaded empty, and loaded with items. Safe categorized error enum (none, notAuthenticated, loadFailed, updateFailed, deleteFailed) prevents raw Postgres strings in UI.
+   - Zero UI Coupling: Presentation-independent (no BuildContext, widgets, or localization dependencies).
+
+5. Offline-Test Dependency Injection:
+   - Abstract contract IProducerProductService allows injecting mock/fake services.
+   - 100% offline, deterministic testing with zero live Supabase requirement.
+
+6. Boundaries:
+   - Storage Boundary: Still deferred to Step 6C (images are raw string references only).
+   - Buyer Boundary: 100% isolated. Zero imports from buyer_section or Buyer mock data.
+
+
+MY PRODUCTS LISTING UI ARCHITECTURE (STEP 6B.3)
+------------------------------------------------------------
+1. Information Hierarchy:
+   - Header: Localized title ("My Products") and meaningful subtitle ("Manage the products you make and sell").
+   - Add Product Action: Prominent touch-friendly button (calls existing placeholder route without implementing form).
+   - Filter Tabs: All, Active, Draft, Hidden.
+   - Product Cards: Visual image area/placeholder, title, price (or "Price not set"), category badge, status badge, and contextual action buttons.
+
+2. Responsive Layouts:
+   - Phone (< 640px): 1-column list with 16dp horizontal padding and touch-friendly (>=48dp) targets.
+   - Tablet (640px - 1024px): 2-column grid inside existing NavigationRail shell with 24dp padding.
+   - Desktop (>= 1024px): 3-column centered grid constrained to 1200px max width inside existing left sidebar.
+
+3. Filter Behavior:
+   - Pure in-memory filtering via ProducerProductsProvider.
+   - Switching filters changes visible cards instantaneously without network round-trips.
+
+4. Empty vs Filtered-Empty vs Error States:
+   - True Zero-Products Empty: Friendly craft illustration, "No products added yet", and prominent "+ Add Product" button.
+   - Filtered Empty: Distinct lighter message per filter ("No active/draft/hidden products") with "Show All Products" button to return to All.
+   - Error State: Sanitized title and message with "Retry" button. Never shows raw Postgres or exception strings.
+
+5. Image Placeholder Boundary:
+   - Supabase Storage remains Step 6C work.
+   - Missing or unresolved image paths render a polished local Material inventory placeholder (no network images, no picsum).
+
+6. Supported Actions & Truthful Semantics (Step 6B.3A):
+   - Active: Complete and ready for listing in Producer management. Under Migration 009, ALL products remain strictly owner-only (auth.uid() = producer_id); active products are NOT yet readable by Buyer accounts. My Products UI intentionally does not claim Buyer visibility. Future Buyer marketplace access requires a dedicated later migration.
+   - Hidden: Paused/hidden by producer in Producer product management (e.g. temporarily delisted from the active-ready list). Does NOT claim prior Buyer visibility.
+   - Active -> Hidden ("Hide"): Pauses product in producer management (moves to hidden list).
+   - Hidden -> Active ("Show"): Marks product active/ready for listing with DB check constraint enforcement.
+   - Delete: Triggered via delete icon; requires explicit confirmation dialog before invoking provider.
+   - Draft Activation / Editing: Intentionally deferred. Draft cards truthfully state "Needs price or details" without premature activation.
+
+7. Localization & Themes:
+   - Full English, Hindi, and Punjabi support across all labels, badges, empty states, and feedback toasts.
+   - ColorScheme-aware styling; verified readable in both Light and Dark modes.
+   - Accessible touch targets, no color-only status indicators, and no technical jargon or misleading Buyer-visibility claims.
+
+8. Add Product Route:
+   - Add Product form and Supabase Storage image upload remain Step 6C.
+
+
+ADD PRODUCT DART DOMAIN, SERVICE & PROVIDER FOUNDATION (STEP 6C.4)
+------------------------------------------------------------
+1. ProducerProductDraft Domain Model:
+   - File: lib/producer_section/products/models/producer_product_draft.dart
+   - Purpose: Dedicated mutable/editable form draft state, strictly decoupled from canonical persisted ProducerProduct rows.
+   - Defaults: name = '', category = '', description = '', pricePaise = null, unit = 'piece', images = const [].
+   - Boundaries: Zero platform-specific types (no XFile, File, Uint8List, base64, or signed URLs). Only stable Storage object paths in images.
+
+2. Centralized Exact Price Handling (ProductPriceParser):
+   - File: lib/producer_section/products/models/product_price_parser.dart
+   - Rule: Strictly integer paise (int? pricePaise). ZERO double parsing.
+   - Parsing: Converts UI rupee text to paise (e.g. "1250" -> 125000, "1250.5" -> 125050, "0.01" -> 1).
+   - Strict Rejections: Rejects zero ("0", "0.00"), negative values, >2 decimal places, alphabetic input, multiple decimal points, and values above Migration 009 NUMERIC(12, 2) maximum (₹9,999,999,999.99 = 999,999,999,999 paise).
+   - Serialization: paiseToDecimalString converts paise to exact 2-decimal string for Supabase NUMERIC(12,2).
+
+3. Create vs Update Draft Lifecycle:
+   - createDraft: Requires authenticated user, forces producer_id = auth.uid(), forces status = draft, inserts allowed draft columns only.
+   - updateDraft: Owner-scoped (id = productId AND producer_id = auth.uid()). Updates editable draft fields only. Does NOT modify producer_id, status, or images.
+   - updateProductImages: Owner-scoped update specifically for stable Storage object paths.
+
+4. Prerequisite: Product Must Exist Before Photo Upload:
+   - Migration 011 Storage RLS strictly verifies:
+     (1) First folder = auth.uid()::text
+     (2) Second folder = owned product verified via private.producer_owns_product().
+   - Therefore, a product record must be persisted in public.products BEFORE any photo can be uploaded to Storage.
+   - In Step Navigation, advancing into Step 3 (Photos) automatically creates or syncs the draft record to ensure an authentic productId is available.
+
+5. Image Storage Service Separation:
+   - File: lib/producer_section/products/services/producer_product_image_service.dart
+   - Contract: IProducerProductImageService
+   - Bucket: Strictly private 'product-images' bucket (no caller-controlled bucket).
+   - Filename Generation: Injectable SecureRandomFilenameGenerator creates 32-character collision-resistant hex names without user input or external packages.
+   - Canonical MIME & Extension: Upload takes declared Content-Type, normalizes and validates it against allowlist (image/jpeg -> jpg, image/png -> png, image/webp -> webp), and internally derives the object extension. Caller cannot mismatch MIME and extension.
+   - Validation Truthfulness: Declared MIME and 5 MB size checks are client and bucket allowlist checks; they are NOT cryptographic/encoded image byte sniffing.
+   - Path Contract: Stable relative Storage object paths strictly shaped as `<auth.uid()>/<productId>/<generated-filename>.<ext>` (3 segments). Validated client-side: public/signed URLs, file://, data URIs, bucket prefixes, and invalid segment counts are rejected.
+   - Upsert: Strictly upsert = false (matches Migration 010/011 where no UPDATE policy exists).
+   - Return Value: Returns stable relative Storage object path (NOT signed URL, NOT local path).
+
+6. Private Image Viewing & Signed URLs:
+   - Storage service provides createSignedImageUrl(storagePath, expiresInSeconds).
+   - Short-lived signed URLs are generated on-demand for private viewing; they are NEVER persisted in public.products or ProducerProduct.images.
+
+7. No DB / Storage Atomic Transaction & Compensating Actions:
+   - Supabase Storage and PostgreSQL are distinct backend services without distributed 2PC transactions.
+   - If Storage upload succeeds but subsequent database image update fails, client/service architecture is designed to trigger compensating Storage deletion.
+
+8. Product Delete Lifecycle Order: Storage First -> DB Second:
+   - Storage DELETE policy verifies product ownership through private.producer_owns_product against public.products.
+   - If database row is deleted first, ownership evidence is lost and Storage images become permanently undeletable orphaned files.
+   - Fail-Safe Cases:
+     * CASE A (no images): Deletes owned DB row normally.
+     * CASE B (images present + image service available): Deletes all referenced Storage images first. Only if ALL succeed is the DB row deleted.
+     * CASE C (images present + NO image service): DO NOT delete DB row. Throws typed ProductOperationException to preserve DB row and image references for retry.
+   - Partial Storage Delete Failure:
+     If deleting image A succeeds and B fails, DB row is NOT deleted. DB + Storage deletion is not atomic, but preserving the DB row retains ownership evidence for remaining files and allows retry/recovery.
+   - Runtime Wiring:
+     ProducerProductService default constructor wires ProducerProductImageService so My Products deletion at runtime possesses Storage cleanup capability.
+
+9. Voice & AI Readiness:
+   - Canonical field setters on AddProductProvider (setName, setCategory, setDescription, setPriceFromPaise, setPriceFromRupeesText, setUnit, addImagePath) serve as the unified write path for future keyboard forms, voice extraction, and AI Studio suggestions.
+
+10. Step 6C.4 Completion:
+    - Foundation is fully verified offline with 100% deterministic test coverage.
+
+
+ADD PRODUCT 3-STEP UI ARCHITECTURE (STEP 6C.5)
+------------------------------------------------------------
+1. 3-Step Guided Flow:
+   - File: lib/producer_section/products/screens/add_product_screen.dart
+   - Step 1: "What do you make?" (Product name text field with Unicode support, Category selectable chips with custom category option for "Other", Unit dropdown defaulting to 'piece').
+   - Step 2: "Price & Details" (Price with visual ₹ prefix using ProductPriceParser to parse into integer paise, multiline Description).
+   - Step 3: "Add Photos & Save" (4-photo visual grid, truthful temporary coming-next behavior for photo adding, Save Draft button, Mark Ready button).
+
+2. Provider Ownership & Canonical State:
+   - Exactly one AddProductProvider instance is created at the AddProductScreen boundary and provided to the widget tree.
+   - Provider draft is the canonical state. No duplicate local draft state in widgets.
+   - Text controllers sync bidirectionally with the provider draft.
+   - Form state and active step survive widget rebuilds, theme changes, and locale switches.
+
+3. Persistence Before Step 3:
+   - Clicking "Continue" from Step 2 automatically calls `provider.goToStep(3)`.
+   - `goToStep(3)` persists the draft (via `createDraft` on first save, or `updateDraft` if existing) before transitioning to Step 3.
+   - If persistence fails, the UI remains safely on Step 2 with a localized error toast and prevents advancing without a saved product ID.
+
+4. Save Draft Behavior:
+   - Calls `provider.saveDraft()`.
+   - Shows localized success SnackBar ("Draft saved").
+   - Pops route returning `true` to notify caller (My Products) to refresh product list.
+
+5. Mark Ready Behavior & Status Activation:
+   - Validates `provider.canMarkActive` (name >= 2 chars, category >= 2 chars, price > 0 paise; photos are NOT required).
+   - If incomplete, the "Mark Ready" button is disabled and guidance text clearly explains what fields are missing.
+   - When enabled, tapping invokes `provider.markReady()`.
+   - `markReady()` ensures any dirty draft changes are saved, then calls explicit `productService.updateProductStatus(id, ProductStatus.active)`.
+   - Shows localized success SnackBar ("Product marked ready") and pops route returning `true`.
+   - Under Migration 009, products remain owner-only; UI does not claim Buyer marketplace visibility.
+
+6. Photo UI Truthfulness:
+   - Displays a 4-photo grid with empty visual slots and an "Add Photo" action.
+   - Because image_picker and upload are scheduled for Step 6C.6, tapping "Add Photo" displays a truthful localized SnackBar: "Photo selection will be added next".
+   - Zero fake uploaded photos, fake storage paths, or dummy network URLs.
+
+7. Responsiveness & Accessibility:
+   - Phone (<640px): Full-width single-column layout, compact button column fallback on narrow displays (<360px), zero RenderFlex overflows.
+   - Tablet (640-1024px): Centered card layout with max width 640px.
+   - Desktop (>1024px): Centered elevated card layout constrained to 760px max width inside the producer shell.
+   - Step indicator displays both numerical/dot progress and localized "Step X of 3" text (does not rely on color alone).
+
+8. Refresh-on-Return Wiring:
+   - ProducerMainScreen owns a shared ProducerProductsProvider instance injected into ProducerProductsTab.
+   - All Add Product entry points (Home tab shortcut, My Products header, zero-products empty state CTA) use `openAddProduct()`.
+   - `openAddProduct()` awaits `Navigator.push(..., MaterialPageRoute(builder: (_) => AddProductScreen(...)))`.
+   - If result is `true` (successful Save Draft or Mark Ready), `_productsProvider.loadProducts()` is automatically triggered to display the new or updated product in My Products.
+
+9. Theme & Multi-Language Support:
+   - Fully localized in English, Hindi (Devanagari), and Punjabi (Gurmukhi).
+   - Fully compatible with Light, Dark, and System themes using ThemeData and ColorScheme.
+
+10. Current Limitation (Exit with Unsaved Draft):
+    - Normal back/pop navigation is preserved. There is currently no background autosave or discard confirmation modal. If producer exits before Step 2 Continue/Save Draft, in-memory draft is discarded.
+

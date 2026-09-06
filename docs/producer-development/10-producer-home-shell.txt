@@ -1,0 +1,99 @@
+==============================================================================
+VYAPARSETU — PRODUCER DEVELOPMENT: RESPONSIVE APP SHELL & PRODUCER HOME
+==============================================================================
+Milestone: Step 6A (Post-Onboarding Experience)
+Scope: Responsive Producer App Shell + Producer Home Screen
+Owner: Producer Development Team
+Dependencies: Flutter gen-l10n (English/Hindi/Punjabi), ThemeProvider, Supabase Auth
+
+------------------------------------------------------------------------------
+1. RESPONSIVE NAVIGATION ARCHITECTURE
+------------------------------------------------------------------------------
+Navigation across devices uses standard Material adaptive layout paradigms
+governed by LayoutBuilder breakpoints rather than brittle device checks:
+
+- Phone (< 640px width):
+  * Material 3 bottom NavigationBar.
+  * 4 primary destinations with icons and plain-language localized labels.
+  * Large, comfortable touch targets (56dp+ height).
+  * Safe area padding with bottom inset handling.
+
+- Tablet (640px - 1024px width):
+  * Left NavigationRail with icon + always-visible label.
+  * Min-width 72dp with a prominent Add Product icon button in the header.
+  * Allows comfortable side-by-side content consumption on tablets.
+
+- Laptop / Desktop (> 1024px width):
+  * Expanded permanent left navigation sidebar (width 250dp).
+  * NOT an enterprise admin dashboard; simple, welcoming artisan portal.
+  * Brand header with VyaparSetu icon and title.
+  * Prominent [ + Add Product ] hero button immediately below the header.
+  * 4 destination items featuring selected container treatment (background pill,
+    distinct accent border, bold weight, and high contrast).
+  * Centered content canvas constrained to maxWidth 1100dp to avoid stretched cards.
+
+------------------------------------------------------------------------------
+2. FOUR PRIMARY DESTINATIONS
+------------------------------------------------------------------------------
+The shell strictly maintains exactly four permanent navigation destinations:
+  1. Home (Icons.home_outlined / Icons.home)
+  2. My Products (Icons.inventory_2_outlined / Icons.inventory_2)
+  3. Buyer Needs (Icons.handshake_outlined / Icons.handshake)
+  4. My Profile (Icons.person_outline / Icons.person)
+
+Critical Architectural Boundaries:
+- Add Product is an ACTION, not a permanent navigation tab.
+- What Buyers Want is a prominent HOME FEATURE / CARD, not a navigation tab.
+- State is preserved across tab transitions using IndexedStack.
+
+------------------------------------------------------------------------------
+3. PRODUCER HOME VISUAL HIERARCHY
+------------------------------------------------------------------------------
+The Home view is structured for maximum visual clarity for grassroots producers:
+
+A. Friendly Identity Area:
+   - Welcomes the producer by name (e.g., "Welcome, Ramesh Kumar" / "नमस्ते, ...")
+   - Displays enterprise/business name and craft category subtly when available.
+   - Zero exposure of internal database flags or verification jargon.
+
+B. One Dominant Primary Action:
+   - Visually dominant hero card for "+ Add Product" with rich terracotta accent.
+   - Action icon + title + clear explanation: "Show buyers what you make".
+   - Tapping routes to the Add Product action flow.
+
+C. Important Shortcuts:
+   - 📦 My Products ("See the products you have added") -> switches to Tab 1.
+   - 📋 Buyer Needs ("See what buyers are looking for") -> switches to Tab 2.
+   - 📈 What Buyers Want ("See what products people want") -> opens market preview.
+
+D. Supporting Information (Truthful, Non-Fabricated States):
+   - Useful empty states ("No products added yet", "Buyer needs will appear here").
+   - ZERO fabricated dashboard analytics, fake earnings, fake buyer counts, or fake graphs.
+
+------------------------------------------------------------------------------
+4. LOW-DIGITAL-LITERACY DESIGN PRINCIPLES
+------------------------------------------------------------------------------
+Target users include rural artisans, grassroots craftspeople, and micro-producers:
+- Plain everyday phrasing with zero corporate/startup jargon.
+- Every important action pairs a clear icon with a human-readable text label.
+- Minimum 48x48dp interactive touch targets across all platforms.
+- Obvious selected visual states (container highlight, borders, icons).
+- Generous spacing and text scaling support.
+- Responsive layout tested down to 320px narrow mobile viewports with zero overflows.
+
+------------------------------------------------------------------------------
+5. THEME-SAFE & MULTILINGUAL FOUNDATION
+------------------------------------------------------------------------------
+- Strict adherence to Theme.of(context).colorScheme and AppTheme tokens.
+- Zero hardcoded hex colors or raw black/white backgrounds.
+- High-contrast compliance in Light, Dark, and System appearance modes.
+- 100% localized from day one via Flutter ARB in English, Hindi, and Punjabi.
+- Instant, flicker-free language and appearance toggling without tab reset.
+
+------------------------------------------------------------------------------
+6. VOICE-READY ARCHITECTURE
+------------------------------------------------------------------------------
+- Action methods (selectDestination, openAddProduct, openWhatBuyersWant) are
+  decoupled on the shell controller.
+- Taps and future voice intents invoke the exact same methods.
+- Microphone permissions, speech recognition, and AI models remain deferred.

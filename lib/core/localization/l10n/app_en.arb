@@ -705,5 +705,350 @@
   "nextStageDescription": "Direct access to Buyer Needs & Products",
   "@nextStageDescription": {
     "description": "Value describing direct access after onboarding"
+  },
+  "welcomeProducer": "Welcome, {name}",
+  "@welcomeProducer": {
+    "description": "Greeting with producer name",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "producerDefaultName": "Producer",
+  "@producerDefaultName": {
+    "description": "Default fallback name for producer"
+  },
+  "producerHomeSubtitle": "Manage your craft and connect with buyers",
+  "@producerHomeSubtitle": {
+    "description": "Subtitle below producer greeting on Home"
+  },
+  "addProductActionSubtitle": "Show buyers what you make",
+  "@addProductActionSubtitle": {
+    "description": "Subtitle on the primary Add Product action card"
+  },
+  "myProductsShortcutSubtitle": "See the products you have added",
+  "@myProductsShortcutSubtitle": {
+    "description": "Subtitle for My Products shortcut"
+  },
+  "buyerNeedsShortcutSubtitle": "See what buyers are looking for",
+  "@buyerNeedsShortcutSubtitle": {
+    "description": "Subtitle for Buyer Needs shortcut"
+  },
+  "whatBuyersWantShortcutSubtitle": "See what products people want",
+  "@whatBuyersWantShortcutSubtitle": {
+    "description": "Subtitle for What Buyers Want shortcut"
+  },
+  "noProductsListedTitle": "No products added yet",
+  "@noProductsListedTitle": {
+    "description": "Title for empty products status card"
+  },
+  "noProductsListedSubtitle": "Add your first product so buyers can discover your craft",
+  "@noProductsListedSubtitle": {
+    "description": "Subtitle for empty products status card"
+  },
+  "buyerNeedsWaitingTitle": "Buyer needs will appear here",
+  "@buyerNeedsWaitingTitle": {
+    "description": "Title for waiting buyer needs status card"
+  },
+  "buyerNeedsWaitingSubtitle": "Buyer requests will be listed here when available",
+  "@buyerNeedsWaitingSubtitle": {
+    "description": "Subtitle for waiting buyer needs status card"
+  },
+  "featureComingSoon": "This feature will be available in the next update",
+  "@featureComingSoon": {
+    "description": "Description on placeholder destinations"
+  },
+  "signOutAction": "Sign Out",
+  "@signOutAction": {
+    "description": "Sign out button label"
+  },
+  "myProductsSubtitle": "Manage the products you make and sell",
+  "@myProductsSubtitle": {
+    "description": "Subtitle for My Products header"
+  },
+  "filterAll": "All",
+  "@filterAll": {
+    "description": "Filter tab for all products"
+  },
+  "filterActive": "Active",
+  "@filterActive": {
+    "description": "Filter tab for active products"
+  },
+  "filterDraft": "Draft",
+  "@filterDraft": {
+    "description": "Filter tab for draft products"
+  },
+  "filterHidden": "Hidden",
+  "@filterHidden": {
+    "description": "Filter tab for hidden products"
+  },
+  "statusActive": "Active",
+  "@statusActive": {
+    "description": "Status badge for active products"
+  },
+  "statusDraft": "Draft",
+  "@statusDraft": {
+    "description": "Status badge for draft products"
+  },
+  "statusHidden": "Hidden",
+  "@statusHidden": {
+    "description": "Status badge for hidden products"
+  },
+  "priceNotSet": "Price not set",
+  "@priceNotSet": {
+    "description": "Label when product price is not specified"
+  },
+  "draftNeedsCompletion": "Needs price or details",
+  "@draftNeedsCompletion": {
+    "description": "Indicator on draft cards that product details are incomplete"
+  },
+  "noActiveProductsTitle": "No active products",
+  "@noActiveProductsTitle": {
+    "description": "Title when active filter has zero results"
+  },
+  "noActiveProductsSubtitle": "Products ready for listing will appear here",
+  "@noActiveProductsSubtitle": {
+    "description": "Subtitle when active filter has zero results"
+  },
+  "noDraftProductsTitle": "No draft products",
+  "@noDraftProductsTitle": {
+    "description": "Title when draft filter has zero results"
+  },
+  "noDraftProductsSubtitle": "Products that still need details will appear here",
+  "@noDraftProductsSubtitle": {
+    "description": "Subtitle when draft filter has zero results"
+  },
+  "noHiddenProductsTitle": "No hidden products",
+  "@noHiddenProductsTitle": {
+    "description": "Title when hidden filter has zero results"
+  },
+  "noHiddenProductsSubtitle": "Products you temporarily hide will appear here",
+  "@noHiddenProductsSubtitle": {
+    "description": "Subtitle when hidden filter has zero results"
+  },
+  "showAllProducts": "Show All Products",
+  "@showAllProducts": {
+    "description": "Button to clear filters and view all products"
+  },
+  "unableToLoadProducts": "We couldn't load your products",
+  "@unableToLoadProducts": {
+    "description": "Error title when product loading fails"
+  },
+  "unableToLoadSubtitle": "Please check your connection and try again",
+  "@unableToLoadSubtitle": {
+    "description": "Error subtitle when product loading fails"
+  },
+  "notAuthenticatedMessage": "Please sign in to view your products",
+  "@notAuthenticatedMessage": {
+    "description": "Error message when user is not authenticated"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button label"
+  },
+  "hideAction": "Hide",
+  "@hideAction": {
+    "description": "Action button to hide a product"
+  },
+  "showAction": "Show",
+  "@showAction": {
+    "description": "Action button to activate/show a product"
+  },
+  "deleteAction": "Delete",
+  "@deleteAction": {
+    "description": "Action button to delete a product"
+  },
+  "deleteProductTitle": "Delete Product?",
+  "@deleteProductTitle": {
+    "description": "Title of delete confirmation dialog"
+  },
+  "deleteProductConfirmation": "Are you sure you want to delete this product? This action cannot be undone.",
+  "@deleteProductConfirmation": {
+    "description": "Body message of delete confirmation dialog"
+  },
+  "productHiddenSuccess": "Product hidden",
+  "@productHiddenSuccess": {
+    "description": "Feedback message when product is hidden"
+  },
+  "productActivatedSuccess": "Product marked active",
+  "@productActivatedSuccess": {
+    "description": "Feedback message when product is activated"
+  },
+  "productDeletedSuccess": "Product deleted",
+  "@productDeletedSuccess": {
+    "description": "Feedback message when product is deleted"
+  },
+  "productActionFailed": "Unable to update product. Please try again.",
+  "@productActionFailed": {
+    "description": "Error feedback when updating product status fails"
+  },
+  "productDeleteFailed": "Unable to delete product. Please try again.",
+  "@productDeleteFailed": {
+    "description": "Error feedback when deleting product fails"
+  },
+  "stepCount": "Step {current} of {total}",
+  "@stepCount": {
+    "description": "Progress step indicator text",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "addProductStep1Title": "What do you make?",
+  "@addProductStep1Title": {
+    "description": "Title for Add Product Step 1"
+  },
+  "addProductStep2Title": "Price & Details",
+  "@addProductStep2Title": {
+    "description": "Title for Add Product Step 2"
+  },
+  "addProductStep3Title": "Add Photos & Save",
+  "@addProductStep3Title": {
+    "description": "Title for Add Product Step 3"
+  },
+  "productNameLabel": "Product name",
+  "@productNameLabel": {
+    "description": "Label for product name input field"
+  },
+  "productNameHint": "e.g. Homemade Mango Pickle",
+  "@productNameHint": {
+    "description": "Placeholder hint for product name"
+  },
+  "productNameRequired": "Please enter a product name first",
+  "@productNameRequired": {
+    "description": "Validation error when continuing with empty product name"
+  },
+  "categoryLabel": "Category",
+  "@categoryLabel": {
+    "description": "Label for category selector"
+  },
+  "categoryFood": "Food",
+  "@categoryFood": {
+    "description": "Category option: Food"
+  },
+  "categoryHandicraft": "Handicraft",
+  "@categoryHandicraft": {
+    "description": "Category option: Handicraft"
+  },
+  "categoryClothing": "Clothing",
+  "@categoryClothing": {
+    "description": "Category option: Clothing"
+  },
+  "categoryHome": "Home Products",
+  "@categoryHome": {
+    "description": "Category option: Home Products"
+  },
+  "categoryBeauty": "Beauty & Care",
+  "@categoryBeauty": {
+    "description": "Category option: Beauty & Care"
+  },
+  "categoryJewellery": "Jewellery",
+  "@categoryJewellery": {
+    "description": "Category option: Jewellery"
+  },
+  "categoryOther": "Other",
+  "@categoryOther": {
+    "description": "Category option: Other"
+  },
+  "customCategoryLabel": "Describe category",
+  "@customCategoryLabel": {
+    "description": "Label for custom category text input"
+  },
+  "unitLabel": "Unit",
+  "@unitLabel": {
+    "description": "Label for measurement unit selector"
+  },
+  "unitPiece": "Piece",
+  "@unitPiece": {
+    "description": "Unit option: Piece"
+  },
+  "unitKg": "Kilogram (kg)",
+  "@unitKg": {
+    "description": "Unit option: Kilogram"
+  },
+  "unitGram": "Gram (g)",
+  "@unitGram": {
+    "description": "Unit option: Gram"
+  },
+  "unitLitre": "Litre (L)",
+  "@unitLitre": {
+    "description": "Unit option: Litre"
+  },
+  "unitMl": "Millilitre (ml)",
+  "@unitMl": {
+    "description": "Unit option: Millilitre"
+  },
+  "unitPack": "Pack",
+  "@unitPack": {
+    "description": "Unit option: Pack"
+  },
+  "unitDozen": "Dozen",
+  "@unitDozen": {
+    "description": "Unit option: Dozen"
+  },
+  "priceLabel": "Price",
+  "@priceLabel": {
+    "description": "Label for price input field"
+  },
+  "priceHelper": "Enter the price for one unit",
+  "@priceHelper": {
+    "description": "Helper text for price input"
+  },
+  "priceInvalidError": "Please enter a valid price (e.g. 250 or 250.50)",
+  "@priceInvalidError": {
+    "description": "Error text for invalid price input"
+  },
+  "descriptionLabel": "Tell buyers about your product",
+  "@descriptionLabel": {
+    "description": "Label for description field"
+  },
+  "descriptionHelper": "What is it made from? What makes it special?",
+  "@descriptionHelper": {
+    "description": "Helper text for description field"
+  },
+  "addPhotosHeading": "Add Photos",
+  "@addPhotosHeading": {
+    "description": "Heading for photos step"
+  },
+  "addPhotosSubtitle": "Photos help buyers see the quality of your craft",
+  "@addPhotosSubtitle": {
+    "description": "Subtitle for photos step"
+  },
+  "photoUploadComingNext": "Photo selection will be added next",
+  "@photoUploadComingNext": {
+    "description": "Temporary message indicating photo picker arrives in next step"
+  },
+  "saveDraftAction": "Save Draft",
+  "@saveDraftAction": {
+    "description": "Action button to save current product as a draft"
+  },
+  "markReadyAction": "Mark Ready",
+  "@markReadyAction": {
+    "description": "Action button to mark product ready/active"
+  },
+  "markReadyGuidance": "Add name, category, and price to mark ready",
+  "@markReadyGuidance": {
+    "description": "Guidance message explaining what is missing to mark product ready"
+  },
+  "draftSavedMessage": "Draft saved",
+  "@draftSavedMessage": {
+    "description": "Feedback message when draft is saved"
+  },
+  "productMarkedReadyMessage": "Product marked ready",
+  "@productMarkedReadyMessage": {
+    "description": "Feedback message when product is marked active/ready"
+  },
+  "saveDraftFailed": "Could not save draft. Please try again.",
+  "@saveDraftFailed": {
+    "description": "Error feedback when saving draft fails"
+  },
+  "markReadyFailed": "Could not mark ready. Please try again.",
+  "@markReadyFailed": {
+    "description": "Error feedback when marking ready fails"
   }
 }
