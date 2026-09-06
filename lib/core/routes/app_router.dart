@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../buyer_section/screens/shared/placeholder_screen.dart';
 import '../../buyer_section/screens/shared/auth_screen.dart';
 import '../../buyer_section/screens/shared/otp_screen.dart';
+import '../../buyer_section/auth/buyer_signup_screen.dart';
 import '../../buyer_section/onboarding/buyer_onboarding_screen.dart';
 import '../../buyer_section/onboarding/buyer_verification_screen.dart';
 import '../../buyer_section/onboarding/buyer_check_submit_screen.dart';
@@ -26,6 +27,7 @@ class AppRouter {
 
   static const String initialRoute = '/';
   static const String buyerAuthRoute = '/buyer_auth';
+  static const String buyerSignupRoute = '/buyer_signup';
   static const String otpRoute = '/otp';
   static const String buyerOnboardingRoute = '/buyer_onboarding';
   static const String buyerVerificationRoute = '/buyer_verification';
@@ -52,7 +54,15 @@ class AppRouter {
       case buyerAuthRoute:
         return MaterialPageRoute(builder: (_) => const AuthScreen());
       case otpRoute:
-        return MaterialPageRoute(builder: (_) => const OtpScreen());
+        final args = settings.arguments as Map<String, dynamic>?;
+        final isVerificationMode = args?['isVerificationMode'] as bool? ?? false;
+        final mobile = args?['mobile'] as String? ?? '';
+        return MaterialPageRoute(builder: (_) => OtpScreen(
+          isVerificationMode: isVerificationMode,
+          mobile: mobile,
+        ));
+      case buyerSignupRoute:
+        return MaterialPageRoute(builder: (_) => const BuyerSignupScreen());
       case buyerOnboardingRoute:
         return MaterialPageRoute(builder: (_) => const BuyerOnboardingScreen());
       case buyerVerificationRoute:
