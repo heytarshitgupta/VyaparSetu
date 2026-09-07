@@ -91,6 +91,9 @@ class TestProductService implements IProducerProductService {
     required String productId,
     required List<String> imagePaths,
   }) async {
+    if (shouldFailUpdateDraft) {
+      throw const ProductOperationException('Database connection failed');
+    }
     final existing = database[productId]!;
     final updated = existing.copyWith(images: imagePaths);
     database[productId] = updated;

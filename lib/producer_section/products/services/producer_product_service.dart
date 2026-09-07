@@ -158,6 +158,7 @@ class ProducerProductService implements IProducerProductService {
         'price': ProductPriceParser.paiseToDecimalString(draft.pricePaise),
         'unit': draft.unit.trim().isEmpty ? 'piece' : draft.unit.trim(),
         'status': ProductStatus.draft.toDbValue(),
+        'images': draft.images,
       };
 
       final response = await _supabaseClient
@@ -193,6 +194,7 @@ class ProducerProductService implements IProducerProductService {
         'category': draft.category.trim(),
         'price': ProductPriceParser.paiseToDecimalString(draft.pricePaise),
         'unit': draft.unit.trim().isEmpty ? 'piece' : draft.unit.trim(),
+        'images': draft.images,
       };
 
       final response = await _supabaseClient

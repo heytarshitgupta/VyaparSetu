@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'dart:developer' as developer;
 import '../models/producer_product.dart';
 import '../models/producer_product_draft.dart';
 import '../models/product_price_parser.dart';
@@ -30,12 +31,14 @@ class AddProductProvider extends ChangeNotifier {
   final IProducerProductImageService imageService;
   final IProducerImagePickerService imagePickerService;
   final IProductPhotoEnhancementService enhancementService;
+  ProducerProduct? _existingProduct;
 
   AddProductProvider({
     IProducerProductService? productService,
     IProducerProductImageService? imageService,
     IProducerImagePickerService? imagePickerService,
     IProductPhotoEnhancementService? enhancementService,
+    ProducerProduct? existingProduct,
   })  : _productService = productService ?? ProducerProductService(),
         imageService = imageService ??
             productService?.imageService ??
@@ -50,7 +53,29 @@ class AddProductProvider extends ChangeNotifier {
                   (productService is ProducerProductService
                       ? (productService.imageService ?? ProducerProductImageService(client: productService.client))
                       : ProducerProductImageService()),
-            );
+            ),
+        _existingProduct = existingProduct,
+        _persistedProductId = existingProduct?.id,
+        _draft = existingProduct != null
+            ? ProducerProductDraft.fromProduct(existingProduct)
+            : const ProducerProductDraft();
+
+  /// Named constructor to initialize provider directly for editing an existing product.
+  factory AddProductProvider.forExistingProduct({
+    required ProducerProduct product,
+    IProducerProductService? productService,
+    IProducerProductImageService? imageService,
+    IProducerImagePickerService? imagePickerService,
+    IProductPhotoEnhancementService? enhancementService,
+  }) {
+    return AddProductProvider(
+      existingProduct: product,
+      productService: productService,
+      imageService: imageService,
+      imagePickerService: imagePickerService,
+      enhancementService: enhancementService,
+    );
+  }
 
   ProducerProductDraft _draft = const ProducerProductDraft();
   int _currentStep = 1; // Planned 3-step wizard: 1, 2, 3
@@ -77,6 +102,15 @@ class AddProductProvider extends ChangeNotifier {
 
   /// The persisted database ID of the product once saved, or null if not yet saved.
   String? get persistedProductId => _persistedProductId;
+
+  /// The existing product being edited, or null if creating a new product.
+  ProducerProduct? get existingProduct => _existingProduct;
+
+  /// Whether the provider is in edit mode for an existing product.
+  bool get isEditMode => _existingProduct != null;
+
+  /// The original status of the existing product, or null if creating a new product.
+  ProductStatus? get existingStatus => _existingProduct?.status;
 
   /// Whether this draft has been persisted to public.products at least once.
   bool get isPersisted => _persistedProductId != null;
@@ -252,14 +286,16 @@ class AddProductProvider extends ChangeNotifier {
         // First persistence: create draft row
         final created = await _productService.createDraft(_draft);
         _persistedProductId = created.id;
+        _existingProduct = created;
         _isDirty = false;
         return true;
       } else {
         // Subsequent persistence: update existing draft row
-        await _productService.updateDraft(
+        final updated = await _productService.updateDraft(
           productId: _persistedProductId!,
           draft: _draft,
         );
+        _existingProduct = updated;
         _isDirty = false;
         return true;
       }
@@ -280,6 +316,9 @@ class AddProductProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// Saves changes to an existing or draft product without altering its current status.
+  Future<bool> saveChanges() => saveDraft();
 
   /// Persists any unpersisted draft changes and explicitly transitions the
   /// product status to [ProductStatus.active] via [_productService.updateProductStatus].
@@ -307,10 +346,11 @@ class AddProductProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _productService.updateProductStatus(
+      final updated = await _productService.updateProductStatus(
         productId: _persistedProductId!,
         newStatus: ProductStatus.active,
       );
+      _existingProduct = updated;
       return true;
     } on ProductAuthException {
       _lastErrorCode = ProductPhotoErrorCode.authRequired;
@@ -515,6 +555,13 @@ class AddProductProvider extends ChangeNotifier {
 
     String? newlyUploadedPath;
     try {
+      if (kDebugMode) {
+        developer.log(
+          '[PHOTO PIPELINE] Step A: Starting storage upload for product=$productId imagesCount=${_draft.images.length}',
+          name: 'AddProductProvider',
+        );
+      }
+
       // Step A: Upload to Supabase Storage
       newlyUploadedPath = await imageService.uploadProductImage(
         productId: productId,
@@ -522,12 +569,42 @@ class AddProductProvider extends ChangeNotifier {
         contentType: contentType,
       );
 
-      // Step B: Update Database row with the new storage path
+      if (kDebugMode) {
+        developer.log(
+          '[PHOTO PIPELINE] storage-upload-ok path-segments=${newlyUploadedPath.split('/').length}',
+          name: 'AddProductProvider',
+        );
+      }
+
+      // Step B: Persist new image path to products.images via dedicated updateProductImages.
+      // Uses updateProductImages (not updateDraft) to avoid the name-not-empty guard
+      // and to keep the images update isolated from draft field overwrites.
       final updatedImages = [..._draft.images, newlyUploadedPath];
-      await _productService.updateDraft(
+      final updatedProduct = await _productService.updateProductImages(
         productId: productId,
-        draft: _draft.copyWith(images: updatedImages),
+        imagePaths: updatedImages,
       );
+
+      if (kDebugMode) {
+        developer.log(
+          '[PHOTO PIPELINE] db-images-update-ok product-images-count=${updatedProduct.images.length}',
+          name: 'AddProductProvider',
+        );
+      }
+
+      // Verify the returned product actually contains the new image path.
+      // If the DB update somehow dropped it, fail cleanly rather than show false success.
+      if (!updatedProduct.images.contains(newlyUploadedPath)) {
+        if (kDebugMode) {
+          developer.log(
+            '[PHOTO PIPELINE] WARNING: DB returned product does NOT contain new path. Uploaded path=$newlyUploadedPath returnedImages=${updatedProduct.images}',
+            name: 'AddProductProvider',
+          );
+        }
+        throw ProductOperationException(
+          'Image upload succeeded but the database did not save the path. Please try again.',
+        );
+      }
 
       // Step C: Update in-memory state with canonical stable path
       _draft = _draft.copyWith(images: updatedImages);
@@ -539,22 +616,50 @@ class AddProductProvider extends ChangeNotifier {
           storagePath: newlyUploadedPath,
         );
         _signedUrlCache[newlyUploadedPath] = signedUrl;
+        if (kDebugMode) {
+          developer.log(
+            '[PHOTO PIPELINE] signed-url-ok total-images=${_draft.images.length}',
+            name: 'AddProductProvider',
+          );
+        }
       } catch (_) {
-        // Non-critical if signed URL fetch fails; preview tile will retry
+        // Non-critical if signed URL fetch fails; preview tile will retry on render
+        if (kDebugMode) {
+          developer.log(
+            '[PHOTO PIPELINE] signed-url-failed (non-critical, image IS saved)',
+            name: 'AddProductProvider',
+          );
+        }
       }
 
       return true;
     } on ProductAuthException {
       _lastErrorCode = ProductPhotoErrorCode.authRequired;
       _errorMessage = 'Authentication required. Please log in again.';
+      if (kDebugMode) {
+        developer.log('[PHOTO PIPELINE] FAILED: auth-required', name: 'AddProductProvider');
+      }
       return false;
     } catch (e) {
       // Step D: Best-effort failure cleanup of newly uploaded object if DB update failed
       if (newlyUploadedPath != null) {
+        if (kDebugMode) {
+          developer.log(
+            '[PHOTO PIPELINE] FAILED: cleaning up storage object. error=$e',
+            name: 'AddProductProvider',
+          );
+        }
         try {
           await imageService.deleteProductImage(newlyUploadedPath);
         } catch (_) {
           // Ignore secondary cleanup error to expose original root cause
+        }
+      } else {
+        if (kDebugMode) {
+          developer.log(
+            '[PHOTO PIPELINE] FAILED before storage upload. error=$e',
+            name: 'AddProductProvider',
+          );
         }
       }
 

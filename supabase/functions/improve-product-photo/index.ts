@@ -224,7 +224,7 @@ export async function handleImprovePhotoRequest(req: Request): Promise<Response>
   }
 
   // 7. Call OpenAI Image Edit API
-  const model = Deno.env.get("OPENAI_IMAGE_MODEL") || "gpt-image-1.5";
+  const model = Deno.env.get("OPENAI_IMAGE_MODEL")?.trim() || "gpt-image-2";
 
   const formData = new FormData();
   // Name the file cleanly with extension
@@ -248,6 +248,7 @@ export async function handleImprovePhotoRequest(req: Request): Promise<Response>
 
     if (!openaiRes.ok) {
       const errText = await openaiRes.text();
+      console.error(`[improve-product-photo] OpenAI API error status=${openaiRes.status}: ${errText}`);
       let sanitizedError = "AI image enhancement provider error";
       try {
         const errJson = JSON.parse(errText);
@@ -287,6 +288,7 @@ export async function handleImprovePhotoRequest(req: Request): Promise<Response>
       );
     }
   } catch (err: any) {
+    console.error(`[improve-product-photo] Exception calling AI provider: ${err?.message || err}`);
     return new Response(
       JSON.stringify({ error: `Failed to call AI provider: ${err?.message || "Unknown error"}` }),
       { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }

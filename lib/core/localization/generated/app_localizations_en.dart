@@ -640,7 +640,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterDraft => 'Draft';
 
   @override
-  String get filterHidden => 'Hidden';
+  String get filterHidden => 'Inactive';
+
+  @override
+  String get filterInactive => 'Inactive';
 
   @override
   String get statusActive => 'Active';
@@ -649,7 +652,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusDraft => 'Draft';
 
   @override
-  String get statusHidden => 'Hidden';
+  String get statusHidden => 'Inactive';
+
+  @override
+  String get statusInactive => 'Inactive';
+
+  @override
+  String get editAction => 'Edit';
+
+  @override
+  String get continueEditingAction => 'Continue Editing';
+
+  @override
+  String get saveChangesAction => 'Save Changes';
+
+  @override
+  String get makeActiveAction => 'Make Active';
+
+  @override
+  String get makeInactiveAction => 'Make Inactive';
+
+  @override
+  String get editProductTitle => 'Edit Product';
+
+  @override
+  String get editProductHelper => 'Update your product details and photos';
+
+  @override
+  String get deleteProductConfirmTitle => 'Delete product?';
+
+  @override
+  String get deleteProductConfirmBody =>
+      'This will permanently remove this product and its photos.';
+
+  @override
+  String get productUpdatedSuccess => 'Product updated';
+
+  @override
+  String get productMadeActiveSuccess => 'Product made active';
+
+  @override
+  String get productMadeInactiveSuccess => 'Product made inactive';
+
+  @override
+  String get couldNotUpdateProduct => 'Could not update product';
+
+  @override
+  String get couldNotLoadProductPhoto => 'Could not load product photo';
+
+  @override
+  String get incompleteProductCannotActivate =>
+      'Please edit product to fill name, category, and price before making it active.';
 
   @override
   String get priceNotSet => 'Price not set';
@@ -672,11 +725,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Products that still need details will appear here';
 
   @override
-  String get noHiddenProductsTitle => 'No hidden products';
+  String get noHiddenProductsTitle => 'No inactive products';
 
   @override
   String get noHiddenProductsSubtitle =>
       'Products you temporarily hide will appear here';
+
+  @override
+  String get noInactiveProductsTitle => 'No inactive products';
+
+  @override
+  String get noInactiveProductsSubtitle =>
+      'Products you mark as inactive will appear here';
 
   @override
   String get showAllProducts => 'Show All Products';
@@ -1027,4 +1087,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get storageUnavailableError =>
       'Image storage service is not available.';
+
+  @override
+  String get productDetailsTitle => 'Product Details';
+
+  @override
+  String get noDescriptionAdded => 'No description added';
+
+  @override
+  String get deleteProductAction => 'Delete Product';
 }

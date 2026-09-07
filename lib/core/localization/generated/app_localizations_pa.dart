@@ -618,8 +618,7 @@ class AppLocalizationsPa extends AppLocalizations {
       'ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਮੰਗਾਂ ਉਪਲਬਧ ਹੋਣ \'ਤੇ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੀਆਂ';
 
   @override
-  String get featureComingSoon =>
-      'This feature will be available in the next update';
+  String get featureComingSoon => 'ਇਹ ਵਿਸ਼ੇਸ਼ਤਾ ਅਗਲੇ ਅੱਪਡੇਟ ਵਿੱਚ ਉਪਲਬਧ ਹੋਵੇਗੀ';
 
   @override
   String get signOutAction => 'ਸਾਈਨ ਆਉਟ';
@@ -638,7 +637,10 @@ class AppLocalizationsPa extends AppLocalizations {
   String get filterDraft => 'ਡਰਾਫਟ';
 
   @override
-  String get filterHidden => 'ਲੁਕਵੇਂ';
+  String get filterHidden => 'ਅਕਿਰਿਆਸ਼ੀਲ';
+
+  @override
+  String get filterInactive => 'ਅਕਿਰਿਆਸ਼ੀਲ';
 
   @override
   String get statusActive => 'ਸਰਗਰਮ';
@@ -647,7 +649,57 @@ class AppLocalizationsPa extends AppLocalizations {
   String get statusDraft => 'ਡਰਾਫਟ';
 
   @override
-  String get statusHidden => 'ਲੁਕਵਾਂ';
+  String get statusHidden => 'ਅਕਿਰਿਆਸ਼ੀਲ';
+
+  @override
+  String get statusInactive => 'ਅਕਿਰਿਆਸ਼ੀਲ';
+
+  @override
+  String get editAction => 'ਸੋਧੋ';
+
+  @override
+  String get continueEditingAction => 'ਸੋਧ ਜਾਰੀ ਰੱਖੋ';
+
+  @override
+  String get saveChangesAction => 'ਬਦਲਾਅ ਸੁਰੱਖਿਅਤ ਕਰੋ';
+
+  @override
+  String get makeActiveAction => 'ਸਰਗਰਮ ਕਰੋ';
+
+  @override
+  String get makeInactiveAction => 'ਅਕਿਰਿਆਸ਼ੀਲ ਕਰੋ';
+
+  @override
+  String get editProductTitle => 'ਉਤਪਾਦ ਸੋਧੋ';
+
+  @override
+  String get editProductHelper => 'ਆਪਣੇ ਉਤਪਾਦ ਦਾ ਵੇਰਵਾ ਅਤੇ ਫ਼ੋਟੋਆਂ ਅੱਪਡੇਟ ਕਰੋ';
+
+  @override
+  String get deleteProductConfirmTitle => 'ਕੀ ਉਤਪਾਦ ਹਟਾਉਣਾ ਹੈ?';
+
+  @override
+  String get deleteProductConfirmBody =>
+      'ਇਹ ਇਸ ਉਤਪਾਦ ਅਤੇ ਇਸ ਦੀਆਂ ਫ਼ੋਟੋਆਂ ਨੂੰ ਪੱਕੇ ਤੌਰ \'ਤੇ ਹਟਾ ਦੇਵੇਗਾ।';
+
+  @override
+  String get productUpdatedSuccess => 'ਉਤਪਾਦ ਅੱਪਡੇਟ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get productMadeActiveSuccess => 'ਉਤਪਾਦ ਸਰਗਰਮ ਕਰ ਦਿੱਤਾ ਗਿਆ';
+
+  @override
+  String get productMadeInactiveSuccess => 'ਉਤਪਾਦ ਅਕਿਰਿਆਸ਼ੀਲ ਕਰ ਦਿੱਤਾ ਗਿਆ';
+
+  @override
+  String get couldNotUpdateProduct => 'ਉਤਪਾਦ ਅੱਪਡੇਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ';
+
+  @override
+  String get couldNotLoadProductPhoto => 'ਉਤਪਾਦ ਦੀ ਫ਼ੋਟੋ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ';
+
+  @override
+  String get incompleteProductCannotActivate =>
+      'ਸਰਗਰਮ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਨਾਮ, ਸ਼੍ਰੇਣੀ ਅਤੇ ਕੀਮਤ ਭਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਉਤਪਾਦ ਨੂੰ ਸੋਧੋ।';
 
   @override
   String get priceNotSet => 'ਕੀਮਤ ਤੈਅ ਨਹੀਂ';
@@ -669,11 +721,18 @@ class AppLocalizationsPa extends AppLocalizations {
       'ਅਧੂਰੇ ਉਤਪਾਦ ਜਿਨ੍ਹਾਂ \'ਤੇ ਕੰਮ ਬਾਕੀ ਹੈ, ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
 
   @override
-  String get noHiddenProductsTitle => 'ਕੋਈ ਲੁਕਵਾਂ ਉਤਪਾਦ ਨਹੀਂ';
+  String get noHiddenProductsTitle => 'ਕੋਈ ਅਕਿਰਿਆਸ਼ੀਲ ਉਤਪਾਦ ਨਹੀਂ';
 
   @override
   String get noHiddenProductsSubtitle =>
-      'ਅਸਥਾਈ ਤੌਰ \'ਤੇ ਲੁਕਾਏ ਗਏ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
+      'ਅਸਥਾਈ ਤੌਰ \'ਤੇ ਅਕਿਰਿਆਸ਼ੀਲ ਕੀਤੇ ਗਏ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
+
+  @override
+  String get noInactiveProductsTitle => 'ਕੋਈ ਅਕਿਰਿਆਸ਼ੀਲ ਉਤਪਾਦ ਨਹੀਂ';
+
+  @override
+  String get noInactiveProductsSubtitle =>
+      'ਤੁਹਾਡੇ ਵੱਲੋਂ ਅਕਿਰਿਆਸ਼ੀਲ ਕੀਤੇ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
 
   @override
   String get showAllProducts => 'ਸਾਰੇ ਉਤਪਾਦ ਵੇਖੋ';
@@ -1026,4 +1085,13 @@ class AppLocalizationsPa extends AppLocalizations {
 
   @override
   String get storageUnavailableError => 'ਫੋਟੋ ਸਟੋਰੇਜ ਸੇਵਾ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।';
+
+  @override
+  String get productDetailsTitle => 'ਉਤਪਾਦ ਵੇਰਵੇ';
+
+  @override
+  String get noDescriptionAdded => 'ਕੋਈ ਵੇਰਵਾ ਨਹੀਂ ਜੋੜਿਆ ਗਿਆ';
+
+  @override
+  String get deleteProductAction => 'ਉਤਪਾਦ ਮਿਟਾਓ';
 }

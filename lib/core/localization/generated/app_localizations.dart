@@ -1282,11 +1282,17 @@ abstract class AppLocalizations {
   /// **'Draft'**
   String get filterDraft;
 
-  /// Filter tab for hidden products
+  /// Filter tab for inactive products
   ///
   /// In en, this message translates to:
-  /// **'Hidden'**
+  /// **'Inactive'**
   String get filterHidden;
+
+  /// Filter tab for inactive products
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get filterInactive;
 
   /// Status badge for active products
   ///
@@ -1300,11 +1306,107 @@ abstract class AppLocalizations {
   /// **'Draft'**
   String get statusDraft;
 
-  /// Status badge for hidden products
+  /// Status badge for hidden/inactive products
   ///
   /// In en, this message translates to:
-  /// **'Hidden'**
+  /// **'Inactive'**
   String get statusHidden;
+
+  /// Status badge for inactive products
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get statusInactive;
+
+  /// Action button to edit a product
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editAction;
+
+  /// Action button to continue editing a draft product
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Editing'**
+  String get continueEditingAction;
+
+  /// Action button to save edits to an existing product
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChangesAction;
+
+  /// Action button to make an inactive product active
+  ///
+  /// In en, this message translates to:
+  /// **'Make Active'**
+  String get makeActiveAction;
+
+  /// Action button to make an active product inactive
+  ///
+  /// In en, this message translates to:
+  /// **'Make Inactive'**
+  String get makeInactiveAction;
+
+  /// Modal title when editing an existing product
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Product'**
+  String get editProductTitle;
+
+  /// Modal subtitle when editing an existing product
+  ///
+  /// In en, this message translates to:
+  /// **'Update your product details and photos'**
+  String get editProductHelper;
+
+  /// Confirmation title when deleting a product
+  ///
+  /// In en, this message translates to:
+  /// **'Delete product?'**
+  String get deleteProductConfirmTitle;
+
+  /// Confirmation body when deleting a product
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently remove this product and its photos.'**
+  String get deleteProductConfirmBody;
+
+  /// Toast message when product details are updated
+  ///
+  /// In en, this message translates to:
+  /// **'Product updated'**
+  String get productUpdatedSuccess;
+
+  /// Toast message when product is made active
+  ///
+  /// In en, this message translates to:
+  /// **'Product made active'**
+  String get productMadeActiveSuccess;
+
+  /// Toast message when product is made inactive
+  ///
+  /// In en, this message translates to:
+  /// **'Product made inactive'**
+  String get productMadeInactiveSuccess;
+
+  /// Error toast when product update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update product'**
+  String get couldNotUpdateProduct;
+
+  /// Error toast when product photo fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load product photo'**
+  String get couldNotLoadProductPhoto;
+
+  /// Guidance toast when trying to activate an incomplete product
+  ///
+  /// In en, this message translates to:
+  /// **'Please edit product to fill name, category, and price before making it active.'**
+  String get incompleteProductCannotActivate;
 
   /// Label when product price is not specified
   ///
@@ -1342,17 +1444,29 @@ abstract class AppLocalizations {
   /// **'Products that still need details will appear here'**
   String get noDraftProductsSubtitle;
 
-  /// Title when hidden filter has zero results
+  /// Title when hidden/inactive filter has zero results
   ///
   /// In en, this message translates to:
-  /// **'No hidden products'**
+  /// **'No inactive products'**
   String get noHiddenProductsTitle;
 
-  /// Subtitle when hidden filter has zero results
+  /// Subtitle when hidden/inactive filter has zero results
   ///
   /// In en, this message translates to:
   /// **'Products you temporarily hide will appear here'**
   String get noHiddenProductsSubtitle;
+
+  /// Title when inactive filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'No inactive products'**
+  String get noInactiveProductsTitle;
+
+  /// Subtitle when inactive filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'Products you mark as inactive will appear here'**
+  String get noInactiveProductsSubtitle;
 
   /// Button to clear filters and view all products
   ///
@@ -1995,6 +2109,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Image storage service is not available.'**
   String get storageUnavailableError;
+
+  /// Title for product details view
+  ///
+  /// In en, this message translates to:
+  /// **'Product Details'**
+  String get productDetailsTitle;
+
+  /// Placeholder text when product description is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No description added'**
+  String get noDescriptionAdded;
+
+  /// Menu action to delete a product
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Product'**
+  String get deleteProductAction;
 }
 
 class _AppLocalizationsDelegate

@@ -376,3 +376,72 @@ AI "IMPROVE PHOTO" ARCHITECTURE & MARKETPLACE-READY ENHANCEMENT (STEP 6C.6B)
    - Prototype rate limiting: Per-request concurrency guards and busy state in client; edge function verifies ownership and single-image processing per call.
    - Active products remain Producer-owner-only under Migration 009; no Buyer marketplace visibility is claimed.
 
+
+============================================================
+MY PRODUCTS MANAGEMENT & REAL IMAGE LIFECYCLE (STEP 6D)
+============================================================
+
+1. Real Product Image Display & Private Signed URL Architecture:
+   - Private Bucket Integrity: The `product-images` bucket remains strictly private with RLS enforcement.
+   - Canonical Storage Paths: Products in `public.products.images` store only stable relative Storage paths (`<owner_id>/<product_id>/<file>`).
+   - Transient Signed URLs: Client never requests or renders raw public URLs. When a product has images, `ProducerProductCard` requests an ephemeral signed URL (default 3600s expiration) via `IProducerProductImageService.createSignedImageUrl`.
+   - In-Memory Caching: `ProducerProductsProvider` maintains a transient `_signedUrlCache` mapped by storage path.
+   - Security Invariant: Signed URLs are NEVER written to PostgreSQL, NEVER saved into domain models, and NEVER shared across sessions.
+   - Graceful Fallback: If no image exists, a clean neutral Material inventory placeholder is displayed. If signed URL generation or image loading fails, a neutral broken-image fallback renders safely without UI crash.
+
+2. Card & Marketplace-Management Redesign:
+   - Layout: Compact, balanced cards designed for efficient inventory oversight.
+   - Responsive Grid/List:
+     * Desktop (>=1024px): 3 columns, prominent ~190px image area with category chip (top-left) and status badge (top-right), title, price + localized unit, and compact action row.
+     * Tablet (640px-1023px): 2 columns with adjusted aspect ratio.
+     * Phone (<640px): 1 column, compact 130px image height, readable typography, and vertically stacked action buttons when width is constrained (<310px) to prevent RenderFlex overflow.
+   - Action Hierarchy (Part K):
+     * Draft: [ Continue Editing ] (tonal filled) + [ Delete ]
+     * Active: [ Edit ] (outlined) + [ Make Inactive ] (tonal filled) + [ Delete ]
+     * Inactive: [ Edit ] (outlined) + [ Make Active ] (filled primary) + [ Delete ]
+   - Delete action uses distinct error coloring and requires confirmation modal.
+
+3. User-Facing Status Terminology & DB Enum Mapping:
+   - Database Enum: Remains strictly `draft`, `active`, `hidden` (no schema migration created).
+   - User-Facing Terminology:
+     * `draft`  -> "Draft"  / "ड्राफ्ट"  / "ਡਰਾਫਟ"
+     * `active` -> "Active" / "सक्रिय"  / "ਸਰਗਰਮ"
+     * `hidden` -> "Inactive" / "निष्क्रिय" / "ਅਕਿਰਿਆਸ਼ੀਲ"
+   - Filter Tabs: All, Active, Draft, Inactive.
+   - The user-facing label "Hidden" is completely eliminated from the Producer UI in favor of "Inactive".
+
+4. Product Editing Architecture:
+   - Single-Sheet Reuse: Reuses the single responsive bottom sheet modal (`AddProductScreen.show(existingProduct: product)`).
+   - Domain Initialization: `AddProductProvider.forExistingProduct` initializes with `persistedProductId = existingProduct.id`, populates draft fields (name, category, description, price, unit, images), and sets `isEditMode = true`.
+   - Anti-Duplication: Save operations call `ProducerProductService.updateDraft(productId: persistedProductId, ...)` instead of `createDraft`, guaranteeing the exact same database row is updated.
+   - Active Product Preservation: Editing an active product updates content attributes while preserving `ProductStatus.active` (does not reset to draft).
+   - Image & AI Preservation: Existing photos load via transient signed URLs, photo add/remove continues to function, and AI Photo Improvement workflows remain fully accessible.
+   - Instant Refresh: On successful edit, the sheet returns `true` and `ProducerProductsTab` immediately updates the local provider collection.
+
+5. Status Transition Rules:
+   - Active -> Inactive (`active` -> `hidden`): Immediately updates via `ProducerProductService.updateProductStatus`.
+   - Inactive -> Active (`hidden` -> `active`): Readiness validation enforced prior to activation:
+     * `name.trim().length >= 2`
+     * `category.trim().length >= 2`
+     * `pricePaise != null && pricePaise > 0`
+   - Incomplete products are blocked from activation with a localized guidance message directing the producer to edit the product first.
+
+6. Delete Lifecycle & Fail-Safe Cleanup Ordering:
+   - Storage Deletion First: When deleting a product, all associated Storage objects in `product.images` MUST be deleted BEFORE deleting the database row.
+   - RLS Dependency: Migration 011 policies authorize Storage deletion based on existing ownership in `public.products`. Deleting the DB row first would orphan storage files and violate RLS on subsequent delete attempts.
+   - Confirmation Dialog: Clear, destructive confirmation dialog ("Delete product? / This will permanently remove this product and its photos.").
+   - UI Update: On successful deletion, product is removed immediately from provider in-memory state. On failure, the card remains intact and a localized error is shown.
+
+7. AI Original/Candidate Storage Limitation Note:
+   - When a user chooses "Use Improved Photo", the canonical `products.images` points to the improved image path while the original file remains in Storage for recoverability.
+   - Product deletion cleans all paths present in `product.images`.
+   - Non-canonical original sources from AI improvement that are no longer listed in `product.images` are not automatically tracked or deleted by product delete, representing an acceptable prototype storage orphan limitation.
+
+8. Privacy & Security Invariants:
+   - Storage bucket `product-images` remains 100% private.
+   - Signed URLs are transient in-memory previews only (never stored in DB).
+   - No service-role key is ever exposed in client code.
+   - All DB operations use authenticated owner-scoped queries through `ProducerProductService`.
+   - Buyer Isolation: Products remain strictly owner-scoped under Migration 009. Zero Buyer marketplace visibility or discovery is active.
+
+

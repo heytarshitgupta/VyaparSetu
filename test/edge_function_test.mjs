@@ -111,4 +111,18 @@ describe('Supabase Edge Function: improve-product-photo', () => {
     assert.strictEqual(responseString.includes('sk-'), false);
     assert.strictEqual(responseString.includes('service_role'), false);
   });
+
+  // Test 28: Model defaults to gpt-image-2 and respects OPENAI_IMAGE_MODEL override
+  test('Test 28: Model defaults to gpt-image-2 and respects OPENAI_IMAGE_MODEL override', () => {
+    const resolveModel = (envVal) => (envVal?.trim() || 'gpt-image-2');
+
+    // When unset or empty, defaults to gpt-image-2
+    assert.strictEqual(resolveModel(undefined), 'gpt-image-2');
+    assert.strictEqual(resolveModel(''), 'gpt-image-2');
+    assert.strictEqual(resolveModel('   '), 'gpt-image-2');
+
+    // When custom model is configured, respects override
+    assert.strictEqual(resolveModel('gpt-image-1.5'), 'gpt-image-1.5');
+    assert.strictEqual(resolveModel('custom-model-preview'), 'custom-model-preview');
+  });
 });

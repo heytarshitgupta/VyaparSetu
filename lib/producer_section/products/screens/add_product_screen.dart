@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/localization/generated/app_localizations.dart';
+import '../models/producer_product.dart';
 import '../models/product_price_parser.dart';
 import '../providers/add_product_provider.dart';
 import '../services/producer_image_picker_service.dart';
@@ -17,6 +18,7 @@ import '../services/producer_product_service.dart';
 /// - Narrow screens (<640px): Near full-height bottom sheet with rounded top corners.
 /// - Tablet / Desktop / Web (>=640px): Centered modal card (max 840px width, max 90vh).
 class AddProductScreen extends StatefulWidget {
+  final ProducerProduct? existingProduct;
   final AddProductProvider? provider;
   final IProducerProductService? productService;
   final IProducerProductImageService? imageService;
@@ -25,6 +27,7 @@ class AddProductScreen extends StatefulWidget {
 
   const AddProductScreen({
     super.key,
+    this.existingProduct,
     this.provider,
     this.productService,
     this.imageService,
@@ -35,6 +38,7 @@ class AddProductScreen extends StatefulWidget {
   /// Opens the Add Product screen as a responsive modal bottom sheet.
   static Future<bool?> show(
     BuildContext context, {
+    ProducerProduct? existingProduct,
     AddProductProvider? provider,
     IProducerProductService? productService,
     IProducerProductImageService? imageService,
@@ -49,6 +53,7 @@ class AddProductScreen extends StatefulWidget {
       isDismissible: true,
       enableDrag: true,
       builder: (_) => AddProductScreen(
+        existingProduct: existingProduct,
         provider: provider,
         productService: productService,
         imageService: imageService,
@@ -100,12 +105,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
   void initState() {
     super.initState();
     _provider = widget.provider ??
-        AddProductProvider(
-          productService: widget.productService,
-          imageService: widget.imageService ?? widget.productService?.imageService,
-          imagePickerService: widget.imagePickerService,
-          enhancementService: widget.enhancementService,
-        );
+        (widget.existingProduct != null
+            ? AddProductProvider.forExistingProduct(
+                product: widget.existingProduct!,
+                productService: widget.productService,
+                imageService: widget.imageService ?? widget.productService?.imageService,
+                imagePickerService: widget.imagePickerService,
+                enhancementService: widget.enhancementService,
+              )
+            : AddProductProvider(
+                productService: widget.productService,
+                imageService: widget.imageService ?? widget.productService?.imageService,
+                imagePickerService: widget.imagePickerService,
+                enhancementService: widget.enhancementService,
+              ));
 
     _nameController = TextEditingController(text: _provider.draft.name);
     _priceController = TextEditingController(
@@ -648,6 +661,53 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
   }
 
+  Future<void> _onSaveChanges(AppLocalizations l10n) async {
+    bool hasValidationError = false;
+
+    if (_nameController.text.trim().length < 2) {
+      setState(() {
+        _nameError = l10n.productNameRequired;
+      });
+      _nameFocusNode.requestFocus();
+      hasValidationError = true;
+    }
+
+    if (_provider.existingStatus == ProductStatus.active) {
+      if (_provider.draft.category.trim().length < 2) {
+        setState(() {
+          _categoryError = l10n.categoryLabel;
+        });
+        hasValidationError = true;
+      }
+      if (_provider.draft.pricePaise == null || _provider.draft.pricePaise! <= 0) {
+        setState(() {
+          _priceError = l10n.priceInvalidError;
+        });
+        hasValidationError = true;
+      }
+    }
+
+    if (hasValidationError) {
+      return;
+    }
+
+    final success = await _provider.saveChanges();
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.productUpdatedSuccess)),
+      );
+      Navigator.of(context).pop(true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_provider.errorMessage ?? l10n.couldNotUpdateProduct),
+        ),
+      );
+    }
+  }
+
   Future<void> _onAddProduct(AppLocalizations l10n) async {
     bool hasValidationError = false;
 
@@ -898,14 +958,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10n.addProduct,
+                      _provider.isEditMode ? l10n.editProductTitle : l10n.addProduct,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      l10n.addProductHelper,
+                      _provider.isEditMode ? l10n.editProductHelper : l10n.addProductHelper,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -1317,6 +1377,31 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   Widget _buildActionButtons(AppLocalizations l10n, ColorScheme colorScheme) {
     final isBusy = _provider.isSaving || _provider.isUploadingImage;
+
+    // For existing active or inactive products: single prominent "Save Changes" button
+    if (_provider.isEditMode &&
+        _provider.existingStatus != ProductStatus.draft) {
+      return SizedBox(
+        width: double.infinity,
+        child: FilledButton(
+          key: const Key('add_product_save_changes_button'),
+          onPressed: isBusy ? null : () => _onSaveChanges(l10n),
+          style: FilledButton.styleFrom(
+            minimumSize: const Size(0, 48),
+          ),
+          child: isBusy
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+              : Text(l10n.saveChangesAction),
+        ),
+      );
+    }
 
     return Row(
       children: [
