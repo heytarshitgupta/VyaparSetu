@@ -1370,5 +1370,166 @@
   "deleteProductAction": "Delete Product",
   "@deleteProductAction": {
     "description": "Menu action to delete a product"
+  },
+  "verificationAndCompliance": "Verification & Compliance",
+  "@verificationAndCompliance": {
+    "description": "Header for verification and compliance section"
+  },
+  "businessProducerInfo": "Business & Producer Details",
+  "@businessProducerInfo": {
+    "description": "Header for business and producer info section"
+  },
+  "accountAndSecurity": "Account & Security",
+  "@accountAndSecurity": {
+    "description": "Header for account and security section"
+  },
+  "helpAndAbout": "Help & About",
+  "@helpAndAbout": {
+    "description": "Header for help and about section"
+  },
+  "voiceGuidanceLanguage": "Voice Guidance Language",
+  "@voiceGuidanceLanguage": {
+    "description": "Label for voice guidance language setting"
+  },
+  "voiceGuidanceSameAsApp": "Same as App Language",
+  "@voiceGuidanceSameAsApp": {
+    "description": "Voice guidance option matching app language"
+  },
+  "verifiedProducer": "Verified Producer",
+  "@verifiedProducer": {
+    "description": "Badge for verified producer"
+  },
+  "unverifiedProducer": "Producer",
+  "@unverifiedProducer": {
+    "description": "Badge for unverified producer"
+  },
+  "panVerified": "Verified",
+  "@panVerified": {
+    "description": "Badge when PAN is verified"
+  },
+  "panNotVerified": "Not Verified",
+  "@panNotVerified": {
+    "description": "Badge when PAN is not verified"
+  },
+  "identityVerified": "Completed",
+  "@identityVerified": {
+    "description": "Status when identity verification is complete"
+  },
+  "identityNotVerified": "Pending",
+  "@identityNotVerified": {
+    "description": "Status when identity verification is pending"
+  },
+  "gstRegisteredBadge": "Registered",
+  "@gstRegisteredBadge": {
+    "description": "Badge when GST is registered"
+  },
+  "gstNotRegisteredBadge": "Not Registered",
+  "@gstNotRegisteredBadge": {
+    "description": "Badge when GST is not registered"
+  },
+  "aadhaarStatusLabel": "Aadhaar Identity",
+  "@aadhaarStatusLabel": {
+    "description": "Label for Aadhaar status row"
+  },
+  "panIdentityLabel": "PAN Identity",
+  "@panIdentityLabel": {
+    "description": "Label for PAN identity row"
+  },
+  "gstComplianceLabel": "GST",
+  "@gstComplianceLabel": {
+    "description": "Label for GST compliance row"
+  },
+  "workshopLocationLabel": "Workshop Location",
+  "@workshopLocationLabel": {
+    "description": "Label for workshop location"
+  },
+  "resetPassword": "Reset Password",
+  "@resetPassword": {
+    "description": "Action to reset account password"
+  },
+  "resetPasswordDesc": "Send password reset instructions to your registered email",
+  "@resetPasswordDesc": {
+    "description": "Description for reset password action"
+  },
+  "resetPasswordSuccess": "Password reset link sent to your email",
+  "@resetPasswordSuccess": {
+    "description": "Confirmation when reset password email is dispatched"
+  },
+  "activeSession": "Current Session",
+  "@activeSession": {
+    "description": "Label for current session"
+  },
+  "activeSessionTruthful": "Signed in",
+  "@activeSessionTruthful": {
+    "description": "Description for signed in session status"
+  },
+  "signOutConfirmTitle": "Sign out of VyaparSetu?",
+  "@signOutConfirmTitle": {
+    "description": "Title of sign out confirmation dialog"
+  },
+  "signOutConfirmMessage": "Are you sure you want to sign out?",
+  "@signOutConfirmMessage": {
+    "description": "Body message of sign out confirmation dialog"
+  },
+  "howVyaparSetuWorks": "How VyaparSetu Works",
+  "@howVyaparSetuWorks": {
+    "description": "Title for how vyaparsetu works info dialog"
+  },
+  "howVyaparSetuWorksContent": "VyaparSetu connects artisan producers directly with verified bulk and retail buyers. Add your products, share photos, and respond to buyer inquiries with complete transparency.",
+  "@howVyaparSetuWorksContent": {
+    "description": "Description text for how vyaparsetu works"
+  },
+  "privacyAndData": "Privacy & Data",
+  "@privacyAndData": {
+    "description": "Title for privacy and data info dialog"
+  },
+  "privacyAndDataContent": "Sensitive identity information is minimized. Raw PAN is not displayed in the app. Aadhaar numbers are not displayed or carried in the Profile UI. Access to producer data is protected by authentication and database ownership policies.",
+  "@privacyAndDataContent": {
+    "description": "Description text for privacy and data"
+  },
+  "aboutVyaparSetu": "About VyaparSetu",
+  "@aboutVyaparSetu": {
+    "description": "Title for about vyaparsetu info dialog"
+  },
+  "aboutVyaparSetuContent": "VyaparSetu v1.0 — Empowering Indian artisan producers and manufacturers through direct commerce, localization, and trusted verification.",
+  "@aboutVyaparSetuContent": {
+    "description": "Description text for about vyaparsetu"
+  },
+  "phoneLabel": "Contact Phone",
+  "@phoneLabel": {
+    "description": "Label for contact phone"
+  },
+  "notProvided": "Not provided",
+  "@notProvided": {
+    "description": "Placeholder when an optional profile field was not provided"
+  },
+  "quickMenuTitle": "Quick Actions",
+  "@quickMenuTitle": {
+    "description": "Accessibility and tooltip for quick action menu"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Label for email"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "Button label for OK"
+  },
+  "businessName": "Business Name",
+  "@businessName": {
+    "description": "Label for business name"
+  },
+  "craftCategory": "Craft Category",
+  "@craftCategory": {
+    "description": "Label for craft category"
+  },
+  "identityVerification": "Identity Verification",
+  "@identityVerification": {
+    "description": "Label for identity verification"
+  },
+  "producerRoleBadge": "Producer",
+  "@producerRoleBadge": {
+    "description": "Role badge for producer"
   }
 }
+

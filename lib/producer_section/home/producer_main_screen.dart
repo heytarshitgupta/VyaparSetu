@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/localization/generated/app_localizations.dart';
+import '../../core/routes/app_router.dart';
 import '../auth/services/producer_auth_service.dart';
 import '../opportunities/buyer_needs_tab.dart';
 import '../products/providers/producer_products_provider.dart';
@@ -8,6 +9,7 @@ import '../products/screens/add_product_screen.dart';
 import '../products/services/producer_product_service.dart';
 import '../products/producer_products_tab.dart';
 import '../profile/producer_profile_tab.dart';
+import '../widgets/producer_quick_action_menu.dart';
 import 'models/producer_shell_profile.dart';
 import 'tabs/producer_home_tab.dart';
 import 'tabs/what_buyers_want_screen.dart';
@@ -86,11 +88,51 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
             ? fullName
             : (metaName ?? ''),
         email: user.email ?? (profile?['email'] as String?) ?? '',
+        phone: (profile?['phone'] as String?)?.trim(),
         businessName: (producerProfile?['business_name'] as String?)?.trim(),
         craftCategory: (producerProfile?['craft_category'] as String?)?.trim(),
+        bio: (producerProfile?['bio'] as String?)?.trim(),
+        state: (producerProfile?['state'] as String?)?.trim(),
+        district: (producerProfile?['district'] as String?)?.trim(),
+        city: (producerProfile?['city'] as String?)?.trim(),
+        pincode: (producerProfile?['pincode'] as String?)?.trim(),
+        address: (producerProfile?['address'] as String?)?.trim(),
+        panLast4: (producerProfile?['pan_last4'] as String?)?.trim(),
+        panVerificationStatus: (producerProfile?['pan_verification_status'] as String?) ?? 'unverified',
+        gstRegistered: (producerProfile?['gst_registered'] as bool?) ?? false,
+        gstin: (producerProfile?['gstin'] as String?)?.trim(),
+        gstVerificationStatus: (producerProfile?['gst_verification_status'] as String?) ?? 'not_applicable',
+        onboardingStep: (producerProfile?['onboarding_step'] as int?) ?? 1,
       );
     } catch (_) {
       return null;
+    }
+  }
+
+  Future<void> _handleSignOut() async {
+    try {
+      await AuthService.instance.signOut();
+    } catch (_) {}
+    if (!mounted) return;
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRouter.initialRoute,
+      (route) => false,
+    );
+  }
+
+  String _getTitleForIndex(int index, AppLocalizations l10n) {
+    switch (index) {
+      case 0:
+        return l10n.home;
+      case 1:
+        return l10n.myProducts;
+      case 2:
+        return l10n.buyerNeeds;
+      case 3:
+        return l10n.myProfile;
+      default:
+        return l10n.appTitle;
     }
   }
 
@@ -147,6 +189,7 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
       const BuyerNeedsTab(),
       ProducerProfileTab(
         profile: _profile,
+        onSignOut: _handleSignOut,
       ),
     ];
 
@@ -159,6 +202,17 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
         // --------------------------------------------------------------------
         if (width < 640) {
           return Scaffold(
+            appBar: AppBar(
+              title: Text(_getTitleForIndex(_currentIndex, l10n)),
+              elevation: 0,
+              scrolledUnderElevation: 1,
+              actions: [
+                ProducerQuickActionMenu(
+                  onNavigateToProfile: () => selectDestination(3),
+                  onSignOut: _handleSignOut,
+                ),
+              ],
+            ),
             body: IndexedStack(
               index: _currentIndex,
               children: tabs,
@@ -200,6 +254,17 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
         // --------------------------------------------------------------------
         if (width <= 1024) {
           return Scaffold(
+            appBar: AppBar(
+              title: Text(_getTitleForIndex(_currentIndex, l10n)),
+              elevation: 0,
+              scrolledUnderElevation: 1,
+              actions: [
+                ProducerQuickActionMenu(
+                  onNavigateToProfile: () => selectDestination(3),
+                  onSignOut: _handleSignOut,
+                ),
+              ],
+            ),
             body: Row(
               children: [
                 NavigationRail(
@@ -423,6 +488,70 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
               ),
 
               const Spacer(),
+
+              // User Identity Summary & Quick Action Trigger
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 18,
+                      backgroundColor: colorScheme.primaryContainer,
+                      child: Text(
+                        _profile?.initials ?? 'P',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => selectDestination(3),
+                        borderRadius: BorderRadius.circular(6),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              (_profile?.fullName.trim().isNotEmpty ?? false)
+                                  ? _profile!.fullName.trim()
+                                  : l10n.producerDefaultName,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurface,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              _profile?.craftCategory ?? l10n.producerRoleBadge,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ProducerQuickActionMenu(
+                      onNavigateToProfile: () => selectDestination(3),
+                      onSignOut: _handleSignOut,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

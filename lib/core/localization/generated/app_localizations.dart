@@ -580,7 +580,7 @@ abstract class AppLocalizations {
   /// **'Email Address (Login)'**
   String get emailAddressLogin;
 
-  /// Placeholder when data is not provided
+  /// Placeholder when an optional profile field was not provided
   ///
   /// In en, this message translates to:
   /// **'Not provided'**
@@ -892,10 +892,10 @@ abstract class AppLocalizations {
   /// **'PAN Verification'**
   String get panVerification;
 
-  /// Title for PAN card in verified state
+  /// Badge when PAN is verified
   ///
   /// In en, this message translates to:
-  /// **'PAN Verified'**
+  /// **'Verified'**
   String get panVerified;
 
   /// Subtitle for PAN card unverified
@@ -2127,6 +2127,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete Product'**
   String get deleteProductAction;
+
+  /// Header for verification and compliance section
+  ///
+  /// In en, this message translates to:
+  /// **'Verification & Compliance'**
+  String get verificationAndCompliance;
+
+  /// Header for business and producer info section
+  ///
+  /// In en, this message translates to:
+  /// **'Business & Producer Details'**
+  String get businessProducerInfo;
+
+  /// Header for account and security section
+  ///
+  /// In en, this message translates to:
+  /// **'Account & Security'**
+  String get accountAndSecurity;
+
+  /// Header for help and about section
+  ///
+  /// In en, this message translates to:
+  /// **'Help & About'**
+  String get helpAndAbout;
+
+  /// Label for voice guidance language setting
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Guidance Language'**
+  String get voiceGuidanceLanguage;
+
+  /// Voice guidance option matching app language
+  ///
+  /// In en, this message translates to:
+  /// **'Same as App Language'**
+  String get voiceGuidanceSameAsApp;
+
+  /// Badge for verified producer
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Producer'**
+  String get verifiedProducer;
+
+  /// Badge for unverified producer
+  ///
+  /// In en, this message translates to:
+  /// **'Producer'**
+  String get unverifiedProducer;
+
+  /// Badge when PAN is not verified
+  ///
+  /// In en, this message translates to:
+  /// **'Not Verified'**
+  String get panNotVerified;
+
+  /// Status when identity verification is complete
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get identityVerified;
+
+  /// Status when identity verification is pending
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get identityNotVerified;
+
+  /// Badge when GST is registered
+  ///
+  /// In en, this message translates to:
+  /// **'Registered'**
+  String get gstRegisteredBadge;
+
+  /// Badge when GST is not registered
+  ///
+  /// In en, this message translates to:
+  /// **'Not Registered'**
+  String get gstNotRegisteredBadge;
+
+  /// Label for Aadhaar status row
+  ///
+  /// In en, this message translates to:
+  /// **'Aadhaar Identity'**
+  String get aadhaarStatusLabel;
+
+  /// Label for PAN identity row
+  ///
+  /// In en, this message translates to:
+  /// **'PAN Identity'**
+  String get panIdentityLabel;
+
+  /// Label for GST compliance row
+  ///
+  /// In en, this message translates to:
+  /// **'GST'**
+  String get gstComplianceLabel;
+
+  /// Label for workshop location
+  ///
+  /// In en, this message translates to:
+  /// **'Workshop Location'**
+  String get workshopLocationLabel;
+
+  /// Action to reset account password
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// Description for reset password action
+  ///
+  /// In en, this message translates to:
+  /// **'Send password reset instructions to your registered email'**
+  String get resetPasswordDesc;
+
+  /// Confirmation when reset password email is dispatched
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset link sent to your email'**
+  String get resetPasswordSuccess;
+
+  /// Label for current session
+  ///
+  /// In en, this message translates to:
+  /// **'Current Session'**
+  String get activeSession;
+
+  /// Description for signed in session status
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in'**
+  String get activeSessionTruthful;
+
+  /// Title of sign out confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of VyaparSetu?'**
+  String get signOutConfirmTitle;
+
+  /// Body message of sign out confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get signOutConfirmMessage;
+
+  /// Title for how vyaparsetu works info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'How VyaparSetu Works'**
+  String get howVyaparSetuWorks;
+
+  /// Description text for how vyaparsetu works
+  ///
+  /// In en, this message translates to:
+  /// **'VyaparSetu connects artisan producers directly with verified bulk and retail buyers. Add your products, share photos, and respond to buyer inquiries with complete transparency.'**
+  String get howVyaparSetuWorksContent;
+
+  /// Title for privacy and data info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data'**
+  String get privacyAndData;
+
+  /// Description text for privacy and data
+  ///
+  /// In en, this message translates to:
+  /// **'Sensitive identity information is minimized. Raw PAN is not displayed in the app. Aadhaar numbers are not displayed or carried in the Profile UI. Access to producer data is protected by authentication and database ownership policies.'**
+  String get privacyAndDataContent;
+
+  /// Title for about vyaparsetu info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'About VyaparSetu'**
+  String get aboutVyaparSetu;
+
+  /// Description text for about vyaparsetu
+  ///
+  /// In en, this message translates to:
+  /// **'VyaparSetu v1.0 — Empowering Indian artisan producers and manufacturers through direct commerce, localization, and trusted verification.'**
+  String get aboutVyaparSetuContent;
+
+  /// Label for contact phone
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Phone'**
+  String get phoneLabel;
+
+  /// Accessibility and tooltip for quick action menu
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get quickMenuTitle;
+
+  /// Label for email
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// Button label for OK
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// Label for business name
+  ///
+  /// In en, this message translates to:
+  /// **'Business Name'**
+  String get businessName;
+
+  /// Label for craft category
+  ///
+  /// In en, this message translates to:
+  /// **'Craft Category'**
+  String get craftCategory;
+
+  /// Label for identity verification
+  ///
+  /// In en, this message translates to:
+  /// **'Identity Verification'**
+  String get identityVerification;
+
+  /// Role badge for producer
+  ///
+  /// In en, this message translates to:
+  /// **'Producer'**
+  String get producerRoleBadge;
 }
 
 class _AppLocalizationsDelegate

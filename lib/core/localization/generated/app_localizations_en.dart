@@ -431,7 +431,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get panVerification => 'PAN Verification';
 
   @override
-  String get panVerified => 'PAN Verified';
+  String get panVerified => 'Verified';
 
   @override
   String get secureIdentityVerification => 'Secure identity verification';
@@ -1096,4 +1096,122 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteProductAction => 'Delete Product';
+
+  @override
+  String get verificationAndCompliance => 'Verification & Compliance';
+
+  @override
+  String get businessProducerInfo => 'Business & Producer Details';
+
+  @override
+  String get accountAndSecurity => 'Account & Security';
+
+  @override
+  String get helpAndAbout => 'Help & About';
+
+  @override
+  String get voiceGuidanceLanguage => 'Voice Guidance Language';
+
+  @override
+  String get voiceGuidanceSameAsApp => 'Same as App Language';
+
+  @override
+  String get verifiedProducer => 'Verified Producer';
+
+  @override
+  String get unverifiedProducer => 'Producer';
+
+  @override
+  String get panNotVerified => 'Not Verified';
+
+  @override
+  String get identityVerified => 'Completed';
+
+  @override
+  String get identityNotVerified => 'Pending';
+
+  @override
+  String get gstRegisteredBadge => 'Registered';
+
+  @override
+  String get gstNotRegisteredBadge => 'Not Registered';
+
+  @override
+  String get aadhaarStatusLabel => 'Aadhaar Identity';
+
+  @override
+  String get panIdentityLabel => 'PAN Identity';
+
+  @override
+  String get gstComplianceLabel => 'GST';
+
+  @override
+  String get workshopLocationLabel => 'Workshop Location';
+
+  @override
+  String get resetPassword => 'Reset Password';
+
+  @override
+  String get resetPasswordDesc =>
+      'Send password reset instructions to your registered email';
+
+  @override
+  String get resetPasswordSuccess => 'Password reset link sent to your email';
+
+  @override
+  String get activeSession => 'Current Session';
+
+  @override
+  String get activeSessionTruthful => 'Signed in';
+
+  @override
+  String get signOutConfirmTitle => 'Sign out of VyaparSetu?';
+
+  @override
+  String get signOutConfirmMessage => 'Are you sure you want to sign out?';
+
+  @override
+  String get howVyaparSetuWorks => 'How VyaparSetu Works';
+
+  @override
+  String get howVyaparSetuWorksContent =>
+      'VyaparSetu connects artisan producers directly with verified bulk and retail buyers. Add your products, share photos, and respond to buyer inquiries with complete transparency.';
+
+  @override
+  String get privacyAndData => 'Privacy & Data';
+
+  @override
+  String get privacyAndDataContent =>
+      'Sensitive identity information is minimized. Raw PAN is not displayed in the app. Aadhaar numbers are not displayed or carried in the Profile UI. Access to producer data is protected by authentication and database ownership policies.';
+
+  @override
+  String get aboutVyaparSetu => 'About VyaparSetu';
+
+  @override
+  String get aboutVyaparSetuContent =>
+      'VyaparSetu v1.0 — Empowering Indian artisan producers and manufacturers through direct commerce, localization, and trusted verification.';
+
+  @override
+  String get phoneLabel => 'Contact Phone';
+
+  @override
+  String get quickMenuTitle => 'Quick Actions';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get businessName => 'Business Name';
+
+  @override
+  String get craftCategory => 'Craft Category';
+
+  @override
+  String get identityVerification => 'Identity Verification';
+
+  @override
+  String get producerRoleBadge => 'Producer';
 }

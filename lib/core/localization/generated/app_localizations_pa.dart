@@ -262,7 +262,7 @@ class AppLocalizationsPa extends AppLocalizations {
   String get emailAddressLogin => 'ਈਮੇਲ ਪਤਾ (ਲੌਗ ਇਨ)';
 
   @override
-  String get notProvided => 'ਉਪਲਬਧ ਨਹੀਂ';
+  String get notProvided => 'ਮੁਹੱਈਆ ਨਹੀਂ';
 
   @override
   String get readOnly => 'ਸਿਰਫ਼ ਪੜ੍ਹਨ ਲਈ';
@@ -426,7 +426,7 @@ class AppLocalizationsPa extends AppLocalizations {
   String get panVerification => 'ਪੈਨ ਤਸਦੀਕ';
 
   @override
-  String get panVerified => 'ਪੈਨ ਤਸਦੀਕਸ਼ੁਦਾ';
+  String get panVerified => 'ਤਸਦੀਕਸ਼ੁਦਾ';
 
   @override
   String get secureIdentityVerification => 'ਸੁਰੱਖਿਅਤ ਪਛਾਣ ਤਸਦੀਕ';
@@ -1094,4 +1094,124 @@ class AppLocalizationsPa extends AppLocalizations {
 
   @override
   String get deleteProductAction => 'ਉਤਪਾਦ ਮਿਟਾਓ';
+
+  @override
+  String get verificationAndCompliance => 'ਤਸਦੀਕ ਅਤੇ ਪਾਲਣਾ';
+
+  @override
+  String get businessProducerInfo => 'ਕਾਰੋਬਾਰ ਅਤੇ ਉਤਪਾਦਕ ਵੇਰਵੇ';
+
+  @override
+  String get accountAndSecurity => 'ਖਾਤਾ ਅਤੇ ਸੁਰੱਖਿਆ';
+
+  @override
+  String get helpAndAbout => 'ਮਦਦ ਅਤੇ ਜਾਣਕਾਰੀ';
+
+  @override
+  String get voiceGuidanceLanguage => 'ਆਵਾਜ਼ ਮਾਰਗਦਰਸ਼ਨ ਭਾਸ਼ਾ';
+
+  @override
+  String get voiceGuidanceSameAsApp => 'ਐਪ ਭਾਸ਼ਾ ਵਾਂਗ ਹੀ';
+
+  @override
+  String get verifiedProducer => 'ਤਸਦੀਕਸ਼ੁਦਾ ਉਤਪਾਦਕ';
+
+  @override
+  String get unverifiedProducer => 'ਉਤਪਾਦਕ';
+
+  @override
+  String get panNotVerified => 'ਤਸਦੀਕ ਨਹੀਂ ਹੋਇਆ';
+
+  @override
+  String get identityVerified => 'ਪੂਰਾ ਹੋਇਆ';
+
+  @override
+  String get identityNotVerified => 'ਬਾਕੀ ਹੈ';
+
+  @override
+  String get gstRegisteredBadge => 'ਰਜਿਸਟਰਡ';
+
+  @override
+  String get gstNotRegisteredBadge => 'ਰਜਿਸਟਰਡ ਨਹੀਂ';
+
+  @override
+  String get aadhaarStatusLabel => 'ਆਧਾਰ ਪਛਾਣ';
+
+  @override
+  String get panIdentityLabel => 'ਪੈਨ ਪਛਾਣ';
+
+  @override
+  String get gstComplianceLabel => 'ਜੀਐਸਟੀ (GST)';
+
+  @override
+  String get workshopLocationLabel => 'ਵਰਕਸ਼ਾਪ ਦਾ ਟਿਕਾਣਾ';
+
+  @override
+  String get resetPassword => 'ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਕਰੋ';
+
+  @override
+  String get resetPasswordDesc =>
+      'ਆਪਣੀ ਰਜਿਸਟਰਡ ਈਮੇਲ \'ਤੇ ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਹਦਾਇਤਾਂ ਭੇਜੋ';
+
+  @override
+  String get resetPasswordSuccess =>
+      'ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਲਿੰਕ ਤੁਹਾਡੀ ਈਮੇਲ \'ਤੇ ਭੇਜ ਦਿੱਤਾ ਗਿਆ ਹੈ';
+
+  @override
+  String get activeSession => 'ਮੌਜੂਦਾ ਸੈਸ਼ਨ';
+
+  @override
+  String get activeSessionTruthful => 'ਸਾਈਨ ਇਨ';
+
+  @override
+  String get signOutConfirmTitle => 'ਵਪਾਰਸੇਤੂ ਤੋਂ ਸਾਈਨ ਆਊਟ ਕਰਨਾ ਹੈ?';
+
+  @override
+  String get signOutConfirmMessage =>
+      'ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਸਾਈਨ ਆਊਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?';
+
+  @override
+  String get howVyaparSetuWorks => 'ਵਪਾਰਸੇਤੂ ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ';
+
+  @override
+  String get howVyaparSetuWorksContent =>
+      'ਵਪਾਰਸੇਤੂ ਕਾਰੀਗਰ ਉਤਪਾਦਕਾਂ ਨੂੰ ਸਿੱਧੇ ਤਸਦੀਕਸ਼ੁਦਾ ਥੋਕ ਅਤੇ ਪ੍ਰਚੂਨ ਖਰੀਦਦਾਰਾਂ ਨਾਲ ਜੋੜਦਾ ਹੈ। ਆਪਣੇ ਉਤਪਾਦ ਸ਼ਾਮਲ ਕਰੋ, ਫੋਟੋਆਂ ਸਾਂਝੀਆਂ ਕਰੋ ਅਤੇ ਪੂਰੀ ਪਾਰਦਰਸ਼ਤਾ ਨਾਲ ਖਰੀਦਦਾਰਾਂ ਦੇ ਸਵਾਲਾਂ ਦੇ ਜਵਾਬ ਦਿਓ।';
+
+  @override
+  String get privacyAndData => 'ਗੋਪਨੀਯਤਾ ਅਤੇ ਡਾਟਾ';
+
+  @override
+  String get privacyAndDataContent =>
+      'ਸੰਵੇਦਨਸ਼ੀਲ ਪਛਾਣ ਜਾਣਕਾਰੀ ਨੂੰ ਘੱਟ ਤੋਂ ਘੱਟ ਰੱਖਿਆ ਗਿਆ ਹੈ। ਐਪ ਵਿੱਚ ਮੂਲ ਪੈਨ (PAN) ਨਹੀਂ ਦਿਖਾਇਆ ਜਾਂਦਾ। ਆਧਾਰ ਨੰਬਰ ਪ੍ਰੋਫਾਈਲ ਵਿੱਚ ਪ੍ਰਦਰਸ਼ਿਤ ਜਾਂ ਸ਼ਾਮਲ ਨਹੀਂ ਕੀਤੇ ਜਾਂਦੇ। ਉਤਪਾਦਕ ਡੇਟਾ ਤੱਕ ਪਹੁੰਚ ਪ੍ਰਮਾਣੀਕਰਨ ਅਤੇ ਡੇਟਾਬੇਸ ਮਲਕੀਅਤ ਨੀਤੀਆਂ ਦੁਆਰਾ ਸੁਰੱਖਿਅਤ ਹੈ।';
+
+  @override
+  String get aboutVyaparSetu => 'ਵਪਾਰਸੇਤੂ ਬਾਰੇ';
+
+  @override
+  String get aboutVyaparSetuContent =>
+      'ਵਪਾਰਸੇਤੂ v1.0 — ਸਿੱਧੇ ਵਪਾਰ, ਸਥਾਨਕੀਕਰਨ ਅਤੇ ਭਰੋਸੇਯੋਗ ਤਸਦੀਕ ਰਾਹੀਂ ਭਾਰਤੀ ਕਾਰੀਗਰ ਉਤਪਾਦਕਾਂ ਨੂੰ ਸ਼ਕਤੀਸ਼ਾਲੀ ਬਣਾਉਣਾ।';
+
+  @override
+  String get phoneLabel => 'ਸੰਪਰਕ ਫ਼ੋਨ';
+
+  @override
+  String get quickMenuTitle => 'ਤੇਜ਼ ਕਾਰਵਾਈਆਂ';
+
+  @override
+  String get email => 'ਈਮੇਲ';
+
+  @override
+  String get ok => 'ਠੀਕ ਹੈ';
+
+  @override
+  String get businessName => 'ਕਾਰੋਬਾਰ ਦਾ ਨਾਮ';
+
+  @override
+  String get craftCategory => 'ਕਾਰੀਗਰੀ ਸ਼੍ਰੇਣੀ';
+
+  @override
+  String get identityVerification => 'ਪਛਾਣ ਤਸਦੀਕ';
+
+  @override
+  String get producerRoleBadge => 'ਉਤਪਾਦਕ';
 }

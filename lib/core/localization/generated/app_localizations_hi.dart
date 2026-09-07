@@ -425,7 +425,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get panVerification => 'पैन सत्यापन';
 
   @override
-  String get panVerified => 'पैन सत्यापित';
+  String get panVerified => 'सत्यापित';
 
   @override
   String get secureIdentityVerification => 'सुरक्षित पहचान सत्यापन';
@@ -1094,4 +1094,123 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get deleteProductAction => 'उत्पाद हटाएं';
+
+  @override
+  String get verificationAndCompliance => 'सत्यापन एवं अनुपालन';
+
+  @override
+  String get businessProducerInfo => 'व्यापार एवं निर्माता विवरण';
+
+  @override
+  String get accountAndSecurity => 'खाता एवं सुरक्षा';
+
+  @override
+  String get helpAndAbout => 'सहायता एवं परिचय';
+
+  @override
+  String get voiceGuidanceLanguage => 'आवाज मार्गदर्शन भाषा';
+
+  @override
+  String get voiceGuidanceSameAsApp => 'ऐप भाषा के समान';
+
+  @override
+  String get verifiedProducer => 'सत्यापित निर्माता';
+
+  @override
+  String get unverifiedProducer => 'निर्माता';
+
+  @override
+  String get panNotVerified => 'सत्यापित नहीं';
+
+  @override
+  String get identityVerified => 'पूर्ण';
+
+  @override
+  String get identityNotVerified => 'लंबित';
+
+  @override
+  String get gstRegisteredBadge => 'पंजीकृत';
+
+  @override
+  String get gstNotRegisteredBadge => 'पंजीकृत नहीं';
+
+  @override
+  String get aadhaarStatusLabel => 'आधार पहचान';
+
+  @override
+  String get panIdentityLabel => 'पैन पहचान';
+
+  @override
+  String get gstComplianceLabel => 'जीएसटी (GST)';
+
+  @override
+  String get workshopLocationLabel => 'कार्यशाला का स्थान';
+
+  @override
+  String get resetPassword => 'पासवर्ड रीसेट करें';
+
+  @override
+  String get resetPasswordDesc =>
+      'अपने पंजीकृत ईमेल पर पासवर्ड रीसेट निर्देश भेजें';
+
+  @override
+  String get resetPasswordSuccess =>
+      'पासवर्ड रीसेट लिंक आपके ईमेल पर भेज दिया गया है';
+
+  @override
+  String get activeSession => 'वर्तमान सत्र';
+
+  @override
+  String get activeSessionTruthful => 'साइन इन';
+
+  @override
+  String get signOutConfirmTitle => 'व्यापारसेतु से साइन आउट करें?';
+
+  @override
+  String get signOutConfirmMessage => 'क्या आप वाकई साइन आउट करना चाहते हैं?';
+
+  @override
+  String get howVyaparSetuWorks => 'व्यापारसेतु कैसे काम करता है';
+
+  @override
+  String get howVyaparSetuWorksContent =>
+      'व्यापारसेतु कारीगरों और निर्माताओं को सीधे सत्यापित थोक व खुदरा खरीदारों से जोड़ता है। अपने उत्पाद जोड़ें, फोटो साझा करें और पूरी पारदर्शिता के साथ खरीदारों की पूछताछ का उत्तर दें।';
+
+  @override
+  String get privacyAndData => 'गोपनीयता एवं डेटा';
+
+  @override
+  String get privacyAndDataContent =>
+      'संवेदनशील पहचान जानकारी को न्यूनतम रखा गया है। ऐप में मूल पैन (PAN) प्रदर्शित नहीं किया जाता है। आधार संख्या को प्रोफ़ाइल में प्रदर्शित या संग्रहीत नहीं किया जाता है। उत्पादक डेटा तक पहुंच प्रमाणीकरण और डेटाबेस स्वामित्व नीतियों द्वारा सुरक्षित है।';
+
+  @override
+  String get aboutVyaparSetu => 'व्यापारसेतु के बारे में';
+
+  @override
+  String get aboutVyaparSetuContent =>
+      'व्यापारसेतु v1.0 — प्रत्यक्ष वाणिज्य, स्थानीयकरण और विश्वसनीय सत्यापन के माध्यम से भारतीय कारीगरों और निर्माताओं को सशक्त बनाना।';
+
+  @override
+  String get phoneLabel => 'संपर्क फोन';
+
+  @override
+  String get quickMenuTitle => 'त्वरित क्रियाएं';
+
+  @override
+  String get email => 'ईमेल';
+
+  @override
+  String get ok => 'ठीक है';
+
+  @override
+  String get businessName => 'व्यवसाय का नाम';
+
+  @override
+  String get craftCategory => 'शिल्प श्रेणी';
+
+  @override
+  String get identityVerification => 'पहचान सत्यापन';
+
+  @override
+  String get producerRoleBadge => 'कारीगर / उत्पादक';
 }
