@@ -107,12 +107,10 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
   }
 
   Future<void> openAddProduct() async {
-    final result = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        builder: (_) => AddProductScreen(
-          productService: widget.productService,
-        ),
-      ),
+    final result = await AddProductScreen.show(
+      context,
+      productService: widget.productService,
+      imageService: widget.productService?.imageService,
     );
 
     if (result == true) {

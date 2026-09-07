@@ -69,6 +69,9 @@ class FakeProductService implements IProducerProductService {
   int _counter = 1;
 
   @override
+  final IProducerProductImageService? imageService = null;
+
+  @override
   Future<ProducerProduct> createDraft(ProducerProductDraft draft) async {
     final id = 'prod-uuid-$_counter';
     _counter++;
@@ -192,6 +195,10 @@ class FakeImagePickerService implements IProducerImagePickerService {
   PickedProductImage? nextPickedImage;
   Exception? nextException;
   ImageSourceOption? lastSource;
+  bool cameraSupported = true;
+
+  @override
+  bool get isCameraSupported => cameraSupported;
 
   @override
   Future<PickedProductImage?> pickImage(ImageSourceOption source) async {
@@ -228,7 +235,7 @@ Widget createTestApp({
     theme: AppTheme.lightTheme,
     darkTheme: AppTheme.darkTheme,
     themeMode: themeMode,
-    home: child,
+    home: Scaffold(body: child),
   );
 }
 
@@ -602,7 +609,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Step 3 of 3'), findsOneWidget);
+      expect(find.text('Product Photos'), findsOneWidget);
       expect(find.byIcon(Icons.add_a_photo_outlined), findsOneWidget);
 
       // Tap Add Photo tile
@@ -628,7 +635,7 @@ void main() {
       // Bottom sheet dismissed and photo added
       expect(fakePickerService.lastSource, ImageSourceOption.camera);
       expect(provider.draft.images.length, 1);
-      expect(find.byIcon(Icons.delete_outline), findsOneWidget);
+      expect(find.byKey(Key('remove_photo_${provider.draft.images.first}')), findsOneWidget);
     });
 
     testWidgets('Delete icon shows confirmation dialog and removes photo on confirmation', (tester) async {
@@ -657,10 +664,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.delete_outline), findsOneWidget);
+      expect(find.byKey(Key('remove_photo_${provider.draft.images.first}')), findsOneWidget);
 
       // Tap Delete icon
-      await tester.tap(find.byIcon(Icons.delete_outline));
+      await tester.tap(find.byKey(Key('remove_photo_${provider.draft.images.first}')));
       await tester.pumpAndSettle();
 
       // Confirmation dialog opens
@@ -745,7 +752,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Step 3 of 3'), findsOneWidget);
+      expect(find.text('Product Photos'), findsOneWidget);
       expect(find.byIcon(Icons.add_a_photo_outlined), findsOneWidget);
     });
   });

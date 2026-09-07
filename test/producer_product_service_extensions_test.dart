@@ -9,6 +9,7 @@ import 'package:buyer_section/producer_section/products/services/producer_produc
 /// and full support for the Delete Lifecycle (Storage first -> DB second).
 class FakeProducerProductService implements IProducerProductService {
   final String currentUserId;
+  @override
   final IProducerProductImageService? imageService;
   final Map<String, ProducerProduct> _database = {};
 

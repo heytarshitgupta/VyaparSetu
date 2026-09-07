@@ -8,9 +8,13 @@ import 'package:buyer_section/producer_section/products/models/producer_product.
 import 'package:buyer_section/producer_section/products/producer_market_intelligence.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product_draft.dart';
 import 'package:buyer_section/producer_section/products/providers/producer_products_provider.dart';
+import 'package:buyer_section/producer_section/products/services/producer_product_image_service.dart';
 import 'package:buyer_section/producer_section/products/services/producer_product_service.dart';
 
 class FakeProductService implements IProducerProductService {
+  @override
+  final IProducerProductImageService? imageService = null;
+
   @override
   Future<List<ProducerProduct>> fetchProducts({ProductStatus? statusFilter}) async => [];
 

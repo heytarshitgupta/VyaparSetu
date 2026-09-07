@@ -306,5 +306,73 @@ REAL PRODUCT PHOTO SELECTION & SECURE UPLOAD ARCHITECTURE (STEP 6C.6A)
 8. Product Activation & Buyer Visibility Boundaries:
    - Photos are NOT required to mark a product active under Migration 009. A product can be marked active once name, category, and positive price are provided.
    - Security & Visibility: Under Migration 009, public.products RLS restricts SELECT, INSERT, UPDATE, and DELETE strictly to the product owner (`auth.uid() = producer_id`). Active products are NOT yet readable by Buyer accounts. No Buyer marketplace visibility is claimed.
-   - AI Enhancement & Voice: No AI enhancement, auto-tagging, or voice features are implemented in this step. Canonical setters remain the unified input surface.
+
+
+AI "IMPROVE PHOTO" ARCHITECTURE & MARKETPLACE-READY ENHANCEMENT (STEP 6C.6B)
+------------------------------------------------------------
+1. Purpose & Flow:
+   - Provides every uploaded product photo with an optional "✨ Improve Photo" action.
+   - Clean marketplace-ready transformation: removes distracting backgrounds, places product on clean neutral/light background, improves lighting and centering naturally.
+   - Strict User Choice: Never automatically overwrites or replaces original image. Shows a side-by-side comparison ("Original" vs "Improved") with explicit choices: [Keep Original] or [Use Improved Photo].
+
+2. Server-Side Edge Function Architecture & Secret Isolation:
+   - Function Path: `supabase/functions/improve-product-photo/index.ts`
+   - Invocation: Flutter client calls only the authenticated Supabase Edge Function via `supabaseClient.functions.invoke('improve-product-photo', ...)`.
+   - Secret Isolation: AI vendor API keys (e.g. `OPENAI_API_KEY`) and service-role credentials reside strictly on the server in Deno environment variables. Zero AI API keys exist in Flutter Dart code, pubspec, app bundles, git, or client-side storage.
+
+3. Strict Source Ownership & RLS Verification:
+   - Client sends `productId` and `sourceStoragePath`.
+   - Edge Function independently verifies:
+     (1) Request has a valid authenticated JWT (`auth.uid()`).
+     (2) Product exists in `public.products` and `product.producer_id == auth.uid()`.
+     (3) `sourceStoragePath` has valid 3-segment shape `<user_id>/<product_id>/<filename>`.
+     (4) `segments[0] == auth.uid()` and `segments[1] == productId`.
+     (5) `sourceStoragePath` exists in `product.images` array.
+   - Any ownership or shape mismatch is rejected immediately with 401, 403, or 404.
+
+4. Strict Product-Preservation Prompt:
+   - Fixed, server-owned edit instruction (zero raw client prompt injection):
+     "Create a clean marketplace-ready product photo from this exact source image.
+      Preserve the product exactly as shown: same shape, proportions, colors, materials,
+      patterns, embroidery, printed text, logos, packaging details, quantity, and design.
+      Do not add or remove product features.
+      Only improve presentation:
+      remove distracting background, use a clean neutral/light background,
+      center the product, improve lighting and clarity naturally,
+      and keep realistic shadows where useful.
+      Do not stylize or redesign the product."
+   - AI is forbidden from redesigning the product, adding props/labels, changing colors, or inventing packaging.
+
+5. Storage Invariants & Original Retention:
+   - Improved candidate is saved as a NEW immutable object in private `product-images` bucket:
+     `<auth_uid>/<product_id>/<random_hex_32>.png`.
+   - `upsert: false` is strictly enforced; original file is never overwritten.
+   - Original file remains intact in Storage even after "Use Improved Photo" for recoverability.
+   - Output format: PNG/JPEG, 1024x1024, compatible with Migration 010 private bucket rules.
+
+6. Candidate State & Database Lifecycle:
+   - Edge function returns `{ success: true, improvedStoragePath, sourceStoragePath }`.
+   - Edge function does NOT mutate `public.products.images`.
+   - Transient Provider State: Candidate path stored in `_improvedCandidates[originalPath]`. Signed URLs for candidate preview remain in-memory only.
+   - Decision A: User taps "Use Improved Photo":
+     (1) Replaces original path with candidate path in image list.
+     (2) Updates database `products.images` FIRST via `ProducerProductService.updateDraft`.
+     (3) Only after DB update succeeds, updates canonical `_draft.images`.
+     (4) If DB update fails, original image remains canonical in draft and DB.
+   - Decision B: User taps "Keep Original":
+     (1) Canonical draft and DB remain completely unchanged.
+     (2) Candidate removed from state.
+     (3) Triggers best-effort deletion of unused candidate object from Storage (`discardCandidateImage`).
+   - Cross-Service Non-Atomicity: Storage and Postgres operations are non-atomic; DB update always precedes state swap, and failure leaves original intact.
+
+7. Testability & Dependency Injection:
+   - Abstract contract: `IProductPhotoEnhancementService`.
+   - Production implementation: `ProducerProductEnhancementService`.
+   - Testing fake: `FakeProductPhotoEnhancementService` enables 100% offline, deterministic Flutter unit and widget testing without calling live OpenAI APIs.
+   - Backend logic tested via `test/edge_function_test.mjs` verifying authentication, authorization, size/MIME validation, output formatting, and secret protection.
+
+8. Limitations & Status:
+   - Live AI processing requires `OPENAI_API_KEY` configured in Supabase Edge Function environment.
+   - Prototype rate limiting: Per-request concurrency guards and busy state in client; edge function verifies ownership and single-image processing per call.
+   - Active products remain Producer-owner-only under Migration 009; no Buyer marketplace visibility is claimed.
 

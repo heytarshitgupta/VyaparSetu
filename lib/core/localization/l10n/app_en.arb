@@ -1194,5 +1194,93 @@
   "productMustBeSavedBeforePhotos": "Please save product draft before adding photos",
   "@productMustBeSavedBeforePhotos": {
     "description": "Error message when product must be saved before uploading photos"
+  },
+  "improvePhotoAction": "Improve Photo",
+  "@improvePhotoAction": {
+    "description": "Button label to improve a photo using AI"
+  },
+  "improvingPhotoProgress": "Improving photo...",
+  "@improvingPhotoProgress": {
+    "description": "Loading message when AI is processing photo"
+  },
+  "originalPhotoLabel": "Original",
+  "@originalPhotoLabel": {
+    "description": "Label for the original product photo"
+  },
+  "improvedPhotoLabel": "Improved",
+  "@improvedPhotoLabel": {
+    "description": "Label for the AI-improved product photo"
+  },
+  "keepOriginalAction": "Keep Original",
+  "@keepOriginalAction": {
+    "description": "Action to discard AI changes and keep original photo"
+  },
+  "useImprovedAction": "Use Improved Photo",
+  "@useImprovedAction": {
+    "description": "Action to accept AI improved photo"
+  },
+  "photoImprovedTitle": "Photo Improved",
+  "@photoImprovedTitle": {
+    "description": "Dialog or section title when photo has been improved by AI"
+  },
+  "photoImproveFailed": "Could not improve photo. Please try again.",
+  "@photoImproveFailed": {
+    "description": "Error message when AI photo improvement fails"
+  },
+  "aiImproveDisclaimer": "AI improves only the presentation, not your product.",
+  "@aiImproveDisclaimer": {
+    "description": "Truthfulness disclaimer for AI photo improvement"
+  },
+  "aiImproveHelpText": "Cleans background, improves lighting, and centers the product.",
+  "@aiImproveHelpText": {
+    "description": "Explanation of what AI photo improvement accomplishes"
+  },
+  "comparePhotosTitle": "Compare Photos",
+  "@comparePhotosTitle": {
+    "description": "Title for the photo comparison screen or dialog"
+  },
+  "photoImproveSuccessMessage": "Improved photo applied",
+  "@photoImproveSuccessMessage": {
+    "description": "Confirmation message when improved photo is selected"
+  },
+  "productPhotosTitle": "Product Photos",
+  "@productPhotosTitle": {
+    "description": "Title for product photos section in Add Product sheet"
+  },
+  "addPhotosNameFirst": "Add a product name before adding photos.",
+  "@addPhotosNameFirst": {
+    "description": "Validation message when attempting to add photos without a product name"
+  },
+  "choosePhotoAction": "Choose Photo",
+  "@choosePhotoAction": {
+    "description": "Action label to choose a photo on web or single-source platforms"
+  },
+  "addProductHelper": "Enter product details, price, and optional photos.",
+  "@addProductHelper": {
+    "description": "Friendly subtitle helper for Add Product sheet"
+  },
+  "discardChangesTitle": "Discard changes?",
+  "@discardChangesTitle": {
+    "description": "Title for confirmation dialog when closing form with unsaved changes"
+  },
+  "discardChangesMessage": "Your unsaved product details will be lost.",
+  "@discardChangesMessage": {
+    "description": "Message for confirmation dialog when closing form with unsaved changes"
+  },
+  "keepEditingAction": "Keep Editing",
+  "@keepEditingAction": {
+    "description": "Action button to keep editing when prompted to discard changes"
+  },
+  "discardAction": "Discard",
+  "@discardAction": {
+    "description": "Action button to discard changes and close modal"
+  },
+  "pickerUnavailableError": "Photo picker is not available on this device. Please restart the application.",
+  "@pickerUnavailableError": {
+    "description": "Error message when device/platform photo picker is not available"
+  },
+  "storageUnavailableError": "Image storage service is not available.",
+  "@storageUnavailableError": {
+    "description": "Error message when product image storage service is unavailable"
   }
 }

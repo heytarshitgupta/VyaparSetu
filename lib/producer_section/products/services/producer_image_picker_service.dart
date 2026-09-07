@@ -1,5 +1,7 @@
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'picker_web_stub.dart' if (dart.library.js_interop) 'picker_web.dart';
 import 'producer_product_image_service.dart';
 import 'producer_product_service.dart';
 
@@ -22,6 +24,14 @@ class PickedProductImage {
     required this.contentType,
     required this.sizeBytes,
   });
+}
+
+/// Thrown when device/platform photo picker cannot be initialized or accessed.
+class PhotoPickerUnavailableException extends ProductOperationException {
+  const PhotoPickerUnavailableException([
+    super.message = 'Photo picker is not available on this device.',
+    super.originalError,
+  ]);
 }
 
 /// Thrown when an image picked by the user has an unsupported format/mime type (e.g. HEIC, GIF, BMP).
@@ -47,6 +57,9 @@ class ImageTooLargeException extends ProductOperationException {
 /// Injectable abstraction over image selection hardware/APIs.
 /// Enables deterministic widget testing without physical cameras or native pickers.
 abstract class IProducerImagePickerService {
+  /// Whether camera capture is supported on the current device/platform.
+  bool get isCameraSupported;
+
   /// Prompts the user to pick an image from [source] (camera or gallery).
   ///
   /// Returns [PickedProductImage] if selected and validated, or `null` if cancelled by user.
@@ -68,21 +81,44 @@ class ProducerImagePickerService implements IProducerImagePickerService {
       : _picker = picker ?? ImagePicker();
 
   @override
+  bool get isCameraSupported => !kIsWeb;
+
+  @override
   Future<PickedProductImage?> pickImage(ImageSourceOption source) async {
-    final pickerSource = source == ImageSourceOption.camera
+    // Web does not reliably support direct camera hardware capture via image_picker;
+    // route to gallery file picker if camera was requested on web.
+    final effectiveSource = (kIsWeb && source == ImageSourceOption.camera)
+        ? ImageSourceOption.gallery
+        : source;
+
+    final pickerSource = effectiveSource == ImageSourceOption.camera
         ? ImageSource.camera
         : ImageSource.gallery;
 
     final XFile? xFile;
     try {
+      if (kIsWeb) {
+        ensureWebPluginRegistered();
+      }
       xFile = await _picker.pickImage(
         source: pickerSource,
         maxWidth: targetMaxWidth,
         maxHeight: targetMaxHeight,
         imageQuality: targetQuality,
       );
+    } on MissingPluginException catch (e) {
+      throw PhotoPickerUnavailableException(
+        'Photo picker is not available on this device. Please restart the application.',
+        e,
+      );
+    } on PlatformException catch (e) {
+      throw PhotoPickerUnavailableException(
+        'Photo picker error: ${e.message ?? 'Picker unavailable or permission denied.'}',
+        e,
+      );
     } catch (e) {
-      throw ProductOperationException('Could not access image picker: $e', e);
+      if (e is ProductOperationException) rethrow;
+      throw PhotoPickerUnavailableException('Could not access image picker: $e', e);
     }
 
     if (xFile == null) {

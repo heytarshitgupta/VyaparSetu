@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product_draft.dart';
 import 'package:buyer_section/producer_section/products/providers/producer_products_provider.dart';
+import 'package:buyer_section/producer_section/products/services/producer_product_image_service.dart';
 import 'package:buyer_section/producer_section/products/services/producer_product_service.dart';
 
 class FakeProducerProductService implements IProducerProductService {
@@ -9,6 +10,9 @@ class FakeProducerProductService implements IProducerProductService {
   bool shouldThrowAuthError = false;
   bool shouldThrowOperationError = false;
   int fetchCallCount = 0;
+
+  @override
+  final IProducerProductImageService? imageService = null;
 
   FakeProducerProductService({
     List<ProducerProduct>? initialProducts,

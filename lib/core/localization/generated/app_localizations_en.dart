@@ -955,4 +955,76 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get productMustBeSavedBeforePhotos =>
       'Please save product draft before adding photos';
+
+  @override
+  String get improvePhotoAction => 'Improve Photo';
+
+  @override
+  String get improvingPhotoProgress => 'Improving photo...';
+
+  @override
+  String get originalPhotoLabel => 'Original';
+
+  @override
+  String get improvedPhotoLabel => 'Improved';
+
+  @override
+  String get keepOriginalAction => 'Keep Original';
+
+  @override
+  String get useImprovedAction => 'Use Improved Photo';
+
+  @override
+  String get photoImprovedTitle => 'Photo Improved';
+
+  @override
+  String get photoImproveFailed => 'Could not improve photo. Please try again.';
+
+  @override
+  String get aiImproveDisclaimer =>
+      'AI improves only the presentation, not your product.';
+
+  @override
+  String get aiImproveHelpText =>
+      'Cleans background, improves lighting, and centers the product.';
+
+  @override
+  String get comparePhotosTitle => 'Compare Photos';
+
+  @override
+  String get photoImproveSuccessMessage => 'Improved photo applied';
+
+  @override
+  String get productPhotosTitle => 'Product Photos';
+
+  @override
+  String get addPhotosNameFirst => 'Add a product name before adding photos.';
+
+  @override
+  String get choosePhotoAction => 'Choose Photo';
+
+  @override
+  String get addProductHelper =>
+      'Enter product details, price, and optional photos.';
+
+  @override
+  String get discardChangesTitle => 'Discard changes?';
+
+  @override
+  String get discardChangesMessage =>
+      'Your unsaved product details will be lost.';
+
+  @override
+  String get keepEditingAction => 'Keep Editing';
+
+  @override
+  String get discardAction => 'Discard';
+
+  @override
+  String get pickerUnavailableError =>
+      'Photo picker is not available on this device. Please restart the application.';
+
+  @override
+  String get storageUnavailableError =>
+      'Image storage service is not available.';
 }

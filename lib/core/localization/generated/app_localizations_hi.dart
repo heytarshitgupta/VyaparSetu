@@ -954,4 +954,76 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get productMustBeSavedBeforePhotos =>
       'फ़ोटो जोड़ने से पहले कृपया उत्पाद ड्राफ़्ट सहेजें';
+
+  @override
+  String get improvePhotoAction => 'फोटो सुधारें';
+
+  @override
+  String get improvingPhotoProgress => 'फोटो सुधारी जा रही है...';
+
+  @override
+  String get originalPhotoLabel => 'मूल फोटो';
+
+  @override
+  String get improvedPhotoLabel => 'सुधारी गई फोटो';
+
+  @override
+  String get keepOriginalAction => 'मूल फोटो रखें';
+
+  @override
+  String get useImprovedAction => 'सुधारी गई फोटो उपयोग करें';
+
+  @override
+  String get photoImprovedTitle => 'फोटो में सुधार हुआ';
+
+  @override
+  String get photoImproveFailed =>
+      'फोटो नहीं सुधारी जा सकी। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get aiImproveDisclaimer =>
+      'एआई केवल प्रस्तुति में सुधार करता है, आपके उत्पाद में नहीं।';
+
+  @override
+  String get aiImproveHelpText =>
+      'पृष्ठभूमि साफ करता है, रोशनी में सुधार करता है और उत्पाद को केंद्रित करता है।';
+
+  @override
+  String get comparePhotosTitle => 'फोटो की तुलना करें';
+
+  @override
+  String get photoImproveSuccessMessage => 'सुधारी गई फोटो लागू की गई';
+
+  @override
+  String get productPhotosTitle => 'उत्पाद की तस्वीरें';
+
+  @override
+  String get addPhotosNameFirst =>
+      'तस्वीरें जोड़ने से पहले उत्पाद का नाम दर्ज करें।';
+
+  @override
+  String get choosePhotoAction => 'तस्वीर चुनें';
+
+  @override
+  String get addProductHelper =>
+      'उत्पाद का विवरण, मूल्य और तस्वीरें दर्ज करें।';
+
+  @override
+  String get discardChangesTitle => 'बदलाव छोड़ें?';
+
+  @override
+  String get discardChangesMessage => 'आपके सहेजे न गए उत्पाद विवरण खो जाएंगे।';
+
+  @override
+  String get keepEditingAction => 'संपादन जारी रखें';
+
+  @override
+  String get discardAction => 'छोड़ें';
+
+  @override
+  String get pickerUnavailableError =>
+      'इस उपकरण पर फोटो चयन उपलब्ध नहीं है। कृपया ऐप पुनः चालू करें।';
+
+  @override
+  String get storageUnavailableError => 'फोटो संग्रहण सेवा उपलब्ध नहीं है।';
 }

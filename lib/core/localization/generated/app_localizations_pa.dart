@@ -955,4 +955,75 @@ class AppLocalizationsPa extends AppLocalizations {
   @override
   String get productMustBeSavedBeforePhotos =>
       'ਫੋਟੋਆਂ ਸ਼ਾਮਲ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਕਿਰਪਾ ਕਰਕੇ ਉਤਪਾਦ ਡਰਾਫਟ ਸੰਭਾਲੋ';
+
+  @override
+  String get improvePhotoAction => 'ਫੋਟੋ ਸੁਧਾਰੋ';
+
+  @override
+  String get improvingPhotoProgress => 'ਫੋਟੋ ਸੁਧਾਰੀ ਜਾ ਰਹੀ ਹੈ...';
+
+  @override
+  String get originalPhotoLabel => 'ਅਸਲ ਫੋਟੋ';
+
+  @override
+  String get improvedPhotoLabel => 'ਸੁਧਾਰੀ ਗਈ ਫੋਟੋ';
+
+  @override
+  String get keepOriginalAction => 'ਅਸਲ ਫੋਟੋ ਰੱਖੋ';
+
+  @override
+  String get useImprovedAction => 'ਸੁਧਾਰੀ ਗਈ ਫੋਟੋ ਵਰਤੋ';
+
+  @override
+  String get photoImprovedTitle => 'ਫੋਟੋ ਵਿੱਚ ਸੁਧਾਰ ਹੋਇਆ';
+
+  @override
+  String get photoImproveFailed =>
+      'ਫੋਟੋ ਸੁਧਾਰੀ ਨਹੀਂ ਜਾ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String get aiImproveDisclaimer =>
+      'AI ਸਿਰਫ਼ ਪੇਸ਼ਕਾਰੀ ਵਿੱਚ ਸੁਧਾਰ ਕਰਦਾ ਹੈ, ਤੁਹਾਡੇ ਉਤਪਾਦ ਵਿੱਚ ਨਹੀਂ।';
+
+  @override
+  String get aiImproveHelpText =>
+      'ਪਿਛੋਕੜ ਸਾਫ਼ ਕਰਦਾ ਹੈ, ਰੋਸ਼ਨੀ ਸੁਧਾਰਦਾ ਹੈ ਅਤੇ ਉਤਪਾਦ ਨੂੰ ਕੇਂਦਰਿਤ ਕਰਦਾ ਹੈ।';
+
+  @override
+  String get comparePhotosTitle => 'ਫੋਟੋਆਂ ਦੀ ਤੁਲਨਾ ਕਰੋ';
+
+  @override
+  String get photoImproveSuccessMessage => 'ਸੁਧਾਰੀ ਗਈ ਫੋਟੋ ਲਾਗੂ ਕੀਤੀ ਗਈ';
+
+  @override
+  String get productPhotosTitle => 'ਉਤਪਾਦ ਦੀਆਂ ਤਸਵੀਰਾਂ';
+
+  @override
+  String get addPhotosNameFirst =>
+      'ਤਸਵੀਰਾਂ ਜੋੜਨ ਤੋਂ ਪਹਿਲਾਂ ਉਤਪਾਦ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ।';
+
+  @override
+  String get choosePhotoAction => 'ਤਸਵੀਰ ਚੁਣੋ';
+
+  @override
+  String get addProductHelper => 'ਉਤਪਾਦ ਦਾ ਵੇਰਵਾ, ਮੁੱਲ ਅਤੇ ਤਸਵੀਰਾਂ ਦਰਜ ਕਰੋ।';
+
+  @override
+  String get discardChangesTitle => 'ਤਬਦੀਲੀਆਂ ਛੱਡਣੀਆਂ ਹਨ?';
+
+  @override
+  String get discardChangesMessage => 'ਤੁਹਾਡੇ ਅਣਸਾਂਭੇ ਉਤਪਾਦ ਵੇਰਵੇ ਗੁਆਚ ਜਾਣਗੇ।';
+
+  @override
+  String get keepEditingAction => 'ਸੰਪਾਦਨ ਜਾਰੀ ਰੱਖੋ';
+
+  @override
+  String get discardAction => 'ਛੱਡੋ';
+
+  @override
+  String get pickerUnavailableError =>
+      'ਇਸ ਡਿਵਾਈਸ \'ਤੇ ਫੋਟੋ ਚੋਣ ਉਪਲਬਧ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਮੁੜ ਚਾਲੂ ਕਰੋ।';
+
+  @override
+  String get storageUnavailableError => 'ਫੋਟੋ ਸਟੋਰੇਜ ਸੇਵਾ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।';
 }

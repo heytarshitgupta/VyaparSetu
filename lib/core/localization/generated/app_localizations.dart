@@ -1863,6 +1863,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please save product draft before adding photos'**
   String get productMustBeSavedBeforePhotos;
+
+  /// Button label to improve a photo using AI
+  ///
+  /// In en, this message translates to:
+  /// **'Improve Photo'**
+  String get improvePhotoAction;
+
+  /// Loading message when AI is processing photo
+  ///
+  /// In en, this message translates to:
+  /// **'Improving photo...'**
+  String get improvingPhotoProgress;
+
+  /// Label for the original product photo
+  ///
+  /// In en, this message translates to:
+  /// **'Original'**
+  String get originalPhotoLabel;
+
+  /// Label for the AI-improved product photo
+  ///
+  /// In en, this message translates to:
+  /// **'Improved'**
+  String get improvedPhotoLabel;
+
+  /// Action to discard AI changes and keep original photo
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Original'**
+  String get keepOriginalAction;
+
+  /// Action to accept AI improved photo
+  ///
+  /// In en, this message translates to:
+  /// **'Use Improved Photo'**
+  String get useImprovedAction;
+
+  /// Dialog or section title when photo has been improved by AI
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Improved'**
+  String get photoImprovedTitle;
+
+  /// Error message when AI photo improvement fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not improve photo. Please try again.'**
+  String get photoImproveFailed;
+
+  /// Truthfulness disclaimer for AI photo improvement
+  ///
+  /// In en, this message translates to:
+  /// **'AI improves only the presentation, not your product.'**
+  String get aiImproveDisclaimer;
+
+  /// Explanation of what AI photo improvement accomplishes
+  ///
+  /// In en, this message translates to:
+  /// **'Cleans background, improves lighting, and centers the product.'**
+  String get aiImproveHelpText;
+
+  /// Title for the photo comparison screen or dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Compare Photos'**
+  String get comparePhotosTitle;
+
+  /// Confirmation message when improved photo is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Improved photo applied'**
+  String get photoImproveSuccessMessage;
+
+  /// Title for product photos section in Add Product sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Product Photos'**
+  String get productPhotosTitle;
+
+  /// Validation message when attempting to add photos without a product name
+  ///
+  /// In en, this message translates to:
+  /// **'Add a product name before adding photos.'**
+  String get addPhotosNameFirst;
+
+  /// Action label to choose a photo on web or single-source platforms
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Photo'**
+  String get choosePhotoAction;
+
+  /// Friendly subtitle helper for Add Product sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Enter product details, price, and optional photos.'**
+  String get addProductHelper;
+
+  /// Title for confirmation dialog when closing form with unsaved changes
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes?'**
+  String get discardChangesTitle;
+
+  /// Message for confirmation dialog when closing form with unsaved changes
+  ///
+  /// In en, this message translates to:
+  /// **'Your unsaved product details will be lost.'**
+  String get discardChangesMessage;
+
+  /// Action button to keep editing when prompted to discard changes
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Editing'**
+  String get keepEditingAction;
+
+  /// Action button to discard changes and close modal
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discardAction;
+
+  /// Error message when device/platform photo picker is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Photo picker is not available on this device. Please restart the application.'**
+  String get pickerUnavailableError;
+
+  /// Error message when product image storage service is unavailable
+  ///
+  /// In en, this message translates to:
+  /// **'Image storage service is not available.'**
+  String get storageUnavailableError;
 }
 
 class _AppLocalizationsDelegate
