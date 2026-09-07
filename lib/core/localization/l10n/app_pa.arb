@@ -272,5 +272,22 @@
   "draftSavedMessage": "ਡਰਾਫਟ ਸੰਭਾਲਿਆ ਗਿਆ",
   "productMarkedReadyMessage": "ਉਤਪਾਦ ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਕੀਤਾ ਗਿਆ",
   "saveDraftFailed": "ਡਰਾਫਟ ਸੰਭਾਲਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
-  "markReadyFailed": "ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"
+  "markReadyFailed": "ਤਿਆਰ ਚਿੰਨ੍ਹਿਤ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+  "whatBuyersWantSubtitle": "ਵੱਖ-ਵੱਖ ਥਾਵਾਂ ਤੋਂ ਮੰਗ ਦੇ ਨਮੂਨਾ ਰੁਝਾਨ ਦੇਖੋ।",
+  "sampleMarketInsightsBadge": "ਨਮੂਨਾ ਮੰਡੀ ਰੁਝਾਨ",
+  "sampleMarketInsightsNote": "ਇਹ ਖੇਤਰੀ ਰੁਝਾਨ ਖਰੀਦਦਾਰਾਂ ਦੀ ਦਿਲਚਸਪੀ ਨੂੰ ਸਮਝਣ ਵਿੱਚ ਮਦਦ ਕਰਨ ਲਈ ਨਮੂਨਾ ਡੇਟਾ 'ਤੇ ਆਧਾਰਿਤ ਹਨ।",
+  "demandHigh": "ਵੱਧ ਮੰਗ",
+  "demandMedium": "ਦਰਮਿਆਨੀ ਮੰਗ",
+  "demandLow": "ਘੱਟ ਮੰਗ",
+  "demandScoreOutOf": "{score}/100",
+  "signalDistrictLabel": "ਜ਼ਿਲ੍ਹਾ: {district}",
+  "topBuyingCityLabel": "ਮੁੱਖ ਖਰੀਦਦਾਰ ਸ਼ਹਿਰ: {city}",
+  "estimatedMonthlyDemandLabel": "ਅੰਦਾਜ਼ਨ ਮਹੀਨਾਵਾਰ ਮੰਗ",
+  "estimatedUnitsValue": "{count} ਇਕਾਈਆਂ",
+  "typicalOrderValueLabel": "ਆਮ ਆਰਡਰ ਮੁੱਲ",
+  "categoryAgriculture": "ਖੇਤੀਬਾੜੀ",
+  "categoryTextile": "ਕੱਪੜਾ ਉਦਯੋਗ",
+  "categoryFoodProcessing": "ਭੋਜਨ ਪ੍ਰੋਸੈਸਿੰਗ",
+  "categoryManufacturing": "ਨਿਰਮਾਣ",
+  "noMarketInsights": "ਅਜੇ ਕੋਈ ਮੰਡੀ ਰੁਝਾਨ ਉਪਲਬਧ ਨਹੀਂ ਹਨ।"
 }

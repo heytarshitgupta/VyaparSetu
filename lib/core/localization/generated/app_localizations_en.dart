@@ -848,4 +848,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get markReadyFailed => 'Could not mark ready. Please try again.';
+
+  @override
+  String get whatBuyersWantSubtitle =>
+      'See sample market demand trends from different places.';
+
+  @override
+  String get sampleMarketInsightsBadge => 'Sample market insights';
+
+  @override
+  String get sampleMarketInsightsNote =>
+      'These regional trends are based on sample market activity to help you understand buyer interest.';
+
+  @override
+  String get demandHigh => 'High demand';
+
+  @override
+  String get demandMedium => 'Medium demand';
+
+  @override
+  String get demandLow => 'Low demand';
+
+  @override
+  String demandScoreOutOf(String score) {
+    return '$score/100';
+  }
+
+  @override
+  String signalDistrictLabel(String district) {
+    return 'District: $district';
+  }
+
+  @override
+  String topBuyingCityLabel(String city) {
+    return 'Top buying city: $city';
+  }
+
+  @override
+  String get estimatedMonthlyDemandLabel => 'Estimated monthly demand';
+
+  @override
+  String estimatedUnitsValue(String count) {
+    return '$count units';
+  }
+
+  @override
+  String get typicalOrderValueLabel => 'Typical order value';
+
+  @override
+  String get categoryAgriculture => 'Agriculture';
+
+  @override
+  String get categoryTextile => 'Textile';
+
+  @override
+  String get categoryFoodProcessing => 'Food processing';
+
+  @override
+  String get categoryManufacturing => 'Manufacturing';
+
+  @override
+  String get noMarketInsights => 'No market insights available yet.';
 }

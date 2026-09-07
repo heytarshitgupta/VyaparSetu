@@ -272,5 +272,22 @@
   "draftSavedMessage": "ड्राफ्ट सहेजा गया",
   "productMarkedReadyMessage": "उत्पाद तैयार चिह्नित किया गया",
   "saveDraftFailed": "ड्राफ्ट सेव नहीं हो सका। कृपया पुनः प्रयास करें।",
-  "markReadyFailed": "तैयार चिह्नित नहीं हो सका। कृपया पुनः प्रयास करें।"
+  "markReadyFailed": "तैयार चिह्नित नहीं हो सका। कृपया पुनः प्रयास करें।",
+  "whatBuyersWantSubtitle": "अलग-अलग क्षेत्रों में मांग के नमूना रुझान देखें।",
+  "sampleMarketInsightsBadge": "नमूना बाज़ार रुझान",
+  "sampleMarketInsightsNote": "यह क्षेत्रीय रुझान खरीदारों की रुचि को समझने में मदद करने के लिए नमूना बाज़ार डेटा पर आधारित हैं।",
+  "demandHigh": "अधिक मांग",
+  "demandMedium": "मध्यम मांग",
+  "demandLow": "कम मांग",
+  "demandScoreOutOf": "{score}/100",
+  "signalDistrictLabel": "ज़िला: {district}",
+  "topBuyingCityLabel": "प्रमुख खरीदार शहर: {city}",
+  "estimatedMonthlyDemandLabel": "अनुमानित मासिक मांग",
+  "estimatedUnitsValue": "{count} इकाइयां",
+  "typicalOrderValueLabel": "औसत ऑर्डर मूल्य",
+  "categoryAgriculture": "कृषि",
+  "categoryTextile": "वस्त्र उद्योग",
+  "categoryFoodProcessing": "खाद्य प्रसंस्करण",
+  "categoryManufacturing": "विनिर्माण",
+  "noMarketInsights": "अभी कोई बाज़ार रुझान उपलब्ध नहीं हैं।"
 }

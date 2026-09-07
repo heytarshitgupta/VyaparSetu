@@ -1050,5 +1050,93 @@
   "markReadyFailed": "Could not mark ready. Please try again.",
   "@markReadyFailed": {
     "description": "Error feedback when marking ready fails"
+  },
+  "whatBuyersWantSubtitle": "See sample market demand trends from different places.",
+  "@whatBuyersWantSubtitle": {
+    "description": "Subtitle for What Buyers Want screen"
+  },
+  "sampleMarketInsightsBadge": "Sample market insights",
+  "@sampleMarketInsightsBadge": {
+    "description": "Badge indicating market intelligence signals are sample data"
+  },
+  "sampleMarketInsightsNote": "These regional trends are based on sample market activity to help you understand buyer interest.",
+  "@sampleMarketInsightsNote": {
+    "description": "Note clarifying that market trends are sample data"
+  },
+  "demandHigh": "High demand",
+  "@demandHigh": {
+    "description": "High market demand label"
+  },
+  "demandMedium": "Medium demand",
+  "@demandMedium": {
+    "description": "Medium market demand label"
+  },
+  "demandLow": "Low demand",
+  "@demandLow": {
+    "description": "Low market demand label"
+  },
+  "demandScoreOutOf": "{score}/100",
+  "@demandScoreOutOf": {
+    "description": "Demand score out of 100",
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "signalDistrictLabel": "District: {district}",
+  "@signalDistrictLabel": {
+    "description": "Label for product district in market intelligence",
+    "placeholders": {
+      "district": {
+        "type": "String"
+      }
+    }
+  },
+  "topBuyingCityLabel": "Top buying city: {city}",
+  "@topBuyingCityLabel": {
+    "description": "Label for top purchasing city",
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "estimatedMonthlyDemandLabel": "Estimated monthly demand",
+  "@estimatedMonthlyDemandLabel": {
+    "description": "Label for estimated monthly demand"
+  },
+  "estimatedUnitsValue": "{count} units",
+  "@estimatedUnitsValue": {
+    "description": "Formatted units count",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "typicalOrderValueLabel": "Typical order value",
+  "@typicalOrderValueLabel": {
+    "description": "Label for typical order value"
+  },
+  "categoryAgriculture": "Agriculture",
+  "@categoryAgriculture": {
+    "description": "Category: Agriculture"
+  },
+  "categoryTextile": "Textile",
+  "@categoryTextile": {
+    "description": "Category: Textile"
+  },
+  "categoryFoodProcessing": "Food processing",
+  "@categoryFoodProcessing": {
+    "description": "Category: Food processing"
+  },
+  "categoryManufacturing": "Manufacturing",
+  "@categoryManufacturing": {
+    "description": "Category: Manufacturing"
+  },
+  "noMarketInsights": "No market insights available yet.",
+  "@noMarketInsights": {
+    "description": "Empty state message when no market signals are present"
   }
 }

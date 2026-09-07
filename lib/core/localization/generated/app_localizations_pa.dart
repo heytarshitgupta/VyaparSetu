@@ -847,5 +847,66 @@ class AppLocalizationsPa extends AppLocalizations {
 
   @override
   String get markReadyFailed =>
-      'ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+      'ਤਿਆਰ ਚਿੰਨ੍ਹਿਤ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String get whatBuyersWantSubtitle =>
+      'ਵੱਖ-ਵੱਖ ਥਾਵਾਂ ਤੋਂ ਮੰਗ ਦੇ ਨਮੂਨਾ ਰੁਝਾਨ ਦੇਖੋ।';
+
+  @override
+  String get sampleMarketInsightsBadge => 'ਨਮੂਨਾ ਮੰਡੀ ਰੁਝਾਨ';
+
+  @override
+  String get sampleMarketInsightsNote =>
+      'ਇਹ ਖੇਤਰੀ ਰੁਝਾਨ ਖਰੀਦਦਾਰਾਂ ਦੀ ਦਿਲਚਸਪੀ ਨੂੰ ਸਮਝਣ ਵਿੱਚ ਮਦਦ ਕਰਨ ਲਈ ਨਮੂਨਾ ਡੇਟਾ \'ਤੇ ਆਧਾਰਿਤ ਹਨ।';
+
+  @override
+  String get demandHigh => 'ਵੱਧ ਮੰਗ';
+
+  @override
+  String get demandMedium => 'ਦਰਮਿਆਨੀ ਮੰਗ';
+
+  @override
+  String get demandLow => 'ਘੱਟ ਮੰਗ';
+
+  @override
+  String demandScoreOutOf(String score) {
+    return '$score/100';
+  }
+
+  @override
+  String signalDistrictLabel(String district) {
+    return 'ਜ਼ਿਲ੍ਹਾ: $district';
+  }
+
+  @override
+  String topBuyingCityLabel(String city) {
+    return 'ਮੁੱਖ ਖਰੀਦਦਾਰ ਸ਼ਹਿਰ: $city';
+  }
+
+  @override
+  String get estimatedMonthlyDemandLabel => 'ਅੰਦਾਜ਼ਨ ਮਹੀਨਾਵਾਰ ਮੰਗ';
+
+  @override
+  String estimatedUnitsValue(String count) {
+    return '$count ਇਕਾਈਆਂ';
+  }
+
+  @override
+  String get typicalOrderValueLabel => 'ਆਮ ਆਰਡਰ ਮੁੱਲ';
+
+  @override
+  String get categoryAgriculture => 'ਖੇਤੀਬਾੜੀ';
+
+  @override
+  String get categoryTextile => 'ਕੱਪੜਾ ਉਦਯੋਗ';
+
+  @override
+  String get categoryFoodProcessing => 'ਭੋਜਨ ਪ੍ਰੋਸੈਸਿੰਗ';
+
+  @override
+  String get categoryManufacturing => 'ਨਿਰਮਾਣ';
+
+  @override
+  String get noMarketInsights => 'ਅਜੇ ਕੋਈ ਮੰਡੀ ਰੁਝਾਨ ਉਪਲਬਧ ਨਹੀਂ ਹਨ।';
 }

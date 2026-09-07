@@ -1677,6 +1677,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not mark ready. Please try again.'**
   String get markReadyFailed;
+
+  /// Subtitle for What Buyers Want screen
+  ///
+  /// In en, this message translates to:
+  /// **'See sample market demand trends from different places.'**
+  String get whatBuyersWantSubtitle;
+
+  /// Badge indicating market intelligence signals are sample data
+  ///
+  /// In en, this message translates to:
+  /// **'Sample market insights'**
+  String get sampleMarketInsightsBadge;
+
+  /// Note clarifying that market trends are sample data
+  ///
+  /// In en, this message translates to:
+  /// **'These regional trends are based on sample market activity to help you understand buyer interest.'**
+  String get sampleMarketInsightsNote;
+
+  /// High market demand label
+  ///
+  /// In en, this message translates to:
+  /// **'High demand'**
+  String get demandHigh;
+
+  /// Medium market demand label
+  ///
+  /// In en, this message translates to:
+  /// **'Medium demand'**
+  String get demandMedium;
+
+  /// Low market demand label
+  ///
+  /// In en, this message translates to:
+  /// **'Low demand'**
+  String get demandLow;
+
+  /// Demand score out of 100
+  ///
+  /// In en, this message translates to:
+  /// **'{score}/100'**
+  String demandScoreOutOf(String score);
+
+  /// Label for product district in market intelligence
+  ///
+  /// In en, this message translates to:
+  /// **'District: {district}'**
+  String signalDistrictLabel(String district);
+
+  /// Label for top purchasing city
+  ///
+  /// In en, this message translates to:
+  /// **'Top buying city: {city}'**
+  String topBuyingCityLabel(String city);
+
+  /// Label for estimated monthly demand
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated monthly demand'**
+  String get estimatedMonthlyDemandLabel;
+
+  /// Formatted units count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} units'**
+  String estimatedUnitsValue(String count);
+
+  /// Label for typical order value
+  ///
+  /// In en, this message translates to:
+  /// **'Typical order value'**
+  String get typicalOrderValueLabel;
+
+  /// Category: Agriculture
+  ///
+  /// In en, this message translates to:
+  /// **'Agriculture'**
+  String get categoryAgriculture;
+
+  /// Category: Textile
+  ///
+  /// In en, this message translates to:
+  /// **'Textile'**
+  String get categoryTextile;
+
+  /// Category: Food processing
+  ///
+  /// In en, this message translates to:
+  /// **'Food processing'**
+  String get categoryFoodProcessing;
+
+  /// Category: Manufacturing
+  ///
+  /// In en, this message translates to:
+  /// **'Manufacturing'**
+  String get categoryManufacturing;
+
+  /// Empty state message when no market signals are present
+  ///
+  /// In en, this message translates to:
+  /// **'No market insights available yet.'**
+  String get noMarketInsights;
 }
 
 class _AppLocalizationsDelegate

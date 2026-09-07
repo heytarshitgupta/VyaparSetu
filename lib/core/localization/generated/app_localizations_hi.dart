@@ -847,4 +847,65 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get markReadyFailed =>
       'तैयार चिह्नित नहीं हो सका। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get whatBuyersWantSubtitle =>
+      'अलग-अलग क्षेत्रों में मांग के नमूना रुझान देखें।';
+
+  @override
+  String get sampleMarketInsightsBadge => 'नमूना बाज़ार रुझान';
+
+  @override
+  String get sampleMarketInsightsNote =>
+      'यह क्षेत्रीय रुझान खरीदारों की रुचि को समझने में मदद करने के लिए नमूना बाज़ार डेटा पर आधारित हैं।';
+
+  @override
+  String get demandHigh => 'अधिक मांग';
+
+  @override
+  String get demandMedium => 'मध्यम मांग';
+
+  @override
+  String get demandLow => 'कम मांग';
+
+  @override
+  String demandScoreOutOf(String score) {
+    return '$score/100';
+  }
+
+  @override
+  String signalDistrictLabel(String district) {
+    return 'ज़िला: $district';
+  }
+
+  @override
+  String topBuyingCityLabel(String city) {
+    return 'प्रमुख खरीदार शहर: $city';
+  }
+
+  @override
+  String get estimatedMonthlyDemandLabel => 'अनुमानित मासिक मांग';
+
+  @override
+  String estimatedUnitsValue(String count) {
+    return '$count इकाइयां';
+  }
+
+  @override
+  String get typicalOrderValueLabel => 'औसत ऑर्डर मूल्य';
+
+  @override
+  String get categoryAgriculture => 'कृषि';
+
+  @override
+  String get categoryTextile => 'वस्त्र उद्योग';
+
+  @override
+  String get categoryFoodProcessing => 'खाद्य प्रसंस्करण';
+
+  @override
+  String get categoryManufacturing => 'विनिर्माण';
+
+  @override
+  String get noMarketInsights => 'अभी कोई बाज़ार रुझान उपलब्ध नहीं हैं।';
 }

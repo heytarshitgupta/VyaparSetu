@@ -97,3 +97,41 @@ Target users include rural artisans, grassroots craftspeople, and micro-producer
   decoupled on the shell controller.
 - Taps and future voice intents invoke the exact same methods.
 - Microphone permissions, speech recognition, and AI models remain deferred.
+
+------------------------------------------------------------------------------
+7. WHAT BUYERS WANT / MARKET INTELLIGENCE INTEGRATION (STEP BI-2)
+------------------------------------------------------------------------------
+A. Feature Ownership & Distinction:
+   - BUYER NEEDS: Active real buyer requirements / matching posted on marketplace.
+   - WHAT BUYERS WANT: Market Radar / Regional Demand Trends & Business Intelligence.
+   - Reached via Producer Home shortcut: Home -> "What Buyers Want" -> WhatBuyersWantScreen.
+   - The 4-destination navigation architecture (Home, My Products, Buyer Needs, Profile)
+     remains strictly preserved.
+
+B. Data Truthfulness & Static Sample Intelligence:
+   - Current intelligence is STATIC / SAMPLE / PRECOMPUTED DEMO INTELLIGENCE.
+   - NOT live buyer demand, NOT live sales analytics, and NOT real-time ML inference.
+   - Technical implementation artifacts ("CSV-backed", filenames) are eliminated from UI.
+   - UI prominently displays truthful sample indicators: "Sample market insights" badge
+     and clear explanatory subtitle.
+
+C. Reused Foundation:
+   - Leverages teammate's existing ProducerMarketIntelligenceService, ProducerMarketSignal,
+     and ProducerMarketIntelligenceDashboard without rewriting domain models.
+   - Deterministic demand level thresholds:
+     * High Demand: score >= 75
+     * Medium Demand: score >= 50
+     * Low Demand: score < 50
+
+D. Responsive & Theme-Safe Presentation:
+   - Fully responsive across Mobile (<640px), Tablet (640-1024px), and Desktop (>1024px).
+   - Zero RenderFlex overflows down to 320px narrow mobile viewports.
+   - Clean Light & Dark theme compatibility utilizing Theme.of(context).colorScheme.
+   - 100% localized via Flutter gen-l10n across English, Hindi, and Punjabi, including
+     canonical product category mapping (Agriculture, Textile, Food Processing, etc.).
+
+E. Runtime Non-Use of CSVs & Future Live Limitations:
+   - CSV datasets (products.csv, customers.csv, sales.csv) remain in assets/data for
+     reference but are NOT read at runtime. Seed signals are static in-memory objects.
+   - Future transition to live regional market intelligence will require backend DB
+     aggregation tables / RPCs and should NOT attempt client-side runtime CSV parsing.

@@ -10,7 +10,7 @@ import '../products/producer_products_tab.dart';
 import '../profile/producer_profile_tab.dart';
 import 'models/producer_shell_profile.dart';
 import 'tabs/producer_home_tab.dart';
-import 'tabs/what_buyers_want_placeholder_screen.dart';
+import 'tabs/what_buyers_want_screen.dart';
 
 class ProducerMainScreen extends StatefulWidget {
   final int initialIndex;
@@ -123,7 +123,7 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
   void openWhatBuyersWant() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const WhatBuyersWantPlaceholderScreen(),
+        builder: (_) => const WhatBuyersWantScreen(),
       ),
     );
   }
