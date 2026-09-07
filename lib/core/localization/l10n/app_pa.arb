@@ -289,5 +289,19 @@
   "categoryTextile": "ਕੱਪੜਾ ਉਦਯੋਗ",
   "categoryFoodProcessing": "ਭੋਜਨ ਪ੍ਰੋਸੈਸਿੰਗ",
   "categoryManufacturing": "ਨਿਰਮਾਣ",
-  "noMarketInsights": "ਅਜੇ ਕੋਈ ਮੰਡੀ ਰੁਝਾਨ ਉਪਲਬਧ ਨਹੀਂ ਹਨ।"
+  "noMarketInsights": "ਅਜੇ ਕੋਈ ਮੰਡੀ ਰੁਝਾਨ ਉਪਲਬਧ ਨਹੀਂ ਹਨ।",
+  "takePhotoAction": "ਫੋਟੋ ਖਿੱਚੋ",
+  "chooseFromGalleryAction": "ਗੈਲਰੀ ਤੋਂ ਚੁਣੋ",
+  "uploadingPhotoProgress": "ਫੋਟੋ ਅੱਪਲੋਡ ਹੋ ਰਹੀ ਹੈ...",
+  "removePhotoAction": "ਫੋਟੋ ਹਟਾਓ",
+  "photoUploadFailed": "ਫੋਟੋ ਅੱਪਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+  "unsupportedPhotoFormat": "ਅਸਮਰਥਿਤ ਫੋਟੋ ਫਾਰਮੈਟ। ਕਿਰਪਾ ਕਰਕੇ JPEG, PNG ਜਾਂ WebP ਫੋਟੋ ਚੁਣੋ।",
+  "photoTooLarge": "ਫੋਟੋ 5 MB ਸੀਮਾ ਤੋਂ ਵੱਧ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਛੋਟੀ ਫੋਟੋ ਚੁਣੋ।",
+  "maxPhotosReached": "ਵੱਧ ਤੋਂ ਵੱਧ 4 ਫੋਟੋਆਂ ਦੀ ਸੀਮਾ ਪੂਰੀ ਹੋ ਗਈ ਹੈ",
+  "tryAnotherPhoto": "ਕਿਰਪਾ ਕਰਕੇ ਕੋਈ ਹੋਰ ਫੋਟੋ ਚੁਣੋ",
+  "removePhotoConfirmation": "ਕੀ ਤੁਸੀਂ ਇਹ ਫੋਟੋ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+  "photoRemovedMessage": "ਫੋਟੋ ਹਟਾ ਦਿੱਤੀ ਗਈ",
+  "choosePhotoSource": "ਉਤਪਾਦ ਫੋਟੋ ਸ਼ਾਮਲ ਕਰੋ",
+  "deletePhoto": "ਹਟਾਓ",
+  "productMustBeSavedBeforePhotos": "ਫੋਟੋਆਂ ਸ਼ਾਮਲ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਕਿਰਪਾ ਕਰਕੇ ਉਤਪਾਦ ਡਰਾਫਟ ਸੰਭਾਲੋ"
 }

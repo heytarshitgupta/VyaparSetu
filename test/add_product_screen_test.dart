@@ -379,7 +379,10 @@ void main() {
       // Tap Add Photo tile
       await tapVisible(tester, find.byIcon(Icons.add_a_photo_outlined));
 
-      expect(find.text('Photo selection will be added next'), findsWidgets);
+      // Real photo source bottom sheet opens
+      expect(find.text('Add Product Photo'), findsOneWidget);
+      expect(find.text('Take Photo'), findsOneWidget);
+      expect(find.text('Choose from Gallery'), findsOneWidget);
     });
 
     testWidgets('Mark Ready is disabled when requirements incomplete, enabled when complete', (tester) async {

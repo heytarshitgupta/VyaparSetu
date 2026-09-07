@@ -908,4 +908,50 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get noMarketInsights => 'अभी कोई बाज़ार रुझान उपलब्ध नहीं हैं।';
+
+  @override
+  String get takePhotoAction => 'फ़ोटो खींचें';
+
+  @override
+  String get chooseFromGalleryAction => 'गैलरी से चुनें';
+
+  @override
+  String get uploadingPhotoProgress => 'फ़ोटो अपलोड हो रही है...';
+
+  @override
+  String get removePhotoAction => 'फ़ोटो हटाएं';
+
+  @override
+  String get photoUploadFailed =>
+      'फ़ोटो अपलोड नहीं हो सकी। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get unsupportedPhotoFormat =>
+      'असमर्थित फ़ोटो प्रारूप। कृपया JPEG, PNG या WebP फ़ोटो चुनें।';
+
+  @override
+  String get photoTooLarge =>
+      'फ़ोटो 5 MB सीमा से अधिक है। कृपया छोटी फ़ोटो चुनें।';
+
+  @override
+  String get maxPhotosReached => 'अधिकतम 4 फ़ोटो की सीमा पूरी हो गई है';
+
+  @override
+  String get tryAnotherPhoto => 'कृपया कोई अन्य फ़ोटो चुनें';
+
+  @override
+  String get removePhotoConfirmation => 'क्या आप इस फ़ोटो को हटाना चाहते हैं?';
+
+  @override
+  String get photoRemovedMessage => 'फ़ोटो हटा दी गई';
+
+  @override
+  String get choosePhotoSource => 'उत्पाद फ़ोटो जोड़ें';
+
+  @override
+  String get deletePhoto => 'हटाएं';
+
+  @override
+  String get productMustBeSavedBeforePhotos =>
+      'फ़ोटो जोड़ने से पहले कृपया उत्पाद ड्राफ़्ट सहेजें';
 }

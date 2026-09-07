@@ -289,5 +289,19 @@
   "categoryTextile": "वस्त्र उद्योग",
   "categoryFoodProcessing": "खाद्य प्रसंस्करण",
   "categoryManufacturing": "विनिर्माण",
-  "noMarketInsights": "अभी कोई बाज़ार रुझान उपलब्ध नहीं हैं।"
+  "noMarketInsights": "अभी कोई बाज़ार रुझान उपलब्ध नहीं हैं।",
+  "takePhotoAction": "फ़ोटो खींचें",
+  "chooseFromGalleryAction": "गैलरी से चुनें",
+  "uploadingPhotoProgress": "फ़ोटो अपलोड हो रही है...",
+  "removePhotoAction": "फ़ोटो हटाएं",
+  "photoUploadFailed": "फ़ोटो अपलोड नहीं हो सकी। कृपया पुनः प्रयास करें।",
+  "unsupportedPhotoFormat": "असमर्थित फ़ोटो प्रारूप। कृपया JPEG, PNG या WebP फ़ोटो चुनें।",
+  "photoTooLarge": "फ़ोटो 5 MB सीमा से अधिक है। कृपया छोटी फ़ोटो चुनें।",
+  "maxPhotosReached": "अधिकतम 4 फ़ोटो की सीमा पूरी हो गई है",
+  "tryAnotherPhoto": "कृपया कोई अन्य फ़ोटो चुनें",
+  "removePhotoConfirmation": "क्या आप इस फ़ोटो को हटाना चाहते हैं?",
+  "photoRemovedMessage": "फ़ोटो हटा दी गई",
+  "choosePhotoSource": "उत्पाद फ़ोटो जोड़ें",
+  "deletePhoto": "हटाएं",
+  "productMustBeSavedBeforePhotos": "फ़ोटो जोड़ने से पहले कृपया उत्पाद ड्राफ़्ट सहेजें"
 }

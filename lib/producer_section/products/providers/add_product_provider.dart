@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/producer_product.dart';
 import '../models/producer_product_draft.dart';
 import '../models/product_price_parser.dart';
+import '../services/producer_image_picker_service.dart';
 import '../services/producer_product_image_service.dart';
 import '../services/producer_product_service.dart';
 
@@ -12,10 +13,12 @@ import '../services/producer_product_service.dart';
 class AddProductProvider extends ChangeNotifier {
   final IProducerProductService _productService;
   final IProducerProductImageService? imageService;
+  final IProducerImagePickerService? imagePickerService;
 
   AddProductProvider({
     IProducerProductService? productService,
     this.imageService,
+    this.imagePickerService,
   }) : _productService = productService ?? ProducerProductService();
 
   ProducerProductDraft _draft = const ProducerProductDraft();
@@ -23,6 +26,8 @@ class AddProductProvider extends ChangeNotifier {
   String? _persistedProductId;
   bool _isSaving = false;
   bool _isLoading = false;
+  bool _isUploadingImage = false;
+  final Map<String, String> _signedUrlCache = {};
   String? _errorMessage;
   bool _isDirty = false;
 
@@ -47,6 +52,12 @@ class AddProductProvider extends ChangeNotifier {
 
   /// Whether an image or data loading operation is in flight.
   bool get isLoading => _isLoading;
+
+  /// Whether a photo upload operation is currently in flight.
+  bool get isUploadingImage => _isUploadingImage;
+
+  /// Read-only view of cached signed URLs for in-memory display.
+  Map<String, String> get signedUrls => Map.unmodifiable(_signedUrlCache);
 
   /// Safe, human-readable error message or null if no active error.
   String? get errorMessage => _errorMessage;
@@ -309,6 +320,236 @@ class AddProductProvider extends ChangeNotifier {
     return false;
   }
 
+  // ---------------------------------------------------------------------------
+  // Photo Selection & Storage Lifecycle
+  // ---------------------------------------------------------------------------
+
+  /// Prompts the user to pick an image from [source] (camera or gallery),
+  /// validates format and size, and securely uploads it to Storage.
+  Future<bool> pickAndUploadImage(ImageSourceOption source) async {
+    if (_isUploadingImage || _isSaving) return false;
+
+    if (_draft.images.length >= 4) {
+      _errorMessage = 'Maximum 4 photos allowed';
+      notifyListeners();
+      return false;
+    }
+
+    final picker = imagePickerService ?? ProducerImagePickerService();
+
+    final PickedProductImage? picked;
+    try {
+      picked = await picker.pickImage(source);
+    } on UnsupportedImageFormatException catch (e) {
+      _errorMessage = e.message;
+      notifyListeners();
+      return false;
+    } on ImageTooLargeException catch (e) {
+      _errorMessage = e.message;
+      notifyListeners();
+      return false;
+    } on ProductOperationException catch (e) {
+      _errorMessage = e.message;
+      notifyListeners();
+      return false;
+    } catch (_) {
+      _errorMessage = 'Could not select photo. Please try again.';
+      notifyListeners();
+      return false;
+    }
+
+    if (picked == null) {
+      return false; // User cancelled
+    }
+
+    return uploadAndAddImage(
+      bytes: picked.bytes,
+      contentType: picked.contentType,
+      originalFilename: picked.originalFilename,
+    );
+  }
+
+  /// Securely uploads image [bytes] to the private 'product-images' bucket,
+  /// updates the product row in the database, and records the stable storage path
+  /// in the canonical [draft.images] list.
+  ///
+  /// Failure Cleanup Contract:
+  /// Storage and PostgreSQL are not transactionally atomic. If the database update
+  /// fails after a Storage upload succeeds, this method executes a best-effort
+  /// deletion of ONLY the newly uploaded Storage object, preserving previously
+  /// persisted images and preventing orphaned objects.
+  Future<bool> uploadAndAddImage({
+    required Uint8List bytes,
+    required String contentType,
+    required String originalFilename,
+  }) async {
+    if (_isUploadingImage || _isSaving) return false;
+
+    if (_draft.images.length >= 4) {
+      _errorMessage = 'Maximum 4 photos allowed';
+      notifyListeners();
+      return false;
+    }
+
+    // Enforce: Product ID must exist before Storage upload
+    if (_persistedProductId == null || _isDirty) {
+      final saved = await saveDraft();
+      if (!saved || _persistedProductId == null) {
+        _errorMessage = 'Please save product draft before uploading photos';
+        notifyListeners();
+        return false;
+      }
+    }
+
+    final productId = _persistedProductId!;
+    final imageSvc = imageService;
+    if (imageSvc == null) {
+      _errorMessage = 'Image storage service is not available.';
+      notifyListeners();
+      return false;
+    }
+
+    _isUploadingImage = true;
+    clearError();
+    notifyListeners();
+
+    String? newlyUploadedPath;
+    try {
+      // Step A: Upload to Supabase Storage
+      newlyUploadedPath = await imageSvc.uploadProductImage(
+        productId: productId,
+        bytes: bytes,
+        contentType: contentType,
+      );
+
+      // Step B: Update Database row with the new storage path
+      final updatedImages = [..._draft.images, newlyUploadedPath];
+      await _productService.updateDraft(
+        productId: productId,
+        draft: _draft.copyWith(images: updatedImages),
+      );
+
+      // Step C: Update in-memory state with canonical stable path
+      _draft = _draft.copyWith(images: updatedImages);
+      _isDirty = false;
+
+      // Pre-warm signed URL cache for smooth preview
+      try {
+        final signedUrl = await imageSvc.createSignedImageUrl(
+          storagePath: newlyUploadedPath,
+        );
+        _signedUrlCache[newlyUploadedPath] = signedUrl;
+      } catch (_) {
+        // Non-critical if signed URL fetch fails; preview tile will retry
+      }
+
+      return true;
+    } on ProductAuthException {
+      _errorMessage = 'Authentication required. Please log in again.';
+      return false;
+    } catch (e) {
+      // Step D: Best-effort failure cleanup of newly uploaded object if DB update failed
+      if (newlyUploadedPath != null) {
+        try {
+          await imageSvc.deleteProductImage(newlyUploadedPath);
+        } catch (_) {
+          // Ignore secondary cleanup error to expose original root cause
+        }
+      }
+
+      if (e is ProductOperationException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Photo could not be uploaded. Please try again.';
+      }
+      return false;
+    } finally {
+      _isUploadingImage = false;
+      notifyListeners();
+    }
+  }
+
+  /// Removes a photo with [storagePath] from the product.
+  ///
+  /// Consistent Removal Lifecycle:
+  /// 1. Updates the database row first with the image path removed.
+  /// 2. Only after the database update succeeds, deletes the object from Storage.
+  /// 3. Never deletes the product row.
+  Future<bool> removeImage(String storagePath) async {
+    if (_isUploadingImage || _isSaving) return false;
+    if (!_draft.images.contains(storagePath)) return false;
+
+    final productId = _persistedProductId;
+    if (productId == null) {
+      // Unpersisted product: remove from in-memory draft only
+      removeImagePath(storagePath);
+      _signedUrlCache.remove(storagePath);
+      return true;
+    }
+
+    final imageSvc = imageService;
+    _isSaving = true;
+    clearError();
+    notifyListeners();
+
+    try {
+      // Step 1: Update DB first
+      final updatedImages = _draft.images.where((p) => p != storagePath).toList();
+      await _productService.updateDraft(
+        productId: productId,
+        draft: _draft.copyWith(images: updatedImages),
+      );
+
+      // Update in-memory draft
+      _draft = _draft.copyWith(images: updatedImages);
+      _isDirty = false;
+      _signedUrlCache.remove(storagePath);
+
+      // Step 2: Delete from Storage only AFTER DB update succeeds
+      if (imageSvc != null) {
+        try {
+          await imageSvc.deleteProductImage(storagePath);
+        } catch (_) {
+          // DB remains consistent even if Storage cleanup experiences network hiccup
+        }
+      }
+
+      return true;
+    } on ProductAuthException {
+      _errorMessage = 'Authentication required. Please log in again.';
+      return false;
+    } on ProductOperationException catch (e) {
+      _errorMessage = e.message;
+      return false;
+    } catch (_) {
+      _errorMessage = 'Failed to remove photo. Please try again.';
+      return false;
+    } finally {
+      _isSaving = false;
+      notifyListeners();
+    }
+  }
+
+  /// Returns a cached signed URL for [storagePath], or generates and caches a new one.
+  Future<String?> getOrFetchSignedUrl(String storagePath) async {
+    final cached = _signedUrlCache[storagePath];
+    if (cached != null) return cached;
+
+    final imageSvc = imageService;
+    if (imageSvc == null) return null;
+
+    try {
+      final signedUrl = await imageSvc.createSignedImageUrl(
+        storagePath: storagePath,
+      );
+      _signedUrlCache[storagePath] = signedUrl;
+      notifyListeners();
+      return signedUrl;
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// Resets the provider back to initial blank state.
   void reset() {
     _draft = const ProducerProductDraft();
@@ -316,6 +557,8 @@ class AddProductProvider extends ChangeNotifier {
     _persistedProductId = null;
     _isSaving = false;
     _isLoading = false;
+    _isUploadingImage = false;
+    _signedUrlCache.clear();
     _errorMessage = null;
     _isDirty = false;
     notifyListeners();

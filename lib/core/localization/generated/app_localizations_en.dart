@@ -909,4 +909,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noMarketInsights => 'No market insights available yet.';
+
+  @override
+  String get takePhotoAction => 'Take Photo';
+
+  @override
+  String get chooseFromGalleryAction => 'Choose from Gallery';
+
+  @override
+  String get uploadingPhotoProgress => 'Uploading photo...';
+
+  @override
+  String get removePhotoAction => 'Remove photo';
+
+  @override
+  String get photoUploadFailed =>
+      'Photo could not be uploaded. Please try again.';
+
+  @override
+  String get unsupportedPhotoFormat =>
+      'Unsupported photo format. Please select a JPEG, PNG, or WebP photo.';
+
+  @override
+  String get photoTooLarge =>
+      'Photo exceeds 5 MB limit. Please select a smaller photo.';
+
+  @override
+  String get maxPhotosReached => 'Maximum 4 photos reached';
+
+  @override
+  String get tryAnotherPhoto => 'Please choose another photo';
+
+  @override
+  String get removePhotoConfirmation => 'Do you want to remove this photo?';
+
+  @override
+  String get photoRemovedMessage => 'Photo removed';
+
+  @override
+  String get choosePhotoSource => 'Add Product Photo';
+
+  @override
+  String get deletePhoto => 'Delete';
+
+  @override
+  String get productMustBeSavedBeforePhotos =>
+      'Please save product draft before adding photos';
 }

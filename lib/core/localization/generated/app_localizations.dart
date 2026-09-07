@@ -1779,6 +1779,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No market insights available yet.'**
   String get noMarketInsights;
+
+  /// Option to take a photo using the device camera
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhotoAction;
+
+  /// Option to select a photo from device photo library
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseFromGalleryAction;
+
+  /// Progress message while image is uploading
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading photo...'**
+  String get uploadingPhotoProgress;
+
+  /// Tooltip/button to remove a photo
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get removePhotoAction;
+
+  /// Error message when image upload fails
+  ///
+  /// In en, this message translates to:
+  /// **'Photo could not be uploaded. Please try again.'**
+  String get photoUploadFailed;
+
+  /// Error message when chosen photo format is unsupported
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported photo format. Please select a JPEG, PNG, or WebP photo.'**
+  String get unsupportedPhotoFormat;
+
+  /// Error message when chosen photo exceeds 5 MB
+  ///
+  /// In en, this message translates to:
+  /// **'Photo exceeds 5 MB limit. Please select a smaller photo.'**
+  String get photoTooLarge;
+
+  /// Notice when 4 photos have been added
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 4 photos reached'**
+  String get maxPhotosReached;
+
+  /// Prompt asking the user to choose another image
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose another photo'**
+  String get tryAnotherPhoto;
+
+  /// Confirmation prompt before deleting a photo
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to remove this photo?'**
+  String get removePhotoConfirmation;
+
+  /// Snackbar message when a photo is removed
+  ///
+  /// In en, this message translates to:
+  /// **'Photo removed'**
+  String get photoRemovedMessage;
+
+  /// Title of the photo source selection bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add Product Photo'**
+  String get choosePhotoSource;
+
+  /// Confirm button text to delete a photo
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deletePhoto;
+
+  /// Error message when product must be saved before uploading photos
+  ///
+  /// In en, this message translates to:
+  /// **'Please save product draft before adding photos'**
+  String get productMustBeSavedBeforePhotos;
 }
 
 class _AppLocalizationsDelegate

@@ -1138,5 +1138,61 @@
   "noMarketInsights": "No market insights available yet.",
   "@noMarketInsights": {
     "description": "Empty state message when no market signals are present"
+  },
+  "takePhotoAction": "Take Photo",
+  "@takePhotoAction": {
+    "description": "Option to take a photo using the device camera"
+  },
+  "chooseFromGalleryAction": "Choose from Gallery",
+  "@chooseFromGalleryAction": {
+    "description": "Option to select a photo from device photo library"
+  },
+  "uploadingPhotoProgress": "Uploading photo...",
+  "@uploadingPhotoProgress": {
+    "description": "Progress message while image is uploading"
+  },
+  "removePhotoAction": "Remove photo",
+  "@removePhotoAction": {
+    "description": "Tooltip/button to remove a photo"
+  },
+  "photoUploadFailed": "Photo could not be uploaded. Please try again.",
+  "@photoUploadFailed": {
+    "description": "Error message when image upload fails"
+  },
+  "unsupportedPhotoFormat": "Unsupported photo format. Please select a JPEG, PNG, or WebP photo.",
+  "@unsupportedPhotoFormat": {
+    "description": "Error message when chosen photo format is unsupported"
+  },
+  "photoTooLarge": "Photo exceeds 5 MB limit. Please select a smaller photo.",
+  "@photoTooLarge": {
+    "description": "Error message when chosen photo exceeds 5 MB"
+  },
+  "maxPhotosReached": "Maximum 4 photos reached",
+  "@maxPhotosReached": {
+    "description": "Notice when 4 photos have been added"
+  },
+  "tryAnotherPhoto": "Please choose another photo",
+  "@tryAnotherPhoto": {
+    "description": "Prompt asking the user to choose another image"
+  },
+  "removePhotoConfirmation": "Do you want to remove this photo?",
+  "@removePhotoConfirmation": {
+    "description": "Confirmation prompt before deleting a photo"
+  },
+  "photoRemovedMessage": "Photo removed",
+  "@photoRemovedMessage": {
+    "description": "Snackbar message when a photo is removed"
+  },
+  "choosePhotoSource": "Add Product Photo",
+  "@choosePhotoSource": {
+    "description": "Title of the photo source selection bottom sheet"
+  },
+  "deletePhoto": "Delete",
+  "@deletePhoto": {
+    "description": "Confirm button text to delete a photo"
+  },
+  "productMustBeSavedBeforePhotos": "Please save product draft before adding photos",
+  "@productMustBeSavedBeforePhotos": {
+    "description": "Error message when product must be saved before uploading photos"
   }
 }

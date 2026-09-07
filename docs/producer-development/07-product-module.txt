@@ -254,3 +254,57 @@ ADD PRODUCT 3-STEP UI ARCHITECTURE (STEP 6C.5)
 10. Current Limitation (Exit with Unsaved Draft):
     - Normal back/pop navigation is preserved. There is currently no background autosave or discard confirmation modal. If producer exits before Step 2 Continue/Save Draft, in-memory draft is discarded.
 
+
+REAL PRODUCT PHOTO SELECTION & SECURE UPLOAD ARCHITECTURE (STEP 6C.6A)
+------------------------------------------------------------
+1. Picker Architecture & Injectable Abstraction:
+   - File: lib/producer_section/products/services/producer_image_picker_service.dart
+   - Contract: IProducerImagePickerService with production implementation ProducerImagePickerService wrapping image_picker (^1.2.3).
+   - Enables 100% offline, deterministic widget and provider testing via FakeImagePickerService without requiring device cameras or galleries.
+   - Picker parameters: maxWidth: 1280, maxHeight: 1280, imageQuality: 80.
+   - UI choices: Clear modal bottom sheet offering Camera ("Take Photo") and Gallery ("Choose from Gallery") with large touch-friendly targets (>= 48dp).
+
+2. Private Storage Flow & Stable Path vs Signed URL:
+   - Bucket: Dedicated private 'product-images' bucket (established in Migration 010 and 011).
+   - Stable Storage Path: Relative 3-segment path `<auth_uid>/<product_id>/<random_hex_32>.<ext>`.
+   - Domain Model Rule: `ProducerProductDraft.images` and database column `products.images` store ONLY stable relative Storage object paths.
+   - Invariant: Local filesystem paths, XFile paths, file:// URLs, raw bytes, base64 strings, and signed URLs NEVER enter `draft.images` or `products.images`.
+   - In-Memory Preview & Signed URLs: For display, the provider creates short-lived signed URLs on-demand via `ProducerProductImageService.createSignedImageUrl()`. These signed URLs remain transient in-memory state and are never persisted to the database. Broken or expired signed URLs fail gracefully without crashing the UI.
+
+3. Format & Size Validation:
+   - Allowed declared MIME types: `image/jpeg`, `image/png`, `image/webp`.
+   - Unsupported format rejection: Files with unsupported MIME types or extensions (e.g., HEIC/HEIF, GIF, BMP, TIFF) are rejected upfront with a localized user-friendly message asking the user to choose another photo.
+   - Verification honesty: Declared MIME and extension checks are verified through `ProducerProductImageService.normalizeMimeType()`; there is no byte-level cryptographic/content sniffing yet.
+   - Size limit: 5 MB maximum (matching backend Storage bucket limit). Client checks size before attempting upload and rejects oversized photos with localized feedback.
+   - No guaranteed compression claims: imageQuality does not guarantee exact 300-600 KB output; size is validated truthfully.
+
+4. Prerequisite: Persisted Product ID:
+   - Storage RLS policy enforces `private.producer_owns_product(product_id)`.
+   - An upload cannot proceed without a valid persisted `productId`.
+   - The UI automatically ensures draft persistence before entering Step 3. Defensively, if `persistedProductId` is missing, upload fails safely without generating arbitrary/random product IDs.
+
+5. Upload & Compensating Cleanup Lifecycle:
+   - Flow: Pick image -> validate size and MIME -> read bytes -> upload to Storage via `ProducerProductImageService` -> receive stable Storage path -> update `products.images` via `ProducerProductService.updateProductImages` -> update in-memory draft and refresh signed URLs.
+   - Cross-service non-atomicity: Supabase Storage and PostgreSQL are separate services and do not participate in atomic 2-phase commit transactions.
+   - Failure cleanup: If the database update fails AFTER a successful Storage upload, a best-effort compensating delete is triggered immediately for ONLY the newly uploaded Storage object. Previously persisted product photos remain completely untouched.
+   - Concurrency protection: `isUploadingImage` flag guards against duplicate taps and concurrent uploads.
+
+6. Photo Removal Lifecycle:
+   - Recommended order: Database-first -> Storage-delete-second.
+   - Removal flow:
+     (1) Compute new image path list without the removed path.
+     (2) Persist updated list to `products.images` via `ProducerProductService.updateProductImages`.
+     (3) Only AFTER the database update succeeds, delete the object from Storage via `ProducerProductImageService.deleteProductImage`.
+   - Invariant: If database update fails, Storage object is NOT deleted, preserving referential consistency. If Storage deletion fails after DB update, the product row remains correct; orphan cleanup can occur asynchronously.
+   - The product row itself is never deleted during photo removal.
+
+7. Client-Side Maximum 4 Photos Rule:
+   - Maximum photos allowed in the creation UI is 4.
+   - When 4 photos exist, the "Add Photo" button is disabled/hidden and a localized badge ("Maximum 4 photos reached") is shown.
+   - This is documented as a client-side product creation rule, not an immutable database constraint.
+
+8. Product Activation & Buyer Visibility Boundaries:
+   - Photos are NOT required to mark a product active under Migration 009. A product can be marked active once name, category, and positive price are provided.
+   - Security & Visibility: Under Migration 009, public.products RLS restricts SELECT, INSERT, UPDATE, and DELETE strictly to the product owner (`auth.uid() = producer_id`). Active products are NOT yet readable by Buyer accounts. No Buyer marketplace visibility is claimed.
+   - AI Enhancement & Voice: No AI enhancement, auto-tagging, or voice features are implemented in this step. Canonical setters remain the unified input surface.
+

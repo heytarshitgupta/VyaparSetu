@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import '../../../core/localization/generated/app_localizations.dart';
 import '../models/product_price_parser.dart';
 import '../providers/add_product_provider.dart';
+import '../services/producer_image_picker_service.dart';
+import '../services/producer_product_image_service.dart';
 import '../services/producer_product_service.dart';
 
 /// The 3-step guided Add Product screen for grassroots artisan producers.
@@ -14,11 +16,15 @@ import '../services/producer_product_service.dart';
 class AddProductScreen extends StatefulWidget {
   final AddProductProvider? provider;
   final IProducerProductService? productService;
+  final IProducerProductImageService? imageService;
+  final IProducerImagePickerService? imagePickerService;
 
   const AddProductScreen({
     super.key,
     this.provider,
     this.productService,
+    this.imageService,
+    this.imagePickerService,
   });
 
   @override
@@ -63,6 +69,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _provider = widget.provider ??
         AddProductProvider(
           productService: widget.productService,
+          imageService: widget.imageService,
+          imagePickerService: widget.imagePickerService,
         );
 
     _nameController = TextEditingController(text: _provider.draft.name);
@@ -669,11 +677,310 @@ class _AddProductScreenState extends State<AddProductScreen> {
   // STEP 3 — ADD PHOTOS & SAVE
   // ---------------------------------------------------------------------------
 
+  Future<void> _onPickImage(ImageSourceOption source, AppLocalizations l10n) async {
+    final success = await _provider.pickAndUploadImage(source);
+    if (!success && mounted && _provider.hasError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_provider.errorMessage ?? l10n.photoUploadFailed),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onRemoveImage(String storagePath, AppLocalizations l10n) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.removePhotoAction),
+        content: Text(l10n.removePhotoConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(ctx).colorScheme.error,
+            ),
+            child: Text(l10n.deletePhoto),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      final success = await _provider.removeImage(storagePath);
+      if (mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.photoRemovedMessage),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        } else if (_provider.hasError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(_provider.errorMessage ?? l10n.photoUploadFailed),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  void _showPhotoSourceBottomSheet(AppLocalizations l10n, ColorScheme colorScheme) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                  child: Text(
+                    l10n.choosePhotoSource,
+                    style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: colorScheme.primaryContainer,
+                    child: Icon(Icons.camera_alt_outlined, color: colorScheme.primary),
+                  ),
+                  title: Text(
+                    l10n.takePhotoAction,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _onPickImage(ImageSourceOption.camera, l10n);
+                  },
+                ),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: colorScheme.secondaryContainer,
+                    child: Icon(Icons.photo_library_outlined, color: colorScheme.secondary),
+                  ),
+                  title: Text(
+                    l10n.chooseFromGalleryAction,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _onPickImage(ImageSourceOption.gallery, l10n);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPhotoTile(
+    String storagePath,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
+    final signedUrl = _provider.signedUrls[storagePath];
+
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colorScheme.outlineVariant),
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (signedUrl != null)
+            Image.network(
+              signedUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Center(
+                child: Icon(
+                  Icons.broken_image_outlined,
+                  size: 32,
+                  color: colorScheme.error,
+                ),
+              ),
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                    strokeWidth: 2,
+                  ),
+                );
+              },
+            )
+          else
+            FutureBuilder<String?>(
+              future: _provider.getOrFetchSignedUrl(storagePath),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  );
+                }
+                final url = snapshot.data;
+                if (url != null) {
+                  return Image.network(
+                    url,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Center(
+                      child: Icon(
+                        Icons.broken_image_outlined,
+                        size: 32,
+                        color: colorScheme.error,
+                      ),
+                    ),
+                  );
+                }
+                return Center(
+                  child: Icon(
+                    Icons.image_outlined,
+                    size: 32,
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  ),
+                );
+              },
+            ),
+          Positioned(
+            top: 6,
+            right: 6,
+            child: Material(
+              color: Colors.black54,
+              shape: const CircleBorder(),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: (_provider.isSaving || _provider.isUploadingImage)
+                    ? null
+                    : () => _onRemoveImage(storagePath, l10n),
+                child: const Padding(
+                  padding: EdgeInsets.all(6.0),
+                  child: Icon(
+                    Icons.delete_outline,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUploadingTile(ColorScheme colorScheme, AppLocalizations l10n) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colorScheme.primary, width: 1.5),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 28,
+            height: 28,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.5,
+              color: colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              l10n.uploadingPhotoProgress,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.primary,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddPhotoTile(ColorScheme colorScheme, AppLocalizations l10n) {
+    final isBlocked = _provider.isSaving || _provider.isUploadingImage;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: isBlocked ? null : () => _showPhotoSourceBottomSheet(l10n, colorScheme),
+      child: Container(
+        decoration: BoxDecoration(
+          color: colorScheme.primaryContainer.withValues(alpha: 0.35),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: colorScheme.primary,
+            width: 1.5,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add_a_photo_outlined,
+              size: 34,
+              color: colorScheme.primary,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.addPhotosHeading,
+              style: TextStyle(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // STEP 3 — ADD PHOTOS & SAVE
+  // ---------------------------------------------------------------------------
+
   Widget _buildStep3(
     AppLocalizations l10n,
     ColorScheme colorScheme,
     ThemeData theme,
   ) {
+    final images = _provider.draft.images;
+    final isFull = images.length >= 4;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -705,94 +1012,61 @@ class _AddProductScreenState extends State<AddProductScreen> {
           ),
           itemCount: 4,
           itemBuilder: (context, index) {
-            if (index == 0) {
-              // Add Photo action tile
-              return InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: () {
-                  // Truthful temporary feedback: photo picker is in next step (6C.6)
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(l10n.photoUploadComingNext),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer.withValues(alpha: 0.35),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: colorScheme.primary,
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.add_a_photo_outlined,
-                        size: 36,
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        l10n.addPhotosHeading,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+            if (index < images.length) {
+              return _buildPhotoTile(images[index], l10n, colorScheme);
             }
-
-            // Other placeholder slots
+            if (_provider.isUploadingImage && index == images.length) {
+              return _buildUploadingTile(colorScheme, l10n);
+            }
+            if (!_provider.isUploadingImage && !isFull && index == images.length) {
+              return _buildAddPhotoTile(colorScheme, l10n);
+            }
+            // Empty placeholder slot
             return Container(
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: colorScheme.outlineVariant,
-                ),
+                border: Border.all(color: colorScheme.outlineVariant),
               ),
               child: Center(
                 child: Icon(
                   Icons.image_outlined,
                   size: 32,
-                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                 ),
               ),
             );
           },
         ),
-        const SizedBox(height: 12),
 
-        // Truthful coming-next banner
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Icon(Icons.info_outline, size: 20, color: colorScheme.primary),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  l10n.photoUploadComingNext,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+        // Max photos reached badge
+        if (isFull) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.check_circle_outline, size: 18, color: colorScheme.primary),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    l10n.maxPhotosReached,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 28),
+        ],
+
+        const SizedBox(height: 24),
 
         // Mark Ready Guidance if not yet ready
         if (!_provider.canMarkActive) ...[
@@ -825,13 +1099,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
         LayoutBuilder(
           builder: (context, buttonConstraints) {
             final isCompact = buttonConstraints.maxWidth < 360;
+            final isBusy = _provider.isSaving || _provider.isUploadingImage;
 
             if (isCompact) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   FilledButton(
-                    onPressed: (_provider.isSaving || !_provider.canMarkActive)
+                    onPressed: (isBusy || !_provider.canMarkActive)
                         ? null
                         : () => _onMarkReady(l10n),
                     style: FilledButton.styleFrom(
@@ -853,7 +1128,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ),
                   const SizedBox(height: 10),
                   OutlinedButton(
-                    onPressed: _provider.isSaving ? null : () => _onSaveDraft(l10n),
+                    onPressed: isBusy ? null : () => _onSaveDraft(l10n),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
                     ),
@@ -867,7 +1142,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ),
                   const SizedBox(height: 10),
                   OutlinedButton(
-                    onPressed: _provider.isSaving ? null : () => _provider.goToStep(2),
+                    onPressed: isBusy ? null : () => _provider.goToStep(2),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
                     ),
@@ -882,7 +1157,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 Expanded(
                   flex: 1,
                   child: OutlinedButton(
-                    onPressed: _provider.isSaving ? null : () => _provider.goToStep(2),
+                    onPressed: isBusy ? null : () => _provider.goToStep(2),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(0, 50),
                     ),
@@ -893,7 +1168,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 Expanded(
                   flex: 2,
                   child: OutlinedButton(
-                    onPressed: _provider.isSaving ? null : () => _onSaveDraft(l10n),
+                    onPressed: isBusy ? null : () => _onSaveDraft(l10n),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(0, 50),
                     ),
@@ -910,7 +1185,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 Expanded(
                   flex: 2,
                   child: FilledButton(
-                    onPressed: (_provider.isSaving || !_provider.canMarkActive)
+                    onPressed: (isBusy || !_provider.canMarkActive)
                         ? null
                         : () => _onMarkReady(l10n),
                     style: FilledButton.styleFrom(
