@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/mock_data/products.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_router.dart';
+import '../../../../core/services/pricing_api_service.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -84,12 +85,78 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    '₹${product.price.toStringAsFixed(0)}',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: AppColors.primary,
-                      fontSize: 16,
+                  FutureBuilder<PricingApiResponse?>(
+                    future: PricingApiService.fetchPrice(
+                      productId: product.id,
+                      category: product.category,
+                      description: product.description,
                     ),
+                    builder: (context, snapshot) {
+                      final response = snapshot.data;
+                      final recommended = response?.recommendedPrice ?? product.price;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              if (snapshot.connectionState == ConnectionState.waiting)
+                                const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              else
+                                Text(
+                                  '₹${recommended.toStringAsFixed(0)}',
+                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: AppColors.primary,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              if (snapshot.connectionState == ConnectionState.waiting)
+                                const SizedBox(width: 8),
+                              if (snapshot.connectionState == ConnectionState.waiting)
+                                const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                ),
+                            ],
+                          ),
+                          if (response != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                'Floor ₹${response.breakEvenFloor.toStringAsFixed(0)}',
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          if (response != null && response.aiGuidance.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      response.aiGuidance,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: AppColors.textSecondary,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  const Icon(Icons.info_outline, size: 14, color: AppColors.textSecondary),
+                                ],
+                              ),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: 4),
                   Text(

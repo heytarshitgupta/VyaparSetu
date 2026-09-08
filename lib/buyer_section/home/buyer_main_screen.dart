@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../screens/shared/placeholder_screen.dart';
 import '../marketplace/marketplace_search_screen.dart';
 import 'tabs/buyer_home_tab.dart';
 import '../profile/buyer_profile_screen.dart';
