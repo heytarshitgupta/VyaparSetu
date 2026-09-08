@@ -4,15 +4,25 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/routes/app_router.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../../../core/widgets/app_top_bar_controls.dart';
+import '../../../core/auth/auth_service.dart';
+import '../../../core/auth/auth_exception_handler.dart';
+import '../../../core/localization/generated/app_localizations.dart';
 import 'buyer_profile_provider.dart';
-import 'buyer_identity_verification_screen.dart';
 
-class BuyerVerificationScreen extends StatelessWidget {
+class BuyerVerificationScreen extends StatefulWidget {
   const BuyerVerificationScreen({super.key});
+
+  @override
+  State<BuyerVerificationScreen> createState() => _BuyerVerificationScreenState();
+}
+
+class _BuyerVerificationScreenState extends State<BuyerVerificationScreen> {
+  bool _isSendingOtp = false;
 
   @override
   Widget build(BuildContext context) {
     final profile = context.watch<BuyerProfileProvider>().profile;
+    final l10n = AppLocalizations.of(context);
     
     // Check if the required verifications are done
     // For this prototype, Mobile and Email are required.
@@ -46,14 +56,57 @@ class BuyerVerificationScreen extends StatelessWidget {
               _buildVerificationTile(
                 context, 
                 title: 'Mobile Number Verified', 
-                subtitle: profile?.mobile ?? 'Verified via OTP',
+                subtitle: profile?.isMobileVerified == true ? 'Mobile verified' : (profile?.mobile ?? 'Verify your mobile via OTP'),
                 isVerified: profile?.isMobileVerified ?? false,
+                isLoading: _isSendingOtp,
+                onVerify: () async {
+                  if (profile?.mobile == null || profile!.mobile.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No mobile number found.'), backgroundColor: AppColors.error));
+                    return;
+                  }
+                  
+                  setState(() => _isSendingOtp = true);
+                  String phone = profile.mobile.trim();
+                  if (phone.length == 10) {
+                    phone = '+91$phone'; // Default to India for 10-digit numbers
+                  }
+                  
+                  try {
+                    // MOCK: Fake delay to simulate network request
+                    await Future.delayed(const Duration(seconds: 1));
+                    // await AuthService.instance.sendPhoneOtp(phone);
+                    
+                    if (!mounted) return;
+                    
+                    final result = await Navigator.pushNamed(
+                      context, 
+                      AppRouter.otpRoute,
+                      arguments: {'isVerificationMode': true, 'mobile': phone},
+                    );
+                    
+                    if (result == true && context.mounted && profile != null) {
+                      context.read<BuyerProfileProvider>().saveProfile(
+                        profile.copyWith(isMobileVerified: true),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Mobile number verified successfully.'), backgroundColor: AppColors.success),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      final msg = AuthExceptionHandler.getErrorMessage(e);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: AppColors.error));
+                    }
+                  } finally {
+                    if (mounted) setState(() => _isSendingOtp = false);
+                  }
+                },
               ),
               const SizedBox(height: 16),
               
               _buildVerificationTile(
                 context, 
-                title: 'Email Address', 
+                title: l10n?.emailAddress ?? 'Email Address', 
                 subtitle: profile?.isEmailVerified == true ? 'Email verified' : 'A verification link was sent to your email.',
                 isVerified: profile?.isEmailVerified ?? false,
                 onVerify: () async {
@@ -91,6 +144,7 @@ class BuyerVerificationScreen extends StatelessWidget {
     required String subtitle, 
     required bool isVerified,
     VoidCallback? onVerify,
+    bool isLoading = false,
   }) {
     return Card(
       color: AppColors.surface,
@@ -123,12 +177,14 @@ class BuyerVerificationScreen extends StatelessWidget {
                     color: AppColors.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text('Verified', style: TextStyle(color: AppColors.success, fontWeight: FontWeight.bold, fontSize: 12)),
+                  child: Text(AppLocalizations.of(context)?.badgeVerified ?? 'Verified', style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.bold, fontSize: 12)),
                 )
-              : TextButton(
-                  onPressed: onVerify, 
-                  child: const Text('Verify', style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
+              : isLoading 
+                ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2.5))
+                : TextButton(
+                    onPressed: onVerify, 
+                    child: Text(AppLocalizations.of(context)?.verify ?? 'Verify', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
         ),
       ),
     );

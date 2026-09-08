@@ -7,6 +7,7 @@ class AuthExceptionHandler {
   /// Converts Supabase and network errors into clean, user-friendly messages.
   /// Never leaks database queries, stack traces, or internal server errors.
   static String getErrorMessage(dynamic error) {
+    print('### AUTH ERROR: $error'); // DEBUGGING
     if (error is AuthException) {
       final message = error.message.toLowerCase();
       final statusCode = error.statusCode;
@@ -42,6 +43,10 @@ class AuthExceptionHandler {
       if (message.contains('invalid email') ||
           message.contains('unable to validate email address')) {
         return 'Please enter a valid email address.';
+      }
+      
+      if (message.contains('provider is not configured') || message.contains('sms provider')) {
+        return 'SMS Provider not configured in Supabase. Add a Test Phone Number in your dashboard to test this feature.';
       }
 
       return 'Authentication failed. Please check your details and try again.';

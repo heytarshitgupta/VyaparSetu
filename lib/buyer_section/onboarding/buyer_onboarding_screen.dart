@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../core/routes/app_router.dart';
 import '../../../core/widgets/loading_indicator.dart';
 import '../../../core/widgets/app_top_bar_controls.dart';
+import '../../../core/localization/generated/app_localizations.dart';
 import '../screens/shared/widgets/buyer_auth_text_field.dart';
 import 'buyer_profile_provider.dart';
 
@@ -67,7 +68,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
       city: _cityController.text,
       state: _stateController.text,
       pincode: _pincodeController.text,
-      isMobileVerified: true, 
+      isMobileVerified: false, 
     );
 
     context.read<BuyerProfileProvider>().saveProfile(profile);
@@ -78,6 +79,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -137,7 +139,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
-                              _currentStep == 1 ? 'Complete Setup' : 'Continue',
+                              _currentStep == 1 ? (l10n?.submitApplication ?? 'Complete Setup') : (l10n?.continueButton ?? 'Continue'),
                               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                           ),
@@ -149,7 +151,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                           height: 52,
                           child: TextButton(
                             onPressed: details.onStepCancel,
-                            child: const Text('Back'),
+                            child: Text(l10n?.back ?? 'Back'),
                           ),
                         ),
                       ]
@@ -159,7 +161,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
               },
               steps: [
                 Step(
-                  title: Text('Basic Information', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                  title: Text(l10n?.step1Header ?? 'Basic Information', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                   isActive: _currentStep >= 0,
                   content: Padding(
                     padding: const EdgeInsets.only(top: 16.0),
@@ -168,30 +170,30 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                       children: [
                         BuyerAuthTextField(
                           controller: _nameController,
-                          label: 'Full Name',
-                          hint: 'Enter your full name',
+                          label: l10n?.fullName ?? 'Full Name',
+                          hint: l10n?.enterFullNameHint ?? 'Enter your full name',
                           prefixIcon: Icons.person_outline,
                         ),
                         const SizedBox(height: 16),
                         BuyerAuthTextField(
                           controller: _businessNameController,
-                          label: 'Business / Organization Name',
-                          hint: 'Optional',
+                          label: l10n?.businessNameLabel?.replaceAll(' *', '') ?? 'Business / Organization Name',
+                          hint: l10n?.businessNameHint ?? 'Optional',
                           prefixIcon: Icons.business_outlined,
                         ),
                         const SizedBox(height: 16),
                         BuyerAuthTextField(
                           controller: _mobileController,
-                          label: 'Mobile Number',
-                          hint: 'Enter 10-digit mobile number',
+                          label: l10n?.contactPhoneNumber ?? 'Mobile Number',
+                          hint: l10n?.enter10DigitPhoneHint ?? 'Enter 10-digit mobile number',
                           prefixIcon: Icons.phone_outlined,
                           keyboardType: TextInputType.phone,
                         ),
                         const SizedBox(height: 16),
                         BuyerAuthTextField(
                           controller: _emailController,
-                          label: 'Email Address',
-                          hint: 'Enter your email',
+                          label: l10n?.emailAddress ?? 'Email Address',
+                          hint: l10n?.emailHint ?? 'Enter your email',
                           prefixIcon: Icons.email_outlined,
                           keyboardType: TextInputType.emailAddress,
                         ),
@@ -227,7 +229,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                   ),
                 ),
                 Step(
-                  title: Text('Business Details', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                  title: Text(l10n?.step2Header ?? 'Business Details', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                   isActive: _currentStep >= 1,
                   content: Padding(
                     padding: const EdgeInsets.only(top: 16.0),
@@ -236,15 +238,15 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                       children: [
                         BuyerAuthTextField(
                           controller: _businessCategoryController,
-                          label: 'Business Category',
-                          hint: 'E.g. Spices, Textiles',
+                          label: l10n?.craftCategoryLabel?.replaceAll(' *', '') ?? 'Business Category',
+                          hint: l10n?.specifyCategoryHint ?? 'E.g. Spices, Textiles',
                           prefixIcon: Icons.storefront_outlined,
                         ),
                         const SizedBox(height: 16),
                         BuyerAuthTextField(
                           controller: _addressController,
-                          label: 'Business Address',
-                          hint: 'Enter full address',
+                          label: l10n?.addressLabel?.replaceAll(' *', '') ?? 'Business Address',
+                          hint: l10n?.addressHint ?? 'Enter full address',
                           prefixIcon: Icons.location_on_outlined,
                         ),
                         const SizedBox(height: 16),
@@ -253,8 +255,8 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                             Expanded(
                               child: BuyerAuthTextField(
                                 controller: _cityController,
-                                label: 'City',
-                                hint: 'City',
+                                label: l10n?.cityVillageLabel?.replaceAll(' *', '') ?? 'City',
+                                hint: l10n?.cityVillageHint ?? 'City',
                                 prefixIcon: Icons.location_city_outlined,
                               ),
                             ),
@@ -262,8 +264,8 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                             Expanded(
                               child: BuyerAuthTextField(
                                 controller: _stateController,
-                                label: 'State',
-                                hint: 'State',
+                                label: l10n?.stateLabel?.replaceAll(' *', '') ?? 'State',
+                                hint: l10n?.selectStateHint ?? 'State',
                                 prefixIcon: Icons.map_outlined,
                               ),
                             ),
@@ -272,8 +274,8 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                         const SizedBox(height: 16),
                         BuyerAuthTextField(
                           controller: _pincodeController,
-                          label: 'Pincode',
-                          hint: '6-digit pincode',
+                          label: l10n?.pincodeLabel?.replaceAll(' *', '') ?? 'Pincode',
+                          hint: l10n?.pincodeHint ?? '6-digit pincode',
                           prefixIcon: Icons.pin_drop_outlined,
                           keyboardType: TextInputType.number,
                         ),

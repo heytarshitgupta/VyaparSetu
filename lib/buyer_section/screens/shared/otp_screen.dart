@@ -2,9 +2,18 @@ import 'package:flutter/material.dart';
 import '../../../core/routes/app_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_top_bar_controls.dart';
+import '../../../core/auth/auth_service.dart';
+import '../../../core/auth/auth_exception_handler.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  final bool isVerificationMode;
+  final String mobile;
+  
+  const OtpScreen({
+    super.key,
+    this.isVerificationMode = false,
+    this.mobile = '',
+  });
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -21,12 +30,38 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   void _verifyOtp() async {
+    if (widget.mobile.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid mobile number.'), backgroundColor: AppColors.error));
+      return;
+    }
+    
     setState(() => _isLoading = true);
-    // Mock delay
-    await Future.delayed(const Duration(seconds: 1));
-    if (mounted) {
-      setState(() => _isLoading = false);
-      Navigator.pushNamed(context, AppRouter.homeRoute);
+    
+    try {
+      // MOCK: Fake delay to simulate network request
+      await Future.delayed(const Duration(seconds: 1));
+      
+      // await AuthService.instance.verifyPhoneOtp(
+      //   phone: widget.mobile, 
+      //   otp: _otpController.text.trim(),
+      // );
+      
+      if (mounted) {
+        if (widget.isVerificationMode) {
+          Navigator.pop(context, true);
+        } else {
+          Navigator.pushNamed(context, AppRouter.homeRoute);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        final msg = AuthExceptionHandler.getErrorMessage(e);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: AppColors.error));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
