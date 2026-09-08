@@ -1,3 +1,15 @@
+enum MarketDemandLevel {
+  high,
+  medium,
+  low;
+
+  static MarketDemandLevel fromScore(double score) {
+    if (score >= 75.0) return MarketDemandLevel.high;
+    if (score >= 50.0) return MarketDemandLevel.medium;
+    return MarketDemandLevel.low;
+  }
+}
+
 class ProducerMarketSignal {
   const ProducerMarketSignal({
     required this.productId,
@@ -20,6 +32,8 @@ class ProducerMarketSignal {
   final double avgOrderValue;
   final String topState;
   final String topCity;
+
+  MarketDemandLevel get demandLevel => MarketDemandLevel.fromScore(marketDemandScore);
 }
 
 class ProducerMarketIntelligenceService {

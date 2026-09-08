@@ -48,3 +48,6 @@ app.*.map.json
 .env
 .env.*
 !.env.example
+
+# Supabase CLI local temporary state
+supabase/.temp/

@@ -580,7 +580,7 @@ abstract class AppLocalizations {
   /// **'Email Address (Login)'**
   String get emailAddressLogin;
 
-  /// Placeholder when data is not provided
+  /// Placeholder when an optional profile field was not provided
   ///
   /// In en, this message translates to:
   /// **'Not provided'**
@@ -892,10 +892,10 @@ abstract class AppLocalizations {
   /// **'PAN Verification'**
   String get panVerification;
 
-  /// Title for PAN card in verified state
+  /// Badge when PAN is verified
   ///
   /// In en, this message translates to:
-  /// **'PAN Verified'**
+  /// **'Verified'**
   String get panVerified;
 
   /// Subtitle for PAN card unverified
@@ -1282,11 +1282,17 @@ abstract class AppLocalizations {
   /// **'Draft'**
   String get filterDraft;
 
-  /// Filter tab for hidden products
+  /// Filter tab for inactive products
   ///
   /// In en, this message translates to:
-  /// **'Hidden'**
+  /// **'Inactive'**
   String get filterHidden;
+
+  /// Filter tab for inactive products
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get filterInactive;
 
   /// Status badge for active products
   ///
@@ -1300,11 +1306,107 @@ abstract class AppLocalizations {
   /// **'Draft'**
   String get statusDraft;
 
-  /// Status badge for hidden products
+  /// Status badge for hidden/inactive products
   ///
   /// In en, this message translates to:
-  /// **'Hidden'**
+  /// **'Inactive'**
   String get statusHidden;
+
+  /// Status badge for inactive products
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get statusInactive;
+
+  /// Action button to edit a product
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editAction;
+
+  /// Action button to continue editing a draft product
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Editing'**
+  String get continueEditingAction;
+
+  /// Action button to save edits to an existing product
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChangesAction;
+
+  /// Action button to make an inactive product active
+  ///
+  /// In en, this message translates to:
+  /// **'Make Active'**
+  String get makeActiveAction;
+
+  /// Action button to make an active product inactive
+  ///
+  /// In en, this message translates to:
+  /// **'Make Inactive'**
+  String get makeInactiveAction;
+
+  /// Modal title when editing an existing product
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Product'**
+  String get editProductTitle;
+
+  /// Modal subtitle when editing an existing product
+  ///
+  /// In en, this message translates to:
+  /// **'Update your product details and photos'**
+  String get editProductHelper;
+
+  /// Confirmation title when deleting a product
+  ///
+  /// In en, this message translates to:
+  /// **'Delete product?'**
+  String get deleteProductConfirmTitle;
+
+  /// Confirmation body when deleting a product
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently remove this product and its photos.'**
+  String get deleteProductConfirmBody;
+
+  /// Toast message when product details are updated
+  ///
+  /// In en, this message translates to:
+  /// **'Product updated'**
+  String get productUpdatedSuccess;
+
+  /// Toast message when product is made active
+  ///
+  /// In en, this message translates to:
+  /// **'Product made active'**
+  String get productMadeActiveSuccess;
+
+  /// Toast message when product is made inactive
+  ///
+  /// In en, this message translates to:
+  /// **'Product made inactive'**
+  String get productMadeInactiveSuccess;
+
+  /// Error toast when product update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update product'**
+  String get couldNotUpdateProduct;
+
+  /// Error toast when product photo fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load product photo'**
+  String get couldNotLoadProductPhoto;
+
+  /// Guidance toast when trying to activate an incomplete product
+  ///
+  /// In en, this message translates to:
+  /// **'Please edit product to fill name, category, and price before making it active.'**
+  String get incompleteProductCannotActivate;
 
   /// Label when product price is not specified
   ///
@@ -1342,17 +1444,29 @@ abstract class AppLocalizations {
   /// **'Products that still need details will appear here'**
   String get noDraftProductsSubtitle;
 
-  /// Title when hidden filter has zero results
+  /// Title when hidden/inactive filter has zero results
   ///
   /// In en, this message translates to:
-  /// **'No hidden products'**
+  /// **'No inactive products'**
   String get noHiddenProductsTitle;
 
-  /// Subtitle when hidden filter has zero results
+  /// Subtitle when hidden/inactive filter has zero results
   ///
   /// In en, this message translates to:
   /// **'Products you temporarily hide will appear here'**
   String get noHiddenProductsSubtitle;
+
+  /// Title when inactive filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'No inactive products'**
+  String get noInactiveProductsTitle;
+
+  /// Subtitle when inactive filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'Products you mark as inactive will appear here'**
+  String get noInactiveProductsSubtitle;
 
   /// Button to clear filters and view all products
   ///
@@ -1677,6 +1791,570 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not mark ready. Please try again.'**
   String get markReadyFailed;
+
+  /// Subtitle for What Buyers Want screen
+  ///
+  /// In en, this message translates to:
+  /// **'See sample market demand trends from different places.'**
+  String get whatBuyersWantSubtitle;
+
+  /// Badge indicating market intelligence signals are sample data
+  ///
+  /// In en, this message translates to:
+  /// **'Sample market insights'**
+  String get sampleMarketInsightsBadge;
+
+  /// Note clarifying that market trends are sample data
+  ///
+  /// In en, this message translates to:
+  /// **'These regional trends are based on sample market activity to help you understand buyer interest.'**
+  String get sampleMarketInsightsNote;
+
+  /// High market demand label
+  ///
+  /// In en, this message translates to:
+  /// **'High demand'**
+  String get demandHigh;
+
+  /// Medium market demand label
+  ///
+  /// In en, this message translates to:
+  /// **'Medium demand'**
+  String get demandMedium;
+
+  /// Low market demand label
+  ///
+  /// In en, this message translates to:
+  /// **'Low demand'**
+  String get demandLow;
+
+  /// Demand score out of 100
+  ///
+  /// In en, this message translates to:
+  /// **'{score}/100'**
+  String demandScoreOutOf(String score);
+
+  /// Label for product district in market intelligence
+  ///
+  /// In en, this message translates to:
+  /// **'District: {district}'**
+  String signalDistrictLabel(String district);
+
+  /// Label for top purchasing city
+  ///
+  /// In en, this message translates to:
+  /// **'Top buying city: {city}'**
+  String topBuyingCityLabel(String city);
+
+  /// Label for estimated monthly demand
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated monthly demand'**
+  String get estimatedMonthlyDemandLabel;
+
+  /// Formatted units count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} units'**
+  String estimatedUnitsValue(String count);
+
+  /// Label for typical order value
+  ///
+  /// In en, this message translates to:
+  /// **'Typical order value'**
+  String get typicalOrderValueLabel;
+
+  /// Category: Agriculture
+  ///
+  /// In en, this message translates to:
+  /// **'Agriculture'**
+  String get categoryAgriculture;
+
+  /// Category: Textile
+  ///
+  /// In en, this message translates to:
+  /// **'Textile'**
+  String get categoryTextile;
+
+  /// Category: Food processing
+  ///
+  /// In en, this message translates to:
+  /// **'Food processing'**
+  String get categoryFoodProcessing;
+
+  /// Category: Manufacturing
+  ///
+  /// In en, this message translates to:
+  /// **'Manufacturing'**
+  String get categoryManufacturing;
+
+  /// Empty state message when no market signals are present
+  ///
+  /// In en, this message translates to:
+  /// **'No market insights available yet.'**
+  String get noMarketInsights;
+
+  /// Option to take a photo using the device camera
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhotoAction;
+
+  /// Option to select a photo from device photo library
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseFromGalleryAction;
+
+  /// Progress message while image is uploading
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading photo...'**
+  String get uploadingPhotoProgress;
+
+  /// Tooltip/button to remove a photo
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get removePhotoAction;
+
+  /// Error message when image upload fails
+  ///
+  /// In en, this message translates to:
+  /// **'Photo could not be uploaded. Please try again.'**
+  String get photoUploadFailed;
+
+  /// Error message when chosen photo format is unsupported
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported photo format. Please select a JPEG, PNG, or WebP photo.'**
+  String get unsupportedPhotoFormat;
+
+  /// Error message when chosen photo exceeds 5 MB
+  ///
+  /// In en, this message translates to:
+  /// **'Photo exceeds 5 MB limit. Please select a smaller photo.'**
+  String get photoTooLarge;
+
+  /// Notice when 4 photos have been added
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 4 photos reached'**
+  String get maxPhotosReached;
+
+  /// Prompt asking the user to choose another image
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose another photo'**
+  String get tryAnotherPhoto;
+
+  /// Confirmation prompt before deleting a photo
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to remove this photo?'**
+  String get removePhotoConfirmation;
+
+  /// Snackbar message when a photo is removed
+  ///
+  /// In en, this message translates to:
+  /// **'Photo removed'**
+  String get photoRemovedMessage;
+
+  /// Title of the photo source selection bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add Product Photo'**
+  String get choosePhotoSource;
+
+  /// Confirm button text to delete a photo
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deletePhoto;
+
+  /// Error message when product must be saved before uploading photos
+  ///
+  /// In en, this message translates to:
+  /// **'Please save product draft before adding photos'**
+  String get productMustBeSavedBeforePhotos;
+
+  /// Button label to improve a photo using AI
+  ///
+  /// In en, this message translates to:
+  /// **'Improve Photo'**
+  String get improvePhotoAction;
+
+  /// Loading message when AI is processing photo
+  ///
+  /// In en, this message translates to:
+  /// **'Improving photo...'**
+  String get improvingPhotoProgress;
+
+  /// Label for the original product photo
+  ///
+  /// In en, this message translates to:
+  /// **'Original'**
+  String get originalPhotoLabel;
+
+  /// Label for the AI-improved product photo
+  ///
+  /// In en, this message translates to:
+  /// **'Improved'**
+  String get improvedPhotoLabel;
+
+  /// Action to discard AI changes and keep original photo
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Original'**
+  String get keepOriginalAction;
+
+  /// Action to accept AI improved photo
+  ///
+  /// In en, this message translates to:
+  /// **'Use Improved Photo'**
+  String get useImprovedAction;
+
+  /// Dialog or section title when photo has been improved by AI
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Improved'**
+  String get photoImprovedTitle;
+
+  /// Error message when AI photo improvement fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not improve photo. Please try again.'**
+  String get photoImproveFailed;
+
+  /// Truthfulness disclaimer for AI photo improvement
+  ///
+  /// In en, this message translates to:
+  /// **'AI improves only the presentation, not your product.'**
+  String get aiImproveDisclaimer;
+
+  /// Explanation of what AI photo improvement accomplishes
+  ///
+  /// In en, this message translates to:
+  /// **'Cleans background, improves lighting, and centers the product.'**
+  String get aiImproveHelpText;
+
+  /// Title for the photo comparison screen or dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Compare Photos'**
+  String get comparePhotosTitle;
+
+  /// Confirmation message when improved photo is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Improved photo applied'**
+  String get photoImproveSuccessMessage;
+
+  /// Title for product photos section in Add Product sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Product Photos'**
+  String get productPhotosTitle;
+
+  /// Validation message when attempting to add photos without a product name
+  ///
+  /// In en, this message translates to:
+  /// **'Add a product name before adding photos.'**
+  String get addPhotosNameFirst;
+
+  /// Action label to choose a photo on web or single-source platforms
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Photo'**
+  String get choosePhotoAction;
+
+  /// Friendly subtitle helper for Add Product sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Enter product details, price, and optional photos.'**
+  String get addProductHelper;
+
+  /// Title for confirmation dialog when closing form with unsaved changes
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes?'**
+  String get discardChangesTitle;
+
+  /// Message for confirmation dialog when closing form with unsaved changes
+  ///
+  /// In en, this message translates to:
+  /// **'Your unsaved product details will be lost.'**
+  String get discardChangesMessage;
+
+  /// Action button to keep editing when prompted to discard changes
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Editing'**
+  String get keepEditingAction;
+
+  /// Action button to discard changes and close modal
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discardAction;
+
+  /// Error message when device/platform photo picker is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Photo picker is not available on this device. Please restart the application.'**
+  String get pickerUnavailableError;
+
+  /// Error message when product image storage service is unavailable
+  ///
+  /// In en, this message translates to:
+  /// **'Image storage service is not available.'**
+  String get storageUnavailableError;
+
+  /// Title for product details view
+  ///
+  /// In en, this message translates to:
+  /// **'Product Details'**
+  String get productDetailsTitle;
+
+  /// Placeholder text when product description is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No description added'**
+  String get noDescriptionAdded;
+
+  /// Menu action to delete a product
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Product'**
+  String get deleteProductAction;
+
+  /// Header for verification and compliance section
+  ///
+  /// In en, this message translates to:
+  /// **'Verification & Compliance'**
+  String get verificationAndCompliance;
+
+  /// Header for business and producer info section
+  ///
+  /// In en, this message translates to:
+  /// **'Business & Producer Details'**
+  String get businessProducerInfo;
+
+  /// Header for account and security section
+  ///
+  /// In en, this message translates to:
+  /// **'Account & Security'**
+  String get accountAndSecurity;
+
+  /// Header for help and about section
+  ///
+  /// In en, this message translates to:
+  /// **'Help & About'**
+  String get helpAndAbout;
+
+  /// Label for voice guidance language setting
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Guidance Language'**
+  String get voiceGuidanceLanguage;
+
+  /// Voice guidance option matching app language
+  ///
+  /// In en, this message translates to:
+  /// **'Same as App Language'**
+  String get voiceGuidanceSameAsApp;
+
+  /// Badge for verified producer
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Producer'**
+  String get verifiedProducer;
+
+  /// Badge for unverified producer
+  ///
+  /// In en, this message translates to:
+  /// **'Producer'**
+  String get unverifiedProducer;
+
+  /// Badge when PAN is not verified
+  ///
+  /// In en, this message translates to:
+  /// **'Not Verified'**
+  String get panNotVerified;
+
+  /// Status when identity verification is complete
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get identityVerified;
+
+  /// Status when identity verification is pending
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get identityNotVerified;
+
+  /// Badge when GST is registered
+  ///
+  /// In en, this message translates to:
+  /// **'Registered'**
+  String get gstRegisteredBadge;
+
+  /// Badge when GST is not registered
+  ///
+  /// In en, this message translates to:
+  /// **'Not Registered'**
+  String get gstNotRegisteredBadge;
+
+  /// Label for Aadhaar status row
+  ///
+  /// In en, this message translates to:
+  /// **'Aadhaar Identity'**
+  String get aadhaarStatusLabel;
+
+  /// Label for PAN identity row
+  ///
+  /// In en, this message translates to:
+  /// **'PAN Identity'**
+  String get panIdentityLabel;
+
+  /// Label for GST compliance row
+  ///
+  /// In en, this message translates to:
+  /// **'GST'**
+  String get gstComplianceLabel;
+
+  /// Label for workshop location
+  ///
+  /// In en, this message translates to:
+  /// **'Workshop Location'**
+  String get workshopLocationLabel;
+
+  /// Action to reset account password
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// Description for reset password action
+  ///
+  /// In en, this message translates to:
+  /// **'Send password reset instructions to your registered email'**
+  String get resetPasswordDesc;
+
+  /// Confirmation when reset password email is dispatched
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset link sent to your email'**
+  String get resetPasswordSuccess;
+
+  /// Label for current session
+  ///
+  /// In en, this message translates to:
+  /// **'Current Session'**
+  String get activeSession;
+
+  /// Description for signed in session status
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in'**
+  String get activeSessionTruthful;
+
+  /// Title of sign out confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of VyaparSetu?'**
+  String get signOutConfirmTitle;
+
+  /// Body message of sign out confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get signOutConfirmMessage;
+
+  /// Title for how vyaparsetu works info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'How VyaparSetu Works'**
+  String get howVyaparSetuWorks;
+
+  /// Description text for how vyaparsetu works
+  ///
+  /// In en, this message translates to:
+  /// **'VyaparSetu connects artisan producers directly with verified bulk and retail buyers. Add your products, share photos, and respond to buyer inquiries with complete transparency.'**
+  String get howVyaparSetuWorksContent;
+
+  /// Title for privacy and data info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data'**
+  String get privacyAndData;
+
+  /// Description text for privacy and data
+  ///
+  /// In en, this message translates to:
+  /// **'Sensitive identity information is minimized. Raw PAN is not displayed in the app. Aadhaar numbers are not displayed or carried in the Profile UI. Access to producer data is protected by authentication and database ownership policies.'**
+  String get privacyAndDataContent;
+
+  /// Title for about vyaparsetu info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'About VyaparSetu'**
+  String get aboutVyaparSetu;
+
+  /// Description text for about vyaparsetu
+  ///
+  /// In en, this message translates to:
+  /// **'VyaparSetu v1.0 — Empowering Indian artisan producers and manufacturers through direct commerce, localization, and trusted verification.'**
+  String get aboutVyaparSetuContent;
+
+  /// Label for contact phone
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Phone'**
+  String get phoneLabel;
+
+  /// Accessibility and tooltip for quick action menu
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get quickMenuTitle;
+
+  /// Label for email
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// Button label for OK
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// Label for business name
+  ///
+  /// In en, this message translates to:
+  /// **'Business Name'**
+  String get businessName;
+
+  /// Label for craft category
+  ///
+  /// In en, this message translates to:
+  /// **'Craft Category'**
+  String get craftCategory;
+
+  /// Label for identity verification
+  ///
+  /// In en, this message translates to:
+  /// **'Identity Verification'**
+  String get identityVerification;
+
+  /// Role badge for producer
+  ///
+  /// In en, this message translates to:
+  /// **'Producer'**
+  String get producerRoleBadge;
 }
 
 class _AppLocalizationsDelegate

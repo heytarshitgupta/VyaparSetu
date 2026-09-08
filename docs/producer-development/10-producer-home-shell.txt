@@ -97,3 +97,82 @@ Target users include rural artisans, grassroots craftspeople, and micro-producer
   decoupled on the shell controller.
 - Taps and future voice intents invoke the exact same methods.
 - Microphone permissions, speech recognition, and AI models remain deferred.
+
+------------------------------------------------------------------------------
+7. WHAT BUYERS WANT / MARKET INTELLIGENCE INTEGRATION (STEP BI-2)
+------------------------------------------------------------------------------
+A. Feature Ownership & Distinction:
+   - BUYER NEEDS: Active real buyer requirements / matching posted on marketplace.
+   - WHAT BUYERS WANT: Market Radar / Regional Demand Trends & Business Intelligence.
+   - Reached via Producer Home shortcut: Home -> "What Buyers Want" -> WhatBuyersWantScreen.
+   - The 4-destination navigation architecture (Home, My Products, Buyer Needs, Profile)
+     remains strictly preserved.
+
+B. Data Truthfulness & Static Sample Intelligence:
+   - Current intelligence is STATIC / SAMPLE / PRECOMPUTED DEMO INTELLIGENCE.
+   - NOT live buyer demand, NOT live sales analytics, and NOT real-time ML inference.
+   - Technical implementation artifacts ("CSV-backed", filenames) are eliminated from UI.
+   - UI prominently displays truthful sample indicators: "Sample market insights" badge
+     and clear explanatory subtitle.
+
+C. Reused Foundation:
+   - Leverages teammate's existing ProducerMarketIntelligenceService, ProducerMarketSignal,
+     and ProducerMarketIntelligenceDashboard without rewriting domain models.
+   - Deterministic demand level thresholds:
+     * High Demand: score >= 75
+     * Medium Demand: score >= 50
+     * Low Demand: score < 50
+
+D. Responsive & Theme-Safe Presentation:
+   - Fully responsive across Mobile (<640px), Tablet (640-1024px), and Desktop (>1024px).
+   - Zero RenderFlex overflows down to 320px narrow mobile viewports.
+   - Clean Light & Dark theme compatibility utilizing Theme.of(context).colorScheme.
+   - 100% localized via Flutter gen-l10n across English, Hindi, and Punjabi, including
+     canonical product category mapping (Agriculture, Textile, Food Processing, etc.).
+
+E. Runtime Non-Use of CSVs & Future Live Limitations:
+   - CSV datasets (products.csv, customers.csv, sales.csv) remain in assets/data for
+     reference but are NOT read at runtime. Seed signals are static in-memory objects.
+   - Future transition to live regional market intelligence will require backend DB
+     aggregation tables / RPCs and should NOT attempt client-side runtime CSV parsing.
+
+------------------------------------------------------------------------------
+8. MY PROFILE, SETTINGS & SECURITY ARCHITECTURE (STEPS 6E & 6E.1)
+------------------------------------------------------------------------------
+A. Profile Header & Business Identity:
+   - Clean initials circle avatar (derived from full name or "P").
+   - Producer full name, business name, craft category, contact phone, and workshop address.
+   - Fallbacks to localized "Not provided" for optional missing profile details.
+
+B. Truthful Identity & Compliance Presentation:
+   - Generic Truthful Identity Status: Displays "Identity Verification: Completed" or
+     "Identity Verification: Pending" using genuine PAN verification and onboarding state.
+   - Aadhaar Presentation Data Removed: Zero Aadhaar numbers, zero Aadhaar last-4,
+     zero Aadhaar reference IDs, zero fingerprints, and zero fake verification statuses.
+   - Safe GST Status: Simple, truthful compliance state ("GST: Registered" or
+     "GST: Not Registered"). No premature GSTIN exposure or fake masking (•••• F1Z5).
+   - Strict PAN Masking: Only last 4 digits are revealed (•••• 1234); raw PAN is never
+     persisted in profile models or displayed in the UI.
+
+C. Settings (Centralized Preferences):
+   - App Language: English, Hindi (हिन्दी), Punjabi (ਪੰਜਾਬੀ) with reactive switching.
+   - Voice Guidance Language: Follows app language or independent English/Hindi/Punjabi.
+   - Appearance: System, Light, and Dark modes synced with ThemeProvider.
+
+D. Account & Security:
+   - Registered email presentation.
+   - Real Supabase password-reset flow with status feedback.
+   - Truthful Session Presentation: "Current Session: Signed in" without implying
+     unimplemented multi-device tracking or hardware fingerprints.
+   - Sign Out: Clear confirmation dialog routing cleanly back to AuthScreen.
+
+E. Truthful Privacy Claims (Help & About):
+   - Unsupported claims ("documents are encrypted", "government verified") eliminated.
+   - Truthful representation: sensitive identity data is minimized, raw PAN is never
+     rendered, Aadhaar is not carried in Profile, and producer data is guarded by
+     authentication and database ownership policies.
+
+F. Responsive Quick Action Menu:
+   - Accessible from mobile/tablet AppBar and desktop sidebar footer.
+   - Quick routes to My Profile, App Language, Appearance, Help & About, and Sign Out.
+

@@ -425,7 +425,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get panVerification => 'पैन सत्यापन';
 
   @override
-  String get panVerified => 'पैन सत्यापित';
+  String get panVerified => 'सत्यापित';
 
   @override
   String get secureIdentityVerification => 'सुरक्षित पहचान सत्यापन';
@@ -616,8 +616,7 @@ class AppLocalizationsHi extends AppLocalizations {
       'खरीदारों की मांगें उपलब्ध होने पर यहाँ दिखाई देंगी';
 
   @override
-  String get featureComingSoon =>
-      'This feature will be available in the next update';
+  String get featureComingSoon => 'यह सुविधा अगले अपडेट में उपलब्ध होगी';
 
   @override
   String get signOutAction => 'साइन आउट';
@@ -636,7 +635,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get filterDraft => 'ड्राफ्ट';
 
   @override
-  String get filterHidden => 'छिपे हुए';
+  String get filterHidden => 'निष्क्रिय';
+
+  @override
+  String get filterInactive => 'निष्क्रिय';
 
   @override
   String get statusActive => 'सक्रिय';
@@ -645,7 +647,57 @@ class AppLocalizationsHi extends AppLocalizations {
   String get statusDraft => 'ड्राफ्ट';
 
   @override
-  String get statusHidden => 'छिपा हुआ';
+  String get statusHidden => 'निष्क्रिय';
+
+  @override
+  String get statusInactive => 'निष्क्रिय';
+
+  @override
+  String get editAction => 'संपादित करें';
+
+  @override
+  String get continueEditingAction => 'संपादन जारी रखें';
+
+  @override
+  String get saveChangesAction => 'बदलाव सहेजें';
+
+  @override
+  String get makeActiveAction => 'सक्रिय करें';
+
+  @override
+  String get makeInactiveAction => 'निष्क्रिय करें';
+
+  @override
+  String get editProductTitle => 'उत्पाद संपादित करें';
+
+  @override
+  String get editProductHelper => 'अपने उत्पाद का विवरण और फ़ोटो अपडेट करें';
+
+  @override
+  String get deleteProductConfirmTitle => 'उत्पाद हटाएं?';
+
+  @override
+  String get deleteProductConfirmBody =>
+      'यह इस उत्पाद और इसकी तस्वीरों को स्थायी रूप से हटा देगा।';
+
+  @override
+  String get productUpdatedSuccess => 'उत्पाद अपडेट हो गया';
+
+  @override
+  String get productMadeActiveSuccess => 'उत्पाद सक्रिय कर दिया गया';
+
+  @override
+  String get productMadeInactiveSuccess => 'उत्पाद निष्क्रिय कर दिया गया';
+
+  @override
+  String get couldNotUpdateProduct => 'उत्पाद अपडेट नहीं किया जा सका';
+
+  @override
+  String get couldNotLoadProductPhoto => 'उत्पाद की फ़ोटो लोड नहीं हो सकी';
+
+  @override
+  String get incompleteProductCannotActivate =>
+      'सक्रिय करने से पहले नाम, श्रेणी और कीमत भरने के लिए कृपया उत्पाद संपादित करें।';
 
   @override
   String get priceNotSet => 'कीमत तय नहीं';
@@ -668,11 +720,18 @@ class AppLocalizationsHi extends AppLocalizations {
       'अधूरे उत्पाद जिन पर काम बाकी है, यहाँ दिखाई देंगे';
 
   @override
-  String get noHiddenProductsTitle => 'कोई छिपा हुआ उत्पाद नहीं';
+  String get noHiddenProductsTitle => 'कोई निष्क्रिय उत्पाद नहीं';
 
   @override
   String get noHiddenProductsSubtitle =>
-      'अस्थायी रूप से छिपाए गए उत्पाद यहाँ दिखाई देंगे';
+      'अस्थायी रूप से निष्क्रिय किए गए उत्पाद यहाँ दिखाई देंगे';
+
+  @override
+  String get noInactiveProductsTitle => 'कोई निष्क्रिय उत्पाद नहीं';
+
+  @override
+  String get noInactiveProductsSubtitle =>
+      'आपके द्वारा निष्क्रिय किए गए उत्पाद यहां दिखाई देंगे';
 
   @override
   String get showAllProducts => 'सभी उत्पाद देखें';
@@ -847,4 +906,311 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get markReadyFailed =>
       'तैयार चिह्नित नहीं हो सका। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get whatBuyersWantSubtitle =>
+      'अलग-अलग क्षेत्रों में मांग के नमूना रुझान देखें।';
+
+  @override
+  String get sampleMarketInsightsBadge => 'नमूना बाज़ार रुझान';
+
+  @override
+  String get sampleMarketInsightsNote =>
+      'यह क्षेत्रीय रुझान खरीदारों की रुचि को समझने में मदद करने के लिए नमूना बाज़ार डेटा पर आधारित हैं।';
+
+  @override
+  String get demandHigh => 'अधिक मांग';
+
+  @override
+  String get demandMedium => 'मध्यम मांग';
+
+  @override
+  String get demandLow => 'कम मांग';
+
+  @override
+  String demandScoreOutOf(String score) {
+    return '$score/100';
+  }
+
+  @override
+  String signalDistrictLabel(String district) {
+    return 'ज़िला: $district';
+  }
+
+  @override
+  String topBuyingCityLabel(String city) {
+    return 'प्रमुख खरीदार शहर: $city';
+  }
+
+  @override
+  String get estimatedMonthlyDemandLabel => 'अनुमानित मासिक मांग';
+
+  @override
+  String estimatedUnitsValue(String count) {
+    return '$count इकाइयां';
+  }
+
+  @override
+  String get typicalOrderValueLabel => 'औसत ऑर्डर मूल्य';
+
+  @override
+  String get categoryAgriculture => 'कृषि';
+
+  @override
+  String get categoryTextile => 'वस्त्र उद्योग';
+
+  @override
+  String get categoryFoodProcessing => 'खाद्य प्रसंस्करण';
+
+  @override
+  String get categoryManufacturing => 'विनिर्माण';
+
+  @override
+  String get noMarketInsights => 'अभी कोई बाज़ार रुझान उपलब्ध नहीं हैं।';
+
+  @override
+  String get takePhotoAction => 'फ़ोटो खींचें';
+
+  @override
+  String get chooseFromGalleryAction => 'गैलरी से चुनें';
+
+  @override
+  String get uploadingPhotoProgress => 'फ़ोटो अपलोड हो रही है...';
+
+  @override
+  String get removePhotoAction => 'फ़ोटो हटाएं';
+
+  @override
+  String get photoUploadFailed =>
+      'फ़ोटो अपलोड नहीं हो सकी। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get unsupportedPhotoFormat =>
+      'असमर्थित फ़ोटो प्रारूप। कृपया JPEG, PNG या WebP फ़ोटो चुनें।';
+
+  @override
+  String get photoTooLarge =>
+      'फ़ोटो 5 MB सीमा से अधिक है। कृपया छोटी फ़ोटो चुनें।';
+
+  @override
+  String get maxPhotosReached => 'अधिकतम 4 फ़ोटो की सीमा पूरी हो गई है';
+
+  @override
+  String get tryAnotherPhoto => 'कृपया कोई अन्य फ़ोटो चुनें';
+
+  @override
+  String get removePhotoConfirmation => 'क्या आप इस फ़ोटो को हटाना चाहते हैं?';
+
+  @override
+  String get photoRemovedMessage => 'फ़ोटो हटा दी गई';
+
+  @override
+  String get choosePhotoSource => 'उत्पाद फ़ोटो जोड़ें';
+
+  @override
+  String get deletePhoto => 'हटाएं';
+
+  @override
+  String get productMustBeSavedBeforePhotos =>
+      'फ़ोटो जोड़ने से पहले कृपया उत्पाद ड्राफ़्ट सहेजें';
+
+  @override
+  String get improvePhotoAction => 'फोटो सुधारें';
+
+  @override
+  String get improvingPhotoProgress => 'फोटो सुधारी जा रही है...';
+
+  @override
+  String get originalPhotoLabel => 'मूल फोटो';
+
+  @override
+  String get improvedPhotoLabel => 'सुधारी गई फोटो';
+
+  @override
+  String get keepOriginalAction => 'मूल फोटो रखें';
+
+  @override
+  String get useImprovedAction => 'सुधारी गई फोटो उपयोग करें';
+
+  @override
+  String get photoImprovedTitle => 'फोटो में सुधार हुआ';
+
+  @override
+  String get photoImproveFailed =>
+      'फोटो नहीं सुधारी जा सकी। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get aiImproveDisclaimer =>
+      'एआई केवल प्रस्तुति में सुधार करता है, आपके उत्पाद में नहीं।';
+
+  @override
+  String get aiImproveHelpText =>
+      'पृष्ठभूमि साफ करता है, रोशनी में सुधार करता है और उत्पाद को केंद्रित करता है।';
+
+  @override
+  String get comparePhotosTitle => 'फोटो की तुलना करें';
+
+  @override
+  String get photoImproveSuccessMessage => 'सुधारी गई फोटो लागू की गई';
+
+  @override
+  String get productPhotosTitle => 'उत्पाद की तस्वीरें';
+
+  @override
+  String get addPhotosNameFirst =>
+      'तस्वीरें जोड़ने से पहले उत्पाद का नाम दर्ज करें।';
+
+  @override
+  String get choosePhotoAction => 'तस्वीर चुनें';
+
+  @override
+  String get addProductHelper =>
+      'उत्पाद का विवरण, मूल्य और तस्वीरें दर्ज करें।';
+
+  @override
+  String get discardChangesTitle => 'बदलाव छोड़ें?';
+
+  @override
+  String get discardChangesMessage => 'आपके सहेजे न गए उत्पाद विवरण खो जाएंगे।';
+
+  @override
+  String get keepEditingAction => 'संपादन जारी रखें';
+
+  @override
+  String get discardAction => 'छोड़ें';
+
+  @override
+  String get pickerUnavailableError =>
+      'इस उपकरण पर फोटो चयन उपलब्ध नहीं है। कृपया ऐप पुनः चालू करें।';
+
+  @override
+  String get storageUnavailableError => 'फोटो संग्रहण सेवा उपलब्ध नहीं है।';
+
+  @override
+  String get productDetailsTitle => 'उत्पाद विवरण';
+
+  @override
+  String get noDescriptionAdded => 'कोई विवरण नहीं जोड़ा गया';
+
+  @override
+  String get deleteProductAction => 'उत्पाद हटाएं';
+
+  @override
+  String get verificationAndCompliance => 'सत्यापन एवं अनुपालन';
+
+  @override
+  String get businessProducerInfo => 'व्यापार एवं निर्माता विवरण';
+
+  @override
+  String get accountAndSecurity => 'खाता एवं सुरक्षा';
+
+  @override
+  String get helpAndAbout => 'सहायता एवं परिचय';
+
+  @override
+  String get voiceGuidanceLanguage => 'आवाज मार्गदर्शन भाषा';
+
+  @override
+  String get voiceGuidanceSameAsApp => 'ऐप भाषा के समान';
+
+  @override
+  String get verifiedProducer => 'सत्यापित निर्माता';
+
+  @override
+  String get unverifiedProducer => 'निर्माता';
+
+  @override
+  String get panNotVerified => 'सत्यापित नहीं';
+
+  @override
+  String get identityVerified => 'पूर्ण';
+
+  @override
+  String get identityNotVerified => 'लंबित';
+
+  @override
+  String get gstRegisteredBadge => 'पंजीकृत';
+
+  @override
+  String get gstNotRegisteredBadge => 'पंजीकृत नहीं';
+
+  @override
+  String get aadhaarStatusLabel => 'आधार पहचान';
+
+  @override
+  String get panIdentityLabel => 'पैन पहचान';
+
+  @override
+  String get gstComplianceLabel => 'जीएसटी (GST)';
+
+  @override
+  String get workshopLocationLabel => 'कार्यशाला का स्थान';
+
+  @override
+  String get resetPassword => 'पासवर्ड रीसेट करें';
+
+  @override
+  String get resetPasswordDesc =>
+      'अपने पंजीकृत ईमेल पर पासवर्ड रीसेट निर्देश भेजें';
+
+  @override
+  String get resetPasswordSuccess =>
+      'पासवर्ड रीसेट लिंक आपके ईमेल पर भेज दिया गया है';
+
+  @override
+  String get activeSession => 'वर्तमान सत्र';
+
+  @override
+  String get activeSessionTruthful => 'साइन इन';
+
+  @override
+  String get signOutConfirmTitle => 'व्यापारसेतु से साइन आउट करें?';
+
+  @override
+  String get signOutConfirmMessage => 'क्या आप वाकई साइन आउट करना चाहते हैं?';
+
+  @override
+  String get howVyaparSetuWorks => 'व्यापारसेतु कैसे काम करता है';
+
+  @override
+  String get howVyaparSetuWorksContent =>
+      'व्यापारसेतु कारीगरों और निर्माताओं को सीधे सत्यापित थोक व खुदरा खरीदारों से जोड़ता है। अपने उत्पाद जोड़ें, फोटो साझा करें और पूरी पारदर्शिता के साथ खरीदारों की पूछताछ का उत्तर दें।';
+
+  @override
+  String get privacyAndData => 'गोपनीयता एवं डेटा';
+
+  @override
+  String get privacyAndDataContent =>
+      'संवेदनशील पहचान जानकारी को न्यूनतम रखा गया है। ऐप में मूल पैन (PAN) प्रदर्शित नहीं किया जाता है। आधार संख्या को प्रोफ़ाइल में प्रदर्शित या संग्रहीत नहीं किया जाता है। उत्पादक डेटा तक पहुंच प्रमाणीकरण और डेटाबेस स्वामित्व नीतियों द्वारा सुरक्षित है।';
+
+  @override
+  String get aboutVyaparSetu => 'व्यापारसेतु के बारे में';
+
+  @override
+  String get aboutVyaparSetuContent =>
+      'व्यापारसेतु v1.0 — प्रत्यक्ष वाणिज्य, स्थानीयकरण और विश्वसनीय सत्यापन के माध्यम से भारतीय कारीगरों और निर्माताओं को सशक्त बनाना।';
+
+  @override
+  String get phoneLabel => 'संपर्क फोन';
+
+  @override
+  String get quickMenuTitle => 'त्वरित क्रियाएं';
+
+  @override
+  String get email => 'ईमेल';
+
+  @override
+  String get ok => 'ठीक है';
+
+  @override
+  String get businessName => 'व्यवसाय का नाम';
+
+  @override
+  String get craftCategory => 'शिल्प श्रेणी';
+
+  @override
+  String get identityVerification => 'पहचान सत्यापन';
+
+  @override
+  String get producerRoleBadge => 'कारीगर / उत्पादक';
 }

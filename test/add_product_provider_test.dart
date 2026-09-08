@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product_draft.dart';
 import 'package:buyer_section/producer_section/products/providers/add_product_provider.dart';
+import 'package:buyer_section/producer_section/products/services/producer_product_image_service.dart';
 import 'package:buyer_section/producer_section/products/services/producer_product_service.dart';
 
 class MockProductService implements IProducerProductService {
@@ -9,6 +10,9 @@ class MockProductService implements IProducerProductService {
   int createCalls = 0;
   int updateCalls = 0;
   bool shouldFail = false;
+
+  @override
+  final IProducerProductImageService? imageService = null;
 
   @override
   Future<List<ProducerProduct>> fetchProducts({ProductStatus? statusFilter}) async =>

@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>VyaparSetu needs camera access so you can take and upload photos of your products.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>VyaparSetu needs photo library access so you can select and upload photos of your products.</string>
 </dict>
 </plist>
