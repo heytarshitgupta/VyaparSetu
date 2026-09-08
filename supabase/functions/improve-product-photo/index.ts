@@ -1,5 +1,11 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { InferenceClient } from "npm:@huggingface/inference@^4.13.28";
+import { imageSize as sizeOf } from "npm:image-size@^2.0.2";
+import { decode as decodeJpeg, encode as encodeJpeg } from "npm:@jsquash/jpeg@^1.6.0";
+import { decode as decodePng, encode as encodePng } from "npm:@jsquash/png@^3.1.1";
+import { decode as decodeWebp, encode as encodeWebp } from "npm:@jsquash/webp@^1.5.0";
+import resize from "npm:@jsquash/resize@^2.1.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -26,6 +32,83 @@ function generateHexFilename(ext = "png"): string {
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
   return `${hex}.${ext}`;
+}
+
+function detectImageFormat(bytes: Uint8Array): { contentType: string; ext: string } {
+  if (bytes.length >= 4 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47) {
+    return { contentType: "image/png", ext: "png" };
+  }
+  if (bytes.length >= 3 && bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF) {
+    return { contentType: "image/jpeg", ext: "jpg" };
+  }
+  if (
+    bytes.length >= 12 &&
+    bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 &&
+    bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50
+  ) {
+    return { contentType: "image/webp", ext: "webp" };
+  }
+  return { contentType: "image/png", ext: "png" };
+}
+
+const MIN_DIMENSION_PIXELS = 256;
+const MAX_RESIZE_DIMENSION = 4096;
+
+export function calculateResizeDimensions(
+  width: number,
+  height: number,
+  minDimension = MIN_DIMENSION_PIXELS,
+): { targetWidth: number; targetHeight: number; needsResize: boolean } {
+  if (width <= 0 || height <= 0 || (width >= minDimension && height >= minDimension)) {
+    return { targetWidth: width, targetHeight: height, needsResize: false };
+  }
+
+  const scale = Math.max(minDimension / width, minDimension / height, 1);
+  let targetWidth = Math.round(width * scale);
+  let targetHeight = Math.round(height * scale);
+
+  if (targetWidth < minDimension) targetWidth = minDimension;
+  if (targetHeight < minDimension) targetHeight = minDimension;
+
+  return { targetWidth, targetHeight, needsResize: true };
+}
+
+export async function resizeImageBytes(
+  bytes: Uint8Array,
+  mimeType: string,
+  targetWidth: number,
+  targetHeight: number,
+): Promise<Uint8Array> {
+  const arrayBuffer = bytes.buffer.slice(
+    bytes.byteOffset,
+    bytes.byteOffset + bytes.byteLength,
+  ) as ArrayBuffer;
+
+  let decoded: ImageData;
+  if (mimeType === "image/png") {
+    decoded = await decodePng(arrayBuffer);
+  } else if (mimeType === "image/jpeg") {
+    decoded = await decodeJpeg(arrayBuffer);
+  } else if (mimeType === "image/webp") {
+    decoded = await decodeWebp(arrayBuffer);
+  } else {
+    throw new Error(`Unsupported MIME type for resizing: ${mimeType}`);
+  }
+
+  const resized = await resize(decoded, { width: targetWidth, height: targetHeight });
+
+  let encoded: ArrayBuffer;
+  if (mimeType === "image/png") {
+    encoded = await encodePng(resized);
+  } else if (mimeType === "image/jpeg") {
+    encoded = await encodeJpeg(resized);
+  } else if (mimeType === "image/webp") {
+    encoded = await encodeWebp(resized);
+  } else {
+    encoded = await encodePng(resized);
+  }
+
+  return new Uint8Array(encoded);
 }
 
 export async function handleImprovePhotoRequest(req: Request): Promise<Response> {
@@ -81,7 +164,7 @@ export async function handleImprovePhotoRequest(req: Request): Promise<Response>
   const userId = user.id;
 
   // 3. Input Validation
-  let body: any;
+  let body: Record<string, unknown> | null = null;
   try {
     body = await req.json();
   } catch (_) {
@@ -212,97 +295,151 @@ export async function handleImprovePhotoRequest(req: Request): Promise<Response>
     );
   }
 
-  // 6. OpenAI API Key check
-  const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
-  if (!openaiApiKey || openaiApiKey.trim().length === 0) {
+  // Read image bytes for dimension validation & optional temporary AI input resize
+  const sourceArrayBuffer = await fileBlob.arrayBuffer();
+  const sourceBytes = new Uint8Array(sourceArrayBuffer);
+
+  let sourceWidth = 0;
+  let sourceHeight = 0;
+  try {
+    const dimensions = sizeOf(sourceBytes);
+    sourceWidth = dimensions.width || 0;
+    sourceHeight = dimensions.height || 0;
+  } catch (_) {
+    // Fallback dimension extraction via decoder if header parsing fails
+    try {
+      const buf = sourceBytes.buffer.slice(
+        sourceBytes.byteOffset,
+        sourceBytes.byteOffset + sourceBytes.byteLength,
+      ) as ArrayBuffer;
+      let dec: ImageData | null = null;
+      if (mimeType === "image/png") dec = await decodePng(buf);
+      else if (mimeType === "image/jpeg") dec = await decodeJpeg(buf);
+      else if (mimeType === "image/webp") dec = await decodeWebp(buf);
+      if (dec) {
+        sourceWidth = dec.width;
+        sourceHeight = dec.height;
+      }
+    } catch (_) {
+      // Fallback decode failure ignored; will proceed with zero or header dimensions
+    }
+  }
+
+  console.log(`[improve-product-photo] source dimensions: ${sourceWidth}x${sourceHeight}`);
+
+  let aiInputBlob: Blob = fileBlob;
+
+  const resizePlan = calculateResizeDimensions(sourceWidth, sourceHeight, MIN_DIMENSION_PIXELS);
+  if (resizePlan.needsResize) {
+    if (resizePlan.targetWidth > MAX_RESIZE_DIMENSION || resizePlan.targetHeight > MAX_RESIZE_DIMENSION) {
+      return new Response(
+        JSON.stringify({
+          error: "Source image aspect ratio or dimensions cannot be safely processed.",
+          code: "HF_INVALID_DIMENSIONS",
+        }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log(`[improve-product-photo] resized AI input: ${resizePlan.targetWidth}x${resizePlan.targetHeight}`);
+
+    try {
+      const resizedBytes = await resizeImageBytes(
+        sourceBytes,
+        mimeType,
+        resizePlan.targetWidth,
+        resizePlan.targetHeight,
+      );
+      aiInputBlob = new Blob([resizedBytes.buffer as ArrayBuffer], { type: mimeType });
+    } catch (resizeErr: unknown) {
+      const resizeMessage = resizeErr instanceof Error ? resizeErr.message : String(resizeErr);
+      console.error(
+        `[improve-product-photo] Failed to resize image below minimum dimensions: ${resizeMessage}`
+      );
+      return new Response(
+        JSON.stringify({
+          error: "Photo improvement service is temporarily unavailable. Please try again.",
+          code: "HF_PROVIDER_ERROR",
+        }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+  }
+
+  // 6. Hugging Face API Key check
+  const hfToken = Deno.env.get("HF_TOKEN");
+  if (!hfToken || hfToken.trim().length === 0) {
     return new Response(
       JSON.stringify({
-        error: "AI enhancement service is not configured on the server. Please set OPENAI_API_KEY.",
+        error: "AI enhancement service is not configured on the server. Please set HF_TOKEN.",
       }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
-  // 7. Call OpenAI Image Edit API
-  const model = Deno.env.get("OPENAI_IMAGE_MODEL")?.trim() || "gpt-image-2";
-
-  const formData = new FormData();
-  // Name the file cleanly with extension
-  const sourceExt = mimeType === "image/jpeg" ? "jpg" : mimeType === "image/webp" ? "webp" : "png";
-  formData.append("image", fileBlob, `source.${sourceExt}`);
-  formData.append("prompt", STRICT_PRODUCT_EDIT_PROMPT);
-  formData.append("model", model);
-  formData.append("size", "1024x1024");
-  formData.append("n", "1");
-  formData.append("response_format", "b64_json");
+  // 7. Call Hugging Face Inference Providers image-to-image API
+  const model = Deno.env.get("HF_IMAGE_MODEL")?.trim() || "Qwen/Qwen-Image-Edit";
 
   let improvedBytes: Uint8Array;
   try {
-    const openaiRes = await fetch("https://api.openai.com/v1/images/edits", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${openaiApiKey}`,
+    const hf = new InferenceClient(hfToken);
+
+    const resultBlob: Blob = await hf.imageToImage({
+      model,
+      inputs: aiInputBlob,
+      parameters: {
+        prompt: STRICT_PRODUCT_EDIT_PROMPT,
       },
-      body: formData,
+      provider: "auto",
     });
 
-    if (!openaiRes.ok) {
-      const errText = await openaiRes.text();
-      console.error(`[improve-product-photo] OpenAI API error status=${openaiRes.status}: ${errText}`);
-      let sanitizedError = "AI image enhancement provider error";
-      try {
-        const errJson = JSON.parse(errText);
-        if (errJson?.error?.message) {
-          sanitizedError = errJson.error.message;
-        }
-      } catch (_) {}
-
+    if (!resultBlob || !(resultBlob instanceof Blob) || resultBlob.size === 0) {
+      console.error("[improve-product-photo] Empty or malformed blob returned by Hugging Face provider");
       return new Response(
-        JSON.stringify({ error: `AI provider error: ${sanitizedError}` }),
+        JSON.stringify({
+          error: "Photo improvement service is temporarily unavailable. Please try again.",
+          code: "HF_PROVIDER_ERROR",
+        }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const resultJson = await openaiRes.json();
-    const item = resultJson?.data?.[0];
+    const arrayBuffer = await resultBlob.arrayBuffer();
+    improvedBytes = new Uint8Array(arrayBuffer);
 
-    if (item?.b64_json) {
-      const binaryString = atob(item.b64_json);
-      const len = binaryString.length;
-      improvedBytes = new Uint8Array(len);
-      for (let i = 0; i < len; i++) {
-        improvedBytes[i] = binaryString.charCodeAt(i);
-      }
-    } else if (item?.url) {
-      // Download generated image from provided URL
-      const imgRes = await fetch(item.url);
-      if (!imgRes.ok) {
-        throw new Error("Failed to download generated image from provider URL");
-      }
-      const buffer = await imgRes.arrayBuffer();
-      improvedBytes = new Uint8Array(buffer);
-    } else {
+    if (improvedBytes.byteLength === 0) {
+      console.error("[improve-product-photo] Provider returned 0 byte image buffer");
       return new Response(
-        JSON.stringify({ error: "Malformed response received from AI provider" }),
+        JSON.stringify({
+          error: "Photo improvement service is temporarily unavailable. Please try again.",
+          code: "HF_PROVIDER_ERROR",
+        }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-  } catch (err: any) {
-    console.error(`[improve-product-photo] Exception calling AI provider: ${err?.message || err}`);
+  } catch (err: unknown) {
+    const errorDetails = err as { httpResponse?: { status?: number }; status?: number; message?: string };
+    console.error(
+      `[improve-product-photo] Hugging Face inference error status=${errorDetails?.httpResponse?.status || errorDetails?.status || "unknown"}: ${errorDetails?.message || err}`
+    );
     return new Response(
-      JSON.stringify({ error: `Failed to call AI provider: ${err?.message || "Unknown error"}` }),
+      JSON.stringify({
+        error: "Photo improvement service is temporarily unavailable. Please try again.",
+        code: "HF_PROVIDER_ERROR",
+      }),
       { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
   // 8. Store Improved Image as New Immutable Object
-  const newFilename = generateHexFilename("png");
+  const { contentType: outputContentType, ext: outputExt } = detectImageFormat(improvedBytes);
+  const newFilename = generateHexFilename(outputExt);
   const improvedStoragePath = `${userId}/${productId.trim()}/${newFilename}`;
 
   const { error: uploadError } = await dbClient.storage
     .from("product-images")
     .upload(improvedStoragePath, improvedBytes, {
-      contentType: "image/png",
+      contentType: outputContentType,
       upsert: false, // Strict: Do not overwrite
     });
 

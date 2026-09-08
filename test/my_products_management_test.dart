@@ -36,7 +36,7 @@ class FakeManagementPhotoEnhancementService implements IProductPhotoEnhancementS
   }) async {
     improveCalls.add({'productId': productId, 'sourceStoragePath': sourceStoragePath});
     if (shouldThrow) {
-      throw const ProductOperationException('AI enhancement provider error');
+      throw const ProductOperationException('Could not improve photo. Please try again.');
     }
     final ext = sourceStoragePath.split('.').last;
     return EnhancementResult(

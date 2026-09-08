@@ -441,7 +441,21 @@ MY PRODUCTS MANAGEMENT & REAL IMAGE LIFECYCLE (STEP 6D)
    - Storage bucket `product-images` remains 100% private.
    - Signed URLs are transient in-memory previews only (never stored in DB).
    - No service-role key is ever exposed in client code.
-   - All DB operations use authenticated owner-scoped queries through `ProducerProductService`.
-   - Buyer Isolation: Products remain strictly owner-scoped under Migration 009. Zero Buyer marketplace visibility or discovery is active.
 
-
+9. AI Product Photo Improvement Architecture (Hugging Face Inference Providers):
+   - End-to-End Pipeline:
+     Flutter ProducerProductDetailsView -> improve-product-photo Supabase Edge Function ->
+     Bearer JWT verification + product ownership/path validation -> private Storage download ->
+     in-memory minimum dimension validation (upscaled via @jsquash WASM if <256x256 while preserving aspect ratio) ->
+     Hugging Face Inference Providers (`@huggingface/inference`) with provider="auto" ->
+     Model: `Qwen/Qwen-Image-Edit` -> magic byte detection (PNG/JPEG/WebP) ->
+     uploaded to private `product-images` as `<userId>/<productId>/<hex_id>.<ext>` (upsert: false) ->
+     transient signed URL pre-warming -> interactive Before/After comparison modal ->
+     explicit producer selection ("Keep Original" discards candidate / "Use Improved Photo" persists to products.images).
+   - Security Invariants:
+     * `HF_TOKEN` is read strictly server-side via Supabase Edge Function environment secrets.
+     * Zero API keys or service role secrets present in Flutter client code, Dart, or git.
+     * Sanitized error messages presented to users on failure; technical diagnostics confined to server logs.
+     * Original producer photo in Supabase Storage is never mutated or overwritten during AI enhancement.
+   - Live Verification Result:
+     * Manually tested and confirmed functional in the live mobile application.

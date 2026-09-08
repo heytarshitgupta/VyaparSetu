@@ -33,6 +33,7 @@ class ProducerProductDetailsView extends StatefulWidget {
   final IProductPhotoEnhancementService? enhancementService;
   final VoidCallback? onProductUpdated;
   final bool isBottomSheet;
+  final ScaffoldMessengerState? rootMessenger;
 
   const ProducerProductDetailsView({
     super.key,
@@ -43,6 +44,7 @@ class ProducerProductDetailsView extends StatefulWidget {
     this.enhancementService,
     this.onProductUpdated,
     this.isBottomSheet = false,
+    this.rootMessenger,
   });
 
   /// Displays the Product Details in a responsive modal.
@@ -57,6 +59,7 @@ class ProducerProductDetailsView extends StatefulWidget {
   }) async {
     final width = MediaQuery.sizeOf(context).width;
     final isPhone = width < 640;
+    final rootMessenger = ScaffoldMessenger.maybeOf(context);
 
     if (isPhone) {
       await showModalBottomSheet<void>(
@@ -77,6 +80,7 @@ class ProducerProductDetailsView extends StatefulWidget {
             enhancementService: enhancementService,
             onProductUpdated: onProductUpdated,
             isBottomSheet: true,
+            rootMessenger: rootMessenger,
           ),
         ),
       );
@@ -99,6 +103,7 @@ class ProducerProductDetailsView extends StatefulWidget {
               enhancementService: enhancementService,
               onProductUpdated: onProductUpdated,
               isBottomSheet: false,
+              rootMessenger: rootMessenger,
             ),
           ),
         ),
@@ -111,6 +116,7 @@ class ProducerProductDetailsView extends StatefulWidget {
 }
 
 class _ProducerProductDetailsViewState extends State<ProducerProductDetailsView> {
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   late ProducerProduct _currentProduct;
   int _selectedImageIndex = 0;
   bool _isImprovingPhoto = false;
@@ -183,7 +189,7 @@ class _ProducerProductDetailsViewState extends State<ProducerProductDetailsView>
 
   Future<void> _handleToggleStatus() async {
     final l10n = AppLocalizations.of(context)!;
-    final messenger = ScaffoldMessenger.of(context);
+    final messenger = _scaffoldMessengerKey.currentState ?? ScaffoldMessenger.of(context);
 
     // Validation for activating an inactive product
     if (_currentProduct.status == ProductStatus.hidden) {
@@ -296,7 +302,7 @@ class _ProducerProductDetailsViewState extends State<ProducerProductDetailsView>
             ),
             onPressed: () async {
               Navigator.of(dialogContext).pop();
-              final messenger = ScaffoldMessenger.of(context);
+              final messenger = widget.rootMessenger ?? ScaffoldMessenger.of(context);
               final nav = Navigator.of(context);
               final success = await widget.productsProvider.deleteProduct(_currentProduct.id);
               if (mounted) {
@@ -339,7 +345,7 @@ class _ProducerProductDetailsViewState extends State<ProducerProductDetailsView>
     final enhancementSvc = _effectiveEnhancementService;
     final l10n = AppLocalizations.of(context)!;
     final errorColor = Theme.of(context).colorScheme.error;
-    final messenger = ScaffoldMessenger.of(context);
+    final messenger = _scaffoldMessengerKey.currentState ?? ScaffoldMessenger.of(context);
 
     setState(() {
       _isImprovingPhoto = true;
@@ -367,9 +373,13 @@ class _ProducerProductDetailsViewState extends State<ProducerProductDetailsView>
       );
     } catch (e) {
       if (!mounted) return;
+      final errorMsg = (e is ProductOperationException && e.message.isNotEmpty)
+          ? e.message
+          : l10n.photoImproveFailed;
+      messenger.hideCurrentSnackBar();
       messenger.showSnackBar(
         SnackBar(
-          content: Text(l10n.photoImproveFailed),
+          content: Text(errorMsg),
           backgroundColor: errorColor,
           behavior: SnackBarBehavior.floating,
         ),
@@ -616,7 +626,7 @@ class _ProducerProductDetailsViewState extends State<ProducerProductDetailsView>
 
   Future<void> _applyImprovedPhoto(String sourcePath, String candidatePath) async {
     final l10n = AppLocalizations.of(context)!;
-    final messenger = ScaffoldMessenger.of(context);
+    final messenger = _scaffoldMessengerKey.currentState ?? ScaffoldMessenger.of(context);
 
     // Replace source path with candidate path
     final updatedImages = _currentProduct.images
@@ -670,40 +680,43 @@ class _ProducerProductDetailsViewState extends State<ProducerProductDetailsView>
     final l10n = AppLocalizations.of(context)!;
     final isPhone = MediaQuery.sizeOf(context).width < 640;
 
-    return Material(
-      color: colorScheme.surface,
-      child: SafeArea(
-        top: widget.isBottomSheet,
-        bottom: true,
-        child: Column(
-          children: [
-            // Top Drag Handle (Mobile bottom sheet only)
-            if (widget.isBottomSheet) ...[
-              const SizedBox(height: 10),
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colorScheme.outlineVariant.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(2),
+    return ScaffoldMessenger(
+      key: _scaffoldMessengerKey,
+      child: Scaffold(
+        backgroundColor: colorScheme.surface,
+        body: SafeArea(
+          top: widget.isBottomSheet,
+          bottom: true,
+          child: Column(
+            children: [
+              // Top Drag Handle (Mobile bottom sheet only)
+              if (widget.isBottomSheet) ...[
+                const SizedBox(height: 10),
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
+                const SizedBox(height: 8),
+              ],
+
+              // App Bar / Top Navigation
+              _buildTopBar(context, l10n, colorScheme, theme),
+              const Divider(height: 1),
+
+              // Scrollable Content
+              Expanded(
+                child: isPhone
+                    ? _buildPhoneLayout(context, l10n, colorScheme, theme)
+                    : _buildDesktopLayout(context, l10n, colorScheme, theme),
               ),
-              const SizedBox(height: 8),
             ],
-
-            // App Bar / Top Navigation
-            _buildTopBar(context, l10n, colorScheme, theme),
-            const Divider(height: 1),
-
-            // Scrollable Content
-            Expanded(
-              child: isPhone
-                  ? _buildPhoneLayout(context, l10n, colorScheme, theme)
-                  : _buildDesktopLayout(context, l10n, colorScheme, theme),
-            ),
-          ],
+          ),
         ),
       ),
     );

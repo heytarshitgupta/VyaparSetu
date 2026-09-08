@@ -108,8 +108,11 @@ class ProducerProductEnhancementService implements IProductPhotoEnhancementServi
         sourceStoragePath: returnedSourcePath?.trim() ?? cleanSourcePath,
       );
     } on FunctionException catch (e) {
-      final detail = e.details?.toString() ?? e.toString();
-      throw ProductOperationException('AI service error: $detail', e);
+      String message = 'Photo improvement service is temporarily unavailable. Please try again.';
+      if (e.details is Map && e.details['error'] != null) {
+        message = e.details['error'].toString();
+      }
+      throw ProductOperationException(message, e);
     } on ProductOperationException {
       rethrow;
     } catch (e) {
