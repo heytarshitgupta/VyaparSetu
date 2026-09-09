@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:speech_to_text/speech_to_text.dart';
 import '../../../core/localization/generated/app_localizations.dart';
 import '../models/producer_product.dart';
 import '../models/product_price_parser.dart';
@@ -74,10 +79,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
   late final TextEditingController _descriptionController;
   late final TextEditingController _customCategoryController;
   late final FocusNode _nameFocusNode;
+  final SpeechToText _speech = SpeechToText();
 
   String? _nameError;
   String? _categoryError;
   String? _priceError;
+  bool _isListening = false;
+  String _spokenText = '';
+  bool _isLoading = false;
+  String? _hindiTitle;
+  String? _hindiDescription;
 
   // Canonical categories
   static const List<String> _categories = [
@@ -104,18 +115,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   void initState() {
     super.initState();
-    _provider = widget.provider ??
+    _provider =
+        widget.provider ??
         (widget.existingProduct != null
             ? AddProductProvider.forExistingProduct(
                 product: widget.existingProduct!,
                 productService: widget.productService,
-                imageService: widget.imageService ?? widget.productService?.imageService,
+                imageService:
+                    widget.imageService ?? widget.productService?.imageService,
                 imagePickerService: widget.imagePickerService,
                 enhancementService: widget.enhancementService,
               )
             : AddProductProvider(
                 productService: widget.productService,
-                imageService: widget.imageService ?? widget.productService?.imageService,
+                imageService:
+                    widget.imageService ?? widget.productService?.imageService,
                 imagePickerService: widget.imagePickerService,
                 enhancementService: widget.enhancementService,
               ));
@@ -123,13 +137,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _nameController = TextEditingController(text: _provider.draft.name);
     _priceController = TextEditingController(
       text: _provider.draft.pricePaise != null
-          ? ProductPriceParser.paiseToDecimalString(_provider.draft.pricePaise) ?? ''
+          ? ProductPriceParser.paiseToDecimalString(
+                  _provider.draft.pricePaise,
+                ) ??
+                ''
           : '',
     );
-    _descriptionController =
-        TextEditingController(text: _provider.draft.description);
+    _descriptionController = TextEditingController(
+      text: _provider.draft.description,
+    );
     _customCategoryController = TextEditingController(
-      text: _categories.contains(_provider.draft.category) ||
+      text:
+          _categories.contains(_provider.draft.category) ||
               _provider.draft.category.isEmpty
           ? ''
           : _provider.draft.category,
@@ -141,6 +160,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   void dispose() {
+    _speech.stop();
     _provider.removeListener(_onProviderChanged);
     if (widget.provider == null) {
       _provider.dispose();
@@ -151,6 +171,139 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _customCategoryController.dispose();
     _nameFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _listen() async {
+    if (_isLoading) return;
+
+    if (_isListening) {
+      await _speech.stop();
+      if (mounted) {
+        setState(() => _isListening = false);
+      }
+      await _generateCatalog();
+      return;
+    }
+
+    final available = await _speech.initialize(
+      onError: (error) {
+        if (!mounted) return;
+        setState(() => _isListening = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Could not access speech recognition: ${error.errorMsg}',
+            ),
+          ),
+        );
+      },
+    );
+
+    if (!available) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Speech recognition is not available on this device.'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _spokenText = '';
+      _isListening = true;
+      _hindiTitle = null;
+      _hindiDescription = null;
+    });
+
+    await _speech.listen(
+      onResult: (result) {
+        if (!mounted) return;
+        setState(() => _spokenText = result.recognizedWords);
+      },
+    );
+  }
+
+  Future<void> _generateCatalog() async {
+    final transcript = _spokenText.trim();
+    if (transcript.isEmpty) return;
+
+    setState(() => _isLoading = true);
+    try {
+      final response = await http
+          .post(
+            Uri.parse(
+              'http://${kIsWeb || defaultTargetPlatform != TargetPlatform.android ? 'localhost' : '10.0.2.2'}:8000/api/generate-catalog',
+            ),
+            headers: const {'Content-Type': 'application/json'},
+            body: jsonEncode({'transcript': transcript}),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw Exception(
+          'Catalog service returned HTTP ${response.statusCode}.',
+        );
+      }
+
+      final body = jsonDecode(response.body);
+      if (body is! Map<String, dynamic>) {
+        throw const FormatException('Invalid catalog response.');
+      }
+      final data = body['data'];
+      if (data is! Map<String, dynamic>) {
+        throw const FormatException('Catalog data is missing.');
+      }
+
+      final english = data['english'];
+      final hindi = data['hindi'];
+      final englishTitle = english is Map
+          ? english['title']?.toString().trim()
+          : null;
+      final englishDescription = english is Map
+          ? english['description']?.toString().trim()
+          : null;
+      final hindiTitle = hindi is Map
+          ? hindi['title']?.toString().trim()
+          : null;
+      final hindiDescription = hindi is Map
+          ? hindi['description']?.toString().trim()
+          : null;
+
+      if (englishTitle == null ||
+          englishTitle.isEmpty ||
+          englishDescription == null ||
+          englishDescription.isEmpty) {
+        throw const FormatException('English catalog fields are missing.');
+      }
+
+      if (!mounted) return;
+      _nameController
+        ..text = englishTitle
+        ..selection = TextSelection.collapsed(offset: englishTitle.length);
+      _descriptionController
+        ..text = englishDescription
+        ..selection = TextSelection.collapsed(
+          offset: englishDescription.length,
+        );
+      _provider.setName(englishTitle);
+      _provider.setDescription(englishDescription);
+      setState(() {
+        _hindiTitle = hindiTitle;
+        _hindiDescription = hindiDescription;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Unable to generate catalog. Please try again. ($error)',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   void _onProviderChanged() {
@@ -233,15 +386,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return _provider.errorMessage ?? l10n.photoUploadFailed;
   }
 
-  Future<void> _onPickImage(ImageSourceOption source, AppLocalizations l10n) async {
+  Future<void> _onPickImage(
+    ImageSourceOption source,
+    AppLocalizations l10n,
+  ) async {
     if (_nameController.text.trim().isEmpty) {
       setState(() {
         _nameError = l10n.addPhotosNameFirst;
       });
       _nameFocusNode.requestFocus();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.addPhotosNameFirst)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.addPhotosNameFirst)));
       return;
     }
 
@@ -253,11 +409,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (!mounted) return;
 
     if (!success && _provider.hasError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_resolveErrorMessage(l10n)),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_resolveErrorMessage(l10n))));
     }
   }
 
@@ -267,9 +421,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
         _nameError = l10n.addPhotosNameFirst;
       });
       _nameFocusNode.requestFocus();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.addPhotosNameFirst)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.addPhotosNameFirst)));
       return;
     }
 
@@ -277,8 +431,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return;
     }
 
-    final pickerSvc = widget.imagePickerService ??
-        _provider.imagePickerService;
+    final pickerSvc = widget.imagePickerService ?? _provider.imagePickerService;
 
     // If camera is unsupported (e.g. web), directly choose photo from gallery/file input
     if (!pickerSvc.isCameraSupported) {
@@ -352,14 +505,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (confirmed == true && mounted) {
       await _provider.removeImage(storagePath);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.photoRemovedMessage)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.photoRemovedMessage)));
       }
     }
   }
 
-  Future<void> _onImprovePhoto(String storagePath, AppLocalizations l10n) async {
+  Future<void> _onImprovePhoto(
+    String storagePath,
+    AppLocalizations l10n,
+  ) async {
     final success = await _provider.improvePhoto(storagePath);
     if (!mounted) return;
 
@@ -408,7 +564,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.auto_awesome, color: colorScheme.primary, size: 24),
+                      Icon(
+                        Icons.auto_awesome,
+                        color: colorScheme.primary,
+                        size: 24,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -431,7 +591,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   Text(
                     l10n.aiImproveHelpText,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                      color: colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.8,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -505,7 +667,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           onPressed: () async {
                             final navigator = Navigator.of(modalContext);
                             final messenger = ScaffoldMessenger.of(context);
-                            final success = await _provider.useImprovedPhoto(storagePath);
+                            final success = await _provider.useImprovedPhoto(
+                              storagePath,
+                            );
                             if (modalContext.mounted) {
                               navigator.pop();
                             }
@@ -513,14 +677,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               if (success) {
                                 messenger.showSnackBar(
                                   SnackBar(
-                                    content: Text(l10n.photoImproveSuccessMessage),
+                                    content: Text(
+                                      l10n.photoImproveSuccessMessage,
+                                    ),
                                   ),
                                 );
                               } else {
                                 messenger.showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      _provider.errorMessage ?? l10n.photoImproveFailed,
+                                      _provider.errorMessage ??
+                                          l10n.photoImproveFailed,
                                     ),
                                   ),
                                 );
@@ -573,7 +740,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (isImproved) ...[
-                  Icon(Icons.auto_awesome, size: 14, color: colorScheme.onPrimaryContainer),
+                  Icon(
+                    Icons.auto_awesome,
+                    size: 14,
+                    color: colorScheme.onPrimaryContainer,
+                  ),
                   const SizedBox(width: 4),
                 ],
                 Text(
@@ -596,7 +767,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     url,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Center(
-                      child: Icon(Icons.broken_image_outlined, color: colorScheme.error),
+                      child: Icon(
+                        Icons.broken_image_outlined,
+                        color: colorScheme.error,
+                      ),
                     ),
                   )
                 : FutureBuilder<String?>(
@@ -613,14 +787,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           fetched,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) => Center(
-                            child: Icon(Icons.broken_image_outlined, color: colorScheme.error),
+                            child: Icon(
+                              Icons.broken_image_outlined,
+                              color: colorScheme.error,
+                            ),
                           ),
                         );
                       }
                       return Center(
                         child: Icon(
                           Icons.image_outlined,
-                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                          color: colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       );
                     },
@@ -648,15 +827,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (!mounted) return;
 
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.draftSavedMessage)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.draftSavedMessage)));
       Navigator.of(context).pop(true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_provider.errorMessage ?? l10n.saveDraftFailed),
-        ),
+        SnackBar(content: Text(_provider.errorMessage ?? l10n.saveDraftFailed)),
       );
     }
   }
@@ -679,7 +856,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         });
         hasValidationError = true;
       }
-      if (_provider.draft.pricePaise == null || _provider.draft.pricePaise! <= 0) {
+      if (_provider.draft.pricePaise == null ||
+          _provider.draft.pricePaise! <= 0) {
         setState(() {
           _priceError = l10n.priceInvalidError;
         });
@@ -695,9 +873,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (!mounted) return;
 
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.productUpdatedSuccess)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.productUpdatedSuccess)));
       Navigator.of(context).pop(true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -726,7 +904,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       hasValidationError = true;
     }
 
-    if (_provider.draft.pricePaise == null || _provider.draft.pricePaise! <= 0) {
+    if (_provider.draft.pricePaise == null ||
+        _provider.draft.pricePaise! <= 0) {
       setState(() {
         _priceError = l10n.priceInvalidError;
       });
@@ -741,15 +920,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (!mounted) return;
 
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.productMarkedReadyMessage)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.productMarkedReadyMessage)));
       Navigator.of(context).pop(true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_provider.errorMessage ?? l10n.markReadyFailed),
-        ),
+        SnackBar(content: Text(_provider.errorMessage ?? l10n.markReadyFailed)),
       );
     }
   }
@@ -791,7 +968,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
       canPop: !_provider.isDirty,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
-        final shouldDiscard = await _showDiscardConfirmationDialog(context, l10n);
+        final shouldDiscard = await _showDiscardConfirmationDialog(
+          context,
+          l10n,
+        );
         if (shouldDiscard == true && context.mounted) {
           Navigator.of(context).pop(false);
         }
@@ -832,95 +1012,149 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   // 2. Scrollable single form
                   Flexible(
                     child: SingleChildScrollView(
-                      padding: EdgeInsets.fromLTRB(20, 12, 20, 16 + bottomInset),
-                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Photos Section
-                        _buildPhotosSection(l10n, colorScheme, theme),
-                        const SizedBox(height: 20),
+                      padding: EdgeInsets.fromLTRB(
+                        20,
+                        12,
+                        20,
+                        16 + bottomInset,
+                      ),
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Photos Section
+                          _buildPhotosSection(l10n, colorScheme, theme),
+                          const SizedBox(height: 20),
 
-                        // Product Name
-                        _buildNameField(l10n, colorScheme),
-                        const SizedBox(height: 16),
-
-                        // Category & Unit (2-column on wide screens)
-                        if (isWide)
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(flex: 3, child: _buildCategorySection(l10n, colorScheme)),
-                              const SizedBox(width: 16),
-                              Expanded(flex: 2, child: _buildUnitDropdown(l10n, colorScheme)),
-                            ],
-                          )
-                        else ...[
-                          _buildCategorySection(l10n, colorScheme),
+                          // Product Name
+                          _buildNameField(l10n, colorScheme),
                           const SizedBox(height: 16),
-                          _buildUnitDropdown(l10n, colorScheme),
-                        ],
-                        const SizedBox(height: 16),
 
-                        // Price & Description
-                        if (isWide)
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(flex: 2, child: _buildPriceField(l10n, colorScheme)),
-                              const SizedBox(width: 16),
-                              Expanded(flex: 3, child: _buildDescriptionField(l10n, colorScheme)),
-                            ],
-                          )
-                        else ...[
-                          _buildPriceField(l10n, colorScheme),
-                          const SizedBox(height: 16),
-                          _buildDescriptionField(l10n, colorScheme),
-                        ],
-                        const SizedBox(height: 20),
-
-                        // Error Banner if provider has active error
-                        if (_provider.hasError) ...[
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: colorScheme.errorContainer,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
+                          // Category & Unit (2-column on wide screens)
+                          if (isWide)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.error_outline, color: colorScheme.onErrorContainer, size: 20),
-                                const SizedBox(width: 8),
                                 Expanded(
-                                  child: Text(
-                                    _provider.errorMessage!,
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: colorScheme.onErrorContainer,
-                                    ),
+                                  flex: 3,
+                                  child: _buildCategorySection(
+                                    l10n,
+                                    colorScheme,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  flex: 2,
+                                  child: _buildUnitDropdown(l10n, colorScheme),
+                                ),
+                              ],
+                            )
+                          else ...[
+                            _buildCategorySection(l10n, colorScheme),
+                            const SizedBox(height: 16),
+                            _buildUnitDropdown(l10n, colorScheme),
+                          ],
+                          const SizedBox(height: 16),
+
+                          // Price & Description
+                          if (isWide)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: _buildPriceField(l10n, colorScheme),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  flex: 3,
+                                  child: _buildDescriptionField(
+                                    l10n,
+                                    colorScheme,
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
+                            )
+                          else ...[
+                            _buildPriceField(l10n, colorScheme),
+                            const SizedBox(height: 16),
+                            _buildDescriptionField(l10n, colorScheme),
+                          ],
+                          const SizedBox(height: 20),
 
-                        // Actions: Save Draft & Add Product
-                        _buildActionButtons(l10n, colorScheme),
-                      ],
+                          // Error Banner if provider has active error
+                          if (_provider.hasError) ...[
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: colorScheme.errorContainer,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.error_outline,
+                                    color: colorScheme.onErrorContainer,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      _provider.errorMessage!,
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            color: colorScheme.onErrorContainer,
+                                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+
+                          // Actions: Save Draft & Add Product
+                          _buildActionButtons(l10n, colorScheme),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+
+          content = Stack(
+            fit: StackFit.passthrough,
+            children: [
+              content,
+              if (_isLoading)
+                Positioned.fill(
+                  child: ColoredBox(
+                    color: Colors.black12,
+                    child: Center(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              CircularProgressIndicator(),
+                              SizedBox(height: 10),
+                              Text('Generating catalog...'),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        );
+            ],
+          );
 
           if (isWide) {
-            return Align(
-              alignment: Alignment.bottomCenter,
-              child: content,
-            );
+            return Align(alignment: Alignment.bottomCenter, child: content);
           }
 
           return content;
@@ -933,7 +1167,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   // Component Builders
   // ---------------------------------------------------------------------------
 
-  Widget _buildHeader(AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildHeader(
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+    ThemeData theme,
+  ) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 12, 4),
       child: Column(
@@ -958,14 +1196,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _provider.isEditMode ? l10n.editProductTitle : l10n.addProduct,
+                      _provider.isEditMode
+                          ? l10n.editProductTitle
+                          : l10n.addProduct,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      _provider.isEditMode ? l10n.editProductHelper : l10n.addProductHelper,
+                      _provider.isEditMode
+                          ? l10n.editProductHelper
+                          : l10n.addProductHelper,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -986,7 +1228,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
-  Widget _buildPhotosSection(AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildPhotosSection(
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+    ThemeData theme,
+  ) {
     final images = _provider.draft.images;
 
     return Column(
@@ -1053,7 +1299,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: hasCandidate ? colorScheme.primary : colorScheme.outlineVariant,
+                    color: hasCandidate
+                        ? colorScheme.primary
+                        : colorScheme.outlineVariant,
                     width: hasCandidate ? 2.0 : 1.0,
                   ),
                 ),
@@ -1063,26 +1311,41 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         signedUrl,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Center(
-                          child: Icon(Icons.broken_image_outlined, size: 24, color: colorScheme.error),
+                          child: Icon(
+                            Icons.broken_image_outlined,
+                            size: 24,
+                            color: colorScheme.error,
+                          ),
                         ),
                       )
                     : FutureBuilder<String?>(
                         future: _provider.getOrFetchSignedUrl(storagePath),
                         builder: (context, snap) {
                           if (snap.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+                            return const Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            );
                           }
                           if (snap.data != null) {
                             return Image.network(
                               snap.data!,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Center(
-                                child: Icon(Icons.broken_image_outlined, size: 24, color: colorScheme.error),
-                              ),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Center(
+                                    child: Icon(
+                                      Icons.broken_image_outlined,
+                                      size: 24,
+                                      color: colorScheme.error,
+                                    ),
+                                  ),
                             );
                           }
                           return Center(
-                            child: Icon(Icons.image_outlined, size: 24, color: colorScheme.onSurfaceVariant),
+                            child: Icon(
+                              Icons.image_outlined,
+                              size: 24,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
                           );
                         },
                       ),
@@ -1100,7 +1363,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -1115,7 +1380,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   child: InkWell(
                     key: Key('remove_photo_$storagePath'),
                     customBorder: const CircleBorder(),
-                    onTap: isBeingImproved ? null : () => _onRemovePhoto(storagePath, l10n),
+                    onTap: isBeingImproved
+                        ? null
+                        : () => _onRemovePhoto(storagePath, l10n),
                     child: const Padding(
                       padding: EdgeInsets.all(4),
                       child: Icon(Icons.close, size: 14, color: Colors.white),
@@ -1152,7 +1419,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   const SizedBox(width: 2),
                   Flexible(
                     child: Text(
-                      hasCandidate ? l10n.comparePhotosTitle : l10n.improvePhotoAction,
+                      hasCandidate
+                          ? l10n.comparePhotosTitle
+                          : l10n.improvePhotoAction,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: colorScheme.primary,
                         fontSize: 9,
@@ -1170,7 +1439,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
-  Widget _buildAddPhotoTile(AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildAddPhotoTile(
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+    ThemeData theme,
+  ) {
     return InkWell(
       key: const Key('add_product_photo_button'),
       onTap: () => _showPhotoSourceSelector(l10n),
@@ -1216,25 +1489,47 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   Widget _buildNameField(AppLocalizations l10n, ColorScheme colorScheme) {
-    return TextFormField(
-      key: const Key('add_product_name_field'),
-      controller: _nameController,
-      focusNode: _nameFocusNode,
-      decoration: InputDecoration(
-        labelText: '${l10n.productNameLabel} *',
-        hintText: l10n.productNameHint,
-        errorText: _nameError,
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      ),
-      onChanged: (val) {
-        _provider.setName(val);
-        if (_nameError != null) {
-          setState(() {
-            _nameError = null;
-          });
-        }
-      },
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: TextFormField(
+            key: const Key('add_product_name_field'),
+            controller: _nameController,
+            focusNode: _nameFocusNode,
+            decoration: InputDecoration(
+              labelText: '${l10n.productNameLabel} *',
+              hintText: l10n.productNameHint,
+              errorText: _nameError,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
+            ),
+            onChanged: (val) {
+              _provider.setName(val);
+              if (_nameError != null) {
+                setState(() {
+                  _nameError = null;
+                });
+              }
+            },
+          ),
+        ),
+        const SizedBox(width: 4),
+        IconButton(
+          key: const Key('add_product_voice_catalog_button'),
+          tooltip: _isListening
+              ? 'Stop voice catalog'
+              : 'Create catalog from voice',
+          onPressed: _isLoading ? null : _listen,
+          icon: Icon(
+            _isListening ? Icons.stop_circle_outlined : Icons.mic_none_outlined,
+          ),
+          color: _isListening ? colorScheme.error : colorScheme.primary,
+        ),
+      ],
     );
   }
 
@@ -1254,7 +1549,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
             labelText: '${l10n.categoryLabel} *',
             errorText: _categoryError,
             border: const OutlineInputBorder(),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
           ),
           items: _categories.map((cat) {
             return DropdownMenuItem<String>(
@@ -1284,7 +1582,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
             decoration: InputDecoration(
               labelText: l10n.customCategoryLabel,
               border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
             ),
             onChanged: (val) {
               _provider.setCategory(val);
@@ -1307,7 +1608,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
       decoration: InputDecoration(
         labelText: l10n.unitLabel,
         border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
       items: _units.map((unit) {
         return DropdownMenuItem<String>(
@@ -1337,7 +1641,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
         helperText: l10n.priceHelper,
         errorText: _priceError,
         border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
       onChanged: (val) {
         if (val.trim().isEmpty) {
@@ -1358,20 +1665,67 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
-  Widget _buildDescriptionField(AppLocalizations l10n, ColorScheme colorScheme) {
-    return TextFormField(
-      key: const Key('add_product_description_field'),
-      controller: _descriptionController,
-      maxLines: 3,
-      decoration: InputDecoration(
-        labelText: l10n.descriptionLabel,
-        hintText: l10n.descriptionHelper,
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+  Widget _buildDescriptionField(
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TextFormField(
+          key: const Key('add_product_description_field'),
+          controller: _descriptionController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            labelText: l10n.descriptionLabel,
+            hintText: l10n.descriptionHelper,
+            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
+          ),
+          onChanged: (val) {
+            _provider.setDescription(val);
+          },
+        ),
+        _buildHindiCatalogCard(colorScheme),
+      ],
+    );
+  }
+
+  Widget _buildHindiCatalogCard(ColorScheme colorScheme) {
+    if ((_hindiTitle == null || _hindiTitle!.isEmpty) &&
+        (_hindiDescription == null || _hindiDescription!.isEmpty)) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      margin: const EdgeInsets.only(top: 8),
+      color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.55),
+      child: ExpansionTile(
+        dense: true,
+        leading: Icon(Icons.translate, color: colorScheme.primary),
+        title: const Text('Hindi SEO content'),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        children: [
+          if (_hindiTitle != null && _hindiTitle!.isNotEmpty)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _hindiTitle!,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+          if (_hindiDescription != null && _hindiDescription!.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(_hindiDescription!),
+            ),
+          ],
+        ],
       ),
-      onChanged: (val) {
-        _provider.setDescription(val);
-      },
     );
   }
 
@@ -1386,9 +1740,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         child: FilledButton(
           key: const Key('add_product_save_changes_button'),
           onPressed: isBusy ? null : () => _onSaveChanges(l10n),
-          style: FilledButton.styleFrom(
-            minimumSize: const Size(0, 48),
-          ),
+          style: FilledButton.styleFrom(minimumSize: const Size(0, 48)),
           child: isBusy
               ? const SizedBox(
                   width: 20,
@@ -1410,9 +1762,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           child: OutlinedButton(
             key: const Key('add_product_save_draft_button'),
             onPressed: isBusy ? null : () => _onSaveDraft(l10n),
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size(0, 48),
-            ),
+            style: OutlinedButton.styleFrom(minimumSize: const Size(0, 48)),
             child: _provider.isSaving
                 ? const SizedBox(
                     width: 20,
@@ -1429,9 +1779,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           child: FilledButton(
             key: const Key('add_product_mark_ready_button'),
             onPressed: isBusy ? null : () => _onAddProduct(l10n),
-            style: FilledButton.styleFrom(
-              minimumSize: const Size(0, 48),
-            ),
+            style: FilledButton.styleFrom(minimumSize: const Size(0, 48)),
             child: isBusy
                 ? const SizedBox(
                     width: 20,
