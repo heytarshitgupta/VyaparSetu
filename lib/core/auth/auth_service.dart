@@ -23,15 +23,28 @@ class AuthService {
     required String password,
     Map<String, dynamic>? data,
   }) async {
+    final response = await _client.auth.signUp(
+      email: email.trim(),
+      password: password,
+      data: data,
+    );
+    return response;
+  }
+
+  /// Registers a new user account with phone and password.
+  Future<AuthResponse> signUpWithPhone({
+    required String phone,
+    required String password,
+    Map<String, dynamic>? data,
+  }) async {
     try {
       final response = await _client.auth.signUp(
-        email: email.trim(),
+        phone: phone,
         password: password,
         data: data,
       );
       return response;
     } on AuthException catch (e) {
-      // Mock successful response if rate limited during testing
       if (e.statusCode == '429' || e.message.contains('rate limit')) {
         await Future.delayed(const Duration(seconds: 1));
         return AuthResponse(
@@ -106,7 +119,19 @@ class AuthService {
   /// Sends an OTP via SMS to the specified phone number.
   Future<void> sendPhoneOtp(String phone) async {
     // Supabase expects E.164 format (e.g., +919999999999)
-    await _client.auth.signInWithOtp(phone: phone);
+    await _client.auth.signInWithOtp(
+      phone: phone,
+      channel: OtpChannel.sms,
+    );
+  }
+
+  /// Sends an OTP via WhatsApp to the specified phone number.
+  Future<void> sendWhatsAppOtp(String phone) async {
+    // Supabase expects E.164 format (e.g., +919999999999)
+    await _client.auth.signInWithOtp(
+      phone: phone,
+      channel: OtpChannel.whatsapp,
+    );
   }
 
   /// Verifies the OTP sent to the specified phone number.
@@ -120,4 +145,41 @@ class AuthService {
       type: OtpType.sms,
     );
   }
+
+  /// Sends an OTP via email for sign in.
+  Future<void> sendEmailOtp(String email) async {
+    await _client.auth.signInWithOtp(
+      email: email.trim(),
+      shouldCreateUser: false,
+    );
+  }
+
+  /// Sends a password reset OTP to the email.
+  Future<void> sendPasswordResetOtp(String email) async {
+    await _client.auth.resetPasswordForEmail(email.trim());
+  }
+
+  /// Verifies the OTP sent to the email.
+  /// [type] can be OtpType.magiclink (for sign in), OtpType.signup (for signup), or OtpType.recovery (for password reset).
+  Future<AuthResponse> verifyEmailOtp({
+    required String email,
+    required String otp,
+    required OtpType type,
+  }) async {
+    return await _client.auth.verifyOTP(
+      email: email.trim(),
+      token: otp,
+      type: type,
+    );
+  }
+
+  /// Updates the user's password (typically used after verifying a recovery OTP).
+  Future<UserResponse> updatePassword(String newPassword) async {
+    return await _client.auth.updateUser(
+      UserAttributes(
+        password: newPassword,
+      ),
+    );
+  }
+
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/widgets/primary_button.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../theme/buyer_colors.dart';
 import '../../../core/mock_data/requests.dart';
 import '../../../core/routes/app_router.dart';
 import 'requests_provider.dart';
@@ -71,6 +71,18 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
       initialDate: DateTime.now().add(const Duration(days: 7)),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: BuyerColors.of(context).primary,
+              onPrimary: Colors.white,
+              onSurface: BuyerColors.of(context).textPrimary,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null) {
       setState(() {
@@ -97,21 +109,26 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Row(
+        backgroundColor: BuyerColors.of(context).surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Row(
           children: [
-            Icon(Icons.check_circle, color: AppColors.success),
-            SizedBox(width: 8),
-            Text('Success'),
+            Icon(Icons.check_circle, color: BuyerColors.of(context).badgeGreen),
+            const SizedBox(width: 8),
+            Text('Success', style: GoogleFonts.inter(fontWeight: FontWeight.w700, color: BuyerColors.of(context).textPrimary)),
           ],
         ),
-        content: const Text('Your request has been posted. Producers matching your requirement will be notified.'),
+        content: Text(
+          'Your requirement has been posted. Producers matching your requirement will be notified.',
+          style: GoogleFonts.inter(color: BuyerColors.of(context).textSecondary),
+        ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context); // Close dialog
               Navigator.pushReplacementNamed(context, AppRouter.myRequestsRoute);
             },
-            child: const Text('View My Requests'),
+            child: Text('View My Requests', style: GoogleFonts.inter(color: BuyerColors.of(context).primary, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -122,11 +139,11 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
     return RichText(
       text: TextSpan(
         text: text,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+        style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: BuyerColors.of(context).textPrimary),
         children: [
           TextSpan(
             text: ' (Optional)',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+            style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w400, color: BuyerColors.of(context).textSecondary),
           ),
         ],
       ),
@@ -136,40 +153,82 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
   Widget _buildRequiredLabel(String text) {
     return Text(
       text,
-      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: BuyerColors.of(context).textPrimary),
+    );
+  }
+
+  InputDecoration _buildInputDecoration(String hint, {Widget? prefixIcon}) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: GoogleFonts.inter(color: BuyerColors.of(context).textSecondary.withOpacity(0.5)),
+      filled: true,
+      fillColor: BuyerColors.of(context).surface,
+      prefixIcon: prefixIcon,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(color: BuyerColors.of(context).borderLight),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(color: BuyerColors.of(context).borderLight),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(color: BuyerColors.of(context).primary, width: 2),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: BuyerColors.of(context).background,
       appBar: AppBar(
-        title: const Text('Post Requirement', style: TextStyle(color: AppColors.textPrimary)),
-        backgroundColor: AppColors.surface,
+        title: Text('Post Requirement', style: GoogleFonts.inter(color: BuyerColors.of(context).textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+        backgroundColor: BuyerColors.of(context).surface,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.primary),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: BuyerColors.of(context).textPrimary),
       ),
       body: Column(
         children: [
           Expanded(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 540),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Form(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: BuyerColors.of(context).primary.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: BuyerColors.of(context).primary.withOpacity(0.2)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.campaign_outlined, color: BuyerColors.of(context).primary),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Describe what you need and get quotes directly from verified producers.',
+                              style: GoogleFonts.inter(fontSize: 13, color: BuyerColors.of(context).primary, height: 1.4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+
                     _buildRequiredLabel('Product / Category'),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _categoryController,
-                      decoration: const InputDecoration(
-                        hintText: 'e.g. Organic Cotton, Handwoven Baskets...',
-                      ),
+                      style: GoogleFonts.inter(color: BuyerColors.of(context).textPrimary),
+                      decoration: _buildInputDecoration('e.g. Organic Cotton, Handwoven Baskets...'),
                     ),
                     const SizedBox(height: 24),
 
@@ -182,9 +241,8 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
                           child: TextFormField(
                             controller: _quantityController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              hintText: 'Amount',
-                            ),
+                            style: GoogleFonts.inter(color: BuyerColors.of(context).textPrimary),
+                            decoration: _buildInputDecoration('Amount'),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -192,6 +250,10 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
                           flex: 1,
                           child: DropdownButtonFormField<String>(
                             value: _selectedUnit,
+                            dropdownColor: BuyerColors.of(context).surface,
+                            iconEnabledColor: BuyerColors.of(context).primary,
+                            style: GoogleFonts.inter(color: BuyerColors.of(context).textPrimary),
+                            decoration: _buildInputDecoration(''),
                             items: ['kg', 'pcs', 'liters', 'tons'].map((unit) {
                               return DropdownMenuItem(value: unit, child: Text(unit));
                             }).toList(),
@@ -208,9 +270,8 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _locationController,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.location_on, color: AppColors.textSecondary),
-                      ),
+                      style: GoogleFonts.inter(color: BuyerColors.of(context).textPrimary),
+                      decoration: _buildInputDecoration('City, State', prefixIcon: Icon(Icons.location_on, color: BuyerColors.of(context).textSecondary)),
                     ),
                     const SizedBox(height: 24),
 
@@ -220,29 +281,28 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
                       onTap: () => _selectDate(context),
                       borderRadius: BorderRadius.circular(8),
                       child: InputDecorator(
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.calendar_today, color: AppColors.textSecondary),
-                        ),
+                        decoration: _buildInputDecoration('', prefixIcon: Icon(Icons.calendar_today, color: BuyerColors.of(context).textSecondary)),
                         child: Text(
                           _requiredByDate == null
                               ? 'Select Date'
                               : DateFormat('MMM dd, yyyy').format(_requiredByDate!),
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: _requiredByDate == null ? AppColors.textSecondary : AppColors.textPrimary,
+                          style: GoogleFonts.inter(
+                            color: _requiredByDate == null ? BuyerColors.of(context).textSecondary : BuyerColors.of(context).textPrimary,
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 24),
 
-                    _buildOptionalLabel('Budget'),
+                    _buildOptionalLabel('Estimated Budget'),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _budgetController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
+                      style: GoogleFonts.inter(color: BuyerColors.of(context).textPrimary),
+                      decoration: _buildInputDecoration('Enter estimated budget').copyWith(
                         prefixText: '₹ ',
-                        hintText: 'Enter estimated budget',
+                        prefixStyle: GoogleFonts.inter(fontSize: 16, color: BuyerColors.of(context).textSecondary),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -252,9 +312,8 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
                     TextFormField(
                       controller: _specsController,
                       maxLines: 3,
-                      decoration: const InputDecoration(
-                        hintText: 'Provide details about quality, packaging, etc.',
-                      ),
+                      style: GoogleFonts.inter(color: BuyerColors.of(context).textPrimary),
+                      decoration: _buildInputDecoration('Provide details about quality, packaging, etc.'),
                     ),
                     const SizedBox(height: 24),
 
@@ -263,9 +322,8 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
                     TextFormField(
                       controller: _customizationController,
                       maxLines: 3,
-                      decoration: const InputDecoration(
-                        hintText: 'Any specific customization needed?',
-                      ),
+                      style: GoogleFonts.inter(color: BuyerColors.of(context).textPrimary),
+                      decoration: _buildInputDecoration('Any specific customization needed?'),
                     ),
                     const SizedBox(height: 24),
 
@@ -273,7 +331,7 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
                     const SizedBox(height: 4),
                     Text(
                       'Optional, skip if you don\'t have one',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+                      style: GoogleFonts.inter(fontSize: 12, color: BuyerColors.of(context).textSecondary),
                     ),
                     const SizedBox(height: 12),
                     InkWell(
@@ -283,17 +341,17 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
                       child: Container(
                         height: 120,
                         decoration: BoxDecoration(
-                          color: AppColors.surface,
+                          color: BuyerColors.of(context).surface,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.border, style: BorderStyle.solid),
+                          border: Border.all(color: BuyerColors.of(context).borderLight, style: BorderStyle.solid),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.add_photo_alternate, size: 40, color: AppColors.textSecondary),
-                              SizedBox(height: 8),
-                              Text('Tap to upload image', style: TextStyle(color: AppColors.textSecondary)),
+                              Icon(Icons.add_photo_alternate, size: 40, color: BuyerColors.of(context).textSecondary),
+                              const SizedBox(height: 8),
+                              Text('Tap to upload image', style: GoogleFonts.inter(color: BuyerColors.of(context).textSecondary)),
                             ],
                           ),
                         ),
@@ -304,24 +362,34 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
               ),
             ),
           ),
-        ),
-      ),
           
           // Sticky Bottom Submit Button
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            decoration: const BoxDecoration(
-              color: AppColors.surface,
-              border: Border(top: BorderSide(color: AppColors.border, width: 1)),
-            ),
-            child: SafeArea(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 540),
-                  child: PrimaryButton(
-                    text: 'Submit Requirement',
-                    onPressed: _isFormValid ? _submit : null,
+          SafeArea(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: BuyerColors.of(context).surface,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -5),
                   ),
+                ],
+              ),
+              child: ElevatedButton(
+                onPressed: _isFormValid ? _submit : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: BuyerColors.of(context).primary,
+                  disabledBackgroundColor: BuyerColors.of(context).borderLight,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                child: Text(
+                  'Submit Requirement',
+                  style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
             ),

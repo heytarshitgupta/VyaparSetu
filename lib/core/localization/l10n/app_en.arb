@@ -232,7 +232,6 @@
   "@themeSystem": {
     "description": "Appearance mode following system/phone setting"
   },
-
   "producerSetup": "Producer Setup",
   "@producerSetup": {
     "description": "Screen title for producer onboarding"
@@ -245,15 +244,21 @@
   "@stepOf": {
     "description": "Progress step indicator",
     "placeholders": {
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "percentCompleted": "{percent}% Completed",
   "@percentCompleted": {
     "description": "Progress percentage indicator",
     "placeholders": {
-      "percent": { "type": "int" }
+      "percent": {
+        "type": "int"
+      }
     }
   },
   "submitApplication": "Submit Application",
@@ -264,7 +269,6 @@
   "@onboardingReviewSubmitted": {
     "description": "Snackbar shown upon onboarding completion"
   },
-
   "step1Title": "About You",
   "@step1Title": {
     "description": "Step 1 simplified title"
@@ -305,7 +309,6 @@
   "@step5Subtitle": {
     "description": "Step 5 simplified subtitle"
   },
-
   "step1Header": "Artisan Basic Details",
   "@step1Header": {
     "description": "Header inside Step 1 card"
@@ -332,7 +335,7 @@
   },
   "notProvided": "Not provided",
   "@notProvided": {
-    "description": "Placeholder when data is not provided"
+    "description": "Added for profile screen"
   },
   "readOnly": "Read Only",
   "@readOnly": {
@@ -366,7 +369,6 @@
   "@contactPhoneHelper": {
     "description": "Helper for contact phone"
   },
-
   "step2Header": "Business & Craft Details",
   "@step2Header": {
     "description": "Header inside Step 2 card"
@@ -419,28 +421,46 @@
   "@shortDescriptionHelper": {
     "description": "Bio description helper"
   },
-
   "catFood": "Food & Homemade Products",
-  "@catFood": { "description": "Category: Food" },
+  "@catFood": {
+    "description": "Category: Food"
+  },
   "catHandicrafts": "Handicrafts",
-  "@catHandicrafts": { "description": "Category: Handicrafts" },
+  "@catHandicrafts": {
+    "description": "Category: Handicrafts"
+  },
   "catHandloom": "Handloom & Textiles",
-  "@catHandloom": { "description": "Category: Handloom" },
+  "@catHandloom": {
+    "description": "Category: Handloom"
+  },
   "catClothing": "Clothing & Embroidery",
-  "@catClothing": { "description": "Category: Clothing" },
+  "@catClothing": {
+    "description": "Category: Clothing"
+  },
   "catJewellery": "Jewellery & Accessories",
-  "@catJewellery": { "description": "Category: Jewellery" },
+  "@catJewellery": {
+    "description": "Category: Jewellery"
+  },
   "catWoodwork": "Woodwork",
-  "@catWoodwork": { "description": "Category: Woodwork" },
+  "@catWoodwork": {
+    "description": "Category: Woodwork"
+  },
   "catMetalCraft": "Metal Craft",
-  "@catMetalCraft": { "description": "Category: Metal" },
+  "@catMetalCraft": {
+    "description": "Category: Metal"
+  },
   "catHomeDecor": "Home Decor",
-  "@catHomeDecor": { "description": "Category: Home Decor" },
+  "@catHomeDecor": {
+    "description": "Category: Home Decor"
+  },
   "catBeauty": "Beauty / Personal Care",
-  "@catBeauty": { "description": "Category: Beauty" },
+  "@catBeauty": {
+    "description": "Category: Beauty"
+  },
   "catOther": "Other",
-  "@catOther": { "description": "Category: Other" },
-
+  "@catOther": {
+    "description": "Category: Other"
+  },
   "step3Header": "Workshop Location",
   "@step3Header": {
     "description": "Header inside Step 3 card"
@@ -505,7 +525,6 @@
   "@addressHelper": {
     "description": "Address helper"
   },
-
   "step4Header": "Identity & Compliance",
   "@step4Header": {
     "description": "Header inside Step 4 card"
@@ -594,7 +613,6 @@
   "@tryAgain": {
     "description": "Button label when verification failed"
   },
-
   "aadhaarVerification": "Aadhaar Verification",
   "@aadhaarVerification": {
     "description": "Title for Aadhaar card"
@@ -619,7 +637,6 @@
   "@gotIt": {
     "description": "Action button on Aadhaar dialog"
   },
-
   "gstRegistration": "GST Registration",
   "@gstRegistration": {
     "description": "Title for GST card"
@@ -668,20 +685,30 @@
   "@gstUpcomingNotice": {
     "description": "Information message after format-checking GSTIN"
   },
-
   "badgeNotVerified": "Not Verified",
-  "@badgeNotVerified": { "description": "Verification badge: not verified" },
+  "@badgeNotVerified": {
+    "description": "Verification badge: not verified"
+  },
   "badgeChecking": "Checking...",
-  "@badgeChecking": { "description": "Verification badge: checking" },
+  "@badgeChecking": {
+    "description": "Verification badge: checking"
+  },
   "badgeVerified": "Verified",
-  "@badgeVerified": { "description": "Verification badge: verified" },
+  "@badgeVerified": {
+    "description": "Verification badge: verified"
+  },
   "badgeCouldNotVerify": "Could Not Verify",
-  "@badgeCouldNotVerify": { "description": "Verification badge: could not verify" },
+  "@badgeCouldNotVerify": {
+    "description": "Verification badge: could not verify"
+  },
   "badgeComingSoon": "Coming Soon",
-  "@badgeComingSoon": { "description": "Verification badge: coming soon" },
+  "@badgeComingSoon": {
+    "description": "Verification badge: coming soon"
+  },
   "badgeNotRegistered": "Not Registered",
-  "@badgeNotRegistered": { "description": "Verification badge: not registered" },
-
+  "@badgeNotRegistered": {
+    "description": "Verification badge: not registered"
+  },
   "step5CardTitle": "Review & Submit Onboarding",
   "@step5CardTitle": {
     "description": "Title on Step 5 review card"
@@ -1050,5 +1077,185 @@
   "markReadyFailed": "Could not mark ready. Please try again.",
   "@markReadyFailed": {
     "description": "Error feedback when marking ready fails"
+  },
+  "myOrders": "My Orders",
+  "@myOrders": {
+    "description": "Added for profile screen"
+  },
+  "wishlist": "Wishlist",
+  "@wishlist": {
+    "description": "Added for profile screen"
+  },
+  "myRequirements": "My Requirements",
+  "@myRequirements": {
+    "description": "Added for profile screen"
+  },
+  "businessInformation": "Business Information",
+  "@businessInformation": {
+    "description": "Added for profile screen"
+  },
+  "businessName": "Business Name",
+  "@businessName": {
+    "description": "Added for profile screen"
+  },
+  "category": "Category",
+  "@category": {
+    "description": "Added for profile screen"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Added for profile screen"
+  },
+  "phone": "Phone",
+  "@phone": {
+    "description": "Added for profile screen"
+  },
+  "address": "Address",
+  "@address": {
+    "description": "Added for profile screen"
+  },
+  "recentActivity": "Recent Activity",
+  "@recentActivity": {
+    "description": "Added for profile screen"
+  },
+  "quickLinks": "Quick Links",
+  "@quickLinks": {
+    "description": "Added for profile screen"
+  },
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Added for profile screen"
+  },
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Added for profile screen"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Added for profile screen"
+  },
+  "navDiscover": "Discover",
+  "@navDiscover": {
+    "description": "Bottom navigation bar item"
+  },
+  "navSearch": "Search",
+  "@navSearch": {
+    "description": "Bottom navigation bar item"
+  },
+  "navOrders": "Orders",
+  "@navOrders": {
+    "description": "Bottom navigation bar item"
+  },
+  "navAccount": "Account",
+  "@navAccount": {
+    "description": "Bottom navigation bar item"
+  },
+  "searchHint": "Search for Products, Brands and More",
+  "@searchHint": {
+    "description": "Added for Home tab"
+  },
+  "allCategories": "All Categories",
+  "@allCategories": {
+    "description": "Added for Home tab"
+  },
+  "handlooms": "Handlooms",
+  "@handlooms": {
+    "description": "Added for Home tab"
+  },
+  "spices": "Spices",
+  "@spices": {
+    "description": "Added for Home tab"
+  },
+  "handicrafts": "Handicrafts",
+  "@handicrafts": {
+    "description": "Added for Home tab"
+  },
+  "food": "Food",
+  "@food": {
+    "description": "Added for Home tab"
+  },
+  "gifting": "Gifting",
+  "@gifting": {
+    "description": "Added for Home tab"
+  },
+  "forYou": "For You",
+  "@forYou": {
+    "description": "Added for Home tab"
+  },
+  "textiles": "Textiles",
+  "@textiles": {
+    "description": "Added for Home tab"
+  },
+  "recommendedForYou": "Recommended For You",
+  "@recommendedForYou": {
+    "description": "Added for Home tab"
+  },
+  "viewAll": "VIEW ALL",
+  "@viewAll": {
+    "description": "Added for Home tab"
+  },
+  "noProductsFound": "No products found.",
+  "@noProductsFound": {
+    "description": "Added for Home tab"
+  },
+  "orderNow": "Order Now",
+  "@orderNow": {
+    "description": "Added for Home tab"
+  },
+  "addedToWishlist": "Added to wishlist",
+  "@addedToWishlist": {
+    "description": "Added for Home tab"
+  },
+  "removedFromWishlist": "Removed from wishlist",
+  "@removedFromWishlist": {
+    "description": "Added for Home tab"
+  },
+  "filters": "Filters",
+  "@filters": {
+    "description": "Added for Home tab"
+  },
+  "filterByCategory": "Filter by Category",
+  "@filterByCategory": {
+    "description": "Added for Home tab"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Added for Home tab"
+  },
+  "searchProducts": "Search products...",
+  "@searchProducts": {
+    "description": "Added for search and requests screen"
+  },
+  "myCart": "My Cart",
+  "@myCart": {
+    "description": "Added for search and requests screen"
+  },
+  "noProducts": "No Products",
+  "@noProducts": {
+    "description": "Added for search and requests screen"
+  },
+  "noProductsCategory": "No products available in this category yet.",
+  "@noProductsCategory": {
+    "description": "Added for search and requests screen"
+  },
+  "noRequests": "No requests yet",
+  "@noRequests": {
+    "description": "Added for search and requests screen"
+  },
+  "noRequestsSub": "Post a custom requirement to start receiving quotes from verified producers.",
+  "@noRequestsSub": {
+    "description": "Added for search and requests screen"
+  },
+  "responsesText": "Responses",
+  "@responsesText": {
+    "description": "Added for search and requests screen"
+  },
+  "receivingQuotes": "Receiving Quotes",
+  "@receivingQuotes": {
+    "description": "Added for search and requests screen"
+  },
+  "closed": "Closed",
+  "@closed": {
+    "description": "Added for search and requests screen"
   }
 }

@@ -262,7 +262,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get emailAddressLogin => 'ईमेल पता (लॉग इन)';
 
   @override
-  String get notProvided => 'उपलब्ध नहीं';
+  String get notProvided => 'प्रदान नहीं किया गया';
 
   @override
   String get readOnly => 'केवल पढ़ने के लिए';
@@ -847,4 +847,141 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get markReadyFailed =>
       'तैयार चिह्नित नहीं हो सका। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get myOrders => 'मेरे ऑर्डर';
+
+  @override
+  String get wishlist => 'विशलिस्ट';
+
+  @override
+  String get myRequirements => 'मेरी ज़रूरतें';
+
+  @override
+  String get businessInformation => 'व्यावसायिक जानकारी';
+
+  @override
+  String get businessName => 'व्यापार का नाम';
+
+  @override
+  String get category => 'श्रेणी';
+
+  @override
+  String get email => 'ईमेल';
+
+  @override
+  String get phone => 'फ़ोन';
+
+  @override
+  String get address => 'पता';
+
+  @override
+  String get recentActivity => 'हाल की गतिविधि';
+
+  @override
+  String get quickLinks => 'त्वरित लिंक';
+
+  @override
+  String get darkMode => 'डार्क मोड';
+
+  @override
+  String get notifications => 'सूचनाएं';
+
+  @override
+  String get logout => 'लॉग आउट';
+
+  @override
+  String get navDiscover => 'खोजें';
+
+  @override
+  String get navSearch => 'सर्च';
+
+  @override
+  String get navOrders => 'ऑर्डर';
+
+  @override
+  String get navAccount => 'खाता';
+
+  @override
+  String get searchHint => 'उत्पाद, ब्रांड और बहुत कुछ खोजें';
+
+  @override
+  String get allCategories => 'सभी श्रेणियां';
+
+  @override
+  String get handlooms => 'हथकरघा';
+
+  @override
+  String get spices => 'मसाले';
+
+  @override
+  String get handicrafts => 'हस्तशिल्प';
+
+  @override
+  String get food => 'भोजन';
+
+  @override
+  String get gifting => 'उपहार';
+
+  @override
+  String get forYou => 'आपके लिए';
+
+  @override
+  String get textiles => 'कपड़ा';
+
+  @override
+  String get recommendedForYou => 'आपके लिए अनुशंसित';
+
+  @override
+  String get viewAll => 'सभी देखें';
+
+  @override
+  String get noProductsFound => 'कोई उत्पाद नहीं मिला।';
+
+  @override
+  String get orderNow => 'अभी ऑर्डर करें';
+
+  @override
+  String get addedToWishlist => 'विशलिस्ट में जोड़ा गया';
+
+  @override
+  String get removedFromWishlist => 'विशलिस्ट से हटाया गया';
+
+  @override
+  String get filters => 'फ़िल्टर';
+
+  @override
+  String get filterByCategory => 'श्रेणी के आधार पर फ़िल्टर करें';
+
+  @override
+  String get close => 'बंद करें';
+
+  @override
+  String get searchProducts => 'उत्पाद खोजें...';
+
+  @override
+  String get myCart => 'मेरी कार्ट';
+
+  @override
+  String get noProducts => 'कोई उत्पाद नहीं';
+
+  @override
+  String get noProductsCategory =>
+      'इस श्रेणी में अभी तक कोई उत्पाद उपलब्ध नहीं है।';
+
+  @override
+  String get noRequests => 'अभी तक कोई अनुरोध नहीं';
+
+  @override
+  String get noRequestsSub =>
+      'सत्यापित उत्पादकों से उद्धरण प्राप्त करना शुरू करने के लिए एक कस्टम आवश्यकता पोस्ट करें।';
+
+  @override
+  String get responsesText => 'प्रतिक्रियाएं';
+
+  @override
+  String get receivingQuotes => 'उद्धरण प्राप्त कर रहे हैं';
+
+  @override
+  String get closed => 'बंद';
 }

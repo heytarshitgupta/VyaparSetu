@@ -848,4 +848,141 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get markReadyFailed => 'Could not mark ready. Please try again.';
+
+  @override
+  String get myOrders => 'My Orders';
+
+  @override
+  String get wishlist => 'Wishlist';
+
+  @override
+  String get myRequirements => 'My Requirements';
+
+  @override
+  String get businessInformation => 'Business Information';
+
+  @override
+  String get businessName => 'Business Name';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get recentActivity => 'Recent Activity';
+
+  @override
+  String get quickLinks => 'Quick Links';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get navDiscover => 'Discover';
+
+  @override
+  String get navSearch => 'Search';
+
+  @override
+  String get navOrders => 'Orders';
+
+  @override
+  String get navAccount => 'Account';
+
+  @override
+  String get searchHint => 'Search for Products, Brands and More';
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get handlooms => 'Handlooms';
+
+  @override
+  String get spices => 'Spices';
+
+  @override
+  String get handicrafts => 'Handicrafts';
+
+  @override
+  String get food => 'Food';
+
+  @override
+  String get gifting => 'Gifting';
+
+  @override
+  String get forYou => 'For You';
+
+  @override
+  String get textiles => 'Textiles';
+
+  @override
+  String get recommendedForYou => 'Recommended For You';
+
+  @override
+  String get viewAll => 'VIEW ALL';
+
+  @override
+  String get noProductsFound => 'No products found.';
+
+  @override
+  String get orderNow => 'Order Now';
+
+  @override
+  String get addedToWishlist => 'Added to wishlist';
+
+  @override
+  String get removedFromWishlist => 'Removed from wishlist';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get filterByCategory => 'Filter by Category';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get searchProducts => 'Search products...';
+
+  @override
+  String get myCart => 'My Cart';
+
+  @override
+  String get noProducts => 'No Products';
+
+  @override
+  String get noProductsCategory =>
+      'No products available in this category yet.';
+
+  @override
+  String get noRequests => 'No requests yet';
+
+  @override
+  String get noRequestsSub =>
+      'Post a custom requirement to start receiving quotes from verified producers.';
+
+  @override
+  String get responsesText => 'Responses';
+
+  @override
+  String get receivingQuotes => 'Receiving Quotes';
+
+  @override
+  String get closed => 'Closed';
 }

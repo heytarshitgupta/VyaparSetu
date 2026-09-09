@@ -580,7 +580,7 @@ abstract class AppLocalizations {
   /// **'Email Address (Login)'**
   String get emailAddressLogin;
 
-  /// Placeholder when data is not provided
+  /// Added for profile screen
   ///
   /// In en, this message translates to:
   /// **'Not provided'**
@@ -1677,6 +1677,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not mark ready. Please try again.'**
   String get markReadyFailed;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'My Orders'**
+  String get myOrders;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist'**
+  String get wishlist;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'My Requirements'**
+  String get myRequirements;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Business Information'**
+  String get businessInformation;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Business Name'**
+  String get businessName;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get recentActivity;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Links'**
+  String get quickLinks;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// Bottom navigation bar item
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get navDiscover;
+
+  /// Bottom navigation bar item
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get navSearch;
+
+  /// Bottom navigation bar item
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get navOrders;
+
+  /// Bottom navigation bar item
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get navAccount;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Search for Products, Brands and More'**
+  String get searchHint;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get allCategories;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Handlooms'**
+  String get handlooms;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Spices'**
+  String get spices;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Handicrafts'**
+  String get handicrafts;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get food;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Gifting'**
+  String get gifting;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'For You'**
+  String get forYou;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Textiles'**
+  String get textiles;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended For You'**
+  String get recommendedForYou;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'VIEW ALL'**
+  String get viewAll;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'No products found.'**
+  String get noProductsFound;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Order Now'**
+  String get orderNow;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Added to wishlist'**
+  String get addedToWishlist;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from wishlist'**
+  String get removedFromWishlist;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Category'**
+  String get filterByCategory;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Search products...'**
+  String get searchProducts;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'My Cart'**
+  String get myCart;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'No Products'**
+  String get noProducts;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'No products available in this category yet.'**
+  String get noProductsCategory;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'No requests yet'**
+  String get noRequests;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Post a custom requirement to start receiving quotes from verified producers.'**
+  String get noRequestsSub;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Responses'**
+  String get responsesText;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Receiving Quotes'**
+  String get receivingQuotes;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get closed;
 }
 
 class _AppLocalizationsDelegate
