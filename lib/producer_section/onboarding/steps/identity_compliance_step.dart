@@ -168,13 +168,15 @@ class _IdentityComplianceStepState extends State<IdentityComplianceStep> {
     final verifier = widget.verificationService ?? ProducerVerificationService.instance;
     final result = await verifier.verifyPan(
       pan: trimmedPan,
-      nameAsPerPan: trimmedName,
-      dateOfBirth: _selectedDob!,
     );
 
     if (!mounted) return;
 
-    if (result.success && (result.status == 'verified' || result.status == 'already_verified')) {
+    if (result.success &&
+        (result.status == 'verified' ||
+         result.status == 'already_verified' ||
+         result.status == 'details_recorded' ||
+         result.status == 'already_recorded')) {
       // SUCCESS: Clear raw PAN from memory immediately; retain only masked PAN
       _panController.clear();
       setState(() {

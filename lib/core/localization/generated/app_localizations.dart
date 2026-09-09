@@ -2949,6 +2949,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Optional'**
   String get optionalBadge;
+
+  /// Title for Home verification banner
+  ///
+  /// In en, this message translates to:
+  /// **'Reach more buyers across India'**
+  String get reachMoreBuyers;
+
+  /// Body for Home verification banner
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your business to build trust and unlock eligible wider-market features.'**
+  String get verifyBusinessPrompt;
+
+  /// Action button on Home verification banner
+  ///
+  /// In en, this message translates to:
+  /// **'Verify My Business'**
+  String get verifyMyBusiness;
+
+  /// Title for Business Verification section and screen
+  ///
+  /// In en, this message translates to:
+  /// **'Business Verification'**
+  String get businessVerification;
+
+  /// Subtitle for Business Verification entry point in Profile
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your business details and build buyer trust.'**
+  String get businessVerificationSubtitle;
+
+  /// Intro on Business Verification overview screen
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your business details to build trust and access eligible VyaparSetu features.'**
+  String get businessVerificationIntro;
+
+  /// Status text when all applicable verification steps are completed
+  ///
+  /// In en, this message translates to:
+  /// **'Business details recorded'**
+  String get businessVerificationComplete;
+
+  /// Count of remaining verification steps
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step remaining} other{{count} steps remaining}}'**
+  String verificationStepsRemaining(int count);
+
+  /// Fraction of completed steps
+  ///
+  /// In en, this message translates to:
+  /// **'{completed} of {total} completed'**
+  String verificationStepsCompleted(int completed, int total);
+
+  /// Label for Email verification card
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailVerificationLabel;
+
+  /// Badge when email is verified
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get emailVerifiedBadge;
+
+  /// Badge when email is not verified
+  ///
+  /// In en, this message translates to:
+  /// **'Not verified'**
+  String get emailNotVerifiedBadge;
+
+  /// Label for Business Identity / PAN verification card
+  ///
+  /// In en, this message translates to:
+  /// **'Business Identity'**
+  String get businessIdentityLabel;
+
+  /// Description for Business Identity card
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your PAN to confirm your business identity.'**
+  String get businessIdentityDesc;
+
+  /// Badge when PAN details have been added
+  ///
+  /// In en, this message translates to:
+  /// **'Details Added'**
+  String get panVerifiedBadge;
+
+  /// Badge when PAN is not provided
+  ///
+  /// In en, this message translates to:
+  /// **'Not provided'**
+  String get panNotVerifiedBadge;
+
+  /// Label for GST Registration card
+  ///
+  /// In en, this message translates to:
+  /// **'GST Registration'**
+  String get gstRegistrationLabel;
+
+  /// Description for GST Registration card
+  ///
+  /// In en, this message translates to:
+  /// **'Record your GST registration to access eligible wider-market features on VyaparSetu.'**
+  String get gstRegistrationDesc;
+
+  /// Badge when GST is optional and not provided
+  ///
+  /// In en, this message translates to:
+  /// **'Optional • Not provided'**
+  String get gstOptionalNotProvided;
+
+  /// Informational note for non-GST producers
+  ///
+  /// In en, this message translates to:
+  /// **'GST details are optional here. You can add them later if applicable to your business.'**
+  String get gstOptionalDesc;
+
+  /// Badge when GST format check is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Checking format'**
+  String get gstVerificationPending;
+
+  /// Badge when GST details have been added
+  ///
+  /// In en, this message translates to:
+  /// **'Details Added'**
+  String get gstVerifiedBadge;
+
+  /// Badge when GST is not provided
+  ///
+  /// In en, this message translates to:
+  /// **'Not provided'**
+  String get gstNotVerifiedBadge;
+
+  /// Action button to add PAN
+  ///
+  /// In en, this message translates to:
+  /// **'Add PAN'**
+  String get verifyPanAction;
+
+  /// Action button to add GSTIN
+  ///
+  /// In en, this message translates to:
+  /// **'Add GSTIN'**
+  String get addOrVerifyGstAction;
+
+  /// Title for PAN verification info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'PAN Verification'**
+  String get panVerificationComingSoonTitle;
+
+  /// Description for PAN verification info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'PAN verification flow is being updated for progressive onboarding. Your recorded status will appear here once submitted.'**
+  String get panVerificationComingSoonDesc;
+
+  /// Title for GST verification info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'GST Registration'**
+  String get gstVerificationComingSoonTitle;
+
+  /// Description for GST verification info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'GST details are optional here. You can add them later if applicable to your business.'**
+  String get gstVerificationComingSoonDesc;
+
+  /// Title for PAN bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Business Identity (PAN)'**
+  String get panVerificationSheetTitle;
+
+  /// Description for PAN bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your 10-character PAN to record your business identity on VyaparSetu.'**
+  String get panVerificationSheetDesc;
+
+  /// Label for PAN input field
+  ///
+  /// In en, this message translates to:
+  /// **'PAN Number'**
+  String get panInputLabel;
+
+  /// Hint for PAN input field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. ABCDE1234F'**
+  String get panInputHint;
+
+  /// Error message when PAN format is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid 10-character PAN (e.g. ABCDE1234F).'**
+  String get panInvalidFormatError;
+
+  /// Success message after PAN details are recorded
+  ///
+  /// In en, this message translates to:
+  /// **'PAN details recorded successfully.'**
+  String get panVerificationSuccess;
+
+  /// Error message when account already has a recorded PAN
+  ///
+  /// In en, this message translates to:
+  /// **'A PAN is already associated with this account.'**
+  String get panAlreadyLinkedError;
+
+  /// Error message when PAN recording fails
+  ///
+  /// In en, this message translates to:
+  /// **'PAN details could not be recorded. Please check your details.'**
+  String get panVerificationFailedError;
+
+  /// Title for GST bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'GST Registration (GSTIN)'**
+  String get gstVerificationSheetTitle;
+
+  /// Description for GST bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your 15-character GSTIN to record your GST details on VyaparSetu.'**
+  String get gstVerificationSheetDesc;
+
+  /// Label for GSTIN input field
+  ///
+  /// In en, this message translates to:
+  /// **'GSTIN'**
+  String get gstInputLabel;
+
+  /// Hint for GSTIN input field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 07AAAAA0000A1Z5'**
+  String get gstInputHint;
+
+  /// Error message when GSTIN format is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid 15-character GSTIN (e.g. 07AAAAA0000A1Z5).'**
+  String get gstInvalidFormatError;
+
+  /// Error message when GSTIN state code is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid state code in GSTIN. First 2 digits must be between 01-38, 97, or 99.'**
+  String get gstInvalidStateCodeError;
+
+  /// Success message after GSTIN details are recorded
+  ///
+  /// In en, this message translates to:
+  /// **'GSTIN details recorded successfully.'**
+  String get gstVerificationSuccess;
+
+  /// Error message when account already has a recorded GSTIN
+  ///
+  /// In en, this message translates to:
+  /// **'A GSTIN is already associated with this account.'**
+  String get gstAlreadyLinkedError;
+
+  /// Error message when GSTIN recording fails
+  ///
+  /// In en, this message translates to:
+  /// **'GSTIN details could not be recorded. Please check your 15-digit GSTIN.'**
+  String get gstVerificationFailedError;
+
+  /// Button label while request is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Checking...'**
+  String get verifyingAction;
+
+  /// Button label to submit format check
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get verifyAction;
 }
 
 class _AppLocalizationsDelegate

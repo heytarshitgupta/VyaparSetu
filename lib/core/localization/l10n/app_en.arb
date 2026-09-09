@@ -1954,6 +1954,211 @@
   "optionalBadge": "Optional",
   "@optionalBadge": {
     "description": "Badge indicating an optional step or field"
+  },
+  "reachMoreBuyers": "Reach more buyers across India",
+  "@reachMoreBuyers": {
+    "description": "Title for Home verification banner"
+  },
+  "verifyBusinessPrompt": "Verify your business to build trust and unlock eligible wider-market features.",
+  "@verifyBusinessPrompt": {
+    "description": "Body for Home verification banner"
+  },
+  "verifyMyBusiness": "Verify My Business",
+  "@verifyMyBusiness": {
+    "description": "Action button on Home verification banner"
+  },
+  "businessVerification": "Business Verification",
+  "@businessVerification": {
+    "description": "Title for Business Verification section and screen"
+  },
+  "businessVerificationSubtitle": "Verify your business details and build buyer trust.",
+  "@businessVerificationSubtitle": {
+    "description": "Subtitle for Business Verification entry point in Profile"
+  },
+  "businessVerificationIntro": "Complete your business details to build trust and access eligible VyaparSetu features.",
+  "@businessVerificationIntro": {
+    "description": "Intro on Business Verification overview screen"
+  },
+  "businessVerificationComplete": "Business details recorded",
+  "@businessVerificationComplete": {
+    "description": "Status text when all applicable verification steps are completed"
+  },
+  "verificationStepsRemaining": "{count, plural, =1{1 step remaining} other{{count} steps remaining}}",
+  "@verificationStepsRemaining": {
+    "description": "Count of remaining verification steps",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verificationStepsCompleted": "{completed} of {total} completed",
+  "@verificationStepsCompleted": {
+    "description": "Fraction of completed steps",
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "emailVerificationLabel": "Email",
+  "@emailVerificationLabel": {
+    "description": "Label for Email verification card"
+  },
+  "emailVerifiedBadge": "Verified",
+  "@emailVerifiedBadge": {
+    "description": "Badge when email is verified"
+  },
+  "emailNotVerifiedBadge": "Not verified",
+  "@emailNotVerifiedBadge": {
+    "description": "Badge when email is not verified"
+  },
+  "businessIdentityLabel": "Business Identity",
+  "@businessIdentityLabel": {
+    "description": "Label for Business Identity / PAN verification card"
+  },
+  "businessIdentityDesc": "Verify your PAN to confirm your business identity.",
+  "@businessIdentityDesc": {
+    "description": "Description for Business Identity card"
+  },
+  "panVerifiedBadge": "Details Added",
+  "@panVerifiedBadge": {
+    "description": "Badge when PAN details have been added"
+  },
+  "panNotVerifiedBadge": "Not provided",
+  "@panNotVerifiedBadge": {
+    "description": "Badge when PAN is not provided"
+  },
+  "gstRegistrationLabel": "GST Registration",
+  "@gstRegistrationLabel": {
+    "description": "Label for GST Registration card"
+  },
+  "gstRegistrationDesc": "Record your GST registration to access eligible wider-market features on VyaparSetu.",
+  "@gstRegistrationDesc": {
+    "description": "Description for GST Registration card"
+  },
+  "gstOptionalNotProvided": "Optional • Not provided",
+  "@gstOptionalNotProvided": {
+    "description": "Badge when GST is optional and not provided"
+  },
+  "gstOptionalDesc": "GST details are optional here. You can add them later if applicable to your business.",
+  "@gstOptionalDesc": {
+    "description": "Informational note for non-GST producers"
+  },
+  "gstVerificationPending": "Checking format",
+  "@gstVerificationPending": {
+    "description": "Badge when GST format check is in progress"
+  },
+  "gstVerifiedBadge": "Details Added",
+  "@gstVerifiedBadge": {
+    "description": "Badge when GST details have been added"
+  },
+  "gstNotVerifiedBadge": "Not provided",
+  "@gstNotVerifiedBadge": {
+    "description": "Badge when GST is not provided"
+  },
+  "verifyPanAction": "Add PAN",
+  "@verifyPanAction": {
+    "description": "Action button to add PAN"
+  },
+  "addOrVerifyGstAction": "Add GSTIN",
+  "@addOrVerifyGstAction": {
+    "description": "Action button to add GSTIN"
+  },
+  "panVerificationComingSoonTitle": "PAN Verification",
+  "@panVerificationComingSoonTitle": {
+    "description": "Title for PAN verification info dialog"
+  },
+  "panVerificationComingSoonDesc": "PAN verification flow is being updated for progressive onboarding. Your recorded status will appear here once submitted.",
+  "@panVerificationComingSoonDesc": {
+    "description": "Description for PAN verification info dialog"
+  },
+  "gstVerificationComingSoonTitle": "GST Registration",
+  "@gstVerificationComingSoonTitle": {
+    "description": "Title for GST verification info dialog"
+  },
+  "gstVerificationComingSoonDesc": "GST details are optional here. You can add them later if applicable to your business.",
+  "@gstVerificationComingSoonDesc": {
+    "description": "Description for GST verification info dialog"
+  },
+  "panVerificationSheetTitle": "Business Identity (PAN)",
+  "@panVerificationSheetTitle": {
+    "description": "Title for PAN bottom sheet"
+  },
+  "panVerificationSheetDesc": "Enter your 10-character PAN to record your business identity on VyaparSetu.",
+  "@panVerificationSheetDesc": {
+    "description": "Description for PAN bottom sheet"
+  },
+  "panInputLabel": "PAN Number",
+  "@panInputLabel": {
+    "description": "Label for PAN input field"
+  },
+  "panInputHint": "e.g. ABCDE1234F",
+  "@panInputHint": {
+    "description": "Hint for PAN input field"
+  },
+  "panInvalidFormatError": "Please enter a valid 10-character PAN (e.g. ABCDE1234F).",
+  "@panInvalidFormatError": {
+    "description": "Error message when PAN format is invalid"
+  },
+  "panVerificationSuccess": "PAN details recorded successfully.",
+  "@panVerificationSuccess": {
+    "description": "Success message after PAN details are recorded"
+  },
+  "panAlreadyLinkedError": "A PAN is already associated with this account.",
+  "@panAlreadyLinkedError": {
+    "description": "Error message when account already has a recorded PAN"
+  },
+  "panVerificationFailedError": "PAN details could not be recorded. Please check your details.",
+  "@panVerificationFailedError": {
+    "description": "Error message when PAN recording fails"
+  },
+  "gstVerificationSheetTitle": "GST Registration (GSTIN)",
+  "@gstVerificationSheetTitle": {
+    "description": "Title for GST bottom sheet"
+  },
+  "gstVerificationSheetDesc": "Enter your 15-character GSTIN to record your GST details on VyaparSetu.",
+  "@gstVerificationSheetDesc": {
+    "description": "Description for GST bottom sheet"
+  },
+  "gstInputLabel": "GSTIN",
+  "@gstInputLabel": {
+    "description": "Label for GSTIN input field"
+  },
+  "gstInputHint": "e.g. 07AAAAA0000A1Z5",
+  "@gstInputHint": {
+    "description": "Hint for GSTIN input field"
+  },
+  "gstInvalidFormatError": "Please enter a valid 15-character GSTIN (e.g. 07AAAAA0000A1Z5).",
+  "@gstInvalidFormatError": {
+    "description": "Error message when GSTIN format is invalid"
+  },
+  "gstInvalidStateCodeError": "Invalid state code in GSTIN. First 2 digits must be between 01-38, 97, or 99.",
+  "@gstInvalidStateCodeError": {
+    "description": "Error message when GSTIN state code is invalid"
+  },
+  "gstVerificationSuccess": "GSTIN details recorded successfully.",
+  "@gstVerificationSuccess": {
+    "description": "Success message after GSTIN details are recorded"
+  },
+  "gstAlreadyLinkedError": "A GSTIN is already associated with this account.",
+  "@gstAlreadyLinkedError": {
+    "description": "Error message when account already has a recorded GSTIN"
+  },
+  "gstVerificationFailedError": "GSTIN details could not be recorded. Please check your 15-digit GSTIN.",
+  "@gstVerificationFailedError": {
+    "description": "Error message when GSTIN recording fails"
+  },
+  "verifyingAction": "Checking...",
+  "@verifyingAction": {
+    "description": "Button label while request is in progress"
+  },
+  "verifyAction": "Submit",
+  "@verifyAction": {
+    "description": "Button label to submit format check"
   }
 }
 

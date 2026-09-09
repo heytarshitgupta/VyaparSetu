@@ -301,13 +301,13 @@ void main() {
       expect(indexedStack.index, 0);
 
       // Switch to My Products tab
-      await tester.tap(find.text('My Products').first);
+      await tester.tap(find.descendant(of: find.byType(NavigationBar), matching: find.text('My Products')));
       await tester.pumpAndSettle();
       expect(tester.widget<IndexedStack>(indexedStackFinder).index, 1);
       expect(find.byType(ProducerProductsTab), findsOneWidget);
 
       // Switch to Buyer Needs tab
-      await tester.tap(find.text('Buyer Needs').first);
+      await tester.tap(find.descendant(of: find.byType(NavigationBar), matching: find.text('Buyer Needs')));
       await tester.pumpAndSettle();
       expect(tester.widget<IndexedStack>(indexedStackFinder).index, 2);
       expect(find.byType(BuyerNeedsTab), findsOneWidget);
@@ -384,21 +384,25 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap dominant Add Product card via subtitle
+      await tester.ensureVisible(find.text('Show buyers what you make'));
       await tester.tap(find.text('Show buyers what you make'));
       await tester.pumpAndSettle();
       expect(addProductCalled, isTrue);
 
       // Tap My Products shortcut
+      await tester.ensureVisible(find.text('See the products you have added'));
       await tester.tap(find.text('See the products you have added'));
       await tester.pumpAndSettle();
       expect(navigatedTab, 1);
 
       // Tap Buyer Needs shortcut
+      await tester.ensureVisible(find.text('See what buyers are looking for'));
       await tester.tap(find.text('See what buyers are looking for'));
       await tester.pumpAndSettle();
       expect(navigatedTab, 2);
 
       // Tap What Buyers Want shortcut
+      await tester.ensureVisible(find.text('What Buyers Want'));
       await tester.tap(find.text('What Buyers Want'));
       await tester.pumpAndSettle();
       expect(whatBuyersWantCalled, isTrue);
@@ -417,6 +421,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      await tester.ensureVisible(find.text('Show buyers what you make'));
       await tester.tap(find.text('Show buyers what you make'));
       await tester.pumpAndSettle();
 
@@ -519,7 +524,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Switch to Buyer Needs tab (index 2)
-      await tester.tap(find.text('Buyer Needs').first);
+      await tester.tap(find.descendant(of: find.byType(NavigationBar), matching: find.text('Buyer Needs')));
       await tester.pumpAndSettle();
 
       final stackFinder = find.byType(IndexedStack);
@@ -635,13 +640,13 @@ void main() {
       await tester.pumpAndSettle();
 
       // 1. Switch to My Products (index 1)
-      await tester.tap(find.text('My Products').first);
+      await tester.tap(find.descendant(of: find.byType(NavigationBar), matching: find.text('My Products')));
       await tester.pumpAndSettle();
       expect(signOutCalled, isFalse);
       expect(find.byType(ProducerProductsTab), findsOneWidget);
 
       // 2. Switch to Buyer Needs (index 2)
-      await tester.tap(find.text('Buyer Needs').first);
+      await tester.tap(find.descendant(of: find.byType(NavigationBar), matching: find.text('Buyer Needs')));
       await tester.pumpAndSettle();
       expect(signOutCalled, isFalse);
       expect(find.byType(BuyerNeedsTab), findsOneWidget);

@@ -1539,4 +1539,176 @@ class AppLocalizationsPa extends AppLocalizations {
 
   @override
   String get optionalBadge => 'ਵਿਕਲਪਿਕ';
+
+  @override
+  String get reachMoreBuyers => 'ਪੂਰੇ ਭਾਰਤ ਵਿੱਚ ਹੋਰ ਖਰੀਦਦਾਰਾਂ ਤੱਕ ਪਹੁੰਚੋ';
+
+  @override
+  String get verifyBusinessPrompt =>
+      'ਵਿਸ਼ਵਾਸ ਬਣਾਉਣ ਅਤੇ ਵੱਡੇ ਬਾਜ਼ਾਰ ਦੀਆਂ ਸਹੂਲਤਾਂ ਦਾ ਲਾਭ ਲੈਣ ਲਈ ਆਪਣੇ ਕਾਰੋਬਾਰ ਦੀ ਤਸਦੀਕ ਕਰੋ।';
+
+  @override
+  String get verifyMyBusiness => 'ਮੇਰਾ ਕਾਰੋਬਾਰ ਤਸਦੀਕ ਕਰੋ';
+
+  @override
+  String get businessVerification => 'ਕਾਰੋਬਾਰ ਤਸਦੀਕ';
+
+  @override
+  String get businessVerificationSubtitle =>
+      'ਖਰੀਦਦਾਰਾਂ ਦਾ ਵਿਸ਼ਵਾਸ ਬਣਾਉਣ ਲਈ ਆਪਣੇ ਕਾਰੋਬਾਰ ਦੇ ਵੇਰਵਿਆਂ ਦੀ ਤਸਦੀਕ ਕਰੋ।';
+
+  @override
+  String get businessVerificationIntro =>
+      'ਵਿਸ਼ਵਾਸ ਬਣਾਉਣ ਅਤੇ ਯੋਗ ਵਿਆਪਾਰਸੇਤੂ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਤੱਕ ਪਹੁੰਚਣ ਲਈ ਆਪਣੇ ਕਾਰੋਬਾਰ ਦੇ ਵੇਰਵੇ ਪੂਰੇ ਕਰੋ।';
+
+  @override
+  String get businessVerificationComplete => 'ਕਾਰੋਬਾਰੀ ਵੇਰਵੇ ਦਰਜ';
+
+  @override
+  String verificationStepsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ਕਦਮ ਬਾਕੀ',
+      one: '1 ਕਦਮ ਬਾਕੀ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String verificationStepsCompleted(int completed, int total) {
+    return '$total ਵਿੱਚੋਂ $completed ਪੂਰੇ';
+  }
+
+  @override
+  String get emailVerificationLabel => 'ਈਮੇਲ';
+
+  @override
+  String get emailVerifiedBadge => 'ਤਸਦੀਕਸ਼ੁਦਾ';
+
+  @override
+  String get emailNotVerifiedBadge => 'ਤਸਦੀਕ ਨਹੀਂ ਹੋਈ';
+
+  @override
+  String get businessIdentityLabel => 'ਕਾਰੋਬਾਰੀ ਪਛਾਣ';
+
+  @override
+  String get businessIdentityDesc =>
+      'ਆਪਣੇ ਕਾਰੋਬਾਰ ਦੀ ਪਛਾਣ ਦਰਜ ਕਰਨ ਲਈ ਪੈਨ ਸ਼ਾਮਲ ਕਰੋ।';
+
+  @override
+  String get panVerifiedBadge => 'ਵੇਰਵੇ ਦਰਜ';
+
+  @override
+  String get panNotVerifiedBadge => 'ਮੁਹੱਈਆ ਨਹੀਂ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get gstRegistrationLabel => 'ਜੀਐਸਟੀ ਰਜਿਸਟ੍ਰੇਸ਼ਨ';
+
+  @override
+  String get gstRegistrationDesc =>
+      'ਵਿਆਪਾਰਸੇਤੂ \'ਤੇ ਵਿਆਪਕ ਬਾਜ਼ਾਰ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਲਈ ਆਪਣੀ ਜੀਐਸਟੀ ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਦਰਜ ਕਰੋ।';
+
+  @override
+  String get gstOptionalNotProvided => 'ਵਿਕਲਪਿਕ • ਮੁਹੱਈਆ ਨਹੀਂ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get gstOptionalDesc =>
+      'ਇੱਥੇ ਜੀਐਸਟੀ ਵੇਰਵੇ ਵਿਕਲਪਿਕ ਹਨ। ਜੇਕਰ ਤੁਹਾਡੇ ਕਾਰੋਬਾਰ \'ਤੇ ਲਾਗੂ ਹੋਵੇ ਤਾਂ ਤੁਸੀਂ ਇਸਨੂੰ ਬਾਅਦ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰ ਸਕਦੇ ਹੋ।';
+
+  @override
+  String get gstVerificationPending => 'ਫਾਰਮੈਟ ਜਾਂਚਿਆ ਜਾ ਰਿਹਾ ਹੈ';
+
+  @override
+  String get gstVerifiedBadge => 'ਵੇਰਵੇ ਦਰਜ';
+
+  @override
+  String get gstNotVerifiedBadge => 'ਮੁਹੱਈਆ ਨਹੀਂ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get verifyPanAction => 'ਪੈਨ ਸ਼ਾਮਲ ਕਰੋ';
+
+  @override
+  String get addOrVerifyGstAction => 'ਜੀਐਸਟੀਆਈਐਨ ਸ਼ਾਮਲ ਕਰੋ';
+
+  @override
+  String get panVerificationComingSoonTitle => 'ਪੈਨ ਤਸਦੀਕ';
+
+  @override
+  String get panVerificationComingSoonDesc =>
+      'ਪੈਨ ਤਸਦੀਕ ਪ੍ਰਕਿਰਿਆ ਨੂੰ ਅਪਡੇਟ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ। ਸਬਮਿਟ ਕਰਨ ਤੋਂ ਬਾਅਦ ਤੁਹਾਡੀ ਸਥਿਤੀ ਇੱਥੇ ਦਿਖਾਈ ਦੇਵੇਗੀ।';
+
+  @override
+  String get gstVerificationComingSoonTitle => 'ਜੀਐਸਟੀ ਰਜਿਸਟ੍ਰੇਸ਼ਨ';
+
+  @override
+  String get gstVerificationComingSoonDesc =>
+      'ਇੱਥੇ ਜੀਐਸਟੀ ਵੇਰਵੇ ਵਿਕਲਪਿਕ ਹਨ। ਜੇਕਰ ਤੁਹਾਡੇ ਕਾਰੋਬਾਰ \'ਤੇ ਲਾਗੂ ਹੋਵੇ ਤਾਂ ਤੁਸੀਂ ਇਸਨੂੰ ਬਾਅਦ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰ ਸਕਦੇ ਹੋ।';
+
+  @override
+  String get panVerificationSheetTitle => 'ਕਾਰੋਬਾਰੀ ਪਛਾਣ (ਪੈਨ)';
+
+  @override
+  String get panVerificationSheetDesc =>
+      'ਵਿਆਪਾਰਸੇਤੂ \'ਤੇ ਆਪਣੇ ਕਾਰੋਬਾਰ ਦੀ ਪਛਾਣ ਦਰਜ ਕਰਨ ਲਈ ਆਪਣਾ 10-ਅੱਖਰੀ ਪੈਨ ਦਰਜ ਕਰੋ।';
+
+  @override
+  String get panInputLabel => 'ਪੈਨ ਨੰਬਰ';
+
+  @override
+  String get panInputHint => 'ਉਦਾ. ABCDE1234F';
+
+  @override
+  String get panInvalidFormatError =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੈਧ 10-ਅੱਖਰੀ ਪੈਨ ਦਰਜ ਕਰੋ (ਉਦਾ. ABCDE1234F)।';
+
+  @override
+  String get panVerificationSuccess => 'ਪੈਨ ਵੇਰਵੇ ਸਫ਼ਲਤਾਪੂਰਵਕ ਦਰਜ ਹੋ ਗਏ।';
+
+  @override
+  String get panAlreadyLinkedError =>
+      'ਇਸ ਖਾਤੇ ਨਾਲ ਪਹਿਲਾਂ ਹੀ ਇੱਕ ਪੈਨ ਜੁੜਿਆ ਹੋਇਆ ਹੈ।';
+
+  @override
+  String get panVerificationFailedError =>
+      'ਪੈਨ ਦੇ ਵੇਰਵੇ ਦਰਜ ਨਹੀਂ ਹੋ ਸਕੇ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਵੇਰਵੇ ਜਾਂਚੋ।';
+
+  @override
+  String get gstVerificationSheetTitle => 'ਜੀਐਸਟੀ ਰਜਿਸਟ੍ਰੇਸ਼ਨ (GSTIN)';
+
+  @override
+  String get gstVerificationSheetDesc =>
+      'ਵਿਆਪਾਰਸੇਤੂ \'ਤੇ ਆਪਣੇ ਜੀਐਸਟੀ ਵੇਰਵੇ ਦਰਜ ਕਰਨ ਲਈ ਆਪਣਾ 15-ਅੱਖਰੀ ਜੀਐਸਟੀਆਈਐਨ ਦਰਜ ਕਰੋ।';
+
+  @override
+  String get gstInputLabel => 'ਜੀਐਸਟੀਆਈਐਨ (GSTIN)';
+
+  @override
+  String get gstInputHint => 'ਉਦਾ. 07AAAAA0000A1Z5';
+
+  @override
+  String get gstInvalidFormatError =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੈਧ 15-ਅੱਖਰੀ ਜੀਐਸਟੀਆਈਐਨ ਦਰਜ ਕਰੋ (ਉਦਾ. 07AAAAA0000A1Z5)।';
+
+  @override
+  String get gstInvalidStateCodeError =>
+      'ਜੀਐਸਟੀਆਈਐਨ ਵਿੱਚ ਗਲਤ ਰਾਜ ਕੋਡ। ਪਹਿਲੇ 2 ਅੰਕ 01-38, 97, ਜਾਂ 99 ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ।';
+
+  @override
+  String get gstVerificationSuccess =>
+      'ਜੀਐਸਟੀਆਈਐਨ ਵੇਰਵੇ ਸਫ਼ਲਤਾਪੂਰਵਕ ਦਰਜ ਹੋ ਗਏ।';
+
+  @override
+  String get gstAlreadyLinkedError =>
+      'ਇਸ ਖਾਤੇ ਨਾਲ ਪਹਿਲਾਂ ਹੀ ਇੱਕ ਜੀਐਸਟੀਆਈਐਨ ਜੁੜਿਆ ਹੋਇਆ ਹੈ।';
+
+  @override
+  String get gstVerificationFailedError =>
+      'ਜੀਐਸਟੀਆਈਐਨ ਵੇਰਵੇ ਦਰਜ ਨਹੀਂ ਹੋ ਸਕੇ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ 15-ਅੱਖਰੀ ਜੀਐਸਟੀਆਈਐਨ ਜਾਂਚੋ।';
+
+  @override
+  String get verifyingAction => 'ਜਾਂਚਿਆ ਜਾ ਰਿਹਾ ਹੈ...';
+
+  @override
+  String get verifyAction => 'ਸਬਮਿਟ ਕਰੋ';
 }

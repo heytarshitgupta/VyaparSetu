@@ -1535,4 +1535,175 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get optionalBadge => 'Optional';
+
+  @override
+  String get reachMoreBuyers => 'Reach more buyers across India';
+
+  @override
+  String get verifyBusinessPrompt =>
+      'Verify your business to build trust and unlock eligible wider-market features.';
+
+  @override
+  String get verifyMyBusiness => 'Verify My Business';
+
+  @override
+  String get businessVerification => 'Business Verification';
+
+  @override
+  String get businessVerificationSubtitle =>
+      'Verify your business details and build buyer trust.';
+
+  @override
+  String get businessVerificationIntro =>
+      'Complete your business details to build trust and access eligible VyaparSetu features.';
+
+  @override
+  String get businessVerificationComplete => 'Business details recorded';
+
+  @override
+  String verificationStepsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps remaining',
+      one: '1 step remaining',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String verificationStepsCompleted(int completed, int total) {
+    return '$completed of $total completed';
+  }
+
+  @override
+  String get emailVerificationLabel => 'Email';
+
+  @override
+  String get emailVerifiedBadge => 'Verified';
+
+  @override
+  String get emailNotVerifiedBadge => 'Not verified';
+
+  @override
+  String get businessIdentityLabel => 'Business Identity';
+
+  @override
+  String get businessIdentityDesc =>
+      'Verify your PAN to confirm your business identity.';
+
+  @override
+  String get panVerifiedBadge => 'Details Added';
+
+  @override
+  String get panNotVerifiedBadge => 'Not provided';
+
+  @override
+  String get gstRegistrationLabel => 'GST Registration';
+
+  @override
+  String get gstRegistrationDesc =>
+      'Record your GST registration to access eligible wider-market features on VyaparSetu.';
+
+  @override
+  String get gstOptionalNotProvided => 'Optional • Not provided';
+
+  @override
+  String get gstOptionalDesc =>
+      'GST details are optional here. You can add them later if applicable to your business.';
+
+  @override
+  String get gstVerificationPending => 'Checking format';
+
+  @override
+  String get gstVerifiedBadge => 'Details Added';
+
+  @override
+  String get gstNotVerifiedBadge => 'Not provided';
+
+  @override
+  String get verifyPanAction => 'Add PAN';
+
+  @override
+  String get addOrVerifyGstAction => 'Add GSTIN';
+
+  @override
+  String get panVerificationComingSoonTitle => 'PAN Verification';
+
+  @override
+  String get panVerificationComingSoonDesc =>
+      'PAN verification flow is being updated for progressive onboarding. Your recorded status will appear here once submitted.';
+
+  @override
+  String get gstVerificationComingSoonTitle => 'GST Registration';
+
+  @override
+  String get gstVerificationComingSoonDesc =>
+      'GST details are optional here. You can add them later if applicable to your business.';
+
+  @override
+  String get panVerificationSheetTitle => 'Business Identity (PAN)';
+
+  @override
+  String get panVerificationSheetDesc =>
+      'Enter your 10-character PAN to record your business identity on VyaparSetu.';
+
+  @override
+  String get panInputLabel => 'PAN Number';
+
+  @override
+  String get panInputHint => 'e.g. ABCDE1234F';
+
+  @override
+  String get panInvalidFormatError =>
+      'Please enter a valid 10-character PAN (e.g. ABCDE1234F).';
+
+  @override
+  String get panVerificationSuccess => 'PAN details recorded successfully.';
+
+  @override
+  String get panAlreadyLinkedError =>
+      'A PAN is already associated with this account.';
+
+  @override
+  String get panVerificationFailedError =>
+      'PAN details could not be recorded. Please check your details.';
+
+  @override
+  String get gstVerificationSheetTitle => 'GST Registration (GSTIN)';
+
+  @override
+  String get gstVerificationSheetDesc =>
+      'Enter your 15-character GSTIN to record your GST details on VyaparSetu.';
+
+  @override
+  String get gstInputLabel => 'GSTIN';
+
+  @override
+  String get gstInputHint => 'e.g. 07AAAAA0000A1Z5';
+
+  @override
+  String get gstInvalidFormatError =>
+      'Please enter a valid 15-character GSTIN (e.g. 07AAAAA0000A1Z5).';
+
+  @override
+  String get gstInvalidStateCodeError =>
+      'Invalid state code in GSTIN. First 2 digits must be between 01-38, 97, or 99.';
+
+  @override
+  String get gstVerificationSuccess => 'GSTIN details recorded successfully.';
+
+  @override
+  String get gstAlreadyLinkedError =>
+      'A GSTIN is already associated with this account.';
+
+  @override
+  String get gstVerificationFailedError =>
+      'GSTIN details could not be recorded. Please check your 15-digit GSTIN.';
+
+  @override
+  String get verifyingAction => 'Checking...';
+
+  @override
+  String get verifyAction => 'Submit';
 }

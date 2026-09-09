@@ -9,6 +9,8 @@ import '../products/screens/add_product_screen.dart';
 import '../products/services/producer_product_service.dart';
 import '../products/producer_products_tab.dart';
 import '../profile/producer_profile_tab.dart';
+import '../verification/screens/business_verification_overview_screen.dart';
+import '../verification/services/business_verification_session.dart';
 import '../widgets/producer_quick_action_menu.dart';
 import 'models/producer_shell_profile.dart';
 import 'tabs/producer_home_tab.dart';
@@ -168,6 +170,24 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
     );
   }
 
+  Future<void> _openBusinessVerification() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BusinessVerificationOverviewScreen(
+          profile: _profile,
+          onProfileUpdated: () {
+            if (mounted) {
+              _loadProfileOnce();
+            }
+          },
+        ),
+      ),
+    );
+    if (mounted) {
+      _loadProfileOnce();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -180,6 +200,13 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
         onAddProduct: openAddProduct,
         onNavigateToTab: selectDestination,
         onOpenWhatBuyersWant: openWhatBuyersWant,
+        onVerifyBusiness: _openBusinessVerification,
+        onDismissVerificationBanner: () {
+          setState(() {
+            BusinessVerificationSession.instance.dismissHomeBanner();
+          });
+        },
+        isBannerDismissed: BusinessVerificationSession.instance.isHomeBannerDismissed,
       ),
       ProducerProductsTab(
         provider: _productsProvider,
@@ -190,6 +217,7 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
       ProducerProfileTab(
         profile: _profile,
         onSignOut: _handleSignOut,
+        onNavigateToVerification: _openBusinessVerification,
       ),
     ];
 

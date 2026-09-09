@@ -20,7 +20,9 @@ import '../auth/role_selection_screen.dart';
 import '../../producer_section/auth/producer_login_screen.dart';
 import '../../producer_section/auth/producer_signup_screen.dart';
 import '../../producer_section/home/producer_main_screen.dart';
+import '../../producer_section/home/models/producer_shell_profile.dart';
 import '../../producer_section/onboarding/producer_onboarding_screen.dart';
+import '../../producer_section/verification/screens/business_verification_overview_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -46,6 +48,7 @@ class AppRouter {
   static const String producerSignupRoute = '/producer_signup';
   static const String producerHomeRoute = '/producer_home';
   static const String producerOnboardingRoute = '/producer_onboarding';
+  static const String producerBusinessVerificationRoute = '/producer_business_verification';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -106,6 +109,13 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ProducerMainScreen());
       case producerOnboardingRoute:
         return MaterialPageRoute(builder: (_) => const ProducerOnboardingScreen());
+      case producerBusinessVerificationRoute:
+        final profile = settings.arguments is ProducerShellProfile
+            ? settings.arguments as ProducerShellProfile
+            : null;
+        return MaterialPageRoute(
+          builder: (_) => BusinessVerificationOverviewScreen(profile: profile),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

@@ -764,8 +764,9 @@ void main() {
           rpcCalled = true;
           expect(fnName, 'verify_producer_pan_prototype');
           expect(params['p_pan'], 'ABCDE1234F');
-          expect(params['p_name'], 'Ramesh Kumar');
-          expect(params['p_dob'], isNotNull);
+          expect(params.containsKey('p_name'), isFalse);
+          expect(params.containsKey('p_dob'), isFalse);
+          expect(params.length, 1);
           return {
             'success': true,
             'status': 'verified',

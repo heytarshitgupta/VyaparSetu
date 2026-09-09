@@ -8,16 +8,20 @@ import '../../core/theme/theme_provider.dart';
 import '../home/models/producer_shell_profile.dart';
 import '../widgets/producer_quick_action_menu.dart';
 
+import '../verification/screens/business_verification_overview_screen.dart';
+
 class ProducerProfileTab extends StatefulWidget {
   final ProducerShellProfile? profile;
   final Future<void> Function()? onSignOut;
   final Future<void> Function(String email)? onResetPassword;
+  final VoidCallback? onNavigateToVerification;
 
   const ProducerProfileTab({
     super.key,
     this.profile,
     this.onSignOut,
     this.onResetPassword,
+    this.onNavigateToVerification,
   });
 
   @override
@@ -471,6 +475,71 @@ class _ProducerProfileTabState extends State<ProducerProfileTab> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 16),
+
+            // Permanent Business Verification Entry Point
+            InkWell(
+              key: const ValueKey('business_verification_entry'),
+              borderRadius: BorderRadius.circular(12),
+              onTap: () {
+                if (widget.onNavigateToVerification != null) {
+                  widget.onNavigateToVerification!();
+                } else {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => BusinessVerificationOverviewScreen(
+                        profile: profile,
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.verified_user_outlined,
+                      color: colorScheme.primary,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.businessVerification,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            l10n.businessVerificationSubtitle,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 16),
 

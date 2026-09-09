@@ -35,6 +35,40 @@ class PanVerificationResult {
   }
 }
 
+class GstVerificationResult {
+  final bool success;
+  final String status;
+  final String message;
+  final String? maskedGstin;
+  final String? marketAccessScope;
+
+  const GstVerificationResult({
+    required this.success,
+    required this.status,
+    required this.message,
+    this.maskedGstin,
+    this.marketAccessScope,
+  });
+
+  factory GstVerificationResult.fromJson(Map<String, dynamic> json) {
+    return GstVerificationResult(
+      success: json['success'] as bool? ?? false,
+      status: json['status'] as String? ?? 'unknown',
+      message: json['message'] as String? ?? '',
+      maskedGstin: json['masked_gstin'] as String?,
+      marketAccessScope: json['market_access_scope'] as String?,
+    );
+  }
+
+  factory GstVerificationResult.failure(String message) {
+    return GstVerificationResult(
+      success: false,
+      status: 'error',
+      message: message,
+    );
+  }
+}
+
 class ProducerVerificationService {
   final SupabaseClient? client;
 
@@ -57,24 +91,23 @@ class ProducerVerificationService {
     _instance = mock;
   }
 
-  /// Requests simulated PAN verification via trusted backend RPC.
+  /// Records and validates a 10-character PAN via the trusted backend RPC.
+  ///
+  /// Prototype validation note: The backend RPC `verify_producer_pan_prototype`
+  /// performs format validation and demo simulation. It does NOT contact an external government registry.
+  ///
+  /// Aligned with Migration 014: takes only `p_pan`. Legacy `p_name` and `p_dob`
+  /// parameters have been eliminated.
   ///
   /// Raw PAN is strictly transient and NEVER logged, printed, or persisted locally.
   Future<PanVerificationResult> verifyPan({
     required String pan,
-    required String nameAsPerPan,
-    required DateTime dateOfBirth,
   }) async {
     final trimmedPan = pan.trim().toUpperCase();
-    final trimmedName = nameAsPerPan.trim();
-    final dobIso =
-        '${dateOfBirth.year.toString().padLeft(4, '0')}-${dateOfBirth.month.toString().padLeft(2, '0')}-${dateOfBirth.day.toString().padLeft(2, '0')}';
 
     try {
       final params = <String, dynamic>{
         'p_pan': trimmedPan,
-        'p_name': trimmedName,
-        'p_dob': dobIso,
       };
 
       final response = rpcHandler != null
@@ -100,6 +133,47 @@ class ProducerVerificationService {
         }
       }
       return PanVerificationResult.failure(
+        'Unable to complete verification at this time. Please try again.',
+      );
+    }
+  }
+
+  /// Requests simulated GST verification via trusted backend RPC.
+  ///
+  /// Raw GSTIN is strictly transient and written only by the authoritative backend RPC.
+  Future<GstVerificationResult> verifyGst({
+    required String gstin,
+  }) async {
+    final trimmedGstin = gstin.trim().toUpperCase();
+
+    try {
+      final params = <String, dynamic>{
+        'p_gstin': trimmedGstin,
+      };
+
+      final response = rpcHandler != null
+          ? await rpcHandler!('verify_producer_gst_prototype', params)
+          : await supabaseClient.rpc('verify_producer_gst_prototype', params: params);
+
+      if (response is Map<String, dynamic>) {
+        return GstVerificationResult.fromJson(response);
+      } else if (response is Map) {
+        return GstVerificationResult.fromJson(Map<String, dynamic>.from(response));
+      }
+
+      return GstVerificationResult.failure('Invalid response format from verification service.');
+    } catch (e) {
+      if (kDebugMode) {
+        if (e is PostgrestException) {
+          debugPrint(
+            '[ProducerVerification] PostgrestException on GST verification: '
+            'code=${e.code}, message=${e.message}, hint=${e.hint}',
+          );
+        } else {
+          debugPrint('[ProducerVerification] Exception on GST verification: $e');
+        }
+      }
+      return GstVerificationResult.failure(
         'Unable to complete verification at this time. Please try again.',
       );
     }

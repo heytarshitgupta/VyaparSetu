@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/localization/generated/app_localizations.dart';
+import '../../verification/models/business_verification_status.dart';
 import '../models/producer_shell_profile.dart';
+import '../widgets/business_verification_banner.dart';
 
 class ProducerHomeTab extends StatelessWidget {
   final VoidCallback onAddProduct;
   final ValueChanged<int> onNavigateToTab;
   final VoidCallback onOpenWhatBuyersWant;
   final ProducerShellProfile? profile;
+  final VoidCallback? onVerifyBusiness;
+  final VoidCallback? onDismissVerificationBanner;
+  final bool isBannerDismissed;
+  final bool? overrideEmailVerified;
 
   const ProducerHomeTab({
     super.key,
@@ -14,6 +21,10 @@ class ProducerHomeTab extends StatelessWidget {
     required this.onNavigateToTab,
     required this.onOpenWhatBuyersWant,
     this.profile,
+    this.onVerifyBusiness,
+    this.onDismissVerificationBanner,
+    this.isBannerDismissed = false,
+    this.overrideEmailVerified,
   });
 
   @override
@@ -24,6 +35,13 @@ class ProducerHomeTab extends StatelessWidget {
         : l10n.producerDefaultName;
     final businessName = profile?.businessName?.trim();
     final craftCategory = profile?.craftCategory?.trim();
+
+    final verificationStatus = BusinessVerificationStatus.fromProfile(
+      profile: profile,
+      currentUser: AuthService.instance.currentUser,
+      overrideEmailVerified: overrideEmailVerified,
+    );
+    final showBanner = !isBannerDismissed && verificationStatus.shouldShowHomeBanner;
 
     return SafeArea(
       child: Center(
@@ -46,19 +64,30 @@ class ProducerHomeTab extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // ----------------------------------------------------------------
-                // 2. ADD PRODUCT HERO (Most dominant action on the screen)
+                // 2. HOME VERIFICATION BANNER (Visible when verification incomplete & not dismissed)
+                // ----------------------------------------------------------------
+                if (showBanner) ...[
+                  BusinessVerificationBanner(
+                    onVerify: onVerifyBusiness ?? () {},
+                    onDismiss: onDismissVerificationBanner ?? () {},
+                  ),
+                  const SizedBox(height: 20),
+                ],
+
+                // ----------------------------------------------------------------
+                // 3. ADD PRODUCT HERO (Most dominant action on the screen)
                 // ----------------------------------------------------------------
                 _buildPrimaryActionCard(context),
                 const SizedBox(height: 24),
 
                 // ----------------------------------------------------------------
-                // 3. MAIN USEFUL SHORTCUTS (My Products, Buyer Needs, What Buyers Want)
+                // 4. MAIN USEFUL SHORTCUTS (My Products, Buyer Needs, What Buyers Want)
                 // ----------------------------------------------------------------
                 _buildShortcutsSection(context),
                 const SizedBox(height: 24),
 
                 // ----------------------------------------------------------------
-                // 4. SUPPORTING INFORMATION (Clean, truthful status states, no filler)
+                // 5. SUPPORTING INFORMATION (Clean, truthful status states, no filler)
                 // ----------------------------------------------------------------
                 _buildSupportingStatusSection(context),
               ],

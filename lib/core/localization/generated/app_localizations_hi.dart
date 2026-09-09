@@ -1536,4 +1536,176 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get optionalBadge => 'वैकल्पिक';
+
+  @override
+  String get reachMoreBuyers => 'पूरे भारत में अधिक खरीदारों तक पहुँचें';
+
+  @override
+  String get verifyBusinessPrompt =>
+      'विश्वास बनाने और बड़े बाज़ार की सुविधाओं का लाभ उठाने के लिए अपने व्यवसाय को सत्यापित करें।';
+
+  @override
+  String get verifyMyBusiness => 'व्यवसाय सत्यापित करें';
+
+  @override
+  String get businessVerification => 'व्यवसाय सत्यापन';
+
+  @override
+  String get businessVerificationSubtitle =>
+      'खरीदारों का विश्वास बनाने के लिए अपने व्यवसाय का विवरण सत्यापित करें।';
+
+  @override
+  String get businessVerificationIntro =>
+      'विश्वास बनाने और योग्य व्यापारसेतु सुविधाओं का लाभ उठाने के लिए अपने व्यवसाय का विवरण पूरा करें।';
+
+  @override
+  String get businessVerificationComplete => 'व्यवसाय विवरण दर्ज';
+
+  @override
+  String verificationStepsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count चरण शेष',
+      one: '1 चरण शेष',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String verificationStepsCompleted(int completed, int total) {
+    return '$total में से $completed पूर्ण';
+  }
+
+  @override
+  String get emailVerificationLabel => 'ईमेल';
+
+  @override
+  String get emailVerifiedBadge => 'सत्यापित';
+
+  @override
+  String get emailNotVerifiedBadge => 'सत्यापित नहीं';
+
+  @override
+  String get businessIdentityLabel => 'व्यवसाय पहचान';
+
+  @override
+  String get businessIdentityDesc =>
+      'अपने व्यवसाय की पहचान की पुष्टि करने के लिए पैन दर्ज करें।';
+
+  @override
+  String get panVerifiedBadge => 'विवरण दर्ज';
+
+  @override
+  String get panNotVerifiedBadge => 'प्रदान नहीं किया गया';
+
+  @override
+  String get gstRegistrationLabel => 'जीएसटी पंजीकरण';
+
+  @override
+  String get gstRegistrationDesc =>
+      'व्यापारसेतु पर व्यापक बाज़ार सुविधाओं का लाभ उठाने के लिए अपना जीएसटी पंजीकरण दर्ज करें।';
+
+  @override
+  String get gstOptionalNotProvided => 'वैकल्पिक • प्रदान नहीं किया गया';
+
+  @override
+  String get gstOptionalDesc =>
+      'यहाँ जीएसटी विवरण वैकल्पिक है। यदि आपके व्यवसाय पर लागू हो तो आप इसे बाद में जोड़ सकते हैं।';
+
+  @override
+  String get gstVerificationPending => 'प्रारूप जांचा जा रहा है';
+
+  @override
+  String get gstVerifiedBadge => 'विवरण दर्ज';
+
+  @override
+  String get gstNotVerifiedBadge => 'प्रदान नहीं किया गया';
+
+  @override
+  String get verifyPanAction => 'पैन जोड़ें';
+
+  @override
+  String get addOrVerifyGstAction => 'जीएसटीआईएन जोड़ें';
+
+  @override
+  String get panVerificationComingSoonTitle => 'पैन सत्यापन';
+
+  @override
+  String get panVerificationComingSoonDesc =>
+      'पैन सत्यापन प्रक्रिया को अपडेट किया जा रहा है। सबमिट करने के बाद आपकी स्थिति यहाँ दिखाई देगी।';
+
+  @override
+  String get gstVerificationComingSoonTitle => 'जीएसटी पंजीकरण';
+
+  @override
+  String get gstVerificationComingSoonDesc =>
+      'यहाँ जीएसटी विवरण वैकल्पिक है। यदि आपके व्यवसाय पर लागू हो तो आप इसे बाद में जोड़ सकते हैं।';
+
+  @override
+  String get panVerificationSheetTitle => 'व्यवसाय पहचान (पैन)';
+
+  @override
+  String get panVerificationSheetDesc =>
+      'व्यापारसेतु पर अपनी व्यावसायिक पहचान दर्ज करने के लिए अपना 10-अंकीय पैन दर्ज करें।';
+
+  @override
+  String get panInputLabel => 'पैन नंबर';
+
+  @override
+  String get panInputHint => 'उदा. ABCDE1234F';
+
+  @override
+  String get panInvalidFormatError =>
+      'कृपया एक मान्य 10-अंकीय पैन दर्ज करें (उदा. ABCDE1234F)।';
+
+  @override
+  String get panVerificationSuccess => 'पैन विवरण सफलतापूर्वक दर्ज हो गया।';
+
+  @override
+  String get panAlreadyLinkedError =>
+      'इस खाते के साथ पहले से ही एक पैन जुड़ा हुआ है।';
+
+  @override
+  String get panVerificationFailedError =>
+      'पैन विवरण दर्ज नहीं हो सके। कृपया अपना विवरण जांचें।';
+
+  @override
+  String get gstVerificationSheetTitle => 'जीएसटी पंजीकरण (GSTIN)';
+
+  @override
+  String get gstVerificationSheetDesc =>
+      'व्यापारसेतु पर अपने जीएसटी विवरण दर्ज करने के लिए अपना 15-अंकीय जीएसटीआईएन दर्ज करें।';
+
+  @override
+  String get gstInputLabel => 'जीएसटीआईएन (GSTIN)';
+
+  @override
+  String get gstInputHint => 'उदा. 07AAAAA0000A1Z5';
+
+  @override
+  String get gstInvalidFormatError =>
+      'कृपया एक मान्य 15-अक्षर का जीएसटीआईएन (उदा. 07AAAAA0000A1Z5) दर्ज करें।';
+
+  @override
+  String get gstInvalidStateCodeError =>
+      'जीएसटीआईएन में अमान्य राज्य कोड। पहले 2 अंक 01-38, 97, या 99 होने चाहिए।';
+
+  @override
+  String get gstVerificationSuccess =>
+      'जीएसटीआईएन विवरण सफलतापूर्वक दर्ज हो गया।';
+
+  @override
+  String get gstAlreadyLinkedError =>
+      'इस खाते के साथ पहले से ही एक जीएसटीआईएन जुड़ा हुआ है।';
+
+  @override
+  String get gstVerificationFailedError =>
+      'जीएसटीआईएन विवरण दर्ज नहीं हो सका। कृपया अपना 15-अंकीय जीएसटीआईएन जांचें।';
+
+  @override
+  String get verifyingAction => 'जांचा जा रहा है...';
+
+  @override
+  String get verifyAction => 'सबमिट करें';
 }
