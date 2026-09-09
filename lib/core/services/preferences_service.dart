@@ -10,6 +10,7 @@ class PreferencesService {
 
   static const String _keyLanguageCode = 'app_language_code';
   static const String _keyThemeMode = 'app_theme_mode';
+  static const String _keyVoiceLanguageOption = 'voice_guidance_language';
 
   SharedPreferences? _prefs;
   final Map<String, String> _inMemoryFallback = {};
@@ -72,6 +73,28 @@ class PreferencesService {
     try {
       final prefs = await _getPrefs();
       await prefs?.setString(_keyThemeMode, mode);
+    } catch (_) {}
+  }
+
+  /// Loads saved voice guidance language option ('sameAsApp', 'en', 'hi', 'pa').
+  Future<String?> getSavedVoiceLanguageOption() async {
+    try {
+      final prefs = await _getPrefs();
+      if (prefs != null) {
+        return prefs.getString(_keyVoiceLanguageOption);
+      }
+      return _inMemoryFallback[_keyVoiceLanguageOption];
+    } catch (_) {
+      return _inMemoryFallback[_keyVoiceLanguageOption];
+    }
+  }
+
+  /// Persists voice guidance language option.
+  Future<void> saveVoiceLanguageOption(String option) async {
+    _inMemoryFallback[_keyVoiceLanguageOption] = option;
+    try {
+      final prefs = await _getPrefs();
+      await prefs?.setString(_keyVoiceLanguageOption, option);
     } catch (_) {}
   }
 }

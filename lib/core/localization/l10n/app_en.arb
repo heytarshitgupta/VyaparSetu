@@ -335,7 +335,7 @@
   },
   "notProvided": "Not provided",
   "@notProvided": {
-    "description": "Added for profile screen"
+    "description": "Placeholder when an optional profile field was not provided"
   },
   "readOnly": "Read Only",
   "@readOnly": {
@@ -541,9 +541,9 @@
   "@panVerification": {
     "description": "Title for PAN card in unverified state"
   },
-  "panVerified": "PAN Verified",
+  "panVerified": "Verified",
   "@panVerified": {
-    "description": "Title for PAN card in verified state"
+    "description": "Badge when PAN is verified"
   },
   "secureIdentityVerification": "Secure identity verification",
   "@secureIdentityVerification": {
@@ -806,9 +806,9 @@
   "@filterDraft": {
     "description": "Filter tab for draft products"
   },
-  "filterHidden": "Hidden",
+  "filterHidden": "Inactive",
   "@filterHidden": {
-    "description": "Filter tab for hidden products"
+    "description": "Filter tab for inactive products"
   },
   "statusActive": "Active",
   "@statusActive": {
@@ -818,9 +818,9 @@
   "@statusDraft": {
     "description": "Status badge for draft products"
   },
-  "statusHidden": "Hidden",
+  "statusHidden": "Inactive",
   "@statusHidden": {
-    "description": "Status badge for hidden products"
+    "description": "Status badge for hidden/inactive products"
   },
   "priceNotSet": "Price not set",
   "@priceNotSet": {
@@ -846,13 +846,13 @@
   "@noDraftProductsSubtitle": {
     "description": "Subtitle when draft filter has zero results"
   },
-  "noHiddenProductsTitle": "No hidden products",
+  "noHiddenProductsTitle": "No inactive products",
   "@noHiddenProductsTitle": {
-    "description": "Title when hidden filter has zero results"
+    "description": "Title when hidden/inactive filter has zero results"
   },
   "noHiddenProductsSubtitle": "Products you temporarily hide will appear here",
   "@noHiddenProductsSubtitle": {
-    "description": "Subtitle when hidden filter has zero results"
+    "description": "Subtitle when hidden/inactive filter has zero results"
   },
   "showAllProducts": "Show All Products",
   "@showAllProducts": {
@@ -1096,7 +1096,7 @@
   },
   "businessName": "Business Name",
   "@businessName": {
-    "description": "Added for profile screen"
+    "description": "Label for business name"
   },
   "category": "Category",
   "@category": {
@@ -1104,7 +1104,7 @@
   },
   "email": "Email",
   "@email": {
-    "description": "Added for profile screen"
+    "description": "Label for email"
   },
   "phone": "Phone",
   "@phone": {
@@ -1257,5 +1257,609 @@
   "closed": "Closed",
   "@closed": {
     "description": "Added for search and requests screen"
+  },
+  "createYourAccountTitle": "Create Your Account",
+  "@createYourAccountTitle": {
+    "description": "Header for Step 1 producer signup"
+  },
+  "createAccountSupportingCopy": "Start setting up your business on VyaparSetu.",
+  "@createAccountSupportingCopy": {
+    "description": "Supporting copy for Step 1 producer signup"
+  },
+  "verifyYourEmailTitle": "Verify Your Email",
+  "@verifyYourEmailTitle": {
+    "description": "Header for email OTP verification screen"
+  },
+  "verifyYourEmailSubtitle": "We sent a 6-digit code to {email}",
+  "@verifyYourEmailSubtitle": {
+    "description": "Subtitle on email OTP screen showing masked email",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "enterOtpPrompt": "Enter 6-digit verification code",
+  "@enterOtpPrompt": {
+    "description": "Label above 6-digit OTP input"
+  },
+  "verifyAndContinue": "Verify & Continue",
+  "@verifyAndContinue": {
+    "description": "Primary action button to verify OTP"
+  },
+  "resendCode": "Resend Code",
+  "@resendCode": {
+    "description": "Button to resend email verification code"
+  },
+  "resendCodeIn": "Resend Code in {seconds}s",
+  "@resendCodeIn": {
+    "description": "Cooldown indicator on resend button",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "changeEmail": "Change Email",
+  "@changeEmail": {
+    "description": "Button to go back and change email address"
+  },
+  "otpInvalidLength": "Please enter a valid 6-digit code",
+  "@otpInvalidLength": {
+    "description": "Error shown when OTP is fewer than 6 digits"
+  },
+  "otpIncorrectOrExpired": "That code is incorrect or has expired.",
+  "@otpIncorrectOrExpired": {
+    "description": "Error shown when OTP verification fails"
+  },
+  "otpSentSuccess": "A new 6-digit code has been sent to your email.",
+  "@otpSentSuccess": {
+    "description": "Success message when OTP is resent"
+  },
+  "filterInactive": "Inactive",
+  "@filterInactive": {
+    "description": "Filter tab for inactive products"
+  },
+  "statusInactive": "Inactive",
+  "@statusInactive": {
+    "description": "Status badge for inactive products"
+  },
+  "editAction": "Edit",
+  "@editAction": {
+    "description": "Action button to edit a product"
+  },
+  "continueEditingAction": "Continue Editing",
+  "@continueEditingAction": {
+    "description": "Action button to continue editing a draft product"
+  },
+  "saveChangesAction": "Save Changes",
+  "@saveChangesAction": {
+    "description": "Action button to save edits to an existing product"
+  },
+  "makeActiveAction": "Make Active",
+  "@makeActiveAction": {
+    "description": "Action button to make an inactive product active"
+  },
+  "makeInactiveAction": "Make Inactive",
+  "@makeInactiveAction": {
+    "description": "Action button to make an active product inactive"
+  },
+  "editProductTitle": "Edit Product",
+  "@editProductTitle": {
+    "description": "Modal title when editing an existing product"
+  },
+  "editProductHelper": "Update your product details and photos",
+  "@editProductHelper": {
+    "description": "Modal subtitle when editing an existing product"
+  },
+  "deleteProductConfirmTitle": "Delete product?",
+  "@deleteProductConfirmTitle": {
+    "description": "Confirmation title when deleting a product"
+  },
+  "deleteProductConfirmBody": "This will permanently remove this product and its photos.",
+  "@deleteProductConfirmBody": {
+    "description": "Confirmation body when deleting a product"
+  },
+  "productUpdatedSuccess": "Product updated",
+  "@productUpdatedSuccess": {
+    "description": "Toast message when product details are updated"
+  },
+  "productMadeActiveSuccess": "Product made active",
+  "@productMadeActiveSuccess": {
+    "description": "Toast message when product is made active"
+  },
+  "productMadeInactiveSuccess": "Product made inactive",
+  "@productMadeInactiveSuccess": {
+    "description": "Toast message when product is made inactive"
+  },
+  "couldNotUpdateProduct": "Could not update product",
+  "@couldNotUpdateProduct": {
+    "description": "Error toast when product update fails"
+  },
+  "couldNotLoadProductPhoto": "Could not load product photo",
+  "@couldNotLoadProductPhoto": {
+    "description": "Error toast when product photo fails to load"
+  },
+  "incompleteProductCannotActivate": "Please edit product to fill name, category, and price before making it active.",
+  "@incompleteProductCannotActivate": {
+    "description": "Guidance toast when trying to activate an incomplete product"
+  },
+  "noInactiveProductsTitle": "No inactive products",
+  "@noInactiveProductsTitle": {
+    "description": "Title when inactive filter has zero results"
+  },
+  "noInactiveProductsSubtitle": "Products you mark as inactive will appear here",
+  "@noInactiveProductsSubtitle": {
+    "description": "Subtitle when inactive filter has zero results"
+  },
+  "whatBuyersWantSubtitle": "See sample market demand trends from different places.",
+  "@whatBuyersWantSubtitle": {
+    "description": "Subtitle for What Buyers Want screen"
+  },
+  "sampleMarketInsightsBadge": "Sample market insights",
+  "@sampleMarketInsightsBadge": {
+    "description": "Badge indicating market intelligence signals are sample data"
+  },
+  "sampleMarketInsightsNote": "These regional trends are based on sample market activity to help you understand buyer interest.",
+  "@sampleMarketInsightsNote": {
+    "description": "Note clarifying that market trends are sample data"
+  },
+  "demandHigh": "High demand",
+  "@demandHigh": {
+    "description": "High market demand label"
+  },
+  "demandMedium": "Medium demand",
+  "@demandMedium": {
+    "description": "Medium market demand label"
+  },
+  "demandLow": "Low demand",
+  "@demandLow": {
+    "description": "Low market demand label"
+  },
+  "demandScoreOutOf": "{score}/100",
+  "@demandScoreOutOf": {
+    "description": "Demand score out of 100",
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "signalDistrictLabel": "District: {district}",
+  "@signalDistrictLabel": {
+    "description": "Label for product district in market intelligence",
+    "placeholders": {
+      "district": {
+        "type": "String"
+      }
+    }
+  },
+  "topBuyingCityLabel": "Top buying city: {city}",
+  "@topBuyingCityLabel": {
+    "description": "Label for top purchasing city",
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "estimatedMonthlyDemandLabel": "Estimated monthly demand",
+  "@estimatedMonthlyDemandLabel": {
+    "description": "Label for estimated monthly demand"
+  },
+  "estimatedUnitsValue": "{count} units",
+  "@estimatedUnitsValue": {
+    "description": "Formatted units count",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "typicalOrderValueLabel": "Typical order value",
+  "@typicalOrderValueLabel": {
+    "description": "Label for typical order value"
+  },
+  "categoryAgriculture": "Agriculture",
+  "@categoryAgriculture": {
+    "description": "Category: Agriculture"
+  },
+  "categoryTextile": "Textile",
+  "@categoryTextile": {
+    "description": "Category: Textile"
+  },
+  "categoryFoodProcessing": "Food processing",
+  "@categoryFoodProcessing": {
+    "description": "Category: Food processing"
+  },
+  "categoryManufacturing": "Manufacturing",
+  "@categoryManufacturing": {
+    "description": "Category: Manufacturing"
+  },
+  "noMarketInsights": "No market insights available yet.",
+  "@noMarketInsights": {
+    "description": "Empty state message when no market signals are present"
+  },
+  "takePhotoAction": "Take Photo",
+  "@takePhotoAction": {
+    "description": "Option to take a photo using the device camera"
+  },
+  "chooseFromGalleryAction": "Choose from Gallery",
+  "@chooseFromGalleryAction": {
+    "description": "Option to select a photo from device photo library"
+  },
+  "uploadingPhotoProgress": "Uploading photo...",
+  "@uploadingPhotoProgress": {
+    "description": "Progress message while image is uploading"
+  },
+  "removePhotoAction": "Remove photo",
+  "@removePhotoAction": {
+    "description": "Tooltip/button to remove a photo"
+  },
+  "photoUploadFailed": "Photo could not be uploaded. Please try again.",
+  "@photoUploadFailed": {
+    "description": "Error message when image upload fails"
+  },
+  "unsupportedPhotoFormat": "Unsupported photo format. Please select a JPEG, PNG, or WebP photo.",
+  "@unsupportedPhotoFormat": {
+    "description": "Error message when chosen photo format is unsupported"
+  },
+  "photoTooLarge": "Photo exceeds 5 MB limit. Please select a smaller photo.",
+  "@photoTooLarge": {
+    "description": "Error message when chosen photo exceeds 5 MB"
+  },
+  "maxPhotosReached": "Maximum 4 photos reached",
+  "@maxPhotosReached": {
+    "description": "Notice when 4 photos have been added"
+  },
+  "tryAnotherPhoto": "Please choose another photo",
+  "@tryAnotherPhoto": {
+    "description": "Prompt asking the user to choose another image"
+  },
+  "removePhotoConfirmation": "Do you want to remove this photo?",
+  "@removePhotoConfirmation": {
+    "description": "Confirmation prompt before deleting a photo"
+  },
+  "photoRemovedMessage": "Photo removed",
+  "@photoRemovedMessage": {
+    "description": "Snackbar message when a photo is removed"
+  },
+  "choosePhotoSource": "Add Product Photo",
+  "@choosePhotoSource": {
+    "description": "Title of the photo source selection bottom sheet"
+  },
+  "deletePhoto": "Delete",
+  "@deletePhoto": {
+    "description": "Confirm button text to delete a photo"
+  },
+  "productMustBeSavedBeforePhotos": "Please save product draft before adding photos",
+  "@productMustBeSavedBeforePhotos": {
+    "description": "Error message when product must be saved before uploading photos"
+  },
+  "improvePhotoAction": "Improve Photo",
+  "@improvePhotoAction": {
+    "description": "Button label to improve a photo using AI"
+  },
+  "improvingPhotoProgress": "Improving photo...",
+  "@improvingPhotoProgress": {
+    "description": "Loading message when AI is processing photo"
+  },
+  "originalPhotoLabel": "Original",
+  "@originalPhotoLabel": {
+    "description": "Label for the original product photo"
+  },
+  "improvedPhotoLabel": "Improved",
+  "@improvedPhotoLabel": {
+    "description": "Label for the AI-improved product photo"
+  },
+  "keepOriginalAction": "Keep Original",
+  "@keepOriginalAction": {
+    "description": "Action to discard AI changes and keep original photo"
+  },
+  "useImprovedAction": "Use Improved Photo",
+  "@useImprovedAction": {
+    "description": "Action to accept AI improved photo"
+  },
+  "photoImprovedTitle": "Photo Improved",
+  "@photoImprovedTitle": {
+    "description": "Dialog or section title when photo has been improved by AI"
+  },
+  "photoImproveFailed": "Could not improve photo. Please try again.",
+  "@photoImproveFailed": {
+    "description": "Error message when AI photo improvement fails"
+  },
+  "aiImproveDisclaimer": "AI improves only the presentation, not your product.",
+  "@aiImproveDisclaimer": {
+    "description": "Truthfulness disclaimer for AI photo improvement"
+  },
+  "aiImproveHelpText": "Cleans background, improves lighting, and centers the product.",
+  "@aiImproveHelpText": {
+    "description": "Explanation of what AI photo improvement accomplishes"
+  },
+  "comparePhotosTitle": "Compare Photos",
+  "@comparePhotosTitle": {
+    "description": "Title for the photo comparison screen or dialog"
+  },
+  "photoImproveSuccessMessage": "Improved photo applied",
+  "@photoImproveSuccessMessage": {
+    "description": "Confirmation message when improved photo is selected"
+  },
+  "productPhotosTitle": "Product Photos",
+  "@productPhotosTitle": {
+    "description": "Title for product photos section in Add Product sheet"
+  },
+  "addPhotosNameFirst": "Add a product name before adding photos.",
+  "@addPhotosNameFirst": {
+    "description": "Validation message when attempting to add photos without a product name"
+  },
+  "choosePhotoAction": "Choose Photo",
+  "@choosePhotoAction": {
+    "description": "Action label to choose a photo on web or single-source platforms"
+  },
+  "addProductHelper": "Enter product details, price, and optional photos.",
+  "@addProductHelper": {
+    "description": "Friendly subtitle helper for Add Product sheet"
+  },
+  "discardChangesTitle": "Discard changes?",
+  "@discardChangesTitle": {
+    "description": "Title for confirmation dialog when closing form with unsaved changes"
+  },
+  "discardChangesMessage": "Your unsaved product details will be lost.",
+  "@discardChangesMessage": {
+    "description": "Message for confirmation dialog when closing form with unsaved changes"
+  },
+  "keepEditingAction": "Keep Editing",
+  "@keepEditingAction": {
+    "description": "Action button to keep editing when prompted to discard changes"
+  },
+  "discardAction": "Discard",
+  "@discardAction": {
+    "description": "Action button to discard changes and close modal"
+  },
+  "pickerUnavailableError": "Photo picker is not available on this device. Please restart the application.",
+  "@pickerUnavailableError": {
+    "description": "Error message when device/platform photo picker is not available"
+  },
+  "storageUnavailableError": "Image storage service is not available.",
+  "@storageUnavailableError": {
+    "description": "Error message when product image storage service is unavailable"
+  },
+  "productDetailsTitle": "Product Details",
+  "@productDetailsTitle": {
+    "description": "Title for product details view"
+  },
+  "noDescriptionAdded": "No description added",
+  "@noDescriptionAdded": {
+    "description": "Placeholder text when product description is empty"
+  },
+  "deleteProductAction": "Delete Product",
+  "@deleteProductAction": {
+    "description": "Menu action to delete a product"
+  },
+  "verificationAndCompliance": "Verification & Compliance",
+  "@verificationAndCompliance": {
+    "description": "Header for verification and compliance section"
+  },
+  "businessProducerInfo": "Business & Producer Details",
+  "@businessProducerInfo": {
+    "description": "Header for business and producer info section"
+  },
+  "accountAndSecurity": "Account & Security",
+  "@accountAndSecurity": {
+    "description": "Header for account and security section"
+  },
+  "helpAndAbout": "Help & About",
+  "@helpAndAbout": {
+    "description": "Header for help and about section"
+  },
+  "voiceGuidanceLanguage": "Voice Guidance Language",
+  "@voiceGuidanceLanguage": {
+    "description": "Label for voice guidance language setting"
+  },
+  "voiceGuidanceSameAsApp": "Same as App Language",
+  "@voiceGuidanceSameAsApp": {
+    "description": "Voice guidance option matching app language"
+  },
+  "verifiedProducer": "Verified Producer",
+  "@verifiedProducer": {
+    "description": "Badge for verified producer"
+  },
+  "unverifiedProducer": "Producer",
+  "@unverifiedProducer": {
+    "description": "Badge for unverified producer"
+  },
+  "panNotVerified": "Not Verified",
+  "@panNotVerified": {
+    "description": "Badge when PAN is not verified"
+  },
+  "identityVerified": "Completed",
+  "@identityVerified": {
+    "description": "Status when identity verification is complete"
+  },
+  "identityNotVerified": "Pending",
+  "@identityNotVerified": {
+    "description": "Status when identity verification is pending"
+  },
+  "gstRegisteredBadge": "Registered",
+  "@gstRegisteredBadge": {
+    "description": "Badge when GST is registered"
+  },
+  "gstNotRegisteredBadge": "Not Registered",
+  "@gstNotRegisteredBadge": {
+    "description": "Badge when GST is not registered"
+  },
+  "aadhaarStatusLabel": "Aadhaar Identity",
+  "@aadhaarStatusLabel": {
+    "description": "Label for Aadhaar status row"
+  },
+  "panIdentityLabel": "PAN Identity",
+  "@panIdentityLabel": {
+    "description": "Label for PAN identity row"
+  },
+  "gstComplianceLabel": "GST",
+  "@gstComplianceLabel": {
+    "description": "Label for GST compliance row"
+  },
+  "workshopLocationLabel": "Workshop Location",
+  "@workshopLocationLabel": {
+    "description": "Label for workshop location"
+  },
+  "resetPassword": "Reset Password",
+  "@resetPassword": {
+    "description": "Action to reset account password"
+  },
+  "resetPasswordDesc": "Send password reset instructions to your registered email",
+  "@resetPasswordDesc": {
+    "description": "Description for reset password action"
+  },
+  "resetPasswordSuccess": "Password reset link sent to your email",
+  "@resetPasswordSuccess": {
+    "description": "Confirmation when reset password email is dispatched"
+  },
+  "activeSession": "Current Session",
+  "@activeSession": {
+    "description": "Label for current session"
+  },
+  "activeSessionTruthful": "Signed in",
+  "@activeSessionTruthful": {
+    "description": "Description for signed in session status"
+  },
+  "signOutConfirmTitle": "Sign out of VyaparSetu?",
+  "@signOutConfirmTitle": {
+    "description": "Title of sign out confirmation dialog"
+  },
+  "signOutConfirmMessage": "Are you sure you want to sign out?",
+  "@signOutConfirmMessage": {
+    "description": "Body message of sign out confirmation dialog"
+  },
+  "howVyaparSetuWorks": "How VyaparSetu Works",
+  "@howVyaparSetuWorks": {
+    "description": "Title for how vyaparsetu works info dialog"
+  },
+  "howVyaparSetuWorksContent": "VyaparSetu connects artisan producers directly with verified bulk and retail buyers. Add your products, share photos, and respond to buyer inquiries with complete transparency.",
+  "@howVyaparSetuWorksContent": {
+    "description": "Description text for how vyaparsetu works"
+  },
+  "privacyAndData": "Privacy & Data",
+  "@privacyAndData": {
+    "description": "Title for privacy and data info dialog"
+  },
+  "privacyAndDataContent": "Sensitive identity information is minimized. Raw PAN is not displayed in the app. Aadhaar numbers are not displayed or carried in the Profile UI. Access to producer data is protected by authentication and database ownership policies.",
+  "@privacyAndDataContent": {
+    "description": "Description text for privacy and data"
+  },
+  "aboutVyaparSetu": "About VyaparSetu",
+  "@aboutVyaparSetu": {
+    "description": "Title for about vyaparsetu info dialog"
+  },
+  "aboutVyaparSetuContent": "VyaparSetu v1.0 — Empowering Indian artisan producers and manufacturers through direct commerce, localization, and trusted verification.",
+  "@aboutVyaparSetuContent": {
+    "description": "Description text for about vyaparsetu"
+  },
+  "phoneLabel": "Contact Phone",
+  "@phoneLabel": {
+    "description": "Label for contact phone"
+  },
+  "quickMenuTitle": "Quick Actions",
+  "@quickMenuTitle": {
+    "description": "Accessibility and tooltip for quick action menu"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "Button label for OK"
+  },
+  "craftCategory": "Craft Category",
+  "@craftCategory": {
+    "description": "Label for craft category"
+  },
+  "identityVerification": "Identity Verification",
+  "@identityVerification": {
+    "description": "Label for identity verification"
+  },
+  "producerRoleBadge": "Producer",
+  "@producerRoleBadge": {
+    "description": "Role badge for producer"
+  },
+  "signInWithEmailOtp": "Sign in with OTP",
+  "@signInWithEmailOtp": {
+    "description": "Button to sign in using email OTP"
+  },
+  "orDivider": "OR",
+  "@orDivider": {
+    "description": "Divider text between login methods"
+  },
+  "checkYourEmailTitle": "Check Your Email",
+  "@checkYourEmailTitle": {
+    "description": "Title for OTP sign-in verification stage"
+  },
+  "checkYourEmailSubtitle": "We sent a verification code to {email}",
+  "@checkYourEmailSubtitle": {
+    "description": "Subtitle for OTP sign-in showing masked email",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyAndSignIn": "Verify & Sign In",
+  "@verifyAndSignIn": {
+    "description": "Primary action button for OTP sign-in"
+  },
+  "forgotPasswordTitle": "Reset Your Password",
+  "@forgotPasswordTitle": {
+    "description": "Title for password recovery email entry"
+  },
+  "forgotPasswordSubtitle": "Enter your email address to receive a recovery code.",
+  "@forgotPasswordSubtitle": {
+    "description": "Subtitle for password recovery email entry"
+  },
+  "sendRecoveryCode": "Send Recovery Code",
+  "@sendRecoveryCode": {
+    "description": "Button to request password recovery code"
+  },
+  "recoveryEmailSentNeutralNotice": "If an account exists for this email, we've sent a verification code.",
+  "@recoveryEmailSentNeutralNotice": {
+    "description": "Account enumeration safe notice after requesting recovery"
+  },
+  "enterRecoveryCodeSubtitle": "Enter the verification code sent to {email}",
+  "@enterRecoveryCodeSubtitle": {
+    "description": "Subtitle for recovery OTP verification showing masked email",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyCode": "Verify Code",
+  "@verifyCode": {
+    "description": "Button to verify recovery OTP code"
+  },
+  "createNewPasswordTitle": "Create New Password",
+  "@createNewPasswordTitle": {
+    "description": "Title for set new password stage"
+  },
+  "createNewPasswordSubtitle": "Create a new strong password for your account.",
+  "@createNewPasswordSubtitle": {
+    "description": "Subtitle for set new password stage"
+  },
+  "newPassword": "New Password",
+  "@newPassword": {
+    "description": "Label for new password input"
+  },
+  "newPasswordHint": "Enter new password (min 6 characters)",
+  "@newPasswordHint": {
+    "description": "Hint for new password input"
+  },
+  "updatePassword": "Update Password",
+  "@updatePassword": {
+    "description": "Primary action button to update password"
+  },
+  "passwordUpdatedSuccess": "Your password has been updated.",
+  "@passwordUpdatedSuccess": {
+    "description": "Success message after password is updated"
+  },
+  "noAccountFoundWithEmail": "No account found with this email. Try signing up.",
+  "@noAccountFoundWithEmail": {
+    "description": "Error message when trying to sign in with OTP for an unregistered email"
   }
 }

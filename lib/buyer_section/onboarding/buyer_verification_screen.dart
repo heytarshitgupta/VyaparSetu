@@ -82,7 +82,7 @@ class _BuyerVerificationScreenState extends State<BuyerVerificationScreen> {
                       arguments: {'isVerificationMode': true, 'mobile': phone},
                     );
                     
-                    if (result == true && context.mounted && profile != null) {
+                    if (result == true && context.mounted) {
                       context.read<BuyerProfileProvider>().saveProfile(
                         profile.copyWith(isMobileVerified: true),
                       );

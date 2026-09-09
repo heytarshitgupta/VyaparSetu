@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/producer_product.dart';
+import '../services/producer_product_image_service.dart';
 import '../services/producer_product_service.dart';
 
 /// Loading lifecycle states for the products provider.
@@ -34,20 +35,30 @@ enum ProducerProductsErrorType {
 /// Decoupled from UI and presentation frameworks for deterministic testability.
 class ProducerProductsProvider extends ChangeNotifier {
   final IProducerProductService _service;
+  final IProducerProductImageService? imageService;
 
   ProducerProductsProvider({
     IProducerProductService? service,
+    this.imageService,
   }) : _service = service ?? ProducerProductService();
+
+  /// Underlying effective image service for signed URL retrieval and image actions.
+  IProducerProductImageService? get effectiveImageService =>
+      imageService ?? _service.imageService;
 
   List<ProducerProduct> _products = [];
   ProducerProductsLoadingState _loadingState = ProducerProductsLoadingState.initial;
   ProducerProductsErrorType _error = ProducerProductsErrorType.none;
   ProducerProductFilter _currentFilter = ProducerProductFilter.all;
   bool _isRefreshing = false;
+  final Map<String, String> _signedUrlCache = {};
 
   // ---------------------------------------------------------------------------
   // Getters
   // ---------------------------------------------------------------------------
+
+  /// Read-only snapshot of cached signed URLs.
+  Map<String, String> get signedUrlCache => Map.unmodifiable(_signedUrlCache);
 
   /// Unfiltered list of loaded products.
   List<ProducerProduct> get allProducts => List.unmodifiable(_products);
@@ -208,6 +219,37 @@ class ProducerProductsProvider extends ChangeNotifier {
       _error = ProducerProductsErrorType.deleteFailed;
       notifyListeners();
       return false;
+    }
+  }
+
+  /// Inserts or replaces a product in the local in-memory list and notifies listeners.
+  /// Used after editing or creating a product to update the view immediately without a full reload.
+  void upsertProduct(ProducerProduct product) {
+    final index = _products.indexWhere((p) => p.id == product.id);
+    if (index != -1) {
+      _products[index] = product;
+    } else {
+      _products.insert(0, product);
+    }
+    _error = ProducerProductsErrorType.none;
+    notifyListeners();
+  }
+
+  /// Retrieves an existing cached signed URL or fetches a new one via [effectiveImageService].
+  /// The returned URL is purely transient and cached in-memory only.
+  Future<String?> getSignedUrl(String storagePath) async {
+    if (_signedUrlCache.containsKey(storagePath)) {
+      return _signedUrlCache[storagePath];
+    }
+    final imgSvc = effectiveImageService;
+    if (imgSvc == null) return null;
+    try {
+      final url = await imgSvc.createSignedImageUrl(storagePath: storagePath);
+      _signedUrlCache[storagePath] = url;
+      notifyListeners();
+      return url;
+    } catch (_) {
+      return null;
     }
   }
 }

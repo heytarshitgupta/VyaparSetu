@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import '../../core/localization/generated/app_localizations.dart';
 import 'models/producer_product.dart';
 import 'providers/producer_products_provider.dart';
+import 'screens/add_product_screen.dart';
 import 'services/producer_product_service.dart';
 import 'widgets/producer_product_card.dart';
+import 'widgets/producer_product_details_view.dart';
 
 /// The primary My Products tab inside the responsive Producer navigation shell.
 ///
@@ -33,7 +35,11 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
   @override
   void initState() {
     super.initState();
-    _provider = widget.provider ?? ProducerProductsProvider(service: widget.service);
+    _provider = widget.provider ??
+        ProducerProductsProvider(
+          service: widget.service,
+          imageService: widget.service?.imageService,
+        );
     _provider.addListener(_onProviderChanged);
 
     if (_provider.isInitial) {
@@ -54,8 +60,54 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
     if (mounted) setState(() {});
   }
 
+  Future<void> _handleOpenDetails(ProducerProduct product) async {
+    await ProducerProductDetailsView.show(
+      context,
+      product: product,
+      productsProvider: _provider,
+      productService: widget.service,
+      imageService: widget.service?.imageService ?? _provider.effectiveImageService,
+      onProductUpdated: () {
+        if (mounted) setState(() {});
+      },
+    );
+  }
+
+  Future<void> _handleEdit(ProducerProduct product) async {
+    final result = await AddProductScreen.show(
+      context,
+      existingProduct: product,
+      productService: widget.service,
+      imageService: widget.service?.imageService ?? _provider.effectiveImageService,
+    );
+    if (result == true && mounted) {
+      await _provider.refresh();
+    }
+  }
+
   Future<void> _handleToggleVisibility(ProducerProduct product) async {
     final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+
+    // Enforce activation requirements when transitioning from hidden (inactive) to active
+    if (product.status == ProductStatus.hidden) {
+      final canActivate = product.name.trim().length >= 2 &&
+          product.category.trim().length >= 2 &&
+          product.pricePaise != null &&
+          product.pricePaise! > 0;
+      if (!canActivate) {
+        messenger.hideCurrentSnackBar();
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(l10n.incompleteProductCannotActivate),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        return;
+      }
+    }
+
     final newStatus = product.status == ProductStatus.active
         ? ProductStatus.hidden
         : ProductStatus.active;
@@ -75,7 +127,6 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
       _busyProductIds.remove(product.id);
     });
 
-    final messenger = ScaffoldMessenger.of(context);
     messenger.hideCurrentSnackBar();
 
     if (success) {
@@ -83,8 +134,8 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
         SnackBar(
           content: Text(
             newStatus == ProductStatus.hidden
-                ? l10n.productHiddenSuccess
-                : l10n.productActivatedSuccess,
+                ? l10n.productMadeInactiveSuccess
+                : l10n.productMadeActiveSuccess,
           ),
           behavior: SnackBarBehavior.floating,
         ),
@@ -92,7 +143,7 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
     } else {
       messenger.showSnackBar(
         SnackBar(
-          content: Text(l10n.productActionFailed),
+          content: Text(l10n.couldNotUpdateProduct),
           backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
         ),
@@ -329,11 +380,11 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
           ),
           const SizedBox(width: 8),
           _buildFilterChip(
-            label: l10n.filterHidden,
+            label: l10n.filterInactive,
             filter: ProducerProductFilter.hidden,
             isSelected: _provider.currentFilter == ProducerProductFilter.hidden,
             colorScheme: colorScheme,
-            icon: Icons.visibility_off_outlined,
+            icon: Icons.pause_circle_outline,
           ),
         ],
       ),
@@ -534,8 +585,8 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
           emptySubtitle = l10n.noDraftProductsSubtitle;
           break;
         case ProducerProductFilter.hidden:
-          emptyTitle = l10n.noHiddenProductsTitle;
-          emptySubtitle = l10n.noHiddenProductsSubtitle;
+          emptyTitle = l10n.noInactiveProductsTitle;
+          emptySubtitle = l10n.noInactiveProductsSubtitle;
           break;
         case ProducerProductFilter.all:
           emptyTitle = l10n.noProductsListedTitle;
@@ -568,7 +619,7 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 340),
                   child: Text(
-                    emptySubtitle,
+                     emptySubtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -598,8 +649,12 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
               child: ProducerProductCard(
                 product: product,
                 isBusy: _busyProductIds.contains(product.id),
+                onOpenDetails: () => _handleOpenDetails(product),
+                onEdit: () => _handleEdit(product),
                 onToggleVisibility: () => _handleToggleVisibility(product),
                 onDelete: () => _handleDelete(product),
+                imageService: widget.service?.imageService ?? _provider.effectiveImageService,
+                signedUrlCache: _provider.signedUrlCache,
               ),
             );
           },
@@ -613,7 +668,7 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
         crossAxisCount: crossAxisCount,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
-        childAspectRatio: 0.85,
+        childAspectRatio: crossAxisCount == 2 ? 1.05 : 1.15,
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -621,8 +676,12 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
           return ProducerProductCard(
             product: product,
             isBusy: _busyProductIds.contains(product.id),
+            onOpenDetails: () => _handleOpenDetails(product),
+            onEdit: () => _handleEdit(product),
             onToggleVisibility: () => _handleToggleVisibility(product),
             onDelete: () => _handleDelete(product),
+            imageService: widget.service?.imageService ?? _provider.effectiveImageService,
+            signedUrlCache: _provider.signedUrlCache,
           );
         },
         childCount: visible.length,

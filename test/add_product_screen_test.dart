@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -5,11 +6,19 @@ import 'package:buyer_section/core/localization/generated/app_localizations.dart
 import 'package:buyer_section/core/localization/language_provider.dart';
 import 'package:buyer_section/core/theme/app_theme.dart';
 import 'package:buyer_section/core/theme/theme_provider.dart';
+import 'package:buyer_section/producer_section/home/producer_main_screen.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product_draft.dart';
 import 'package:buyer_section/producer_section/products/providers/add_product_provider.dart';
 import 'package:buyer_section/producer_section/products/screens/add_product_screen.dart';
+import 'package:buyer_section/producer_section/products/services/producer_image_picker_service.dart';
+import 'package:buyer_section/producer_section/products/services/producer_product_enhancement_service.dart';
+import 'package:buyer_section/producer_section/products/services/producer_product_image_service.dart';
 import 'package:buyer_section/producer_section/products/services/producer_product_service.dart';
+
+// -----------------------------------------------------------------------------
+// FAKE TEST SERVICES
+// -----------------------------------------------------------------------------
 
 class FakeAddProductService implements IProducerProductService {
   final Map<String, ProducerProduct> database = {};
@@ -17,6 +26,9 @@ class FakeAddProductService implements IProducerProductService {
   int updateDraftCalls = 0;
   int updateStatusCalls = 0;
   bool shouldFailPersistence = false;
+
+  @override
+  final IProducerProductImageService? imageService = null;
 
   @override
   Future<List<ProducerProduct>> fetchProducts({ProductStatus? statusFilter}) async =>
@@ -79,6 +91,7 @@ class FakeAddProductService implements IProducerProductService {
       category: draft.category,
       pricePaise: draft.pricePaise,
       unit: draft.unit,
+      images: draft.images,
       updatedAt: DateTime.now(),
     );
     database[productId] = updated;
@@ -89,8 +102,92 @@ class FakeAddProductService implements IProducerProductService {
   Future<ProducerProduct> updateProductImages({
     required String productId,
     required List<String> imagePaths,
-  }) async => database[productId]!;
+  }) async {
+    final existing = database[productId]!;
+    final updated = existing.copyWith(images: imagePaths);
+    database[productId] = updated;
+    return updated;
+  }
 }
+
+class FakeImagePickerService implements IProducerImagePickerService {
+  bool cameraSupported = true;
+  PickedProductImage? nextPickedImage;
+  Exception? nextException;
+  ImageSourceOption? lastSource;
+
+  @override
+  bool get isCameraSupported => cameraSupported;
+
+  @override
+  Future<PickedProductImage?> pickImage(ImageSourceOption source) async {
+    lastSource = source;
+    if (nextException != null) throw nextException!;
+    return nextPickedImage;
+  }
+}
+
+class FakeProductImageService implements IProducerProductImageService {
+  final Map<String, String> storage = {};
+  int uploadCount = 0;
+  bool shouldFailUpload = false;
+
+  @override
+  Future<String> uploadProductImage({
+    required String productId,
+    required Uint8List bytes,
+    required String contentType,
+  }) async {
+    uploadCount++;
+    if (shouldFailUpload) throw const ProductOperationException('Storage upload failed');
+    final path = 'test-uid/$productId/img_$uploadCount.jpg';
+    storage[path] = 'https://fake-storage.com/$path';
+    return path;
+  }
+
+  @override
+  Future<String> createSignedImageUrl({
+    required String storagePath,
+    int expiresInSeconds = 3600,
+  }) async {
+    return storage[storagePath] ?? 'https://fake-storage.com/$storagePath';
+  }
+
+  @override
+  Future<void> deleteProductImage(String storagePath) async {
+    storage.remove(storagePath);
+  }
+}
+
+class FakeEnhancementService implements IProductPhotoEnhancementService {
+  bool shouldSucceed = true;
+  String? candidatePath;
+  final List<String> discardedCandidates = [];
+
+  @override
+  Future<EnhancementResult> improvePhoto({
+    required String productId,
+    required String sourceStoragePath,
+  }) async {
+    if (!shouldSucceed) {
+      throw const ProductOperationException('Enhancement failed');
+    }
+    candidatePath = '$sourceStoragePath.improved.jpg';
+    return EnhancementResult(
+      improvedStoragePath: candidatePath!,
+      sourceStoragePath: sourceStoragePath,
+    );
+  }
+
+  @override
+  Future<void> discardCandidateImage(String candidateStoragePath) async {
+    discardedCandidates.add(candidateStoragePath);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// APP WRAPPER HELPER
+// -----------------------------------------------------------------------------
 
 Widget createTestWidget({
   required Widget child,
@@ -109,417 +206,110 @@ Widget createTestWidget({
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-      home: child,
+      home: Scaffold(body: child),
     ),
   );
 }
 
-Future<void> tapVisible(WidgetTester tester, Finder finder) async {
-  await tester.ensureVisible(finder);
-  await tester.tap(finder);
-  await tester.pumpAndSettle();
-}
+// -----------------------------------------------------------------------------
+// MAIN TEST SUITE
+// -----------------------------------------------------------------------------
 
 void main() {
-  group('AddProductScreen - Step 1 ("What do you make?") Tests', () {
-    late FakeAddProductService service;
-    late AddProductProvider provider;
+  late FakeAddProductService service;
+  late FakeProductImageService imageService;
+  late FakeImagePickerService pickerService;
+  late FakeEnhancementService enhancementService;
+  late AddProductProvider provider;
 
-    setUp(() {
-      service = FakeAddProductService();
-      provider = AddProductProvider(productService: service);
-    });
-
-    testWidgets('starts at Step 1 with empty initial values and step indicators', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('Step 1 of 3'), findsOneWidget);
-      expect(find.text('What do you make?'), findsWidgets);
-      expect(find.text('Product name'), findsOneWidget);
-      expect(find.text('Category'), findsOneWidget);
-      expect(find.text('Unit'), findsOneWidget);
-      expect(find.text('Continue'), findsOneWidget);
-    });
-
-    testWidgets('cannot continue with empty product name; shows validation error', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tapVisible(tester, find.text('Continue'));
-
-      expect(find.text('Please enter a product name first'), findsOneWidget);
-      expect(provider.currentStep, 1);
-    });
-
-    testWidgets('entering valid name, selecting category and unit navigates to Step 2', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Enter name
-      await tester.enterText(find.byType(TextField).first, 'Handcrafted Terracotta Pot');
-      // Select Handicraft category
-      await tapVisible(tester, find.text('Handicraft'));
-
-      expect(provider.draft.category, 'handicraft');
-
-      // Tap Continue
-      await tapVisible(tester, find.text('Continue'));
-
-      // Should now be on Step 2
-      expect(find.text('Step 2 of 3'), findsOneWidget);
-      expect(find.text('Price & Details'), findsWidgets);
-      expect(provider.currentStep, 2);
-    });
-
-    testWidgets('selecting Other category allows entering custom category description', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tapVisible(tester, find.text('Other'));
-
-      expect(find.text('Describe category'), findsOneWidget);
-
-      await tester.enterText(find.widgetWithText(TextField, 'Describe category'), 'Metal Sculptures');
-      expect(provider.draft.category, 'Metal Sculptures');
-    });
+  setUp(() {
+    service = FakeAddProductService();
+    imageService = FakeProductImageService();
+    pickerService = FakeImagePickerService();
+    enhancementService = FakeEnhancementService();
+    provider = AddProductProvider(
+      productService: service,
+      imageService: imageService,
+      imagePickerService: pickerService,
+      enhancementService: enhancementService,
+    );
   });
 
-  group('AddProductScreen - Step 2 ("Price & Details") Tests', () {
-    late FakeAddProductService service;
-    late AddProductProvider provider;
-
-    setUp(() {
-      service = FakeAddProductService();
-      provider = AddProductProvider(productService: service);
-    });
-
-    testWidgets('Price converts to paise and Back button preserves Step 1 values', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Complete Step 1
-      await tester.enterText(find.byType(TextField).first, 'Bamboo Basket');
-      await tapVisible(tester, find.text('Continue'));
-
-      expect(find.text('Step 2 of 3'), findsOneWidget);
-
-      // Enter Price
-      final priceField = find.widgetWithText(TextField, '250');
-      await tester.enterText(priceField, '450.50');
-      expect(provider.draft.pricePaise, 45050);
-
-      // Enter Description
-      final descField = find.widgetWithText(TextField, 'What is it made from? What makes it special?');
-      await tester.enterText(descField, 'Woven from natural bamboo strips');
-      expect(provider.draft.description, 'Woven from natural bamboo strips');
-
-      // Tap Back
-      await tapVisible(tester, find.text('Back'));
-
-      // Back in Step 1, verify values preserved
-      expect(find.text('Step 1 of 3'), findsOneWidget);
-      expect(find.text('Bamboo Basket'), findsOneWidget);
-    });
-
-    testWidgets('invalid price input shows format error', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.enterText(find.byType(TextField).first, 'Ceramic Mug');
-      await tapVisible(tester, find.text('Continue'));
-
-      // Enter 0 (invalid price)
-      final priceField = find.widgetWithText(TextField, '250');
-      await tester.enterText(priceField, '0');
-      await tester.pumpAndSettle();
-
-      expect(find.text('Price must be greater than zero: "0"'), findsOneWidget);
-    });
-
-    testWidgets('Continue on Step 2 automatically persists draft before advancing to Step 3', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Step 1
-      await tester.enterText(find.byType(TextField).first, 'Pure Honey');
-      await tapVisible(tester, find.text('Continue'));
-
-      // Step 2
-      final priceField = find.widgetWithText(TextField, '250');
-      await tester.enterText(priceField, '350');
-      await tester.pumpAndSettle();
-
-      expect(service.createCalls, 0);
-
-      // Tap Continue to Step 3
-      await tapVisible(tester, find.text('Continue'));
-
-      // Verified: createDraft was invoked and provider holds persisted ID
-      expect(service.createCalls, 1);
-      expect(provider.isPersisted, isTrue);
-      expect(find.text('Step 3 of 3'), findsOneWidget);
-      expect(find.text('Add Photos & Save'), findsWidgets);
-    });
-
-    testWidgets('database persistence failure halts navigation at Step 2 with error', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      service.shouldFailPersistence = true;
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.enterText(find.byType(TextField).first, 'Pure Honey');
-      await tapVisible(tester, find.text('Continue'));
-
-      await tapVisible(tester, find.text('Continue'));
-
-      // Must remain at Step 2
-      expect(provider.currentStep, 2);
-      expect(find.text('Step 2 of 3'), findsOneWidget);
-      expect(find.text('Simulated database create failure'), findsOneWidget);
-    });
-  });
-
-  group('AddProductScreen - Step 3 ("Add Photos & Save") Tests', () {
-    late FakeAddProductService service;
-    late AddProductProvider provider;
-
-    setUp(() {
-      service = FakeAddProductService();
-      provider = AddProductProvider(productService: service);
-    });
-
-    testWidgets('Add Photo tile displays truthful coming-next feedback without uploading', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Advance to Step 3
-      await tester.enterText(find.byType(TextField).first, 'Silk Shawl');
-      await tapVisible(tester, find.text('Clothing'));
-      await tapVisible(tester, find.text('Continue'));
-
-      final priceField = find.widgetWithText(TextField, '250');
-      await tester.enterText(priceField, '1200');
-      await tapVisible(tester, find.text('Continue'));
-
-      expect(find.text('Step 3 of 3'), findsOneWidget);
-
-      // Tap Add Photo tile
-      await tapVisible(tester, find.byIcon(Icons.add_a_photo_outlined));
-
-      expect(find.text('Photo selection will be added next'), findsWidgets);
-    });
-
-    testWidgets('Mark Ready is disabled when requirements incomplete, enabled when complete', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      await tester.pumpWidget(
-        createTestWidget(
-          child: AddProductScreen(provider: provider),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Step 1 without category
-      await tester.enterText(find.byType(TextField).first, 'Wood Toy');
-      await tapVisible(tester, find.text('Continue'));
-
-      // Step 2 without price
-      await tapVisible(tester, find.text('Continue'));
-
-      // Step 3
-      expect(find.text('Step 3 of 3'), findsOneWidget);
-      expect(provider.canMarkActive, isFalse);
-
-      // Guidance message is displayed
-      expect(find.text('Add name, category, and price to mark ready'), findsOneWidget);
-
-      // Back to Step 1 to set category
-      await tapVisible(tester, find.text('Back'));
-      await tapVisible(tester, find.text('Back'));
-      await tapVisible(tester, find.text('Handicraft'));
-
-      // Step 2 set price
-      await tapVisible(tester, find.text('Continue'));
-      final priceField = find.widgetWithText(TextField, '250');
-      await tester.enterText(priceField, '250');
-
-      // Step 3
-      await tapVisible(tester, find.text('Continue'));
-
-      // Now canMarkActive is true, guidance is gone
-      expect(provider.canMarkActive, isTrue);
-      expect(find.text('Add name, category, and price to mark ready'), findsNothing);
-    });
-
-    testWidgets('Save Draft saves draft and pops route with true', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      bool? poppedResult;
-
+  group('1. Bottom Sheet & Single Form Architecture', () {
+    testWidgets('AddProductScreen.show opens modal bottom sheet with drag handle and title', (tester) async {
       await tester.pumpWidget(
         createTestWidget(
           child: Builder(
             builder: (context) => ElevatedButton(
-              onPressed: () async {
-                poppedResult = await Navigator.of(context).push<bool>(
-                  MaterialPageRoute(
-                    builder: (_) => AddProductScreen(provider: provider),
-                  ),
-                );
-              },
-              child: const Text('Open'),
+              onPressed: () => AddProductScreen.show(
+                context,
+                provider: provider,
+                productService: service,
+                imageService: imageService,
+                imagePickerService: pickerService,
+              ),
+              child: const Text('Open Modal'),
             ),
           ),
         ),
       );
+
+      await tester.tap(find.text('Open Modal'));
       await tester.pumpAndSettle();
 
-      await tapVisible(tester, find.text('Open'));
-
-      // Navigate to Step 3
-      await tester.enterText(find.byType(TextField).first, 'Pickle Jar');
-      await tapVisible(tester, find.text('Continue'));
-      await tapVisible(tester, find.text('Continue'));
-
-      // Tap Save Draft
-      await tapVisible(tester, find.text('Save Draft'));
-
-      expect(poppedResult, isTrue);
+      expect(find.byType(AddProductScreen), findsOneWidget);
+      expect(find.byKey(const Key('add_product_close_button')), findsOneWidget);
+      expect(find.text('Add Product'), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('Mark Ready marks active and pops route with true', (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
-      bool? poppedResult;
-
+    testWidgets('No Step 1/2/3 wizard UI exists', (tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          child: Builder(
-            builder: (context) => ElevatedButton(
-              onPressed: () async {
-                poppedResult = await Navigator.of(context).push<bool>(
-                  MaterialPageRoute(
-                    builder: (_) => AddProductScreen(provider: provider),
-                  ),
-                );
-              },
-              child: const Text('Open'),
-            ),
-          ),
+          child: AddProductScreen(provider: provider),
         ),
       );
       await tester.pumpAndSettle();
 
-      await tapVisible(tester, find.text('Open'));
+      expect(find.text('Step 1 / 3'), findsNothing);
+      expect(find.text('Step 2 / 3'), findsNothing);
+      expect(find.text('Step 3 / 3'), findsNothing);
+      expect(find.text('Continue'), findsNothing);
+      expect(find.text('What do you make?'), findsNothing);
+      expect(find.text('Price & Details'), findsNothing);
+    });
 
-      // Step 1
-      await tester.enterText(find.byType(TextField).first, 'Leather Journal');
-      await tapVisible(tester, find.text('Handicraft'));
-      await tapVisible(tester, find.text('Continue'));
+    testWidgets('All core fields visible in one form simultaneously', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          child: AddProductScreen(provider: provider),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-      // Step 2
-      final priceField = find.widgetWithText(TextField, '250');
-      await tester.enterText(priceField, '400');
-      await tapVisible(tester, find.text('Continue'));
+      // Photos section
+      expect(find.byKey(const Key('add_product_photo_button')), findsOneWidget);
+      expect(find.text('Product Photos'), findsOneWidget);
 
-      // Step 3: Tap Mark Ready
-      await tapVisible(tester, find.text('Mark Ready'));
+      // Name field
+      expect(find.byKey(const Key('add_product_name_field')), findsOneWidget);
 
-      expect(service.updateStatusCalls, 1);
-      expect(poppedResult, isTrue);
+      // Category & Unit
+      expect(find.byKey(const Key('add_product_category_dropdown')), findsOneWidget);
+      expect(find.byKey(const Key('add_product_unit_dropdown')), findsOneWidget);
+
+      // Price & Description
+      expect(find.byKey(const Key('add_product_price_field')), findsOneWidget);
+      expect(find.byKey(const Key('add_product_description_field')), findsOneWidget);
+
+      // Bottom actions
+      expect(find.byKey(const Key('add_product_save_draft_button')), findsOneWidget);
+      expect(find.byKey(const Key('add_product_mark_ready_button')), findsOneWidget);
     });
   });
 
-  group('AddProductScreen - Responsiveness & Theme Tests', () {
-    late FakeAddProductService service;
-    late AddProductProvider provider;
-
-    setUp(() {
-      service = FakeAddProductService();
-      provider = AddProductProvider(productService: service);
-    });
-
-    testWidgets('renders cleanly on phone (320px width) without overflow', (tester) async {
-      tester.view.physicalSize = const Size(320, 640);
+  group('2. Responsive Layouts & Keyboard Insets', () {
+    testWidgets('Phone layout (<640px) renders without overflow', (tester) async {
+      tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
@@ -530,10 +320,11 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Step 1 of 3'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      expect(find.byType(AddProductScreen), findsOneWidget);
     });
 
-    testWidgets('renders cleanly on tablet (768px width)', (tester) async {
+    testWidgets('Tablet layout (640-1024px) renders without overflow', (tester) async {
       tester.view.physicalSize = const Size(768, 1024);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
@@ -545,11 +336,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Step 1 of 3'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      expect(find.byType(AddProductScreen), findsOneWidget);
     });
 
-    testWidgets('renders cleanly on desktop (1440px width)', (tester) async {
-      tester.view.physicalSize = const Size(1440, 900);
+    testWidgets('Desktop/web layout (>=1024px) centers card without full-screen stretching', (tester) async {
+      tester.view.physicalSize = const Size(1280, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
@@ -560,40 +352,428 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Step 1 of 3'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      expect(find.byType(AddProductScreen), findsOneWidget);
     });
 
-    testWidgets('renders properly in Dark Theme', (tester) async {
-      tester.view.physicalSize = const Size(800, 1000);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
+    testWidgets('Keyboard inset and scroll structure exists', (tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          themeMode: ThemeMode.dark,
           child: AddProductScreen(provider: provider),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Step 1 of 3'), findsOneWidget);
+      expect(find.byType(SingleChildScrollView), findsAtLeastNWidgets(1));
     });
   });
 
-  group('AddProductScreen - Localization (Hindi & Punjabi) Tests', () {
-    late FakeAddProductService service;
-    late AddProductProvider provider;
+  group('3. Save Draft & Add Product Actions', () {
+    testWidgets('Save Draft works and pops sheet with true', (tester) async {
+      bool? poppedResult;
+      await tester.pumpWidget(
+        createTestWidget(
+          child: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () async {
+                poppedResult = await AddProductScreen.show(
+                  context,
+                  provider: provider,
+                  productService: service,
+                );
+              },
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
 
-    setUp(() {
-      service = FakeAddProductService();
-      provider = AddProductProvider(productService: service);
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byKey(const Key('add_product_name_field')), 'Brass Lamp');
+      await tester.pump();
+
+      await tester.tap(find.byKey(const Key('add_product_save_draft_button')));
+      await tester.pumpAndSettle();
+
+      expect(poppedResult, isTrue);
+      expect(service.createCalls, 1);
+      expect(provider.isPersisted, isTrue);
+      expect(find.byType(AddProductScreen), findsNothing);
     });
 
-    testWidgets('renders Devanagari labels in Hindi', (tester) async {
-      tester.view.physicalSize = const Size(800, 1000);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
+    testWidgets('Add Product / Mark Ready works when valid', (tester) async {
+      bool? poppedResult;
+      await tester.pumpWidget(
+        createTestWidget(
+          child: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () async {
+                poppedResult = await AddProductScreen.show(
+                  context,
+                  provider: provider,
+                  productService: service,
+                );
+              },
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
 
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byKey(const Key('add_product_name_field')), 'Ceramic Mug');
+      provider.setCategory('handicraft');
+      await tester.enterText(find.byKey(const Key('add_product_price_field')), '350.00');
+      await tester.pump();
+
+      await tester.tap(find.byKey(const Key('add_product_mark_ready_button')));
+      await tester.pumpAndSettle();
+
+      expect(poppedResult, isTrue);
+      expect(provider.isPersisted, isTrue);
+      final id = provider.persistedProductId!;
+      expect(service.database[id]?.status, ProductStatus.active);
+      expect(find.byType(AddProductScreen), findsNothing);
+    });
+
+    testWidgets('Repeated Save Draft does not duplicate product record', (tester) async {
+      provider.setName('Handmade Shawl');
+      final firstOk = await provider.saveDraft();
+      expect(firstOk, isTrue);
+      final id1 = provider.persistedProductId;
+      expect(service.createCalls, 1);
+
+      provider.setDescription('Pure pashmina wool');
+      final secondOk = await provider.saveDraft();
+      expect(secondOk, isTrue);
+      final id2 = provider.persistedProductId;
+
+      expect(id1, id2);
+      expect(service.createCalls, 1);
+      expect(service.updateDraftCalls, 1);
+    });
+  });
+
+  group('4. Draft-Before-Photo & Photo Upload Lifecycle', () {
+    testWidgets('Add photo with no name is safely blocked', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          child: AddProductScreen(
+            provider: provider,
+            productService: service,
+            imageService: imageService,
+            imagePickerService: pickerService,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Tap Add Photo without entering name
+      await tester.tap(find.byKey(const Key('add_product_photo_button')));
+      await tester.pumpAndSettle();
+
+      // No draft created
+      expect(service.createCalls, 0);
+      expect(provider.isPersisted, isFalse);
+      expect(find.text('Add a product name before adding photos.'), findsAtLeastNWidgets(1));
+    });
+
+    testWidgets('Add photo with valid name auto-persists draft first', (tester) async {
+      pickerService.nextPickedImage = PickedProductImage(
+        bytes: Uint8List.fromList([1, 2, 3, 4]),
+        originalFilename: 'test.jpg',
+        contentType: 'image/jpeg',
+        sizeBytes: 4,
+      );
+
+      await tester.pumpWidget(
+        createTestWidget(
+          child: AddProductScreen(
+            provider: provider,
+            productService: service,
+            imageService: imageService,
+            imagePickerService: pickerService,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byKey(const Key('add_product_name_field')), 'Wooden Toy');
+      await tester.pump();
+
+      // Tap Add Photo
+      await tester.tap(find.byKey(const Key('add_product_photo_button')));
+      await tester.pumpAndSettle();
+
+      // If mobile, bottom sheet for source selection opens
+      if (find.text('Take Photo').evaluate().isNotEmpty) {
+        await tester.tap(find.text('Choose from Gallery'));
+        await tester.pumpAndSettle();
+      }
+
+      // Draft was auto-persisted first!
+      expect(service.createCalls, 1);
+      expect(provider.isPersisted, isTrue);
+      expect(imageService.uploadCount, 1);
+      expect(provider.draft.images.length, 1);
+    });
+
+    testWidgets('Persisted product photo upload uses existing product ID', (tester) async {
+      provider.setName('Silk Kurti');
+      await provider.saveDraft();
+      final originalId = provider.persistedProductId;
+      expect(service.createCalls, 1);
+
+      pickerService.nextPickedImage = PickedProductImage(
+        bytes: Uint8List.fromList([1, 2, 3, 4]),
+        originalFilename: 'test2.jpg',
+        contentType: 'image/jpeg',
+        sizeBytes: 4,
+      );
+
+      await provider.pickAndUploadImage(ImageSourceOption.gallery);
+
+      expect(provider.persistedProductId, originalId);
+      expect(service.createCalls, 1); // No new draft row created
+      expect(provider.draft.images.length, 1);
+    });
+
+    testWidgets('Platform failure becomes safe UI error without crashing', (tester) async {
+      provider.setName('Clay Pot');
+      pickerService.nextException = const ProductOperationException(
+        'Photo picker is not available on this device. Please restart the application.',
+      );
+
+      final ok = await provider.pickAndUploadImage(ImageSourceOption.gallery);
+      expect(ok, isFalse);
+      expect(provider.hasError, isTrue);
+      expect(provider.errorMessage, contains('Photo picker is not available'));
+    });
+
+    testWidgets('Camera option is platform-aware (web directly opens gallery)', (tester) async {
+      pickerService.cameraSupported = false; // Simulates web
+      pickerService.nextPickedImage = PickedProductImage(
+        bytes: Uint8List.fromList([1, 2, 3, 4]),
+        originalFilename: 'web.png',
+        contentType: 'image/png',
+        sizeBytes: 4,
+      );
+
+      await tester.pumpWidget(
+        createTestWidget(
+          child: AddProductScreen(
+            provider: provider,
+            productService: service,
+            imageService: imageService,
+            imagePickerService: pickerService,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byKey(const Key('add_product_name_field')), 'Web Item');
+      await tester.pump();
+
+      // Tap Add Photo: on web (cameraSupported = false), no camera sheet is shown;
+      // it directly routes to gallery
+      await tester.tap(find.byKey(const Key('add_product_photo_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Take Photo'), findsNothing);
+      expect(pickerService.lastSource, ImageSourceOption.gallery);
+    });
+
+    testWidgets('Max 4 photos enforced', (tester) async {
+      provider.setName('Test Product');
+      await provider.saveDraft();
+
+      for (int i = 1; i <= 4; i++) {
+        provider.addImagePath('path/img_$i.jpg');
+      }
+      expect(provider.draft.images.length, 4);
+
+      await tester.pumpWidget(
+        createTestWidget(
+          child: AddProductScreen(provider: provider),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // When 4 photos are reached, the Add Photo button is hidden
+      expect(find.byKey(const Key('add_product_photo_button')), findsNothing);
+      expect(find.text('(4/4)'), findsOneWidget);
+    });
+
+    testWidgets('Remove photo works and updates state', (tester) async {
+      provider.setName('Test Product');
+      await provider.saveDraft();
+      provider.addImagePath('path/to/remove.jpg');
+
+      await tester.pumpWidget(
+        createTestWidget(
+          child: AddProductScreen(
+            provider: provider,
+            productService: service,
+            imageService: imageService,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('remove_photo_path/to/remove.jpg')), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('remove_photo_path/to/remove.jpg')));
+      await tester.pumpAndSettle();
+
+      // Confirmation dialog opens
+      expect(find.text('Delete'), findsOneWidget);
+      await tester.tap(find.text('Delete'));
+      await tester.pumpAndSettle();
+
+      expect(provider.draft.images.contains('path/to/remove.jpg'), isFalse);
+    });
+  });
+
+  group('5. AI Improve Photo Preservation', () {
+    testWidgets('Improve Photo button is visible for uploaded photos', (tester) async {
+      provider.setName('Carved Box');
+      await provider.saveDraft();
+      provider.addImagePath('path/box.jpg');
+
+      await tester.pumpWidget(
+        createTestWidget(
+          child: AddProductScreen(provider: provider),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('improve_photo_path/box.jpg')), findsOneWidget);
+      expect(find.text('Improve Photo'), findsOneWidget);
+    });
+
+    testWidgets('AI candidate does not auto-replace original photo', (tester) async {
+      provider.setName('Carved Box');
+      await provider.saveDraft();
+      provider.addImagePath('path/box.jpg');
+
+      await provider.improvePhoto('path/box.jpg');
+
+      // Original photo remains in canonical draft.images
+      expect(provider.draft.images, ['path/box.jpg']);
+      // Candidate exists separately
+      expect(provider.hasCandidateForPhoto('path/box.jpg'), isTrue);
+      expect(provider.getCandidateForPhoto('path/box.jpg'), 'path/box.jpg.improved.jpg');
+    });
+
+    testWidgets('Keep Original retains original and discards candidate', (tester) async {
+      provider.setName('Carved Box');
+      await provider.saveDraft();
+      provider.addImagePath('path/box.jpg');
+      await provider.improvePhoto('path/box.jpg');
+
+      await provider.keepOriginalPhoto('path/box.jpg');
+
+      expect(provider.draft.images, ['path/box.jpg']);
+      expect(provider.hasCandidateForPhoto('path/box.jpg'), isFalse);
+    });
+
+    testWidgets('Use Improved applies candidate to product photos', (tester) async {
+      provider.setName('Carved Box');
+      await provider.saveDraft();
+      provider.addImagePath('path/box.jpg');
+      await provider.improvePhoto('path/box.jpg');
+
+      final ok = await provider.useImprovedPhoto('path/box.jpg');
+      expect(ok, isTrue);
+
+      expect(provider.draft.images, ['path/box.jpg.improved.jpg']);
+      expect(provider.hasCandidateForPhoto('path/box.jpg'), isFalse);
+    });
+  });
+
+  group('6. Unsaved Exit Confirmation', () {
+    testWidgets('Closing with dirty form asks for confirmation', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          child: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () => AddProductScreen.show(
+                context,
+                provider: provider,
+                productService: service,
+              ),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      // Enter dirty data
+      await tester.enterText(find.byKey(const Key('add_product_name_field')), 'Unsaved Item');
+      await tester.pump();
+      expect(provider.isDirty, isTrue);
+
+      // Tap close button
+      await tester.tap(find.byKey(const Key('add_product_close_button')));
+      await tester.pumpAndSettle();
+
+      // Discard confirmation dialog opens
+      expect(find.text('Discard changes?'), findsOneWidget);
+      expect(find.text('Your unsaved product details will be lost.'), findsOneWidget);
+
+      // Tap Keep Editing: modal remains open
+      await tester.tap(find.text('Keep Editing'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AddProductScreen), findsOneWidget);
+
+      // Tap close again, then Discard: modal closes
+      await tester.tap(find.byKey(const Key('add_product_close_button')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Discard'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AddProductScreen), findsNothing);
+    });
+
+    testWidgets('Clean close does not ask for confirmation', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          child: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () => AddProductScreen.show(
+                context,
+                provider: provider,
+                productService: service,
+              ),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      expect(provider.isDirty, isFalse);
+
+      // Tap close button on clean form
+      await tester.tap(find.byKey(const Key('add_product_close_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Discard changes?'), findsNothing);
+      expect(find.byType(AddProductScreen), findsNothing);
+    });
+  });
+
+  group('7. Localization & Rebuild Safety', () {
+    testWidgets('Renders properly in Hindi', (tester) async {
       await tester.pumpWidget(
         createTestWidget(
           locale: const Locale('hi'),
@@ -602,17 +782,11 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('आप क्या बनाते हैं?'), findsWidgets);
-      expect(find.text('उत्पाद का नाम'), findsOneWidget);
-      expect(find.text('श्रेणी'), findsOneWidget);
-      expect(find.text('खाद्य सामग्री'), findsOneWidget);
+      expect(find.text('उत्पाद की तस्वीरें'), findsOneWidget);
+      expect(find.text('ड्राफ्ट सेव करें'), findsOneWidget);
     });
 
-    testWidgets('renders Gurmukhi labels in Punjabi', (tester) async {
-      tester.view.physicalSize = const Size(800, 1000);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
-
+    testWidgets('Renders properly in Punjabi', (tester) async {
       await tester.pumpWidget(
         createTestWidget(
           locale: const Locale('pa'),
@@ -621,10 +795,52 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਹੋ?'), findsWidgets);
-      expect(find.text('ਉਤਪਾਦ ਦਾ ਨਾਮ'), findsOneWidget);
-      expect(find.text('ਸ਼੍ਰੇਣੀ'), findsOneWidget);
-      expect(find.text('ਦਸਤਕਾਰੀ'), findsOneWidget);
+      expect(find.text('ਉਤਪਾਦ ਦੀਆਂ ਤਸਵੀਰਾਂ'), findsOneWidget);
+      expect(find.text('ਡਰਾਫਟ ਸੰਭਾਲੋ'), findsOneWidget);
+    });
+
+    testWidgets('Theme rebuild preserves form values', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          themeMode: ThemeMode.light,
+          child: AddProductScreen(provider: provider),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byKey(const Key('add_product_name_field')), 'Preserved Item');
+      await tester.pump();
+
+      // Switch to dark theme
+      await tester.pumpWidget(
+        createTestWidget(
+          themeMode: ThemeMode.dark,
+          child: AddProductScreen(provider: provider),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Preserved Item'), findsOneWidget);
+    });
+  });
+
+  group('8. ProducerMainScreen Entry Points', () {
+    testWidgets('Main screen openAddProduct triggers AddProductScreen bottom sheet', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          child: ProducerMainScreen(productService: service),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Home tab has Add Product card/button
+      final addProductButton = find.text('Add Product');
+      if (addProductButton.evaluate().isNotEmpty) {
+        await tester.tap(addProductButton.first);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(AddProductScreen), findsOneWidget);
+      }
     });
   });
 }

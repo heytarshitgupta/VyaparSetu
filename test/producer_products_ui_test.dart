@@ -11,6 +11,7 @@ import 'package:buyer_section/producer_section/products/models/producer_product.
 import 'package:buyer_section/producer_section/products/models/producer_product_draft.dart';
 import 'package:buyer_section/producer_section/products/producer_products_tab.dart';
 import 'package:buyer_section/producer_section/products/providers/producer_products_provider.dart';
+import 'package:buyer_section/producer_section/products/services/producer_product_image_service.dart';
 import 'package:buyer_section/producer_section/products/services/producer_product_service.dart';
 
 class FakeProducerProductService implements IProducerProductService {
@@ -18,6 +19,9 @@ class FakeProducerProductService implements IProducerProductService {
   bool shouldThrowAuthError = false;
   bool shouldThrowOperationError = false;
   int fetchCallCount = 0;
+
+  @override
+  final IProducerProductImageService? imageService = null;
 
   FakeProducerProductService({
     List<ProducerProduct>? initialProducts,
@@ -267,14 +271,14 @@ void main() {
       expect(find.text('Draft'), findsWidgets);
       expect(find.byIcon(Icons.edit_note_outlined), findsWidgets);
 
-      // Hidden status
+      // Inactive (hidden) status
       await tester.scrollUntilVisible(
-        find.text('Hidden'),
+        find.text('Inactive'),
         200,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text('Hidden'), findsWidgets);
-      expect(find.byIcon(Icons.visibility_off_outlined), findsWidgets);
+      expect(find.text('Inactive'), findsWidgets);
+      expect(find.byIcon(Icons.pause_circle_outline), findsWidgets);
     });
 
     testWidgets('7. Null price displays "Price not set"', (tester) async {
@@ -337,10 +341,10 @@ void main() {
       expect(find.text('Handcrafted Blue Pottery Vase'), findsNothing);
       expect(find.text('Unfinished Wooden Carving'), findsOneWidget);
 
-      // Filter Hidden
-      await tester.ensureVisible(find.widgetWithText(FilterChip, 'Hidden'));
+      // Filter Inactive
+      await tester.ensureVisible(find.widgetWithText(FilterChip, 'Inactive'));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(FilterChip, 'Hidden'), warnIfMissed: false);
+      await tester.tap(find.widgetWithText(FilterChip, 'Inactive'), warnIfMissed: false);
       await tester.pumpAndSettle();
       expect(find.text('Pure Pashmina Shawl'), findsOneWidget);
 
@@ -377,13 +381,13 @@ void main() {
       expect(find.text('Products that still need details will appear here'), findsOneWidget);
       expect(find.widgetWithText(OutlinedButton, 'Show All Products'), findsOneWidget);
 
-      // Switch to Hidden filter (which has 0 items)
-      await tester.ensureVisible(find.widgetWithText(FilterChip, 'Hidden'));
-      await tester.tap(find.widgetWithText(FilterChip, 'Hidden'), warnIfMissed: false);
+      // Switch to Inactive filter (which has 0 items)
+      await tester.ensureVisible(find.widgetWithText(FilterChip, 'Inactive'));
+      await tester.tap(find.widgetWithText(FilterChip, 'Inactive'), warnIfMissed: false);
       await tester.pumpAndSettle();
 
-      expect(find.text('No hidden products'), findsOneWidget);
-      expect(find.text('Products you temporarily hide will appear here'), findsOneWidget);
+      expect(find.text('No inactive products'), findsOneWidget);
+      expect(find.text('Products you mark as inactive will appear here'), findsOneWidget);
       expect(find.textContaining('buyers'), findsNothing);
 
       // Tap Show All Products returns to all products
@@ -450,21 +454,22 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Tap Hide
-      await tester.tap(find.widgetWithText(OutlinedButton, 'Hide'));
+      // Tap Switch to toggle from Active to Inactive
+      final switchFinder = find.byType(Switch).first;
+      await tester.tap(switchFinder);
       await tester.pumpAndSettle();
 
-      expect(find.text('Product hidden'), findsOneWidget);
+      expect(find.text('Product made inactive'), findsOneWidget);
       expect(find.text('Product hidden from buyers'), findsNothing);
       expect(find.textContaining('buyer'), findsNothing);
       expect(provider.allProducts.first.status, ProductStatus.hidden);
 
-      // Now set service to fail and tap Show
+      // Now set service to fail and tap Switch to toggle from Inactive to Active
       fakeService.shouldThrowOperationError = true;
-      await tester.tap(find.widgetWithText(FilledButton, 'Show'));
+      await tester.tap(switchFinder);
       await tester.pumpAndSettle();
 
-      expect(find.text('Unable to update product. Please try again.'), findsOneWidget);
+      expect(find.text('Could not update product'), findsOneWidget);
     });
 
     testWidgets('19, 20. Show action on hidden product succeeds', (tester) async {
@@ -479,11 +484,11 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Tap Show
-      await tester.tap(find.widgetWithText(FilledButton, 'Show'));
+      // Tap Switch to toggle from Inactive to Active
+      await tester.tap(find.byType(Switch).first);
       await tester.pumpAndSettle();
 
-      expect(find.text('Product marked active'), findsOneWidget);
+      expect(find.text('Product made active'), findsOneWidget);
       expect(find.text('Product is now active'), findsNothing);
       expect(find.textContaining('buyer'), findsNothing);
       expect(provider.allProducts.first.status, ProductStatus.active);
@@ -501,13 +506,17 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Tap delete icon button
-      await tester.tap(find.byIcon(Icons.delete_outline));
+      // Open overflow menu
+      await tester.tap(find.byIcon(Icons.more_vert).first);
+      await tester.pumpAndSettle();
+
+      // Tap Delete Product
+      await tester.tap(find.text('Delete Product'));
       await tester.pumpAndSettle();
 
       // Confirm dialog appeared
-      expect(find.text('Delete Product?'), findsOneWidget);
-      expect(find.text('Are you sure you want to delete this product? This action cannot be undone.'), findsOneWidget);
+      expect(find.text('Delete product?'), findsOneWidget);
+      expect(find.text('This will permanently remove this product and its photos.'), findsOneWidget);
 
       // Tap Cancel
       await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
@@ -518,7 +527,10 @@ void main() {
       expect(find.text('Handcrafted Blue Pottery Vase'), findsOneWidget);
 
       // Tap delete again and confirm
-      await tester.tap(find.byIcon(Icons.delete_outline));
+      await tester.tap(find.byIcon(Icons.more_vert).first);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Delete Product'));
       await tester.pumpAndSettle();
 
       await tester.tap(find.widgetWithText(FilledButton, 'Delete'));
@@ -566,7 +578,6 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-
         expect(tester.takeException(), isNull, reason: 'Overflow at resolution $res');
         expect(find.text('Handcrafted Blue Pottery Vase'), findsOneWidget);
       }
@@ -683,7 +694,7 @@ void main() {
       expect(find.textContaining('published to marketplace'), findsNothing);
 
       // Verify each filter does not display misleading phrases
-      for (final filter in ['Active', 'Draft', 'Hidden', 'All']) {
+      for (final filter in ['Active', 'Draft', 'Inactive', 'All']) {
         await tester.ensureVisible(find.widgetWithText(FilterChip, filter));
         await tester.tap(find.widgetWithText(FilterChip, filter), warnIfMissed: false);
         await tester.pumpAndSettle();

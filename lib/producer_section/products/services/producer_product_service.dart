@@ -56,6 +56,9 @@ abstract class IProducerProductService {
     required String productId,
     required List<String> imagePaths,
   });
+
+  /// The image storage service associated with this product service, if available.
+  IProducerProductImageService? get imageService => null;
 }
 
 /// Production implementation of [IProducerProductService] using Supabase.
@@ -65,6 +68,7 @@ abstract class IProducerProductService {
 /// are also strictly scoped to `auth.uid()` to prevent accidental cross-tenant queries.
 class ProducerProductService implements IProducerProductService {
   final SupabaseClient? client;
+  @override
   final IProducerProductImageService? imageService;
 
   ProducerProductService({
@@ -154,6 +158,7 @@ class ProducerProductService implements IProducerProductService {
         'price': ProductPriceParser.paiseToDecimalString(draft.pricePaise),
         'unit': draft.unit.trim().isEmpty ? 'piece' : draft.unit.trim(),
         'status': ProductStatus.draft.toDbValue(),
+        'images': draft.images,
       };
 
       final response = await _supabaseClient
@@ -189,6 +194,7 @@ class ProducerProductService implements IProducerProductService {
         'category': draft.category.trim(),
         'price': ProductPriceParser.paiseToDecimalString(draft.pricePaise),
         'unit': draft.unit.trim().isEmpty ? 'piece' : draft.unit.trim(),
+        'images': draft.images,
       };
 
       final response = await _supabaseClient

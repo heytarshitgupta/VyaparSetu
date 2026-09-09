@@ -254,3 +254,208 @@ ADD PRODUCT 3-STEP UI ARCHITECTURE (STEP 6C.5)
 10. Current Limitation (Exit with Unsaved Draft):
     - Normal back/pop navigation is preserved. There is currently no background autosave or discard confirmation modal. If producer exits before Step 2 Continue/Save Draft, in-memory draft is discarded.
 
+
+REAL PRODUCT PHOTO SELECTION & SECURE UPLOAD ARCHITECTURE (STEP 6C.6A)
+------------------------------------------------------------
+1. Picker Architecture & Injectable Abstraction:
+   - File: lib/producer_section/products/services/producer_image_picker_service.dart
+   - Contract: IProducerImagePickerService with production implementation ProducerImagePickerService wrapping image_picker (^1.2.3).
+   - Enables 100% offline, deterministic widget and provider testing via FakeImagePickerService without requiring device cameras or galleries.
+   - Picker parameters: maxWidth: 1280, maxHeight: 1280, imageQuality: 80.
+   - UI choices: Clear modal bottom sheet offering Camera ("Take Photo") and Gallery ("Choose from Gallery") with large touch-friendly targets (>= 48dp).
+
+2. Private Storage Flow & Stable Path vs Signed URL:
+   - Bucket: Dedicated private 'product-images' bucket (established in Migration 010 and 011).
+   - Stable Storage Path: Relative 3-segment path `<auth_uid>/<product_id>/<random_hex_32>.<ext>`.
+   - Domain Model Rule: `ProducerProductDraft.images` and database column `products.images` store ONLY stable relative Storage object paths.
+   - Invariant: Local filesystem paths, XFile paths, file:// URLs, raw bytes, base64 strings, and signed URLs NEVER enter `draft.images` or `products.images`.
+   - In-Memory Preview & Signed URLs: For display, the provider creates short-lived signed URLs on-demand via `ProducerProductImageService.createSignedImageUrl()`. These signed URLs remain transient in-memory state and are never persisted to the database. Broken or expired signed URLs fail gracefully without crashing the UI.
+
+3. Format & Size Validation:
+   - Allowed declared MIME types: `image/jpeg`, `image/png`, `image/webp`.
+   - Unsupported format rejection: Files with unsupported MIME types or extensions (e.g., HEIC/HEIF, GIF, BMP, TIFF) are rejected upfront with a localized user-friendly message asking the user to choose another photo.
+   - Verification honesty: Declared MIME and extension checks are verified through `ProducerProductImageService.normalizeMimeType()`; there is no byte-level cryptographic/content sniffing yet.
+   - Size limit: 5 MB maximum (matching backend Storage bucket limit). Client checks size before attempting upload and rejects oversized photos with localized feedback.
+   - No guaranteed compression claims: imageQuality does not guarantee exact 300-600 KB output; size is validated truthfully.
+
+4. Prerequisite: Persisted Product ID:
+   - Storage RLS policy enforces `private.producer_owns_product(product_id)`.
+   - An upload cannot proceed without a valid persisted `productId`.
+   - The UI automatically ensures draft persistence before entering Step 3. Defensively, if `persistedProductId` is missing, upload fails safely without generating arbitrary/random product IDs.
+
+5. Upload & Compensating Cleanup Lifecycle:
+   - Flow: Pick image -> validate size and MIME -> read bytes -> upload to Storage via `ProducerProductImageService` -> receive stable Storage path -> update `products.images` via `ProducerProductService.updateProductImages` -> update in-memory draft and refresh signed URLs.
+   - Cross-service non-atomicity: Supabase Storage and PostgreSQL are separate services and do not participate in atomic 2-phase commit transactions.
+   - Failure cleanup: If the database update fails AFTER a successful Storage upload, a best-effort compensating delete is triggered immediately for ONLY the newly uploaded Storage object. Previously persisted product photos remain completely untouched.
+   - Concurrency protection: `isUploadingImage` flag guards against duplicate taps and concurrent uploads.
+
+6. Photo Removal Lifecycle:
+   - Recommended order: Database-first -> Storage-delete-second.
+   - Removal flow:
+     (1) Compute new image path list without the removed path.
+     (2) Persist updated list to `products.images` via `ProducerProductService.updateProductImages`.
+     (3) Only AFTER the database update succeeds, delete the object from Storage via `ProducerProductImageService.deleteProductImage`.
+   - Invariant: If database update fails, Storage object is NOT deleted, preserving referential consistency. If Storage deletion fails after DB update, the product row remains correct; orphan cleanup can occur asynchronously.
+   - The product row itself is never deleted during photo removal.
+
+7. Client-Side Maximum 4 Photos Rule:
+   - Maximum photos allowed in the creation UI is 4.
+   - When 4 photos exist, the "Add Photo" button is disabled/hidden and a localized badge ("Maximum 4 photos reached") is shown.
+   - This is documented as a client-side product creation rule, not an immutable database constraint.
+
+8. Product Activation & Buyer Visibility Boundaries:
+   - Photos are NOT required to mark a product active under Migration 009. A product can be marked active once name, category, and positive price are provided.
+   - Security & Visibility: Under Migration 009, public.products RLS restricts SELECT, INSERT, UPDATE, and DELETE strictly to the product owner (`auth.uid() = producer_id`). Active products are NOT yet readable by Buyer accounts. No Buyer marketplace visibility is claimed.
+
+
+AI "IMPROVE PHOTO" ARCHITECTURE & MARKETPLACE-READY ENHANCEMENT (STEP 6C.6B)
+------------------------------------------------------------
+1. Purpose & Flow:
+   - Provides every uploaded product photo with an optional "✨ Improve Photo" action.
+   - Clean marketplace-ready transformation: removes distracting backgrounds, places product on clean neutral/light background, improves lighting and centering naturally.
+   - Strict User Choice: Never automatically overwrites or replaces original image. Shows a side-by-side comparison ("Original" vs "Improved") with explicit choices: [Keep Original] or [Use Improved Photo].
+
+2. Server-Side Edge Function Architecture & Secret Isolation:
+   - Function Path: `supabase/functions/improve-product-photo/index.ts`
+   - Invocation: Flutter client calls only the authenticated Supabase Edge Function via `supabaseClient.functions.invoke('improve-product-photo', ...)`.
+   - Secret Isolation: AI vendor API keys (e.g. `OPENAI_API_KEY`) and service-role credentials reside strictly on the server in Deno environment variables. Zero AI API keys exist in Flutter Dart code, pubspec, app bundles, git, or client-side storage.
+
+3. Strict Source Ownership & RLS Verification:
+   - Client sends `productId` and `sourceStoragePath`.
+   - Edge Function independently verifies:
+     (1) Request has a valid authenticated JWT (`auth.uid()`).
+     (2) Product exists in `public.products` and `product.producer_id == auth.uid()`.
+     (3) `sourceStoragePath` has valid 3-segment shape `<user_id>/<product_id>/<filename>`.
+     (4) `segments[0] == auth.uid()` and `segments[1] == productId`.
+     (5) `sourceStoragePath` exists in `product.images` array.
+   - Any ownership or shape mismatch is rejected immediately with 401, 403, or 404.
+
+4. Strict Product-Preservation Prompt:
+   - Fixed, server-owned edit instruction (zero raw client prompt injection):
+     "Create a clean marketplace-ready product photo from this exact source image.
+      Preserve the product exactly as shown: same shape, proportions, colors, materials,
+      patterns, embroidery, printed text, logos, packaging details, quantity, and design.
+      Do not add or remove product features.
+      Only improve presentation:
+      remove distracting background, use a clean neutral/light background,
+      center the product, improve lighting and clarity naturally,
+      and keep realistic shadows where useful.
+      Do not stylize or redesign the product."
+   - AI is forbidden from redesigning the product, adding props/labels, changing colors, or inventing packaging.
+
+5. Storage Invariants & Original Retention:
+   - Improved candidate is saved as a NEW immutable object in private `product-images` bucket:
+     `<auth_uid>/<product_id>/<random_hex_32>.png`.
+   - `upsert: false` is strictly enforced; original file is never overwritten.
+   - Original file remains intact in Storage even after "Use Improved Photo" for recoverability.
+   - Output format: PNG/JPEG, 1024x1024, compatible with Migration 010 private bucket rules.
+
+6. Candidate State & Database Lifecycle:
+   - Edge function returns `{ success: true, improvedStoragePath, sourceStoragePath }`.
+   - Edge function does NOT mutate `public.products.images`.
+   - Transient Provider State: Candidate path stored in `_improvedCandidates[originalPath]`. Signed URLs for candidate preview remain in-memory only.
+   - Decision A: User taps "Use Improved Photo":
+     (1) Replaces original path with candidate path in image list.
+     (2) Updates database `products.images` FIRST via `ProducerProductService.updateDraft`.
+     (3) Only after DB update succeeds, updates canonical `_draft.images`.
+     (4) If DB update fails, original image remains canonical in draft and DB.
+   - Decision B: User taps "Keep Original":
+     (1) Canonical draft and DB remain completely unchanged.
+     (2) Candidate removed from state.
+     (3) Triggers best-effort deletion of unused candidate object from Storage (`discardCandidateImage`).
+   - Cross-Service Non-Atomicity: Storage and Postgres operations are non-atomic; DB update always precedes state swap, and failure leaves original intact.
+
+7. Testability & Dependency Injection:
+   - Abstract contract: `IProductPhotoEnhancementService`.
+   - Production implementation: `ProducerProductEnhancementService`.
+   - Testing fake: `FakeProductPhotoEnhancementService` enables 100% offline, deterministic Flutter unit and widget testing without calling live OpenAI APIs.
+   - Backend logic tested via `test/edge_function_test.mjs` verifying authentication, authorization, size/MIME validation, output formatting, and secret protection.
+
+8. Limitations & Status:
+   - Live AI processing requires `OPENAI_API_KEY` configured in Supabase Edge Function environment.
+   - Prototype rate limiting: Per-request concurrency guards and busy state in client; edge function verifies ownership and single-image processing per call.
+   - Active products remain Producer-owner-only under Migration 009; no Buyer marketplace visibility is claimed.
+
+
+============================================================
+MY PRODUCTS MANAGEMENT & REAL IMAGE LIFECYCLE (STEP 6D)
+============================================================
+
+1. Real Product Image Display & Private Signed URL Architecture:
+   - Private Bucket Integrity: The `product-images` bucket remains strictly private with RLS enforcement.
+   - Canonical Storage Paths: Products in `public.products.images` store only stable relative Storage paths (`<owner_id>/<product_id>/<file>`).
+   - Transient Signed URLs: Client never requests or renders raw public URLs. When a product has images, `ProducerProductCard` requests an ephemeral signed URL (default 3600s expiration) via `IProducerProductImageService.createSignedImageUrl`.
+   - In-Memory Caching: `ProducerProductsProvider` maintains a transient `_signedUrlCache` mapped by storage path.
+   - Security Invariant: Signed URLs are NEVER written to PostgreSQL, NEVER saved into domain models, and NEVER shared across sessions.
+   - Graceful Fallback: If no image exists, a clean neutral Material inventory placeholder is displayed. If signed URL generation or image loading fails, a neutral broken-image fallback renders safely without UI crash.
+
+2. Card & Marketplace-Management Redesign:
+   - Layout: Compact, balanced cards designed for efficient inventory oversight.
+   - Responsive Grid/List:
+     * Desktop (>=1024px): 3 columns, prominent ~190px image area with category chip (top-left) and status badge (top-right), title, price + localized unit, and compact action row.
+     * Tablet (640px-1023px): 2 columns with adjusted aspect ratio.
+     * Phone (<640px): 1 column, compact 130px image height, readable typography, and vertically stacked action buttons when width is constrained (<310px) to prevent RenderFlex overflow.
+   - Action Hierarchy (Part K):
+     * Draft: [ Continue Editing ] (tonal filled) + [ Delete ]
+     * Active: [ Edit ] (outlined) + [ Make Inactive ] (tonal filled) + [ Delete ]
+     * Inactive: [ Edit ] (outlined) + [ Make Active ] (filled primary) + [ Delete ]
+   - Delete action uses distinct error coloring and requires confirmation modal.
+
+3. User-Facing Status Terminology & DB Enum Mapping:
+   - Database Enum: Remains strictly `draft`, `active`, `hidden` (no schema migration created).
+   - User-Facing Terminology:
+     * `draft`  -> "Draft"  / "ड्राफ्ट"  / "ਡਰਾਫਟ"
+     * `active` -> "Active" / "सक्रिय"  / "ਸਰਗਰਮ"
+     * `hidden` -> "Inactive" / "निष्क्रिय" / "ਅਕਿਰਿਆਸ਼ੀਲ"
+   - Filter Tabs: All, Active, Draft, Inactive.
+   - The user-facing label "Hidden" is completely eliminated from the Producer UI in favor of "Inactive".
+
+4. Product Editing Architecture:
+   - Single-Sheet Reuse: Reuses the single responsive bottom sheet modal (`AddProductScreen.show(existingProduct: product)`).
+   - Domain Initialization: `AddProductProvider.forExistingProduct` initializes with `persistedProductId = existingProduct.id`, populates draft fields (name, category, description, price, unit, images), and sets `isEditMode = true`.
+   - Anti-Duplication: Save operations call `ProducerProductService.updateDraft(productId: persistedProductId, ...)` instead of `createDraft`, guaranteeing the exact same database row is updated.
+   - Active Product Preservation: Editing an active product updates content attributes while preserving `ProductStatus.active` (does not reset to draft).
+   - Image & AI Preservation: Existing photos load via transient signed URLs, photo add/remove continues to function, and AI Photo Improvement workflows remain fully accessible.
+   - Instant Refresh: On successful edit, the sheet returns `true` and `ProducerProductsTab` immediately updates the local provider collection.
+
+5. Status Transition Rules:
+   - Active -> Inactive (`active` -> `hidden`): Immediately updates via `ProducerProductService.updateProductStatus`.
+   - Inactive -> Active (`hidden` -> `active`): Readiness validation enforced prior to activation:
+     * `name.trim().length >= 2`
+     * `category.trim().length >= 2`
+     * `pricePaise != null && pricePaise > 0`
+   - Incomplete products are blocked from activation with a localized guidance message directing the producer to edit the product first.
+
+6. Delete Lifecycle & Fail-Safe Cleanup Ordering:
+   - Storage Deletion First: When deleting a product, all associated Storage objects in `product.images` MUST be deleted BEFORE deleting the database row.
+   - RLS Dependency: Migration 011 policies authorize Storage deletion based on existing ownership in `public.products`. Deleting the DB row first would orphan storage files and violate RLS on subsequent delete attempts.
+   - Confirmation Dialog: Clear, destructive confirmation dialog ("Delete product? / This will permanently remove this product and its photos.").
+   - UI Update: On successful deletion, product is removed immediately from provider in-memory state. On failure, the card remains intact and a localized error is shown.
+
+7. AI Original/Candidate Storage Limitation Note:
+   - When a user chooses "Use Improved Photo", the canonical `products.images` points to the improved image path while the original file remains in Storage for recoverability.
+   - Product deletion cleans all paths present in `product.images`.
+   - Non-canonical original sources from AI improvement that are no longer listed in `product.images` are not automatically tracked or deleted by product delete, representing an acceptable prototype storage orphan limitation.
+
+8. Privacy & Security Invariants:
+   - Storage bucket `product-images` remains 100% private.
+   - Signed URLs are transient in-memory previews only (never stored in DB).
+   - No service-role key is ever exposed in client code.
+
+9. AI Product Photo Improvement Architecture (Hugging Face Inference Providers):
+   - End-to-End Pipeline:
+     Flutter ProducerProductDetailsView -> improve-product-photo Supabase Edge Function ->
+     Bearer JWT verification + product ownership/path validation -> private Storage download ->
+     in-memory minimum dimension validation (upscaled via @jsquash WASM if <256x256 while preserving aspect ratio) ->
+     Hugging Face Inference Providers (`@huggingface/inference`) with provider="auto" ->
+     Model: `Qwen/Qwen-Image-Edit` -> magic byte detection (PNG/JPEG/WebP) ->
+     uploaded to private `product-images` as `<userId>/<productId>/<hex_id>.<ext>` (upsert: false) ->
+     transient signed URL pre-warming -> interactive Before/After comparison modal ->
+     explicit producer selection ("Keep Original" discards candidate / "Use Improved Photo" persists to products.images).
+   - Security Invariants:
+     * `HF_TOKEN` is read strictly server-side via Supabase Edge Function environment secrets.
+     * Zero API keys or service role secrets present in Flutter client code, Dart, or git.
+     * Sanitized error messages presented to users on failure; technical diagnostics confined to server logs.
+     * Original producer photo in Supabase Storage is never mutated or overwritten during AI enhancement.
+   - Live Verification Result:
+     * Manually tested and confirmed functional in the live mobile application.
