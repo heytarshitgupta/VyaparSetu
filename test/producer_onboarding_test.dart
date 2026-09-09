@@ -8,13 +8,13 @@ import 'package:buyer_section/producer_section/verification/producer_verificatio
 
 void main() {
   group('ProducerOnboardingProvider Step 1, 2, & 3 Unit Tests', () {
-    test('Initializes at step 0 with 5 total steps', () {
+    test('Initializes at step 0 with 2 total steps (V2: Your Business -> About Your Business)', () {
       final provider = ProducerOnboardingProvider();
       expect(provider.currentStep, 0);
       expect(provider.isFirstStep, isTrue);
       expect(provider.isLastStep, isFalse);
-      expect(provider.progressPercentage, 0.2);
-      expect(provider.currentStepTitle, 'Basic Details');
+      expect(provider.progressPercentage, 0.5);
+      expect(provider.currentStepTitle, 'Your Business');
     });
 
     test('Prefill logic correctly prioritizes profile, producerProfile, and auth data', () {
@@ -47,7 +47,7 @@ void main() {
 
       // Step 2
       expect(provider.businessName, 'Ramesh Handlooms');
-      expect(provider.craftCategory, 'Handloom & Textiles');
+      expect(provider.craftCategory, 'clothing_textiles');
       expect(provider.customCategory, '');
       expect(provider.businessDescription, 'Weaving natural cotton stoles for 10 years.');
 
@@ -233,16 +233,11 @@ void main() {
       );
 
       expect(provider.persistedServerStep, 4);
-      expect(provider.currentStep, 3); // Step 4 Identity & Compliance
+      expect(provider.currentStep, 1); // Clamped to totalSteps - 1 (Step 1: About Your Business)
 
-      // User presses Back to Step 3 Location
+      // User presses Back to Step 0 Your Business
       provider.previousStep();
-      expect(provider.currentStep, 2); // Step 3
-      expect(provider.persistedServerStep, 4); // Server progress remains 4
-
-      // User presses Back to Step 2 Craft
-      provider.previousStep();
-      expect(provider.currentStep, 1); // Step 2
+      expect(provider.currentStep, 0); // Step 0
       expect(provider.persistedServerStep, 4); // Server progress remains 4
     });
 
@@ -267,15 +262,15 @@ void main() {
         },
       );
 
-      // Directly lands on Step 4 (index 3)
+      // Directly lands on Step 1 (clamped to totalSteps - 1)
       expect(provider.persistedServerStep, 4);
-      expect(provider.currentStep, 3);
-      expect(provider.currentStepTitle, 'Identity & Compliance');
+      expect(provider.currentStep, 1);
+      expect(provider.currentStepTitle, 'About Your Business');
 
       // Completed earlier data is fully preserved and available
       expect(provider.fullName, 'Govind Ram');
       expect(provider.businessName, 'Govind Blue Pottery');
-      expect(provider.craftCategory, 'Handicrafts');
+      expect(provider.craftCategory, 'handicrafts');
       expect(provider.state, 'Rajasthan');
       expect(provider.pincode, '302001');
     });
@@ -299,7 +294,7 @@ void main() {
         producerProfile: {'onboarding_step': 99},
       );
       expect(provider.persistedServerStep, 5);
-      expect(provider.currentStep, 4);
+      expect(provider.currentStep, 1);
     });
 
     test('Step 4E2.1: Completed onboarding status routes to producer home, incomplete routes to onboarding', () {
@@ -522,7 +517,7 @@ void main() {
   });
 
   group('ProducerOnboardingScreen Widget Tests', () {
-    testWidgets('Step 1, Step 2, and Step 3 full interaction, validation, and multi-step back navigation',
+    testWidgets('V2 Step 0: Your Business interaction, validation, saving, and back navigation from Step 1',
         (WidgetTester tester) async {
       tester.view.physicalSize = const Size(800, 1600);
       tester.view.devicePixelRatio = 1.0;
@@ -531,37 +526,33 @@ void main() {
         tester.view.resetDevicePixelRatio();
       });
 
-      String? savedName;
       String? savedBusiness;
       String? savedCategory;
+      String? savedBio;
       String? savedState;
       String? savedDistrict;
       String? savedCity;
       String? savedPincode;
-      String? savedAddress;
 
       await tester.pumpWidget(
         MaterialApp(
           home: ProducerOnboardingScreen(
-            step1Saver: ({required fullName, phone}) async {
-              savedName = fullName;
-            },
-            step2Saver: ({required businessName, required craftCategory, bio}) async {
-              savedBusiness = businessName;
-              savedCategory = craftCategory;
-            },
-            step3Saver: ({
+            yourBusinessSaver: ({
+              required businessName,
+              required craftCategory,
+              bio,
               required state,
               required district,
               required city,
               required pincode,
-              required address,
             }) async {
+              savedBusiness = businessName;
+              savedCategory = craftCategory;
+              savedBio = bio;
               savedState = state;
               savedDistrict = district;
               savedCity = city;
               savedPincode = pincode;
-              savedAddress = address;
             },
           ),
         ),
@@ -569,51 +560,31 @@ void main() {
       await tester.pumpAndSettle();
 
       // ----------------------------------------------------------------------
-      // STEP 1: Basic Details
+      // STEP 0: Your Business
       // ----------------------------------------------------------------------
-      expect(find.text('Step 1 of 5'), findsOneWidget);
-      await tester.enterText(
-        find.byKey(const Key('producer_onboarding_name_field')),
-        'Sunita Devi',
-      );
-      await tester.tap(find.text('Continue'));
-      await tester.pumpAndSettle();
-
-      expect(savedName, 'Sunita Devi');
-      expect(find.text('Step 2 of 5'), findsOneWidget);
-
-      // ----------------------------------------------------------------------
-      // STEP 2: Craft & Business
-      // ----------------------------------------------------------------------
-      await tester.enterText(
-        find.byKey(const Key('producer_onboarding_business_name_field')),
-        'Sunita Handloom Works',
-      );
-      await tester.tap(find.byKey(const Key('category_chip_Handloom_&_Textiles')));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Continue'));
-      await tester.pumpAndSettle();
-
-      expect(savedBusiness, 'Sunita Handloom Works');
-      expect(savedCategory, 'Handloom & Textiles');
-
-      // ----------------------------------------------------------------------
-      // STEP 3: Location Details
-      // ----------------------------------------------------------------------
-      expect(find.text('Step 3 of 5'), findsOneWidget);
-      expect(find.text('Location Details'), findsOneWidget);
-      expect(find.text('State / Union Territory *'), findsOneWidget);
-      expect(find.text('District *'), findsOneWidget);
-      expect(find.text('City / Village *'), findsOneWidget);
-      expect(find.text('Pincode *'), findsOneWidget);
-      expect(find.text('Workshop / Business Address *'), findsOneWidget);
+      expect(find.text('Your Business'), findsWidgets);
+      expect(find.text('About Your Business'), findsWidgets);
 
       // Attempt Continue with empty fields -> should block
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
-      expect(find.text('Step 3 of 5'), findsOneWidget);
-      expect(find.text('Please select your state or union territory.'), findsOneWidget);
+      expect(find.text('Please enter your business or brand name (at least 2 characters).'), findsOneWidget);
+
+      // Enter Business Name
+      await tester.enterText(
+        find.byKey(const Key('producer_onboarding_business_name_field')),
+        'Sunita Handloom Works',
+      );
+
+      // Select Craft Category
+      await tester.tap(find.byKey(const Key('category_card_clothing_textiles')));
+      await tester.pumpAndSettle();
+
+      // Enter Bio
+      await tester.enterText(
+        find.byKey(const Key('producer_onboarding_bio_field')),
+        'Authentic handwoven sarees and dupattas',
+      );
 
       // Select State
       await tester.tap(find.byKey(const Key('producer_onboarding_state_dropdown')));
@@ -636,16 +607,12 @@ void main() {
         find.byKey(const Key('producer_onboarding_pincode_field')),
         '012345',
       );
-      await tester.enterText(
-        find.byKey(const Key('producer_onboarding_address_field')),
-        'Plot 42, Artisan Colony',
-      );
       await tester.pumpAndSettle();
 
       // Tap Continue -> Should fail on pincode starting with 0
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
-      expect(find.text('Please enter a valid 6-digit Indian PIN code (cannot start with 0).'), findsOneWidget);
+      expect(find.text('Please enter a valid 6-digit Indian PIN code.'), findsOneWidget);
 
       // Fix pincode
       await tester.enterText(
@@ -654,55 +621,38 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Tap Continue -> Should save Step 3 and advance to Step 4
+      // Tap Continue -> Should save Step 0 and advance to Step 1
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
 
+      expect(savedBusiness, 'Sunita Handloom Works');
+      expect(savedCategory, 'clothing_textiles');
+      expect(savedBio, 'Authentic handwoven sarees and dupattas');
       expect(savedState, 'Rajasthan');
       expect(savedDistrict, 'Jaipur');
       expect(savedCity, 'Sanganer');
       expect(savedPincode, '302029');
-      expect(savedAddress, 'Plot 42, Artisan Colony');
 
       // ----------------------------------------------------------------------
+      // STEP 1: About Your Business reached (Pass 3B real form)
       // ----------------------------------------------------------------------
-      // STEP 4: Identity & Compliance reached
-      // ----------------------------------------------------------------------
-      expect(find.text('Step 4 of 5'), findsOneWidget);
-      expect(find.text('Identity & Compliance'), findsNWidgets(2));
-      expect(find.text('Demo verification environment • Verification is simulated in this prototype.'), findsOneWidget);
-      expect(find.text('PAN Verification'), findsOneWidget);
-      expect(find.text('Aadhaar Verification'), findsOneWidget);
-      expect(find.text('GST Registration'), findsOneWidget);
-      expect(find.text('Workshop Address Verification'), findsNothing);
+      expect(find.text('About Your Business'), findsWidgets);
+      expect(find.text('Team / Business Size'), findsOneWidget);
+      expect(find.text('Complete Setup'), findsOneWidget);
+      expect(find.text('Skip for now'), findsOneWidget);
 
       // ----------------------------------------------------------------------
       // BACK NAVIGATION: Verify all values preserved across steps
       // ----------------------------------------------------------------------
-      // Step 4 -> Step 3
       await tester.tap(find.text('Back'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Step 3 of 5'), findsOneWidget);
+      expect(find.text('Sunita Handloom Works'), findsOneWidget);
+      expect(find.text('Authentic handwoven sarees and dupattas'), findsOneWidget);
       expect(find.text('Rajasthan'), findsOneWidget);
       expect(find.text('Jaipur'), findsOneWidget);
       expect(find.text('Sanganer'), findsOneWidget);
       expect(find.text('302029'), findsOneWidget);
-      expect(find.text('Plot 42, Artisan Colony'), findsOneWidget);
-
-      // Step 3 -> Step 2
-      await tester.tap(find.text('Back'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Step 2 of 5'), findsOneWidget);
-      expect(find.text('Sunita Handloom Works'), findsOneWidget);
-
-      // Step 2 -> Step 1
-      await tester.tap(find.text('Back'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Step 1 of 5'), findsOneWidget);
-      expect(find.text('Sunita Devi'), findsOneWidget);
     });
 
     testWidgets('Step 4E1: IdentityComplianceStep renders cards, validates PAN, and keeps raw PAN transient', (WidgetTester tester) async {

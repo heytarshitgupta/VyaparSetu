@@ -531,19 +531,35 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
       if (validation.isSuccess) {
         final onboardingStatus = validation.producerProfile?['onboarding_status']?.toString();
         if (onboardingStatus == 'completed') {
-          Navigator.pushReplacementNamed(
+          Navigator.pushNamedAndRemoveUntil(
             context,
             AppRouter.producerHomeRoute,
+            (route) => false,
           );
         } else {
-          Navigator.pushReplacementNamed(
+          Navigator.pushNamedAndRemoveUntil(
             context,
             AppRouter.producerOnboardingRoute,
+            (route) => false,
           );
         }
-      } else {
-        // Unauthorized (e.g. buyer or admin account) -> signed out safely
+      } else if (validation.status == ProducerAuthStatus.incompleteSetup) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRouter.producerOnboardingRoute,
+          (route) => false,
+        );
+      } else if (validation.status == ProducerAuthStatus.buyerRejected ||
+          validation.status == ProducerAuthStatus.adminRejected) {
+        // Explicitly unauthorized accounts (Buyer/Admin) -> signed out safely
         await _safeSignOut();
+        if (!mounted) return;
+        setState(() {
+          _isLoading = false;
+        });
+        _showError(validation.message);
+      } else {
+        // Recoverable or operational error -> keep session intact
         if (!mounted) return;
         setState(() {
           _isLoading = false;
@@ -551,7 +567,6 @@ class _ProducerLoginScreenState extends State<ProducerLoginScreen> {
         _showError(validation.message);
       }
     } catch (e) {
-      await _safeSignOut();
       if (!mounted) return;
       setState(() {
         _isLoading = false;

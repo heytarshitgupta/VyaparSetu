@@ -43,9 +43,16 @@ Widget _createLocalizedOnboardingApp({
 }
 
 void main() {
-  group('Producer Onboarding 5-Step Localization Tests (Step 5B.2)', () {
-    testWidgets('All 5 step names and subtitles resolve correctly in en, hi, and pa',
+  group('Producer Onboarding V2 Localization Tests (Pass 3A)', () {
+    testWidgets('Step 0 and Step 1 names and subtitles resolve correctly in en, hi, and pa',
         (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1600);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
       final languageProvider = LanguageProvider();
       final themeProvider = ThemeProvider();
       final onboardingProvider = ProducerOnboardingProvider();
@@ -59,97 +66,70 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Step 1: English
-      expect(find.text('About You'), findsOneWidget);
-      expect(find.text('Your name and contact info'), findsOneWidget);
+      // Step 0: English
+      expect(find.text('Your Business'), findsWidgets);
+      expect(
+        find.text('Tell us a little about what you make and where your business is based.'),
+        findsOneWidget,
+      );
 
       // Switch to Hindi
       languageProvider.setAppLanguage(AppLanguage.hindi);
       await tester.pumpAndSettle();
-      expect(find.text('आपके बारे में'), findsOneWidget);
-      expect(find.text('आपका नाम और संपर्क विवरण'), findsOneWidget);
+      expect(find.text('आपका व्यवसाय'), findsWidgets);
+      expect(
+        find.text('हमें थोड़ा बताएं कि आप क्या बनाते हैं और आपका व्यवसाय कहाँ स्थित है।'),
+        findsOneWidget,
+      );
 
       // Switch to Punjabi
       languageProvider.setAppLanguage(AppLanguage.punjabi);
       await tester.pumpAndSettle();
-      expect(find.text('ਤੁਹਾਡੇ ਬਾਰੇ'), findsOneWidget);
-      expect(find.text('ਤੁਹਾਡਾ ਨਾਮ ਅਤੇ ਸੰਪਰਕ ਵੇਰਵੇ'), findsOneWidget);
+      expect(find.text('ਤੁਹਾਡਾ ਕਾਰੋਬਾਰ'), findsWidgets);
+      expect(
+        find.text('ਸਾਨੂੰ ਥੋੜ੍ਹਾ ਦੱਸੋ ਕਿ ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਹੋ ਅਤੇ ਤੁਹਾਡਾ ਕਾਰੋਬਾਰ ਕਿੱਥੇ ਸਥਿਤ ਹੈ।'),
+        findsOneWidget,
+      );
 
-      // Step 2 in Punjabi -> Hindi -> English
-      onboardingProvider.setFullName('Gurpreet Singh');
-      onboardingProvider.nextStep();
+      // Advance to Step 1 (About Your Business)
+      onboardingProvider.goToStep(1);
       await tester.pumpAndSettle();
-      expect(find.text('ਤੁਹਾਡਾ ਕੰਮ'), findsOneWidget);
-      expect(find.text('ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਅਤੇ ਵੇਚਦੇ ਹੋ'), findsOneWidget);
 
+      // Step 1 in Punjabi
+      expect(find.text('ਤੁਹਾਡੇ ਕਾਰੋਬਾਰ ਬਾਰੇ'), findsWidgets);
+      expect(
+        find.text('ਆਪਣੇ ਕਾਰੋਬਾਰ ਨੂੰ ਬਿਹਤਰ ਤਰੀਕੇ ਨਾਲ ਸਮਝਣ ਵਿੱਚ ਸਾਡੀ ਮਦਦ ਕਰੋ। ਤੁਸੀਂ ਇਸ ਪੜਾਅ ਨੂੰ ਛੱਡ ਸਕਦੇ ਹੋ।'),
+        findsWidgets,
+      );
+
+      // Step 1 in Hindi
       languageProvider.setAppLanguage(AppLanguage.hindi);
       await tester.pumpAndSettle();
-      expect(find.text('आपका काम'), findsOneWidget);
-      expect(find.text('आप क्या बनाते और बेचते हैं'), findsOneWidget);
+      expect(find.text('आपके व्यवसाय के बारे में'), findsWidgets);
+      expect(
+        find.text('अपने व्यवसाय को बेहतर ढंग से समझने में हमारी सहायता करें। आप इस चरण को छोड़ सकते हैं।'),
+        findsWidgets,
+      );
 
+      // Step 1 in English
       languageProvider.setAppLanguage(AppLanguage.english);
       await tester.pumpAndSettle();
-      expect(find.text('Your Work'), findsOneWidget);
-      expect(find.text('What you make and sell'), findsOneWidget);
-
-      // Step 3
-      onboardingProvider.setBusinessName('Punjab Crafts');
-      onboardingProvider.setCraftCategory('Handicrafts');
-      onboardingProvider.nextStep();
-      await tester.pumpAndSettle();
-      expect(find.text('Your Address'), findsOneWidget);
-      expect(find.text('Where your workshop is based'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.hindi);
-      await tester.pumpAndSettle();
-      expect(find.text('काम का पता'), findsOneWidget);
-      expect(find.text('आपकी कार्यशाला या दुकान का पता'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.punjabi);
-      await tester.pumpAndSettle();
-      expect(find.text('ਕੰਮ ਦਾ ਪਤਾ'), findsOneWidget);
-      expect(find.text('ਤੁਹਾਡੀ ਵਰਕਸ਼ਾਪ ਜਾਂ ਦੁਕਾਨ ਦਾ ਪਤਾ'), findsOneWidget);
-
-      // Step 4
-      onboardingProvider.setStateValue('Punjab');
-      onboardingProvider.setDistrict('Amritsar');
-      onboardingProvider.setCity('Amritsar');
-      onboardingProvider.setPincode('143001');
-      onboardingProvider.setAddress('Golden Temple Road');
-      onboardingProvider.nextStep();
-      await tester.pumpAndSettle();
-      expect(find.text('ਤਸਦੀਕ'), findsOneWidget);
-      expect(find.text('ਪਛਾਣ ਅਤੇ ਕੰਮ ਦੇ ਵੇਰਵੇ'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.hindi);
-      await tester.pumpAndSettle();
-      expect(find.text('सत्यापन'), findsOneWidget);
-      expect(find.text('पहचान और कार्य विवरण'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.english);
-      await tester.pumpAndSettle();
-      expect(find.text('Verification'), findsOneWidget);
-      expect(find.text('Identity and business details'), findsOneWidget);
-
-      // Step 5
-      onboardingProvider.nextStep();
-      await tester.pumpAndSettle();
-      expect(find.text('Check & Submit'), findsOneWidget);
-      expect(find.text('Confirm and start selling'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.hindi);
-      await tester.pumpAndSettle();
-      expect(find.text('जांचें और जमा करें'), findsOneWidget);
-      expect(find.text('पुष्टि करें और बेचना शुरू करें'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.punjabi);
-      await tester.pumpAndSettle();
-      expect(find.text('ਜਾਂਚੋ ਅਤੇ ਜਮ੍ਹਾਂ ਕਰੋ'), findsOneWidget);
-      expect(find.text('ਪੁਸ਼ਟੀ ਕਰੋ ਅਤੇ ਵੇਚਣਾ ਸ਼ੁਰੂ ਕਰੋ'), findsOneWidget);
+      expect(find.text('About Your Business'), findsWidgets);
+      expect(
+        find.text('Help us understand your business better. You can skip this step.'),
+        findsWidgets,
+      );
     });
 
-    testWidgets('Step 1, 2, 3, 4, 5 visible labels change live when switching language',
+    testWidgets('Step 0 visible labels change live when switching language',
         (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1600);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
       final languageProvider = LanguageProvider();
       final themeProvider = ThemeProvider();
       final onboardingProvider = ProducerOnboardingProvider();
@@ -163,11 +143,13 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Step 1: English labels
+      // Step 0: English labels
       expect(find.text('Producer Setup'), findsOneWidget);
-      expect(find.text('Artisan Basic Details'), findsOneWidget);
-      expect(find.text('Full Name *'), findsOneWidget);
-      expect(find.text('Email Address (Login)'), findsOneWidget);
+      expect(find.text('Business / Brand Name'), findsOneWidget);
+      expect(find.text('State / Union Territory *'), findsOneWidget);
+      expect(find.text('District *'), findsOneWidget);
+      expect(find.text('Area / Village / City *'), findsOneWidget);
+      expect(find.text('Pincode *'), findsOneWidget);
       expect(find.text('Continue'), findsOneWidget);
 
       // Switch to Hindi live
@@ -175,9 +157,11 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('उत्पादक पंजीकरण'), findsOneWidget);
-      expect(find.text('कारीगर का मूल विवरण'), findsOneWidget);
-      expect(find.text('पूरा नाम *'), findsOneWidget);
-      expect(find.text('ईमेल पता (लॉग इन)'), findsOneWidget);
+      expect(find.text('व्यवसाय / ब्रांड का नाम'), findsOneWidget);
+      expect(find.text('राज्य / केंद्र शासित प्रदेश *'), findsOneWidget);
+      expect(find.text('जिला *'), findsOneWidget);
+      expect(find.text('क्षेत्र / गाँव / शहर *'), findsOneWidget);
+      expect(find.text('पिन कोड *'), findsOneWidget);
       expect(find.text('आगे बढ़ें'), findsOneWidget);
 
       // Switch to Punjabi live
@@ -185,85 +169,23 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('ਉਤਪਾਦਕ ਰਜਿਸਟ੍ਰੇਸ਼ਨ'), findsOneWidget);
-      expect(find.text('ਕਾਰੀਗਰ ਦਾ ਮੂਲ ਵੇਰਵਾ'), findsOneWidget);
-      expect(find.text('ਪੂਰਾ ਨਾਮ *'), findsOneWidget);
-      expect(find.text('ਈਮੇਲ ਪਤਾ (ਲੌਗ ਇਨ)'), findsOneWidget);
+      expect(find.text('ਕਾਰੋਬਾਰ / ਬ੍ਰਾਂਡ ਦਾ ਨਾਮ'), findsOneWidget);
+      expect(find.text('ਰਾਜ / ਕੇਂਦਰ ਸ਼ਾਸਿਤ ਪ੍ਰਦੇਸ਼ *'), findsOneWidget);
+      expect(find.text('ਜ਼ਿਲ੍ਹਾ *'), findsOneWidget);
+      expect(find.text('ਖੇਤਰ / ਪਿੰਡ / ਸ਼ਹਿਰ *'), findsOneWidget);
+      expect(find.text('ਪਿੰਨ ਕੋਡ *'), findsOneWidget);
       expect(find.text('ਅੱਗੇ ਵਧੋ'), findsOneWidget);
-
-      // Move to Step 4 (Verification) to test PAN, Aadhaar, and GST localization
-      onboardingProvider.setFullName('Test Producer');
-      onboardingProvider.setBusinessName('Test Enterprise');
-      onboardingProvider.setCraftCategory('Woodwork');
-      onboardingProvider.setStateValue('Punjab');
-      onboardingProvider.setDistrict('Ludhiana');
-      onboardingProvider.setCity('Ludhiana');
-      onboardingProvider.setPincode('141001');
-      onboardingProvider.setAddress('Artisan Cluster');
-      onboardingProvider.goToStep(3);
-      await tester.pumpAndSettle();
-
-      // Currently Punjabi on Step 4
-      expect(find.text('ਪਛਾਣ ਅਤੇ ਤਸਦੀਕ'), findsOneWidget);
-      expect(find.text('ਪੈਨ ਤਸਦੀਕ'), findsOneWidget);
-      expect(find.text('ਆਧਾਰ ਤਸਦੀਕ'), findsWidgets);
-      expect(find.text('ਜੀਐਸਟੀ ਰਜਿਸਟ੍ਰੇਸ਼ਨ'), findsOneWidget);
-      expect(find.text('ਕੀ ਤੁਸੀਂ ਜੀਐਸਟੀ ਲਈ ਰਜਿਸਟਰਡ ਹੋ? *'), findsOneWidget);
-      expect(find.text('ਹਾਂ'), findsOneWidget);
-      expect(find.text('ਨਹੀਂ'), findsOneWidget);
-      expect(find.text('ਪਿੱਛੇ ਜਾਓ'), findsOneWidget);
-
-      // Switch Step 4 to Hindi live
-      languageProvider.setAppLanguage(AppLanguage.hindi);
-      await tester.pumpAndSettle();
-
-      expect(find.text('पहचान और सत्यापन'), findsOneWidget);
-      expect(find.text('पैन सत्यापन'), findsOneWidget);
-      expect(find.text('आधार सत्यापन'), findsWidgets);
-      expect(find.text('जीएसटी पंजीकरण'), findsOneWidget);
-      expect(find.text('क्या आप जीएसटी के लिए पंजीकृत हैं? *'), findsOneWidget);
-      expect(find.text('हाँ'), findsOneWidget);
-      expect(find.text('नहीं'), findsOneWidget);
-      expect(find.text('पीछे जाएं'), findsOneWidget);
-
-      // Switch Step 4 to English live
-      languageProvider.setAppLanguage(AppLanguage.english);
-      await tester.pumpAndSettle();
-
-      expect(find.text('Identity & Compliance'), findsOneWidget);
-      expect(find.text('PAN Verification'), findsOneWidget);
-      expect(find.text('Aadhaar Verification'), findsWidgets);
-      expect(find.text('GST Registration'), findsOneWidget);
-      expect(find.text('Are you registered for GST? *'), findsOneWidget);
-      expect(find.text('Yes'), findsOneWidget);
-      expect(find.text('No'), findsOneWidget);
-      expect(find.text('Back'), findsOneWidget);
-
-      // Move to Step 5 (Review & Submit)
-      onboardingProvider.goToStep(4);
-      await tester.pumpAndSettle();
-
-      expect(find.text('Review & Submit Onboarding'), findsOneWidget);
-      expect(find.text('Profile Status'), findsOneWidget);
-      expect(find.text('Ready for Submission'), findsOneWidget);
-      expect(find.text('Submit Application'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.hindi);
-      await tester.pumpAndSettle();
-      expect(find.text('समीक्षा और सबमिट करें'), findsOneWidget);
-      expect(find.text('प्रोफाइल स्थिति'), findsOneWidget);
-      expect(find.text('जमा करने के लिए तैयार'), findsOneWidget);
-      expect(find.text('आवेदन जमा करें'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.punjabi);
-      await tester.pumpAndSettle();
-      expect(find.text('ਸਮੀਖਿਆ ਅਤੇ ਸਬਮਿਟ ਕਰੋ'), findsOneWidget);
-      expect(find.text('ਪ੍ਰੋਫਾਈਲ ਸਥਿਤੀ'), findsOneWidget);
-      expect(find.text('ਜਮ੍ਹਾਂ ਕਰਨ ਲਈ ਤਿਆਰ'), findsOneWidget);
-      expect(find.text('ਅਰਜ਼ੀ ਜਮ੍ਹਾਂ ਕਰੋ'), findsOneWidget);
     });
 
     testWidgets('Current step and entered form data remain intact across language switches',
         (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1600);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
       final languageProvider = LanguageProvider();
       final themeProvider = ThemeProvider();
       final onboardingProvider = ProducerOnboardingProvider();
@@ -277,67 +199,53 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Enter data in Step 1
-      final nameField = find.byKey(const Key('producer_onboarding_name_field'));
-      await tester.enterText(nameField, 'Harpreet Singh');
+      // Enter data in Step 0
+      final businessField = find.byKey(const Key('producer_onboarding_business_name_field'));
+      await tester.enterText(businessField, 'Singh Pottery Works');
+
+      final cityField = find.byKey(const Key('producer_onboarding_city_field'));
+      await tester.enterText(cityField, 'Khanna');
+
+      final districtField = find.byKey(const Key('producer_onboarding_district_field'));
+      await tester.enterText(districtField, 'Ludhiana');
+
+      final pincodeField = find.byKey(const Key('producer_onboarding_pincode_field'));
+      await tester.enterText(pincodeField, '141401');
+
+      await tester.tap(find.byKey(const Key('category_card_handicrafts')));
       await tester.pumpAndSettle();
 
-      expect(onboardingProvider.fullName, 'Harpreet Singh');
+      expect(onboardingProvider.businessName, 'Singh Pottery Works');
+      expect(onboardingProvider.craftCategory, 'handicrafts');
+      expect(onboardingProvider.city, 'Khanna');
+      expect(onboardingProvider.district, 'Ludhiana');
+      expect(onboardingProvider.pincode, '141401');
       expect(onboardingProvider.currentStep, 0);
 
       // Switch EN -> HI -> PA -> EN
       languageProvider.setAppLanguage(AppLanguage.hindi);
       await tester.pumpAndSettle();
       expect(onboardingProvider.currentStep, 0);
-      expect(onboardingProvider.fullName, 'Harpreet Singh');
-      expect(find.text('Harpreet Singh'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.punjabi);
-      await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 0);
-      expect(onboardingProvider.fullName, 'Harpreet Singh');
-      expect(find.text('Harpreet Singh'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.english);
-      await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 0);
-      expect(onboardingProvider.fullName, 'Harpreet Singh');
-      expect(find.text('Harpreet Singh'), findsOneWidget);
-
-      // Navigate to Step 2 and enter data
-      onboardingProvider.nextStep();
-      await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 1);
-
-      final businessField = find.byKey(const Key('producer_onboarding_business_name_field'));
-      await tester.enterText(businessField, 'Singh Pottery Works');
-      await tester.pumpAndSettle();
-
-      // Switch languages while on Step 2
-      languageProvider.setAppLanguage(AppLanguage.hindi);
-      await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 1);
       expect(find.text('Singh Pottery Works'), findsOneWidget);
-
-      languageProvider.setAppLanguage(AppLanguage.punjabi);
-      await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 1);
-      expect(find.text('Singh Pottery Works'), findsOneWidget);
-
-      // Navigate to Step 3 and enter location
-      onboardingProvider.setCraftCategory('Handicrafts');
-      onboardingProvider.nextStep();
-      await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 2);
-
-      final cityField = find.byKey(const Key('producer_onboarding_city_field'));
-      await tester.enterText(cityField, 'Khanna');
-      await tester.pumpAndSettle();
-
-      languageProvider.setAppLanguage(AppLanguage.english);
-      await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 2);
       expect(find.text('Khanna'), findsOneWidget);
+      expect(find.text('Ludhiana'), findsOneWidget);
+      expect(find.text('141401'), findsOneWidget);
+
+      languageProvider.setAppLanguage(AppLanguage.punjabi);
+      await tester.pumpAndSettle();
+      expect(onboardingProvider.currentStep, 0);
+      expect(find.text('Singh Pottery Works'), findsOneWidget);
+      expect(find.text('Khanna'), findsOneWidget);
+      expect(find.text('Ludhiana'), findsOneWidget);
+      expect(find.text('141401'), findsOneWidget);
+
+      languageProvider.setAppLanguage(AppLanguage.english);
+      await tester.pumpAndSettle();
+      expect(onboardingProvider.currentStep, 0);
+      expect(find.text('Singh Pottery Works'), findsOneWidget);
+      expect(find.text('Khanna'), findsOneWidget);
+      expect(find.text('Ludhiana'), findsOneWidget);
+      expect(find.text('141401'), findsOneWidget);
     });
 
     testWidgets('Entered form data and current step remain intact across theme switches',
@@ -355,30 +263,27 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Move to step 2 with data
-      onboardingProvider.setFullName('Anita Devi');
       onboardingProvider.setBusinessName('Mithila Kala');
-      onboardingProvider.setCraftCategory('Handicrafts');
-      onboardingProvider.goToStep(1);
+      onboardingProvider.setCraftCategory('handicrafts');
       await tester.pumpAndSettle();
 
-      expect(onboardingProvider.currentStep, 1);
+      expect(onboardingProvider.currentStep, 0);
       expect(find.text('Mithila Kala'), findsOneWidget);
 
       // Toggle Light -> Dark -> System
       themeProvider.setThemeMode(ThemeMode.dark);
       await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 1);
+      expect(onboardingProvider.currentStep, 0);
       expect(find.text('Mithila Kala'), findsOneWidget);
 
       themeProvider.setThemeMode(ThemeMode.system);
       await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 1);
+      expect(onboardingProvider.currentStep, 0);
       expect(find.text('Mithila Kala'), findsOneWidget);
 
       themeProvider.setThemeMode(ThemeMode.light);
       await tester.pumpAndSettle();
-      expect(onboardingProvider.currentStep, 1);
+      expect(onboardingProvider.currentStep, 0);
       expect(find.text('Mithila Kala'), findsOneWidget);
     });
 
@@ -406,19 +311,19 @@ void main() {
 
       // English at 320px
       expect(tester.takeException(), isNull);
-      expect(find.text('Step 1 of 5'), findsOneWidget);
+      expect(find.text('Your Business'), findsWidgets);
 
       // Hindi at 320px
       languageProvider.setAppLanguage(AppLanguage.hindi);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
-      expect(find.text('कदम 1 / 5'), findsOneWidget);
+      expect(find.text('आपका व्यवसाय'), findsWidgets);
 
       // Punjabi at 320px
       languageProvider.setAppLanguage(AppLanguage.punjabi);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
-      expect(find.text('ਕਦਮ 1 / 5'), findsOneWidget);
+      expect(find.text('ਤੁਹਾਡਾ ਕਾਰੋਬਾਰ'), findsWidgets);
     });
   });
 }

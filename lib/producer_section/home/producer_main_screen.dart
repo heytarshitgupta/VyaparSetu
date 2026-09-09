@@ -193,78 +193,90 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
       ),
     ];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-
-        // --------------------------------------------------------------------
-        // 1. PHONE LAYOUT (< 640px): Bottom NavigationBar
-        // --------------------------------------------------------------------
-        if (width < 640) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(_getTitleForIndex(_currentIndex, l10n)),
-              elevation: 0,
-              scrolledUnderElevation: 1,
-              actions: [
-                ProducerQuickActionMenu(
-                  onNavigateToProfile: () => selectDestination(3),
-                  onSignOut: _handleSignOut,
-                ),
-              ],
-            ),
-            body: IndexedStack(
-              index: _currentIndex,
-              children: tabs,
-            ),
-            bottomNavigationBar: NavigationBar(
-              selectedIndex: _currentIndex,
-              onDestinationSelected: selectDestination,
-              elevation: 3,
-              backgroundColor: colorScheme.surface,
-              indicatorColor: colorScheme.primaryContainer,
-              destinations: [
-                NavigationDestination(
-                  icon: const Icon(Icons.home_outlined),
-                  selectedIcon: Icon(Icons.home, color: colorScheme.onPrimaryContainer),
-                  label: l10n.home,
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.inventory_2_outlined),
-                  selectedIcon: Icon(Icons.inventory_2, color: colorScheme.onPrimaryContainer),
-                  label: l10n.myProducts,
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.handshake_outlined),
-                  selectedIcon: Icon(Icons.handshake, color: colorScheme.onPrimaryContainer),
-                  label: l10n.buyerNeeds,
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.person_outline),
-                  selectedIcon: Icon(Icons.person, color: colorScheme.onPrimaryContainer),
-                  label: l10n.myProfile,
-                ),
-              ],
-            ),
-          );
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_currentIndex != 0) {
+          setState(() {
+            _currentIndex = 0;
+          });
         }
+      },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
 
-        // --------------------------------------------------------------------
-        // 2. TABLET LAYOUT (640px - 1024px): NavigationRail
-        // --------------------------------------------------------------------
-        if (width <= 1024) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(_getTitleForIndex(_currentIndex, l10n)),
-              elevation: 0,
-              scrolledUnderElevation: 1,
-              actions: [
-                ProducerQuickActionMenu(
-                  onNavigateToProfile: () => selectDestination(3),
-                  onSignOut: _handleSignOut,
-                ),
-              ],
-            ),
+          // --------------------------------------------------------------------
+          // 1. PHONE LAYOUT (< 640px): Bottom NavigationBar
+          // --------------------------------------------------------------------
+          if (width < 640) {
+            return Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                title: Text(_getTitleForIndex(_currentIndex, l10n)),
+                elevation: 0,
+                scrolledUnderElevation: 1,
+                actions: [
+                  ProducerQuickActionMenu(
+                    onNavigateToProfile: () => selectDestination(3),
+                    onSignOut: _handleSignOut,
+                  ),
+                ],
+              ),
+              body: IndexedStack(
+                index: _currentIndex,
+                children: tabs,
+              ),
+              bottomNavigationBar: NavigationBar(
+                selectedIndex: _currentIndex,
+                onDestinationSelected: selectDestination,
+                elevation: 3,
+                backgroundColor: colorScheme.surface,
+                indicatorColor: colorScheme.primaryContainer,
+                destinations: [
+                  NavigationDestination(
+                    icon: const Icon(Icons.home_outlined),
+                    selectedIcon: Icon(Icons.home, color: colorScheme.onPrimaryContainer),
+                    label: l10n.home,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.inventory_2_outlined),
+                    selectedIcon: Icon(Icons.inventory_2, color: colorScheme.onPrimaryContainer),
+                    label: l10n.myProducts,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.handshake_outlined),
+                    selectedIcon: Icon(Icons.handshake, color: colorScheme.onPrimaryContainer),
+                    label: l10n.buyerNeeds,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.person_outline),
+                    selectedIcon: Icon(Icons.person, color: colorScheme.onPrimaryContainer),
+                    label: l10n.myProfile,
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // --------------------------------------------------------------------
+          // 2. TABLET LAYOUT (640px - 1024px): NavigationRail
+          // --------------------------------------------------------------------
+          if (width <= 1024) {
+            return Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                title: Text(_getTitleForIndex(_currentIndex, l10n)),
+                elevation: 0,
+                scrolledUnderElevation: 1,
+                actions: [
+                  ProducerQuickActionMenu(
+                    onNavigateToProfile: () => selectDestination(3),
+                    onSignOut: _handleSignOut,
+                  ),
+                ],
+              ),
             body: Row(
               children: [
                 NavigationRail(
@@ -379,7 +391,8 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
           ),
         );
       },
-    );
+    ),
+  );
   }
 
   Widget _buildDesktopSidebar(

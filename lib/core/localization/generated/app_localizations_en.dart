@@ -886,7 +886,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unitPiece => 'Piece';
 
   @override
-  String get unitKg => 'Kilogram (kg)';
+  String get unitKg => 'Kg';
 
   @override
   String get unitGram => 'Gram (g)';
@@ -1191,6 +1191,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workshopLocationLabel => 'Workshop Location';
 
   @override
+  String get businessLocationTitle => 'Business Location';
+
+  @override
   String get resetPassword => 'Reset Password';
 
   @override
@@ -1318,4 +1321,218 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get noAccountFoundWithEmail =>
       'No account found with this email. Try signing up.';
+
+  @override
+  String get yourBusinessTitle => 'Your Business';
+
+  @override
+  String get yourBusinessSubtitle =>
+      'Tell us a little about what you make and where your business is based.';
+
+  @override
+  String get aboutYourBusinessTitle => 'About Your Business';
+
+  @override
+  String get aboutYourBusinessSubtitle =>
+      'Help us understand your business better. You can skip this step.';
+
+  @override
+  String get aboutYourBusinessPlaceholderNote =>
+      'About Your Business details will be available in the upcoming update.';
+
+  @override
+  String get businessBrandNameLabel => 'Business / Brand Name';
+
+  @override
+  String get businessBrandNameHelper =>
+      'No brand name? You can use your own name.';
+
+  @override
+  String get businessBrandNameHint => 'e.g. Ramesh Handlooms or Ramesh Kumar';
+
+  @override
+  String get businessCategoryLabel => 'Business Category *';
+
+  @override
+  String get selectCategoryHint => 'Select a category';
+
+  @override
+  String get categoryFoodHomemade => 'Food & Homemade Products';
+
+  @override
+  String get categoryHandicrafts => 'Handicrafts';
+
+  @override
+  String get categoryClothingTextiles => 'Clothing & Textiles';
+
+  @override
+  String get categoryJewelleryAccessories => 'Jewellery & Accessories';
+
+  @override
+  String get categoryHomeDecor => 'Home & Decor';
+
+  @override
+  String get categoryAgricultureProducts => 'Agriculture-based Products';
+
+  @override
+  String get categoryBeautyPersonalCare => 'Beauty & Personal Care';
+
+  @override
+  String get categoryOtherCraft => 'Other';
+
+  @override
+  String get whatDoYouMakeLabel => 'What do you make? (Optional)';
+
+  @override
+  String get whatDoYouMakeHelper =>
+      'For example: homemade pickles, phulkari suits, wooden toys...';
+
+  @override
+  String get whatDoYouMakeHint => 'Describe what you make and sell';
+
+  @override
+  String get areaVillageCityLabel => 'Area / Village / City *';
+
+  @override
+  String get areaVillageCityHint => 'e.g. Rampur Village or Sanganer';
+
+  @override
+  String get businessNameRequired =>
+      'Please enter your business or brand name (at least 2 characters).';
+
+  @override
+  String get categoryRequired => 'Please select your primary product category.';
+
+  @override
+  String get stateRequired => 'Please select your state or union territory.';
+
+  @override
+  String get districtRequired =>
+      'Please enter your district (at least 2 characters).';
+
+  @override
+  String get cityRequired =>
+      'Please enter your area, village, or city (at least 2 characters).';
+
+  @override
+  String get pincodeInvalid => 'Please enter a valid 6-digit Indian PIN code.';
+
+  @override
+  String get yourBusinessSaved => 'Business details saved successfully.';
+
+  @override
+  String get teamSizeTitle => 'Team / Business Size';
+
+  @override
+  String get teamSizeSolo => 'Just me';
+
+  @override
+  String get teamSize2_5 => '2–5 people';
+
+  @override
+  String get teamSize6_10 => '6–10 people';
+
+  @override
+  String get teamSize11_25 => '11–25 people';
+
+  @override
+  String get teamSize25Plus => '25+ people';
+
+  @override
+  String get monthlySalesTitle => 'Typical Monthly Sales';
+
+  @override
+  String get monthlySalesBelow10k => 'Less than ₹10,000';
+
+  @override
+  String get monthlySales10k50k => '₹10,000–₹50,000';
+
+  @override
+  String get monthlySales50k1l => '₹50,000–₹1 lakh';
+
+  @override
+  String get monthlySales1l5l => '₹1–₹5 lakh';
+
+  @override
+  String get monthlySalesAbove5l => 'Above ₹5 lakh';
+
+  @override
+  String get monthlySalesPreferNotToSay => 'Prefer not to say';
+
+  @override
+  String get productionCapacityTitle => 'How much can you usually produce?';
+
+  @override
+  String get quantityLabel => 'Quantity';
+
+  @override
+  String get quantityHint => 'e.g. 50';
+
+  @override
+  String get periodLabel => 'Period';
+
+  @override
+  String get unitPieces => 'Pieces';
+
+  @override
+  String get unitLitres => 'Litres';
+
+  @override
+  String get unitPacks => 'Packs';
+
+  @override
+  String get unitBoxes => 'Boxes';
+
+  @override
+  String get unitOther => 'Other';
+
+  @override
+  String get periodWeek => 'Per Week';
+
+  @override
+  String get periodMonth => 'Per Month';
+
+  @override
+  String get periodYear => 'Per Year';
+
+  @override
+  String get sellingChannelsTitle => 'Where do you currently sell?';
+
+  @override
+  String get channelLocalCustomers => 'Local customers';
+
+  @override
+  String get channelLocalShops => 'Local shops';
+
+  @override
+  String get channelWhatsapp => 'WhatsApp';
+
+  @override
+  String get channelSocialMedia => 'Instagram / Facebook';
+
+  @override
+  String get channelOnlineMarketplaces => 'Online marketplaces';
+
+  @override
+  String get channelExhibitionsFairs => 'Exhibitions / Fairs';
+
+  @override
+  String get channelNotSellingYet => 'Haven’t started selling yet';
+
+  @override
+  String get skipForNow => 'Skip for now';
+
+  @override
+  String get completeSetup => 'Complete Setup';
+
+  @override
+  String get capacityAllOrNoneRequired =>
+      'Please specify quantity, unit, and period for production capacity, or leave all three empty.';
+
+  @override
+  String get capacityPositiveRequired =>
+      'Production capacity quantity must be a positive number.';
+
+  @override
+  String get optionalBadge => 'Optional';
 }

@@ -7,15 +7,31 @@ import '../../core/widgets/app_top_bar_controls.dart';
 import '../auth/services/producer_auth_service.dart';
 import '../verification/producer_verification_service.dart';
 import 'producer_onboarding_provider.dart';
-import 'steps/basic_details_step.dart';
-import 'steps/business_craft_step.dart';
-import 'steps/identity_compliance_step.dart';
-import 'steps/location_details_step.dart';
+import 'steps/your_business_step.dart';
+import 'steps/about_your_business_step.dart';
 import 'widgets/onboarding_navigation_buttons.dart';
 import 'widgets/onboarding_progress_header.dart';
 
 class ProducerOnboardingScreen extends StatefulWidget {
   final ProducerOnboardingProvider? provider;
+  final Future<void> Function({
+    required String businessName,
+    required String craftCategory,
+    String? bio,
+    required String state,
+    required String district,
+    required String city,
+    required String pincode,
+  })? yourBusinessSaver;
+  final Future<void> Function({
+    String? teamSize,
+    String? typicalMonthlySales,
+    double? productionCapacityQuantity,
+    String? productionCapacityUnit,
+    String? productionCapacityPeriod,
+    List<String>? sellingChannels,
+  })? aboutYourBusinessSaver;
+  final Future<Map<String, dynamic>> Function()? onboardingCompleter;
   final Future<void> Function({required String fullName, String? phone})? step1Saver;
   final Future<void> Function({
     required String businessName,
@@ -38,6 +54,9 @@ class ProducerOnboardingScreen extends StatefulWidget {
   const ProducerOnboardingScreen({
     super.key,
     this.provider,
+    this.yourBusinessSaver,
+    this.aboutYourBusinessSaver,
+    this.onboardingCompleter,
     this.step1Saver,
     this.step2Saver,
     this.step3Saver,
@@ -56,6 +75,15 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
   void initState() {
     super.initState();
     _provider = widget.provider ?? ProducerOnboardingProvider();
+    if (widget.yourBusinessSaver != null) {
+      _provider.yourBusinessSaver = widget.yourBusinessSaver;
+    }
+    if (widget.aboutYourBusinessSaver != null) {
+      _provider.aboutYourBusinessSaver = widget.aboutYourBusinessSaver;
+    }
+    if (widget.onboardingCompleter != null) {
+      _provider.onboardingCompleter = widget.onboardingCompleter;
+    }
     if (widget.step1Saver != null) {
       _provider.step1Saver = widget.step1Saver;
     }
@@ -104,80 +132,64 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
 
   String _getLocalizedStepTitle(BuildContext context, int step) {
     final l10n = AppLocalizations.of(context);
-    if (l10n == null) return _provider.currentStepTitle;
-    switch (step) {
-      case 0:
-        return l10n.step1Title;
-      case 1:
-        return l10n.step2Title;
-      case 2:
-        return l10n.step3Title;
-      case 3:
-        return l10n.step4Title;
-      case 4:
-        return l10n.step5Title;
-      default:
-        return _provider.currentStepTitle;
+    if (step == 0) {
+      return l10n?.yourBusinessTitle ?? 'Your Business';
+    } else {
+      return l10n?.aboutYourBusinessTitle ?? 'About Your Business';
     }
   }
 
   String _getLocalizedStepSubtitle(BuildContext context, int step) {
     final l10n = AppLocalizations.of(context);
-    if (l10n == null) return _provider.currentStepSubtitle;
-    switch (step) {
-      case 0:
-        return l10n.step1Subtitle;
-      case 1:
-        return l10n.step2Subtitle;
-      case 2:
-        return l10n.step3Subtitle;
-      case 3:
-        return l10n.step4Subtitle;
-      case 4:
-        return l10n.step5Subtitle;
-      default:
-        return _provider.currentStepSubtitle;
+    if (step == 0) {
+      return l10n?.yourBusinessSubtitle ??
+          'Tell us a little about what you make and where your business is based.';
+    } else {
+      return l10n?.aboutYourBusinessSubtitle ??
+          'Help us understand your business better. You can skip this step.';
     }
   }
 
-  void _handleSubmit() {
-    final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          l10n?.onboardingReviewSubmitted ??
-              'Onboarding review submitted. Full submission will be finalized in upcoming steps.',
-        ),
-        backgroundColor: AppColors.primary,
-        duration: const Duration(seconds: 4),
-      ),
-    );
-    Navigator.pushReplacementNamed(context, AppRouter.producerHomeRoute);
-  }
-
   Future<void> _handleNext() async {
+    final l10n = AppLocalizations.of(context);
     if (_provider.currentStep == 0) {
-      // Step 1: Validate and persist to public.profiles
-      final saved = await _provider.saveStep1();
-      if (saved) {
+      // Step 0 (Your Business): Validate and persist to public.producer_profiles
+      final saved = await _provider.saveYourBusiness(l10n: l10n);
+      if (saved && mounted) {
         _provider.nextStep();
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              l10n?.yourBusinessSaved ?? 'Business details saved successfully.',
+            ),
+            backgroundColor: AppColors.primary,
+            duration: const Duration(seconds: 3),
+          ),
+        );
       }
     } else if (_provider.currentStep == 1) {
-      // Step 2: Validate and persist to public.producer_profiles
-      final saved = await _provider.saveStep2();
-      if (saved) {
-        _provider.nextStep();
+      // Step 1 (About Your Business): Validate, persist, complete onboarding
+      final completed = await _provider.saveAboutYourBusiness(l10n: l10n);
+      if (completed && mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRouter.producerHomeRoute,
+          (route) => false,
+        );
       }
-    } else if (_provider.currentStep == 2) {
-      // Step 3: Validate and persist to public.producer_profiles
-      final saved = await _provider.saveStep3();
-      if (saved) {
-        _provider.nextStep();
-      }
-    } else if (_provider.isLastStep) {
-      _handleSubmit();
-    } else {
-      _provider.nextStep();
+    }
+  }
+
+  Future<void> _handleSkip() async {
+    // Skip for now: complete onboarding without enforcing optional fields
+    final completed = await _provider.skipAboutYourBusiness();
+    if (completed && mounted) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRouter.producerHomeRoute,
+        (route) => false,
+      );
     }
   }
 
@@ -258,35 +270,44 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 540),
+            constraints: const BoxConstraints(maxWidth: 580),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Progress Header
+                  // Progress Header (2-stage mental model)
                   OnboardingProgressHeader(
                     currentStep: _provider.currentStep,
                     totalSteps: ProducerOnboardingProvider.totalSteps,
                     title: _getLocalizedStepTitle(context, _provider.currentStep),
                     subtitle: _getLocalizedStepSubtitle(context, _provider.currentStep),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
 
-                  // Step Content (Scrollable)
+                  // Step Content (Scrollable with bottom padding to protect content)
                   Expanded(
                     child: SingleChildScrollView(
+                      padding: const EdgeInsets.only(bottom: 24),
                       child: _buildStepContent(_provider.currentStep),
                     ),
                   ),
 
-                  // Navigation Buttons (Back & Continue / Submit)
-                  OnboardingNavigationButtons(
-                    isFirstStep: _provider.isFirstStep,
-                    isLastStep: _provider.isLastStep,
-                    isSubmitting: _provider.isSubmitting,
-                    onPrevious: _provider.previousStep,
-                    onNext: _handleNext,
+                  // Navigation Buttons (Back & Complete Setup / Skip for now)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 14),
+                    child: OnboardingNavigationButtons(
+                      isFirstStep: _provider.currentStep == 0,
+                      isLastStep: _provider.currentStep == 1,
+                      showNext: true,
+                      isSubmitting: _provider.isSubmitting,
+                      onPrevious: _provider.previousStep,
+                      onNext: _handleNext,
+                      onSkip: _provider.currentStep == 1 ? _handleSkip : null,
+                      nextLabelOverride: _provider.currentStep == 1
+                          ? (l10n?.completeSetup ?? 'Complete Setup')
+                          : null,
+                    ),
                   ),
                 ],
               ),
@@ -298,128 +319,10 @@ class _ProducerOnboardingScreenState extends State<ProducerOnboardingScreen> {
   }
 
   Widget _buildStepContent(int step) {
-    final l10n = AppLocalizations.of(context);
-    switch (step) {
-      case 0:
-        return BasicDetailsStep(provider: _provider);
-      case 1:
-        return BusinessCraftStep(provider: _provider);
-      case 2:
-        return LocationDetailsStep(provider: _provider);
-      case 3:
-        return IdentityComplianceStep(
-          provider: _provider,
-          verificationService: widget.verificationService,
-        );
-      case 4:
-        return _buildStepCard(
-          icon: Icons.assignment_turned_in_outlined,
-          title: l10n?.step5CardTitle ?? 'Review & Submit Onboarding',
-          description: l10n?.step5CardDescription ??
-              'Review your profile setup before submitting. You can edit your craft catalog anytime from your dashboard.',
-          fields: [
-            _buildInfoTile(
-              l10n?.profileStatus ?? 'Profile Status',
-              l10n?.readyForSubmission ?? 'Ready for Submission',
-            ),
-            _buildInfoTile(
-              l10n?.nextStage ?? 'Next Stage',
-              l10n?.nextStageDescription ?? 'Direct access to Buyer Needs & Products',
-            ),
-          ],
-        );
-      default:
-        return const SizedBox.shrink();
+    if (step == 0) {
+      return YourBusinessStep(provider: _provider);
+    } else {
+      return AboutYourBusinessStep(provider: _provider);
     }
-  }
-
-  Widget _buildStepCard({
-    required IconData icon,
-    required String title,
-    required String description,
-    required List<Widget> fields,
-  }) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.dividerColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, size: 24, color: theme.colorScheme.primary),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            description,
-            style: TextStyle(
-              fontSize: 13,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 18),
-          Divider(color: theme.dividerColor),
-          const SizedBox(height: 8),
-          ...fields,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoTile(String label, String value) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 130,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 13,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

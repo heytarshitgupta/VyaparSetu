@@ -876,13 +876,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get customCategoryLabel => 'श्रेणी बताएं';
 
   @override
-  String get unitLabel => 'मात्रा इकाई';
+  String get unitLabel => 'इकाई';
 
   @override
   String get unitPiece => 'नग / पीस';
 
   @override
-  String get unitKg => 'किलोग्राम (kg)';
+  String get unitKg => 'किग्रा (Kg)';
 
   @override
   String get unitGram => 'ग्राम (g)';
@@ -1189,6 +1189,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get workshopLocationLabel => 'कार्यशाला का स्थान';
 
   @override
+  String get businessLocationTitle => 'व्यवसाय का स्थान';
+
+  @override
   String get resetPassword => 'पासवर्ड रीसेट करें';
 
   @override
@@ -1317,4 +1320,220 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get noAccountFoundWithEmail =>
       'इस ईमेल से कोई खाता नहीं मिला। खाता बनाने का प्रयास करें।';
+
+  @override
+  String get yourBusinessTitle => 'आपका व्यवसाय';
+
+  @override
+  String get yourBusinessSubtitle =>
+      'हमें थोड़ा बताएं कि आप क्या बनाते हैं और आपका व्यवसाय कहाँ स्थित है।';
+
+  @override
+  String get aboutYourBusinessTitle => 'आपके व्यवसाय के बारे में';
+
+  @override
+  String get aboutYourBusinessSubtitle =>
+      'अपने व्यवसाय को बेहतर ढंग से समझने में हमारी सहायता करें। आप इस चरण को छोड़ सकते हैं।';
+
+  @override
+  String get aboutYourBusinessPlaceholderNote =>
+      'व्यवसाय विवरण का यह चरण अगले अपडेट में उपलब्ध होगा।';
+
+  @override
+  String get businessBrandNameLabel => 'व्यवसाय / ब्रांड का नाम';
+
+  @override
+  String get businessBrandNameHelper =>
+      'कोई ब्रांड नाम नहीं है? आप अपने नाम का उपयोग कर सकते हैं।';
+
+  @override
+  String get businessBrandNameHint => 'जैसे रमेश हैंडलूम या रमेश कुमार';
+
+  @override
+  String get businessCategoryLabel => 'व्यवसाय श्रेणी *';
+
+  @override
+  String get selectCategoryHint => 'एक श्रेणी चुनें';
+
+  @override
+  String get categoryFoodHomemade => 'खाद्य और घरेलू उत्पाद';
+
+  @override
+  String get categoryHandicrafts => 'हस्तशिल्प';
+
+  @override
+  String get categoryClothingTextiles => 'वस्त्र और परिधान';
+
+  @override
+  String get categoryJewelleryAccessories => 'आभूषण और सहायक उपकरण';
+
+  @override
+  String get categoryHomeDecor => 'गृह सज्जा';
+
+  @override
+  String get categoryAgricultureProducts => 'कृषि आधारित उत्पाद';
+
+  @override
+  String get categoryBeautyPersonalCare => 'सौंदर्य और व्यक्तिगत देखभाल';
+
+  @override
+  String get categoryOtherCraft => 'अन्य';
+
+  @override
+  String get whatDoYouMakeLabel => 'आप क्या बनाते हैं? (वैकल्पिक)';
+
+  @override
+  String get whatDoYouMakeHelper =>
+      'उदाहरण के लिए: घर का बना अचार, फुलकारी सूट, लकड़ी के खिलौने...';
+
+  @override
+  String get whatDoYouMakeHint =>
+      'आप जो उत्पाद बनाते और बेचते हैं उनका विवरण दें';
+
+  @override
+  String get areaVillageCityLabel => 'क्षेत्र / गाँव / शहर *';
+
+  @override
+  String get areaVillageCityHint => 'जैसे रामपुर गाँव या सांगानेर';
+
+  @override
+  String get businessNameRequired =>
+      'कृपया अपने व्यवसाय या ब्रांड का नाम दर्ज करें (कम से कम 2 अक्षर)।';
+
+  @override
+  String get categoryRequired => 'कृपया अपनी मुख्य उत्पाद श्रेणी चुनें।';
+
+  @override
+  String get stateRequired => 'कृपया अपना राज्य या केंद्र शासित प्रदेश चुनें।';
+
+  @override
+  String get districtRequired =>
+      'कृपया अपना ज़िला दर्ज करें (कम से कम 2 अक्षर)।';
+
+  @override
+  String get cityRequired =>
+      'कृपया अपना क्षेत्र, गाँव या शहर दर्ज करें (कम से कम 2 अक्षर)।';
+
+  @override
+  String get pincodeInvalid => 'कृपया एक वैध 6-अंकों का पिन कोड दर्ज करें।';
+
+  @override
+  String get yourBusinessSaved => 'व्यवसाय विवरण सफलतापूर्वक सहेजा गया।';
+
+  @override
+  String get teamSizeTitle => 'टीम / व्यवसाय का आकार';
+
+  @override
+  String get teamSizeSolo => 'सिर्फ मैं';
+
+  @override
+  String get teamSize2_5 => '2–5 लोग';
+
+  @override
+  String get teamSize6_10 => '6–10 लोग';
+
+  @override
+  String get teamSize11_25 => '11–25 लोग';
+
+  @override
+  String get teamSize25Plus => '25+ लोग';
+
+  @override
+  String get monthlySalesTitle => 'सामान्य मासिक बिक्री';
+
+  @override
+  String get monthlySalesBelow10k => '₹10,000 से कम';
+
+  @override
+  String get monthlySales10k50k => '₹10,000–₹50,000';
+
+  @override
+  String get monthlySales50k1l => '₹50,000–₹1 लाख';
+
+  @override
+  String get monthlySales1l5l => '₹1–₹5 लाख';
+
+  @override
+  String get monthlySalesAbove5l => '₹5 लाख से अधिक';
+
+  @override
+  String get monthlySalesPreferNotToSay => 'बताना नहीं चाहते';
+
+  @override
+  String get productionCapacityTitle =>
+      'आप आमतौर पर कितना उत्पादन कर सकते हैं?';
+
+  @override
+  String get quantityLabel => 'मात्रा';
+
+  @override
+  String get quantityHint => 'जैसे 50';
+
+  @override
+  String get periodLabel => 'अवधि';
+
+  @override
+  String get unitPieces => 'पीस (Pieces)';
+
+  @override
+  String get unitLitres => 'लीटर (Litres)';
+
+  @override
+  String get unitPacks => 'पैक (Packs)';
+
+  @override
+  String get unitBoxes => 'बॉक्स (Boxes)';
+
+  @override
+  String get unitOther => 'अन्य';
+
+  @override
+  String get periodWeek => 'प्रति सप्ताह';
+
+  @override
+  String get periodMonth => 'प्रति माह';
+
+  @override
+  String get periodYear => 'प्रति वर्ष';
+
+  @override
+  String get sellingChannelsTitle => 'वर्तमान में आप कहाँ बेचते हैं?';
+
+  @override
+  String get channelLocalCustomers => 'स्थानीय ग्राहक';
+
+  @override
+  String get channelLocalShops => 'स्थानीय दुकानें';
+
+  @override
+  String get channelWhatsapp => 'व्हाट्सएप (WhatsApp)';
+
+  @override
+  String get channelSocialMedia => 'इंस्टाग्राम / फेसबुक';
+
+  @override
+  String get channelOnlineMarketplaces => 'ऑनलाइन मार्केटप्लेस';
+
+  @override
+  String get channelExhibitionsFairs => 'प्रदर्शनियां / मेले';
+
+  @override
+  String get channelNotSellingYet => 'अभी बेचना शुरू नहीं किया';
+
+  @override
+  String get skipForNow => 'अभी छोड़ें';
+
+  @override
+  String get completeSetup => 'सेटअप पूरा करें';
+
+  @override
+  String get capacityAllOrNoneRequired =>
+      'कृपया उत्पादन क्षमता के लिए मात्रा, इकाई और अवधि निर्दिष्ट करें, या तीनों को खाली छोड़ दें।';
+
+  @override
+  String get capacityPositiveRequired =>
+      'उत्पादन क्षमता की मात्रा एक धनात्मक संख्या होनी चाहिए।';
+
+  @override
+  String get optionalBadge => 'वैकल्पिक';
 }

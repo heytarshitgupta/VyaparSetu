@@ -139,6 +139,86 @@ class ProducerAuthService {
     await _client.from('producer_profiles').update(data).eq('id', user.id);
   }
 
+  /// Updates public.producer_profiles with mandatory "Your Business" attributes for Onboarding V2.
+  /// Persists business_name, canonical craft_category, optional bio, state, district, city, and pincode.
+  Future<void> updateYourBusiness({
+    required String businessName,
+    required String craftCategory,
+    String? bio,
+    required String state,
+    required String district,
+    required String city,
+    required String pincode,
+  }) async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw Exception('User is not authenticated.');
+    }
+
+    final data = <String, dynamic>{
+      'business_name': businessName.trim(),
+      'craft_category': craftCategory.trim(),
+      'bio': bio != null && bio.trim().isNotEmpty ? bio.trim() : null,
+      'state': state.trim(),
+      'district': district.trim(),
+      'city': city.trim(),
+      'pincode': pincode.trim(),
+    };
+
+    await _client.from('producer_profiles').update(data).eq('id', user.id);
+  }
+
+  /// Updates public.producer_profiles with optional "About Your Business" attributes for Onboarding V2 Pass 3B.
+  /// Persists team_size, typical_monthly_sales, production capacity, and selling_channels.
+  /// Uses authenticated user.id as the strict ownership authority.
+  Future<void> updateAboutYourBusiness({
+    String? teamSize,
+    String? typicalMonthlySales,
+    double? productionCapacityQuantity,
+    String? productionCapacityUnit,
+    String? productionCapacityPeriod,
+    List<String>? sellingChannels,
+  }) async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw Exception('User is not authenticated.');
+    }
+
+    final data = <String, dynamic>{
+      'team_size': teamSize,
+      'typical_monthly_sales': typicalMonthlySales,
+      'production_capacity_quantity': productionCapacityQuantity,
+      'production_capacity_unit': productionCapacityUnit,
+      'production_capacity_period': productionCapacityPeriod,
+      'selling_channels': sellingChannels ?? [],
+    };
+
+    await _client.from('producer_profiles').update(data).eq('id', user.id);
+  }
+
+  /// Calls the trusted PostgreSQL SECURITY DEFINER RPC complete_producer_onboarding().
+  /// Enforces server-side rule: Step 1 (account/email) + Step 2 (business/location) completed.
+  /// Sets onboarding_status = 'completed' and onboarding_step = 3.
+  Future<Map<String, dynamic>> completeProducerOnboarding() async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw Exception('User is not authenticated.');
+    }
+
+    try {
+      final response = await _client.rpc('complete_producer_onboarding');
+      if (response is Map) {
+        return Map<String, dynamic>.from(response);
+      }
+      return {'success': true, 'status': 'completed'};
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[ProducerAuthService] complete_producer_onboarding error: $e');
+      }
+      rethrow;
+    }
+  }
+
   /// Advances public.producer_profiles.onboarding_step via trusted SECURITY DEFINER RPC.
   /// Forward-only, monotonic, and idempotent.
   Future<void> advanceOnboardingStep({
@@ -168,8 +248,7 @@ class ProducerAuthService {
 
   /// Validates that the authenticated user possesses the Producer role and
   /// that their domain profile exists.
-  /// If authorization fails for any reason (e.g. Buyer/Admin account or incomplete setup),
-  /// the session is safely terminated (signed out) so no unauthorized active state persists.
+  /// Only explicit role violations (e.g. Buyer/Admin account) sign out the user session.
   Future<ProducerAuthValidationResult> validateProducerAccess({
     String? fallbackFullName,
   }) async {
@@ -182,31 +261,12 @@ class ProducerAuthService {
     }
 
     try {
-      var profile = await fetchProfile();
-
-      // If no profile row exists, attempt initialization with user metadata or fallback name
-      if (profile == null) {
-        final metadataName = (user.userMetadata?['full_name'] as String?)?.trim() ??
-            fallbackFullName?.trim() ??
-            '';
-
-        if (metadataName.length >= 2) {
-          await registerProducerProfile(fullName: metadataName);
-          profile = await fetchProfile();
-        } else {
-          await _client.auth.signOut();
-          return const ProducerAuthValidationResult(
-            status: ProducerAuthStatus.incompleteSetup,
-            message: 'Producer account setup is incomplete. Please sign up to create your Producer profile.',
-          );
-        }
-      }
+      final profile = await fetchProfile();
 
       if (profile == null) {
-        await _client.auth.signOut();
         return const ProducerAuthValidationResult(
           status: ProducerAuthStatus.incompleteSetup,
-          message: 'Unable to load your profile. Please try signing in again.',
+          message: 'Producer account setup is incomplete. Please sign up to create your Producer profile.',
         );
       }
 
@@ -229,20 +289,19 @@ class ProducerAuthService {
       }
 
       if (role != 'producer') {
-        await _client.auth.signOut();
         return const ProducerAuthValidationResult(
           status: ProducerAuthStatus.error,
           message: 'Account role is not recognized as a Producer.',
         );
       }
 
-      // Fetch or ensure producer_profiles exists
-      var producerProfile = await fetchProducerProfile();
+      final producerProfile = await fetchProducerProfile();
       if (producerProfile == null) {
-        // Idempotent recovery
-        final name = (profile['full_name'] as String?)?.trim() ?? 'Producer';
-        await registerProducerProfile(fullName: name);
-        producerProfile = await fetchProducerProfile();
+        return ProducerAuthValidationResult(
+          status: ProducerAuthStatus.incompleteSetup,
+          message: 'Producer profile setup is incomplete. Please complete onboarding.',
+          profile: profile,
+        );
       }
 
       return ProducerAuthValidationResult(
@@ -252,16 +311,16 @@ class ProducerAuthService {
         producerProfile: producerProfile,
       );
     } catch (e) {
-      await _client.auth.signOut();
-
       final errStr = e.toString().toLowerCase();
       if (errStr.contains('already registered as buyer')) {
+        await _client.auth.signOut();
         return const ProducerAuthValidationResult(
           status: ProducerAuthStatus.buyerRejected,
           message: 'This account is registered as a Buyer. Role conversion to Producer is not supported.',
         );
       }
       if (errStr.contains('admin accounts cannot register')) {
+        await _client.auth.signOut();
         return const ProducerAuthValidationResult(
           status: ProducerAuthStatus.adminRejected,
           message: 'Admin accounts cannot access the Producer portal.',

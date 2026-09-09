@@ -38,6 +38,7 @@ class ProducerQuickActionMenu extends StatelessWidget {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         builder: (sheetContext) => _QuickActionsContent(
+          parentContext: context,
           onNavigateToProfile: () {
             Navigator.of(sheetContext).pop();
             onNavigateToProfile?.call();
@@ -56,6 +57,7 @@ class ProducerQuickActionMenu extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 380),
             child: _QuickActionsContent(
+              parentContext: context,
               onNavigateToProfile: () {
                 Navigator.of(dialogContext).pop();
                 onNavigateToProfile?.call();
@@ -277,10 +279,12 @@ class ProducerQuickActionMenu extends StatelessWidget {
 }
 
 class _QuickActionsContent extends StatelessWidget {
+  final BuildContext parentContext;
   final VoidCallback onNavigateToProfile;
   final VoidCallback onSignOut;
 
   const _QuickActionsContent({
+    required this.parentContext,
     required this.onNavigateToProfile,
     required this.onSignOut,
   });
@@ -340,7 +344,7 @@ class _QuickActionsContent extends StatelessWidget {
             ),
             onTap: () {
               Navigator.of(context).pop();
-              ProducerQuickActionMenu.showLanguageSelector(context);
+              ProducerQuickActionMenu.showLanguageSelector(parentContext);
             },
           ),
 
@@ -372,7 +376,7 @@ class _QuickActionsContent extends StatelessWidget {
             ),
             onTap: () {
               Navigator.of(context).pop();
-              ProducerQuickActionMenu.showAppearanceSelector(context);
+              ProducerQuickActionMenu.showAppearanceSelector(parentContext);
             },
           ),
 
@@ -383,7 +387,7 @@ class _QuickActionsContent extends StatelessWidget {
             title: Text(l10n.helpAndAbout),
             onTap: () {
               Navigator.of(context).pop();
-              showAboutDialogModal(context);
+              showAboutDialogModal(parentContext);
             },
           ),
 

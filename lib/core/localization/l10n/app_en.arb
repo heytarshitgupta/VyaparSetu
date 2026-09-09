@@ -1501,6 +1501,10 @@
   "@workshopLocationLabel": {
     "description": "Label for workshop location"
   },
+  "businessLocationTitle": "Business Location",
+  "@businessLocationTitle": {
+    "description": "Section title for business location in onboarding"
+  },
   "resetPassword": "Reset Password",
   "@resetPassword": {
     "description": "Action to reset account password"
@@ -1670,6 +1674,286 @@
   "noAccountFoundWithEmail": "No account found with this email. Try signing up.",
   "@noAccountFoundWithEmail": {
     "description": "Error message when trying to sign in with OTP for an unregistered email"
+  },
+  "yourBusinessTitle": "Your Business",
+  "@yourBusinessTitle": {
+    "description": "Title for the Your Business onboarding step"
+  },
+  "yourBusinessSubtitle": "Tell us a little about what you make and where your business is based.",
+  "@yourBusinessSubtitle": {
+    "description": "Subtitle for the Your Business onboarding step"
+  },
+  "aboutYourBusinessTitle": "About Your Business",
+  "@aboutYourBusinessTitle": {
+    "description": "Title for the optional About Your Business onboarding step"
+  },
+  "aboutYourBusinessSubtitle": "Help us understand your business better. You can skip this step.",
+  "@aboutYourBusinessSubtitle": {
+    "description": "Subtitle for the optional About Your Business onboarding step"
+  },
+  "aboutYourBusinessPlaceholderNote": "About Your Business details will be available in the upcoming update.",
+  "@aboutYourBusinessPlaceholderNote": {
+    "description": "Placeholder text for About Your Business step in Pass 3A"
+  },
+  "businessBrandNameLabel": "Business / Brand Name",
+  "@businessBrandNameLabel": {
+    "description": "Label for Business or Brand name field"
+  },
+  "businessBrandNameHelper": "No brand name? You can use your own name.",
+  "@businessBrandNameHelper": {
+    "description": "Helper text for Business or Brand name field"
+  },
+  "businessBrandNameHint": "e.g. Ramesh Handlooms or Ramesh Kumar",
+  "@businessBrandNameHint": {
+    "description": "Hint for Business or Brand name field"
+  },
+  "businessCategoryLabel": "Business Category *",
+  "@businessCategoryLabel": {
+    "description": "Label for Business category selection"
+  },
+  "selectCategoryHint": "Select a category",
+  "@selectCategoryHint": {
+    "description": "Hint prompting user to select a category"
+  },
+  "categoryFoodHomemade": "Food & Homemade Products",
+  "@categoryFoodHomemade": {
+    "description": "Category option: Food & Homemade Products"
+  },
+  "categoryHandicrafts": "Handicrafts",
+  "@categoryHandicrafts": {
+    "description": "Category option: Handicrafts"
+  },
+  "categoryClothingTextiles": "Clothing & Textiles",
+  "@categoryClothingTextiles": {
+    "description": "Category option: Clothing & Textiles"
+  },
+  "categoryJewelleryAccessories": "Jewellery & Accessories",
+  "@categoryJewelleryAccessories": {
+    "description": "Category option: Jewellery & Accessories"
+  },
+  "categoryHomeDecor": "Home & Decor",
+  "@categoryHomeDecor": {
+    "description": "Category option: Home & Decor"
+  },
+  "categoryAgricultureProducts": "Agriculture-based Products",
+  "@categoryAgricultureProducts": {
+    "description": "Category option: Agriculture-based Products"
+  },
+  "categoryBeautyPersonalCare": "Beauty & Personal Care",
+  "@categoryBeautyPersonalCare": {
+    "description": "Category option: Beauty & Personal Care"
+  },
+  "categoryOtherCraft": "Other",
+  "@categoryOtherCraft": {
+    "description": "Category option: Other"
+  },
+  "whatDoYouMakeLabel": "What do you make? (Optional)",
+  "@whatDoYouMakeLabel": {
+    "description": "Label for optional bio / products description field"
+  },
+  "whatDoYouMakeHelper": "For example: homemade pickles, phulkari suits, wooden toys...",
+  "@whatDoYouMakeHelper": {
+    "description": "Helper text with examples for what do you make field"
+  },
+  "whatDoYouMakeHint": "Describe what you make and sell",
+  "@whatDoYouMakeHint": {
+    "description": "Hint for what do you make field"
+  },
+  "areaVillageCityLabel": "Area / Village / City *",
+  "@areaVillageCityLabel": {
+    "description": "Label for Area, Village, or City location field"
+  },
+  "areaVillageCityHint": "e.g. Rampur Village or Sanganer",
+  "@areaVillageCityHint": {
+    "description": "Hint for Area, Village, or City location field"
+  },
+  "businessNameRequired": "Please enter your business or brand name (at least 2 characters).",
+  "@businessNameRequired": {
+    "description": "Validation error when business name is empty or too short"
+  },
+  "categoryRequired": "Please select your primary product category.",
+  "@categoryRequired": {
+    "description": "Validation error when category is not selected"
+  },
+  "stateRequired": "Please select your state or union territory.",
+  "@stateRequired": {
+    "description": "Validation error when state is not selected"
+  },
+  "districtRequired": "Please enter your district (at least 2 characters).",
+  "@districtRequired": {
+    "description": "Validation error when district is empty or too short"
+  },
+  "cityRequired": "Please enter your area, village, or city (at least 2 characters).",
+  "@cityRequired": {
+    "description": "Validation error when city is empty or too short"
+  },
+  "pincodeInvalid": "Please enter a valid 6-digit Indian PIN code.",
+  "@pincodeInvalid": {
+    "description": "Validation error when pincode is not 6 valid digits"
+  },
+  "yourBusinessSaved": "Business details saved successfully.",
+  "@yourBusinessSaved": {
+    "description": "Feedback message when Your Business details are saved"
+  },
+  "teamSizeTitle": "Team / Business Size",
+  "@teamSizeTitle": {
+    "description": "Title for team or business size section"
+  },
+  "teamSizeSolo": "Just me",
+  "@teamSizeSolo": {
+    "description": "Solo artisan option"
+  },
+  "teamSize2_5": "2–5 people",
+  "@teamSize2_5": {
+    "description": "2 to 5 people option"
+  },
+  "teamSize6_10": "6–10 people",
+  "@teamSize6_10": {
+    "description": "6 to 10 people option"
+  },
+  "teamSize11_25": "11–25 people",
+  "@teamSize11_25": {
+    "description": "11 to 25 people option"
+  },
+  "teamSize25Plus": "25+ people",
+  "@teamSize25Plus": {
+    "description": "25 or more people option"
+  },
+  "monthlySalesTitle": "Typical Monthly Sales",
+  "@monthlySalesTitle": {
+    "description": "Title for typical monthly sales range section"
+  },
+  "monthlySalesBelow10k": "Less than ₹10,000",
+  "@monthlySalesBelow10k": {
+    "description": "Monthly sales below 10k"
+  },
+  "monthlySales10k50k": "₹10,000–₹50,000",
+  "@monthlySales10k50k": {
+    "description": "Monthly sales 10k to 50k"
+  },
+  "monthlySales50k1l": "₹50,000–₹1 lakh",
+  "@monthlySales50k1l": {
+    "description": "Monthly sales 50k to 1 lakh"
+  },
+  "monthlySales1l5l": "₹1–₹5 lakh",
+  "@monthlySales1l5l": {
+    "description": "Monthly sales 1 to 5 lakh"
+  },
+  "monthlySalesAbove5l": "Above ₹5 lakh",
+  "@monthlySalesAbove5l": {
+    "description": "Monthly sales above 5 lakh"
+  },
+  "monthlySalesPreferNotToSay": "Prefer not to say",
+  "@monthlySalesPreferNotToSay": {
+    "description": "Prefer not to disclose sales"
+  },
+  "productionCapacityTitle": "How much can you usually produce?",
+  "@productionCapacityTitle": {
+    "description": "Title for production capacity section"
+  },
+  "quantityLabel": "Quantity",
+  "@quantityLabel": {
+    "description": "Label for production capacity quantity"
+  },
+  "quantityHint": "e.g. 50",
+  "@quantityHint": {
+    "description": "Hint for production capacity quantity"
+  },
+  "unitLabel": "Unit",
+  "@unitLabel": {
+    "description": "Label for production capacity unit dropdown"
+  },
+  "periodLabel": "Period",
+  "@periodLabel": {
+    "description": "Label for production capacity period dropdown"
+  },
+  "unitPieces": "Pieces",
+  "@unitPieces": {
+    "description": "Capacity unit pieces"
+  },
+  "unitKg": "Kg",
+  "@unitKg": {
+    "description": "Capacity unit kg"
+  },
+  "unitLitres": "Litres",
+  "@unitLitres": {
+    "description": "Capacity unit litres"
+  },
+  "unitPacks": "Packs",
+  "@unitPacks": {
+    "description": "Capacity unit packs"
+  },
+  "unitBoxes": "Boxes",
+  "@unitBoxes": {
+    "description": "Capacity unit boxes"
+  },
+  "unitOther": "Other",
+  "@unitOther": {
+    "description": "Capacity unit other"
+  },
+  "periodWeek": "Per Week",
+  "@periodWeek": {
+    "description": "Capacity period per week"
+  },
+  "periodMonth": "Per Month",
+  "@periodMonth": {
+    "description": "Capacity period per month"
+  },
+  "periodYear": "Per Year",
+  "@periodYear": {
+    "description": "Capacity period per year"
+  },
+  "sellingChannelsTitle": "Where do you currently sell?",
+  "@sellingChannelsTitle": {
+    "description": "Title for current selling channels section"
+  },
+  "channelLocalCustomers": "Local customers",
+  "@channelLocalCustomers": {
+    "description": "Selling channel local customers"
+  },
+  "channelLocalShops": "Local shops",
+  "@channelLocalShops": {
+    "description": "Selling channel local shops"
+  },
+  "channelWhatsapp": "WhatsApp",
+  "@channelWhatsapp": {
+    "description": "Selling channel WhatsApp"
+  },
+  "channelSocialMedia": "Instagram / Facebook",
+  "@channelSocialMedia": {
+    "description": "Selling channel social media"
+  },
+  "channelOnlineMarketplaces": "Online marketplaces",
+  "@channelOnlineMarketplaces": {
+    "description": "Selling channel online marketplaces"
+  },
+  "channelExhibitionsFairs": "Exhibitions / Fairs",
+  "@channelExhibitionsFairs": {
+    "description": "Selling channel exhibitions and fairs"
+  },
+  "channelNotSellingYet": "Haven’t started selling yet",
+  "@channelNotSellingYet": {
+    "description": "Selling channel not selling yet"
+  },
+  "skipForNow": "Skip for now",
+  "@skipForNow": {
+    "description": "Action to skip optional onboarding step"
+  },
+  "completeSetup": "Complete Setup",
+  "@completeSetup": {
+    "description": "Action to complete onboarding and enter home"
+  },
+  "capacityAllOrNoneRequired": "Please specify quantity, unit, and period for production capacity, or leave all three empty.",
+  "@capacityAllOrNoneRequired": {
+    "description": "Validation error when production capacity is partially filled"
+  },
+  "capacityPositiveRequired": "Production capacity quantity must be a positive number.",
+  "@capacityPositiveRequired": {
+    "description": "Validation error when capacity quantity is not positive"
+  },
+  "optionalBadge": "Optional",
+  "@optionalBadge": {
+    "description": "Badge indicating an optional step or field"
   }
 }
 

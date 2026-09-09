@@ -1726,7 +1726,7 @@ abstract class AppLocalizations {
   /// **'Describe category'**
   String get customCategoryLabel;
 
-  /// Label for measurement unit selector
+  /// Label for production capacity unit dropdown
   ///
   /// In en, this message translates to:
   /// **'Unit'**
@@ -1738,10 +1738,10 @@ abstract class AppLocalizations {
   /// **'Piece'**
   String get unitPiece;
 
-  /// Unit option: Kilogram
+  /// Capacity unit kg
   ///
   /// In en, this message translates to:
-  /// **'Kilogram (kg)'**
+  /// **'Kg'**
   String get unitKg;
 
   /// Unit option: Gram
@@ -2302,6 +2302,12 @@ abstract class AppLocalizations {
   /// **'Workshop Location'**
   String get workshopLocationLabel;
 
+  /// Section title for business location in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Business Location'**
+  String get businessLocationTitle;
+
   /// Action to reset account password
   ///
   /// In en, this message translates to:
@@ -2535,6 +2541,414 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No account found with this email. Try signing up.'**
   String get noAccountFoundWithEmail;
+
+  /// Title for the Your Business onboarding step
+  ///
+  /// In en, this message translates to:
+  /// **'Your Business'**
+  String get yourBusinessTitle;
+
+  /// Subtitle for the Your Business onboarding step
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us a little about what you make and where your business is based.'**
+  String get yourBusinessSubtitle;
+
+  /// Title for the optional About Your Business onboarding step
+  ///
+  /// In en, this message translates to:
+  /// **'About Your Business'**
+  String get aboutYourBusinessTitle;
+
+  /// Subtitle for the optional About Your Business onboarding step
+  ///
+  /// In en, this message translates to:
+  /// **'Help us understand your business better. You can skip this step.'**
+  String get aboutYourBusinessSubtitle;
+
+  /// Placeholder text for About Your Business step in Pass 3A
+  ///
+  /// In en, this message translates to:
+  /// **'About Your Business details will be available in the upcoming update.'**
+  String get aboutYourBusinessPlaceholderNote;
+
+  /// Label for Business or Brand name field
+  ///
+  /// In en, this message translates to:
+  /// **'Business / Brand Name'**
+  String get businessBrandNameLabel;
+
+  /// Helper text for Business or Brand name field
+  ///
+  /// In en, this message translates to:
+  /// **'No brand name? You can use your own name.'**
+  String get businessBrandNameHelper;
+
+  /// Hint for Business or Brand name field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Ramesh Handlooms or Ramesh Kumar'**
+  String get businessBrandNameHint;
+
+  /// Label for Business category selection
+  ///
+  /// In en, this message translates to:
+  /// **'Business Category *'**
+  String get businessCategoryLabel;
+
+  /// Hint prompting user to select a category
+  ///
+  /// In en, this message translates to:
+  /// **'Select a category'**
+  String get selectCategoryHint;
+
+  /// Category option: Food & Homemade Products
+  ///
+  /// In en, this message translates to:
+  /// **'Food & Homemade Products'**
+  String get categoryFoodHomemade;
+
+  /// Category option: Handicrafts
+  ///
+  /// In en, this message translates to:
+  /// **'Handicrafts'**
+  String get categoryHandicrafts;
+
+  /// Category option: Clothing & Textiles
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing & Textiles'**
+  String get categoryClothingTextiles;
+
+  /// Category option: Jewellery & Accessories
+  ///
+  /// In en, this message translates to:
+  /// **'Jewellery & Accessories'**
+  String get categoryJewelleryAccessories;
+
+  /// Category option: Home & Decor
+  ///
+  /// In en, this message translates to:
+  /// **'Home & Decor'**
+  String get categoryHomeDecor;
+
+  /// Category option: Agriculture-based Products
+  ///
+  /// In en, this message translates to:
+  /// **'Agriculture-based Products'**
+  String get categoryAgricultureProducts;
+
+  /// Category option: Beauty & Personal Care
+  ///
+  /// In en, this message translates to:
+  /// **'Beauty & Personal Care'**
+  String get categoryBeautyPersonalCare;
+
+  /// Category option: Other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get categoryOtherCraft;
+
+  /// Label for optional bio / products description field
+  ///
+  /// In en, this message translates to:
+  /// **'What do you make? (Optional)'**
+  String get whatDoYouMakeLabel;
+
+  /// Helper text with examples for what do you make field
+  ///
+  /// In en, this message translates to:
+  /// **'For example: homemade pickles, phulkari suits, wooden toys...'**
+  String get whatDoYouMakeHelper;
+
+  /// Hint for what do you make field
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what you make and sell'**
+  String get whatDoYouMakeHint;
+
+  /// Label for Area, Village, or City location field
+  ///
+  /// In en, this message translates to:
+  /// **'Area / Village / City *'**
+  String get areaVillageCityLabel;
+
+  /// Hint for Area, Village, or City location field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Rampur Village or Sanganer'**
+  String get areaVillageCityHint;
+
+  /// Validation error when business name is empty or too short
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your business or brand name (at least 2 characters).'**
+  String get businessNameRequired;
+
+  /// Validation error when category is not selected
+  ///
+  /// In en, this message translates to:
+  /// **'Please select your primary product category.'**
+  String get categoryRequired;
+
+  /// Validation error when state is not selected
+  ///
+  /// In en, this message translates to:
+  /// **'Please select your state or union territory.'**
+  String get stateRequired;
+
+  /// Validation error when district is empty or too short
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your district (at least 2 characters).'**
+  String get districtRequired;
+
+  /// Validation error when city is empty or too short
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your area, village, or city (at least 2 characters).'**
+  String get cityRequired;
+
+  /// Validation error when pincode is not 6 valid digits
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid 6-digit Indian PIN code.'**
+  String get pincodeInvalid;
+
+  /// Feedback message when Your Business details are saved
+  ///
+  /// In en, this message translates to:
+  /// **'Business details saved successfully.'**
+  String get yourBusinessSaved;
+
+  /// Title for team or business size section
+  ///
+  /// In en, this message translates to:
+  /// **'Team / Business Size'**
+  String get teamSizeTitle;
+
+  /// Solo artisan option
+  ///
+  /// In en, this message translates to:
+  /// **'Just me'**
+  String get teamSizeSolo;
+
+  /// 2 to 5 people option
+  ///
+  /// In en, this message translates to:
+  /// **'2–5 people'**
+  String get teamSize2_5;
+
+  /// 6 to 10 people option
+  ///
+  /// In en, this message translates to:
+  /// **'6–10 people'**
+  String get teamSize6_10;
+
+  /// 11 to 25 people option
+  ///
+  /// In en, this message translates to:
+  /// **'11–25 people'**
+  String get teamSize11_25;
+
+  /// 25 or more people option
+  ///
+  /// In en, this message translates to:
+  /// **'25+ people'**
+  String get teamSize25Plus;
+
+  /// Title for typical monthly sales range section
+  ///
+  /// In en, this message translates to:
+  /// **'Typical Monthly Sales'**
+  String get monthlySalesTitle;
+
+  /// Monthly sales below 10k
+  ///
+  /// In en, this message translates to:
+  /// **'Less than ₹10,000'**
+  String get monthlySalesBelow10k;
+
+  /// Monthly sales 10k to 50k
+  ///
+  /// In en, this message translates to:
+  /// **'₹10,000–₹50,000'**
+  String get monthlySales10k50k;
+
+  /// Monthly sales 50k to 1 lakh
+  ///
+  /// In en, this message translates to:
+  /// **'₹50,000–₹1 lakh'**
+  String get monthlySales50k1l;
+
+  /// Monthly sales 1 to 5 lakh
+  ///
+  /// In en, this message translates to:
+  /// **'₹1–₹5 lakh'**
+  String get monthlySales1l5l;
+
+  /// Monthly sales above 5 lakh
+  ///
+  /// In en, this message translates to:
+  /// **'Above ₹5 lakh'**
+  String get monthlySalesAbove5l;
+
+  /// Prefer not to disclose sales
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get monthlySalesPreferNotToSay;
+
+  /// Title for production capacity section
+  ///
+  /// In en, this message translates to:
+  /// **'How much can you usually produce?'**
+  String get productionCapacityTitle;
+
+  /// Label for production capacity quantity
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantityLabel;
+
+  /// Hint for production capacity quantity
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 50'**
+  String get quantityHint;
+
+  /// Label for production capacity period dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get periodLabel;
+
+  /// Capacity unit pieces
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces'**
+  String get unitPieces;
+
+  /// Capacity unit litres
+  ///
+  /// In en, this message translates to:
+  /// **'Litres'**
+  String get unitLitres;
+
+  /// Capacity unit packs
+  ///
+  /// In en, this message translates to:
+  /// **'Packs'**
+  String get unitPacks;
+
+  /// Capacity unit boxes
+  ///
+  /// In en, this message translates to:
+  /// **'Boxes'**
+  String get unitBoxes;
+
+  /// Capacity unit other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get unitOther;
+
+  /// Capacity period per week
+  ///
+  /// In en, this message translates to:
+  /// **'Per Week'**
+  String get periodWeek;
+
+  /// Capacity period per month
+  ///
+  /// In en, this message translates to:
+  /// **'Per Month'**
+  String get periodMonth;
+
+  /// Capacity period per year
+  ///
+  /// In en, this message translates to:
+  /// **'Per Year'**
+  String get periodYear;
+
+  /// Title for current selling channels section
+  ///
+  /// In en, this message translates to:
+  /// **'Where do you currently sell?'**
+  String get sellingChannelsTitle;
+
+  /// Selling channel local customers
+  ///
+  /// In en, this message translates to:
+  /// **'Local customers'**
+  String get channelLocalCustomers;
+
+  /// Selling channel local shops
+  ///
+  /// In en, this message translates to:
+  /// **'Local shops'**
+  String get channelLocalShops;
+
+  /// Selling channel WhatsApp
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get channelWhatsapp;
+
+  /// Selling channel social media
+  ///
+  /// In en, this message translates to:
+  /// **'Instagram / Facebook'**
+  String get channelSocialMedia;
+
+  /// Selling channel online marketplaces
+  ///
+  /// In en, this message translates to:
+  /// **'Online marketplaces'**
+  String get channelOnlineMarketplaces;
+
+  /// Selling channel exhibitions and fairs
+  ///
+  /// In en, this message translates to:
+  /// **'Exhibitions / Fairs'**
+  String get channelExhibitionsFairs;
+
+  /// Selling channel not selling yet
+  ///
+  /// In en, this message translates to:
+  /// **'Haven’t started selling yet'**
+  String get channelNotSellingYet;
+
+  /// Action to skip optional onboarding step
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get skipForNow;
+
+  /// Action to complete onboarding and enter home
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Setup'**
+  String get completeSetup;
+
+  /// Validation error when production capacity is partially filled
+  ///
+  /// In en, this message translates to:
+  /// **'Please specify quantity, unit, and period for production capacity, or leave all three empty.'**
+  String get capacityAllOrNoneRequired;
+
+  /// Validation error when capacity quantity is not positive
+  ///
+  /// In en, this message translates to:
+  /// **'Production capacity quantity must be a positive number.'**
+  String get capacityPositiveRequired;
+
+  /// Badge indicating an optional step or field
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optionalBadge;
 }
 
 class _AppLocalizationsDelegate

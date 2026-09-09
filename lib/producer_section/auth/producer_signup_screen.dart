@@ -274,17 +274,25 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
       if (validation.isSuccess) {
         final onboardingStatus = validation.producerProfile?['onboarding_status']?.toString();
         if (onboardingStatus == 'completed') {
-          Navigator.pushReplacementNamed(
+          Navigator.pushNamedAndRemoveUntil(
             context,
             AppRouter.producerHomeRoute,
+            (route) => false,
           );
         } else {
-          // Intended next route: Producer Onboarding (Step 2 in next pass)
-          Navigator.pushReplacementNamed(
+          // Intended next route: Producer Onboarding
+          Navigator.pushNamedAndRemoveUntil(
             context,
             AppRouter.producerOnboardingRoute,
+            (route) => false,
           );
         }
+      } else if (validation.status == ProducerAuthStatus.incompleteSetup) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRouter.producerOnboardingRoute,
+          (route) => false,
+        );
       } else {
         setState(() {
           _isLoading = false;

@@ -19,74 +19,54 @@ class OnboardingProgressHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    final progress = (currentStep + 1) / totalSteps;
 
-    final stepString = l10n != null
-        ? l10n.stepOf(currentStep + 1, totalSteps)
-        : 'Step ${currentStep + 1} of $totalSteps';
-    final percentString = l10n != null
-        ? l10n.percentCompleted((progress * 100).toInt())
-        : '${(progress * 100).toInt()}% Completed';
+    final step1Label = l10n?.yourBusinessTitle ?? 'Your Business';
+    final step2Label = l10n?.aboutYourBusinessTitle ?? 'About Your Business';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top step indicator row
+        // Clean 2-Stage Progress Indicator
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Flexible(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  stepString,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
+            // Stage 1 Indicator
+            Expanded(
+              child: _buildStageIndicator(
+                theme: theme,
+                isActive: currentStep == 0,
+                isCompleted: currentStep > 0,
+                label: step1Label,
+                stepNumber: 1,
               ),
             ),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                percentString,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
-                ),
+            // Connecting Line
+            Container(
+              width: 16,
+              height: 2,
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              color: currentStep > 0
+                  ? theme.colorScheme.primary
+                  : theme.dividerColor,
+            ),
+            // Stage 2 Indicator
+            Expanded(
+              child: _buildStageIndicator(
+                theme: theme,
+                isActive: currentStep == 1,
+                isCompleted: false,
+                label: step2Label,
+                stepNumber: 2,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 10),
-
-        // Linear Progress Bar
-        ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 6,
-            backgroundColor: theme.dividerColor,
-            valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
-          ),
-        ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
 
         // Step Title
         Text(
           title,
           style: TextStyle(
-            fontSize: 22,
+            fontSize: 20,
             fontWeight: FontWeight.w700,
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.3,
@@ -98,8 +78,58 @@ class OnboardingProgressHeader extends StatelessWidget {
         Text(
           subtitle,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 13,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+            height: 1.3,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStageIndicator({
+    required ThemeData theme,
+    required bool isActive,
+    required bool isCompleted,
+    required String label,
+    required int stepNumber,
+  }) {
+    final primaryColor = theme.colorScheme.primary;
+    final onSurfaceColor = theme.colorScheme.onSurface;
+
+    return Row(
+      children: [
+        Container(
+          width: 22,
+          height: 22,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isCompleted || isActive ? primaryColor : theme.dividerColor,
+          ),
+          child: Center(
+            child: isCompleted
+                ? const Icon(Icons.check, size: 13, color: Colors.white)
+                : Text(
+                    '$stepNumber',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: isActive ? Colors.white : onSurfaceColor.withValues(alpha: 0.6),
+                    ),
+                  ),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+              color: isActive ? primaryColor : onSurfaceColor.withValues(alpha: 0.65),
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
       ],

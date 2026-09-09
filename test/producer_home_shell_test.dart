@@ -596,4 +596,86 @@ void main() {
       expect(find.text('Add Product'), findsWidgets);
     });
   });
+
+  group('Producer Navigation & Session Stability Tests (Bug 2 Regression Suite)', () {
+    testWidgets('AppBar does not imply leading back button on phone or tablet', (tester) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
+
+      await tester.pumpWidget(
+        createTestApp(
+          child: const ProducerMainScreen(initialProfile: testProfile),
+          screenSize: const Size(390, 844),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      expect(appBar.automaticallyImplyLeading, isFalse);
+      expect(find.byIcon(Icons.arrow_back), findsNothing);
+    });
+
+    testWidgets('Normal dashboard navigation across all tabs does NOT trigger sign-out', (tester) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
+
+      bool signOutCalled = false;
+
+      await tester.pumpWidget(
+        createTestApp(
+          child: ProducerMainScreen(
+            initialProfile: testProfile,
+            productService: null,
+          ),
+          screenSize: const Size(390, 844),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // 1. Switch to My Products (index 1)
+      await tester.tap(find.text('My Products').first);
+      await tester.pumpAndSettle();
+      expect(signOutCalled, isFalse);
+      expect(find.byType(ProducerProductsTab), findsOneWidget);
+
+      // 2. Switch to Buyer Needs (index 2)
+      await tester.tap(find.text('Buyer Needs').first);
+      await tester.pumpAndSettle();
+      expect(signOutCalled, isFalse);
+      expect(find.byType(BuyerNeedsTab), findsOneWidget);
+
+      // 3. Switch to My Profile (index 3)
+      await tester.tap(find.text('My Profile').first);
+      await tester.pumpAndSettle();
+      expect(signOutCalled, isFalse);
+      expect(find.byType(ProducerProfileTab), findsOneWidget);
+
+      // 4. Switch back to Home (index 0)
+      await tester.tap(find.text('Home').first);
+      await tester.pumpAndSettle();
+      expect(signOutCalled, isFalse);
+      expect(find.byType(ProducerHomeTab), findsOneWidget);
+    });
+
+    testWidgets('PopScope prevents pop from exiting ProducerMainScreen', (tester) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
+
+      await tester.pumpWidget(
+        createTestApp(
+          child: const ProducerMainScreen(initialProfile: testProfile),
+          screenSize: const Size(390, 844),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final popScopeFinder = find.byWidgetPredicate((w) => w is PopScope);
+      expect(popScopeFinder, findsOneWidget);
+      final popScope = tester.widget<PopScope>(popScopeFinder);
+      expect(popScope.canPop, isFalse);
+    });
+  });
 }

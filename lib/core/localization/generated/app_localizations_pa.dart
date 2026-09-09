@@ -877,13 +877,13 @@ class AppLocalizationsPa extends AppLocalizations {
   String get customCategoryLabel => 'ਸ਼੍ਰੇਣੀ ਦੱਸੋ';
 
   @override
-  String get unitLabel => 'ਮਾਤਰਾ ਇਕਾਈ';
+  String get unitLabel => 'ਇਕਾਈ';
 
   @override
   String get unitPiece => 'ਪੀਸ';
 
   @override
-  String get unitKg => 'ਕਿਲੋਗ੍ਰਾਮ (kg)';
+  String get unitKg => 'ਕਿਲੋਗ੍ਰਾਮ (Kg)';
 
   @override
   String get unitGram => 'ਗ੍ਰਾਮ (g)';
@@ -1189,6 +1189,9 @@ class AppLocalizationsPa extends AppLocalizations {
   String get workshopLocationLabel => 'ਵਰਕਸ਼ਾਪ ਦਾ ਟਿਕਾਣਾ';
 
   @override
+  String get businessLocationTitle => 'ਕਾਰੋਬਾਰ ਦਾ ਟਿਕਾਣਾ';
+
+  @override
   String get resetPassword => 'ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਕਰੋ';
 
   @override
@@ -1318,4 +1321,222 @@ class AppLocalizationsPa extends AppLocalizations {
   @override
   String get noAccountFoundWithEmail =>
       'ਇਸ ਈਮੇਲ ਨਾਲ ਕੋਈ ਖਾਤਾ ਨਹੀਂ ਮਿਲਿਆ। ਖਾਤਾ ਬਣਾਉਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String get yourBusinessTitle => 'ਤੁਹਾਡਾ ਕਾਰੋਬਾਰ';
+
+  @override
+  String get yourBusinessSubtitle =>
+      'ਸਾਨੂੰ ਥੋੜ੍ਹਾ ਦੱਸੋ ਕਿ ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਹੋ ਅਤੇ ਤੁਹਾਡਾ ਕਾਰੋਬਾਰ ਕਿੱਥੇ ਸਥਿਤ ਹੈ।';
+
+  @override
+  String get aboutYourBusinessTitle => 'ਤੁਹਾਡੇ ਕਾਰੋਬਾਰ ਬਾਰੇ';
+
+  @override
+  String get aboutYourBusinessSubtitle =>
+      'ਆਪਣੇ ਕਾਰੋਬਾਰ ਨੂੰ ਬਿਹਤਰ ਤਰੀਕੇ ਨਾਲ ਸਮਝਣ ਵਿੱਚ ਸਾਡੀ ਮਦਦ ਕਰੋ। ਤੁਸੀਂ ਇਸ ਪੜਾਅ ਨੂੰ ਛੱਡ ਸਕਦੇ ਹੋ।';
+
+  @override
+  String get aboutYourBusinessPlaceholderNote =>
+      'ਕਾਰੋਬਾਰੀ ਵੇਰਵਿਆਂ ਦਾ ਇਹ ਪੜਾਅ ਅਗਲੇ ਅਪਡੇਟ ਵਿੱਚ ਉਪਲਬਧ ਹੋਵੇਗਾ।';
+
+  @override
+  String get businessBrandNameLabel => 'ਕਾਰੋਬਾਰ / ਬ੍ਰਾਂਡ ਦਾ ਨਾਮ';
+
+  @override
+  String get businessBrandNameHelper =>
+      'ਕੋਈ ਬ੍ਰਾਂਡ ਨਾਮ ਨਹੀਂ ਹੈ? ਤੁਸੀਂ ਆਪਣੇ ਨਾਮ ਦੀ ਵਰਤੋਂ ਕਰ ਸਕਦੇ ਹੋ।';
+
+  @override
+  String get businessBrandNameHint => 'ਜਿਵੇਂ ਰਮੇਸ਼ ਹੈਂਡਲੂਮ ਜਾਂ ਰਮੇਸ਼ ਕੁਮਾਰ';
+
+  @override
+  String get businessCategoryLabel => 'ਕਾਰੋਬਾਰੀ ਸ਼੍ਰੇਣੀ *';
+
+  @override
+  String get selectCategoryHint => 'ਇੱਕ ਸ਼੍ਰੇਣੀ ਚੁਣੋ';
+
+  @override
+  String get categoryFoodHomemade => 'ਭੋਜਨ ਅਤੇ ਘਰੇਲੂ ਉਤਪਾਦ';
+
+  @override
+  String get categoryHandicrafts => 'ਦਸਤਕਾਰੀ (ਹੈਂਡੀਕ੍ਰਾਫਟ)';
+
+  @override
+  String get categoryClothingTextiles => 'ਕੱਪੜੇ ਅਤੇ ਟੈਕਸਟਾਈਲ';
+
+  @override
+  String get categoryJewelleryAccessories => 'ਗਹਿਣੇ ਅਤੇ ਸਹਾਇਕ ਉਪਕਰਣ';
+
+  @override
+  String get categoryHomeDecor => 'ਘਰੇਲੂ ਸਜਾਵਟ';
+
+  @override
+  String get categoryAgricultureProducts => 'ਖੇਤੀਬਾੜੀ ਅਧਾਰਤ ਉਤਪਾਦ';
+
+  @override
+  String get categoryBeautyPersonalCare => 'ਸੁੰਦਰਤਾ ਅਤੇ ਨਿੱਜੀ ਦੇਖਭਾਲ';
+
+  @override
+  String get categoryOtherCraft => 'ਹੋਰ';
+
+  @override
+  String get whatDoYouMakeLabel => 'ਤੁਸੀਂ ਕੀ ਬਣਾਉਂਦੇ ਹੋ? (ਵਿਕਲਪਿਕ)';
+
+  @override
+  String get whatDoYouMakeHelper =>
+      'ਉਦਾਹਰਣ ਲਈ: ਘਰੇਲੂ ਅਚਾਰ, ਫੁਲਕਾਰੀ ਸੂਟ, ਲੱਕੜ ਦੇ ਖਿਡੌਣੇ...';
+
+  @override
+  String get whatDoYouMakeHint =>
+      'ਤੁਸੀਂ ਜੋ ਚੀਜ਼ਾਂ ਬਣਾਉਂਦੇ ਅਤੇ ਵੇਚਦੇ ਹੋ ਉਸਦਾ ਵੇਰਵਾ ਦਿਓ';
+
+  @override
+  String get areaVillageCityLabel => 'ਖੇਤਰ / ਪਿੰਡ / ਸ਼ਹਿਰ *';
+
+  @override
+  String get areaVillageCityHint => 'ਜਿਵੇਂ ਰਾਮਪੁਰ ਪਿੰਡ ਜਾਂ ਸੰਗਾਨੇਰ';
+
+  @override
+  String get businessNameRequired =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਕਾਰੋਬਾਰ ਜਾਂ ਬ੍ਰਾਂਡ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ (ਘੱਟੋ ਘੱਟ 2 ਅੱਖਰ)।';
+
+  @override
+  String get categoryRequired => 'ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਮੁੱਖ ਉਤਪਾਦ ਸ਼੍ਰੇਣੀ ਚੁਣੋ।';
+
+  @override
+  String get stateRequired =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਰਾਜ ਜਾਂ ਕੇਂਦਰ ਸ਼ਾਸਤ ਪ੍ਰਦੇਸ਼ ਚੁਣੋ।';
+
+  @override
+  String get districtRequired =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਜ਼ਿਲ੍ਹਾ ਦਰਜ ਕਰੋ (ਘੱਟੋ ਘੱਟ 2 ਅੱਖਰ)।';
+
+  @override
+  String get cityRequired =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਖੇਤਰ, ਪਿੰਡ ਜਾਂ ਸ਼ਹਿਰ ਦਰਜ ਕਰੋ (ਘੱਟੋ ਘੱਟ 2 ਅੱਖਰ)।';
+
+  @override
+  String get pincodeInvalid =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੈਧ 6-ਅੰਕਾਂ ਵਾਲਾ ਪਿੰਨ ਕੋਡ ਦਰਜ ਕਰੋ।';
+
+  @override
+  String get yourBusinessSaved => 'ਕਾਰੋਬਾਰੀ ਵੇਰਵੇ ਸਫਲਤਾਪੂਰਵਕ ਸੁਰੱਖਿਅਤ ਕੀਤੇ ਗਏ।';
+
+  @override
+  String get teamSizeTitle => 'ਟੀਮ / ਕਾਰੋਬਾਰ ਦਾ ਆਕਾਰ';
+
+  @override
+  String get teamSizeSolo => 'ਸਿਰਫ਼ ਮੈਂ';
+
+  @override
+  String get teamSize2_5 => '2–5 ਲੋਕ';
+
+  @override
+  String get teamSize6_10 => '6–10 ਲੋਕ';
+
+  @override
+  String get teamSize11_25 => '11–25 ਲੋਕ';
+
+  @override
+  String get teamSize25Plus => '25+ ਲੋਕ';
+
+  @override
+  String get monthlySalesTitle => 'ਆਮ ਮਾਸਿਕ ਵਿਕਰੀ';
+
+  @override
+  String get monthlySalesBelow10k => '₹10,000 ਤੋਂ ਘੱਟ';
+
+  @override
+  String get monthlySales10k50k => '₹10,000–₹50,000';
+
+  @override
+  String get monthlySales50k1l => '₹50,000–₹1 ਲੱਖ';
+
+  @override
+  String get monthlySales1l5l => '₹1–₹5 ਲੱਖ';
+
+  @override
+  String get monthlySalesAbove5l => '₹5 ਲੱਖ ਤੋਂ ਵੱਧ';
+
+  @override
+  String get monthlySalesPreferNotToSay => 'ਦੱਸਣਾ ਨਹੀਂ ਚਾਹੁੰਦੇ';
+
+  @override
+  String get productionCapacityTitle =>
+      'ਤੁਸੀਂ ਆਮ ਤੌਰ \'ਤੇ ਕਿੰਨਾ ਉਤਪਾਦਨ ਕਰ ਸਕਦੇ ਹੋ?';
+
+  @override
+  String get quantityLabel => 'ਮਾਤਰਾ';
+
+  @override
+  String get quantityHint => 'ਜਿਵੇਂ 50';
+
+  @override
+  String get periodLabel => 'ਮਿਆਦ';
+
+  @override
+  String get unitPieces => 'ਨਗ (Pieces)';
+
+  @override
+  String get unitLitres => 'ਲਿਟਰ (Litres)';
+
+  @override
+  String get unitPacks => 'ਪੈਕ (Packs)';
+
+  @override
+  String get unitBoxes => 'ਡੱਬੇ (Boxes)';
+
+  @override
+  String get unitOther => 'ਹੋਰ';
+
+  @override
+  String get periodWeek => 'ਪ੍ਰਤੀ ਹਫ਼ਤਾ';
+
+  @override
+  String get periodMonth => 'ਪ੍ਰਤੀ ਮਹੀਨਾ';
+
+  @override
+  String get periodYear => 'ਪ੍ਰਤੀ ਸਾਲ';
+
+  @override
+  String get sellingChannelsTitle => 'ਤੁਸੀਂ ਇਸ ਸਮੇਂ ਕਿੱਥੇ ਵੇਚਦੇ ਹੋ?';
+
+  @override
+  String get channelLocalCustomers => 'ਸਥਾਨਕ ਗਾਹਕ';
+
+  @override
+  String get channelLocalShops => 'ਸਥਾਨਕ ਦੁਕਾਨਾਂ';
+
+  @override
+  String get channelWhatsapp => 'ਵਟਸਐਪ (WhatsApp)';
+
+  @override
+  String get channelSocialMedia => 'ਇੰਸਟਾਗ੍ਰਾਮ / ਫੇਸਬੁੱਕ';
+
+  @override
+  String get channelOnlineMarketplaces => 'ਆਨਲਾਈਨ ਮਾਰਕੀਟਪਲੇਸ';
+
+  @override
+  String get channelExhibitionsFairs => 'ਪ੍ਰਦਰਸ਼ਨੀਆਂ / ਮੇਲੇ';
+
+  @override
+  String get channelNotSellingYet => 'ਅਜੇ ਵੇਚਣਾ ਸ਼ੁਰੂ ਨਹੀਂ ਕੀਤਾ';
+
+  @override
+  String get skipForNow => 'ਹੁਣੇ ਛੱਡੋ';
+
+  @override
+  String get completeSetup => 'ਸੈੱਟਅੱਪ ਪੂਰਾ ਕਰੋ';
+
+  @override
+  String get capacityAllOrNoneRequired =>
+      'ਕਿਰਪਾ ਕਰਕੇ ਉਤਪਾਦਨ ਸਮਰੱਥਾ ਲਈ ਮਾਤਰਾ, ਇਕਾਈ ਅਤੇ ਮਿਆਦ ਦਰਸਾਓ, ਜਾਂ ਤਿੰਨਾਂ ਨੂੰ ਖਾਲੀ ਛੱਡੋ।';
+
+  @override
+  String get capacityPositiveRequired =>
+      'ਉਤਪਾਦਨ ਸਮਰੱਥਾ ਦੀ ਮਾਤਰਾ ਇੱਕ ਧਨਾਤਮਕ ਸੰਖਿਆ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ।';
+
+  @override
+  String get optionalBadge => 'ਵਿਕਲਪਿਕ';
 }

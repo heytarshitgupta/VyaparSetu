@@ -192,7 +192,6 @@ void main() {
       expect(find.text('Patiala'), findsOneWidget);
       expect(find.text('Nabha'), findsOneWidget);
       expect(find.text('147201'), findsOneWidget);
-      expect(find.text('Near Old Fort, Street 4'), findsOneWidget);
 
       // Switch to Hindi
       languageProvider.setAppLanguage(AppLanguage.hindi);
@@ -201,11 +200,9 @@ void main() {
       expect(onboardingProvider.district, 'Patiala');
       expect(onboardingProvider.city, 'Nabha');
       expect(onboardingProvider.pincode, '147201');
-      expect(onboardingProvider.address, 'Near Old Fort, Street 4');
       expect(find.text('Patiala'), findsOneWidget);
       expect(find.text('Nabha'), findsOneWidget);
       expect(find.text('147201'), findsOneWidget);
-      expect(find.text('Near Old Fort, Street 4'), findsOneWidget);
 
       // Switch to Punjabi
       languageProvider.setAppLanguage(AppLanguage.punjabi);
@@ -214,11 +211,9 @@ void main() {
       expect(onboardingProvider.district, 'Patiala');
       expect(onboardingProvider.city, 'Nabha');
       expect(onboardingProvider.pincode, '147201');
-      expect(onboardingProvider.address, 'Near Old Fort, Street 4');
       expect(find.text('Patiala'), findsOneWidget);
       expect(find.text('Nabha'), findsOneWidget);
       expect(find.text('147201'), findsOneWidget);
-      expect(find.text('Near Old Fort, Street 4'), findsOneWidget);
     });
 
     testWidgets('Hindi and Punjabi Unicode free-form address inputs remain exactly unchanged',
@@ -229,13 +224,11 @@ void main() {
 
       onboardingProvider.setFullName('ਸੁਰਜੀਤ ਸਿੰਘ');
       onboardingProvider.setBusinessName('ਕਾਰੀਗਰੀ ਕੇਂਦਰ');
-      onboardingProvider.setCraftCategory('Woodwork');
+      onboardingProvider.setCraftCategory('woodwork');
       onboardingProvider.setStateValue('PB');
       onboardingProvider.setDistrict('ਲੁਧਿਆਣਾ');
       onboardingProvider.setCity('ਖੰਨਾ');
       onboardingProvider.setPincode('141401');
-      onboardingProvider.setAddress('ਮਕਾਨ ਨੰ. ੪੨, ਗੁਰਦੁਆਰਾ ਰੋਡ, ਪਿੰਡ ਸਮਰਾਲਾ');
-      onboardingProvider.goToStep(2);
 
       await tester.pumpWidget(
         _createLocalizedLocationApp(
@@ -249,38 +242,35 @@ void main() {
       // Verify Gurmukhi Unicode fields are rendered without mangling
       expect(find.text('ਲੁਧਿਆਣਾ'), findsOneWidget);
       expect(find.text('ਖੰਨਾ'), findsOneWidget);
-      expect(find.text('ਮਕਾਨ ਨੰ. ੪੨, ਗੁਰਦੁਆਰਾ ਰੋਡ, ਪਿੰਡ ਸਮਰਾਲਾ'), findsOneWidget);
 
-      // Switch language to Hindi -> Gurmukhi address must remain completely intact
+      // Switch language to Hindi -> Gurmukhi text must remain completely intact
       languageProvider.setAppLanguage(AppLanguage.hindi);
       await tester.pumpAndSettle();
 
       expect(onboardingProvider.district, 'ਲੁਧਿਆਣਾ');
       expect(onboardingProvider.city, 'ਖੰਨਾ');
-      expect(onboardingProvider.address, 'ਮਕਾਨ ਨੰ. ੪੨, ਗੁਰਦੁਆਰਾ ਰੋਡ, ਪਿੰਡ ਸਮਰਾਲਾ');
       expect(find.text('ਲੁਧਿਆਣਾ'), findsOneWidget);
       expect(find.text('ਖੰਨਾ'), findsOneWidget);
-      expect(find.text('ਮਕਾਨ ਨੰ. ੪੨, ਗੁਰਦੁਆਰਾ ਰੋਡ, ਪਿੰਡ ਸਮਰਾਲਾ'), findsOneWidget);
 
-      // Enter Hindi Devanagari text into city and address
+      // Enter Hindi Devanagari text into city and district
       final cityField = find.byKey(const Key('producer_onboarding_city_field'));
-      final addressField = find.byKey(const Key('producer_onboarding_address_field'));
+      final districtField = find.byKey(const Key('producer_onboarding_district_field'));
 
       await tester.enterText(cityField, 'सांगानेर');
-      await tester.enterText(addressField, 'दुकान संख्या १२, मुख्य बाज़ार, जयपुर रोड');
+      await tester.enterText(districtField, 'जयपुर');
       await tester.pumpAndSettle();
 
       expect(onboardingProvider.city, 'सांगानेर');
-      expect(onboardingProvider.address, 'दुकान संख्या १२, मुख्य बाज़ार, जयपुर रोड');
+      expect(onboardingProvider.district, 'जयपुर');
 
       // Switch language to English -> Devanagari inputs remain preserved exactly
       languageProvider.setAppLanguage(AppLanguage.english);
       await tester.pumpAndSettle();
 
       expect(onboardingProvider.city, 'सांगानेर');
-      expect(onboardingProvider.address, 'दुकान संख्या १२, मुख्य बाज़ार, जयपुर रोड');
+      expect(onboardingProvider.district, 'जयपुर');
       expect(find.text('सांगानेर'), findsOneWidget);
-      expect(find.text('दुकान संख्या १२, मुख्य बाज़ार, जयपुर रोड'), findsOneWidget);
+      expect(find.text('जयपुर'), findsOneWidget);
     });
 
     testWidgets('Theme switching does not affect location values or state selection',
