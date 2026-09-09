@@ -1,0 +1,31 @@
+request_id,target_product_id,buyer_type,quantity_required,target_budget_per_unit_inr,status
+REQ-1001,PROD000010,Hospitality (5-Star Hotel),200,110,Open
+REQ-1002,PROD000039,Corporate Gifting,50,900,Open
+REQ-1003,PROD000021,Furniture Exporter,150,450,Open
+REQ-1004,PROD000011,Organic Grocery Chain,300,280,Open
+REQ-1005,PROD000040,Ethnic Retail Boutique,100,320,Open
+REQ-1006,PROD000005,Agricultural Machinery Dealer,500,420,Open
+REQ-1007,PROD000018,Dairy Specialty Store,120,950,Open
+REQ-1008,PROD000042,Winter Apparel Wholesaler,80,750,Open
+REQ-1009,PROD000023,Home Decor Outlet,60,850,Open
+REQ-1010,PROD000007,Traditional Kitchenware Exporter,150,800,Open
+REQ-1011,PROD000012,Supermarket Chain,400,120,Open
+REQ-1012,PROD000013,Export Agency,1000,100,Open
+REQ-1013,PROD000014,Beverage Distributor,250,110,Open
+REQ-1014,PROD000015,Snack Wholesaler,500,45,Open
+REQ-1015,PROD000016,Local Bakery,300,55,Open
+REQ-1016,PROD000017,Ayurvedic Brand,150,200,Open
+REQ-1017,PROD000019,Health Food Store,200,250,Open
+REQ-1018,PROD000041,Hospitality (Budget Hotel),300,450,Open
+REQ-1019,PROD000043,Online Ethnic Wear Brand,150,500,Open
+REQ-1020,PROD000044,Luxury Resort Boutique,40,1200,Open
+REQ-1021,PROD000045,Event Management Co.,200,400,Open
+REQ-1022,PROD000046,Regional Retailer,250,700,Open
+REQ-1023,PROD000047,Fast Fashion Outlet,400,600,Open
+REQ-1024,PROD000048,Textile Distributor,500,250,Open
+REQ-1025,PROD000022,Handicraft Exporter,100,800,Open
+REQ-1026,PROD000024,Nursery Chain,300,200,Open
+REQ-1027,PROD000025,Interior Design Firm,50,550,Open
+REQ-1028,PROD000006,Hardware Store Chain,600,180,Open
+REQ-1029,PROD000008,Bicycle Manufacturer,1000,120,Open
+REQ-1030,PROD000009,Garment Factory,800,200,Open

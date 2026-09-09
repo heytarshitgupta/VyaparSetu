@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_top_bar_controls.dart';
 import '../../../core/localization/generated/app_localizations.dart';
-import '../../../producer_section/verification/producer_verification_service.dart';
 import 'buyer_profile_provider.dart';
 
 class BuyerIdentityVerificationScreen extends StatefulWidget {

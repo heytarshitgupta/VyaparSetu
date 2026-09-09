@@ -1,0 +1,31 @@
+product_id,product_name,wpi_category,base_material_cost,material_qty,labor_hours_per_unit,hourly_wage_inr,packaging_cost_inr,target_margin_pct
+PROD000010,Desi Jaggery (Gur),Manufacture Of Food Products,40,1.5,1.0,40,15,0.25
+PROD000011,Organic Multi-Flora Honey,Manufacture Of Food Products,120,1.0,0.5,40,25,0.35
+PROD000012,Traditional Punjabi Achar (Mango/Mixed),Manufacture Of Food Products,60,1.2,1.5,45,20,0.30
+PROD000013,Basmati Rice Premium Pack,Food Articles,75,1.0,0.2,40,30,0.18
+PROD000014,Kinnow Orange Juice Concentrate,Manufacture Of Food Products,50,2.0,2.0,50,35,0.25
+PROD000015,Spiced Murmura / Puffed Rice Snack,Manufacture Of Food Products,30,1.0,0.8,35,10,0.20
+PROD000016,Whole Wheat Atta Stone Ground,Food Articles,35,1.0,0.3,40,20,0.15
+PROD000017,Cold-Pressed Mustard Oil,Manufacture Of Food Products,110,1.0,0.5,45,40,0.22
+PROD000018,Desi Ghee (A2 Milk),Manufacture Of Food Products,450,1.0,1.0,50,50,0.20
+PROD000019,Roasted Makana (Fox Nuts),Food Articles,200,1.0,0.6,40,25,0.30
+PROD000039,Traditional Phulkari Dupatta,Manufacture Of Wearing Apparel,100,2.0,5.0,50,30,0.35
+PROD000040,Handwoven Cotton Khadi Kurta,Manufacture Of Wearing Apparel,150,1.5,3.5,55,35,0.30
+PROD000041,Powerloom Cotton Bedsheet Set,Manufacture Of Textiles,250,2.5,1.5,60,45,0.25
+PROD000042,Woolen Dhariwal Shawl,Manufacture Of Wearing Apparel,300,1.2,4.0,65,50,0.40
+PROD000043,Embroidered Punjabi Jutti (Leather/Fabric),Manufacture Of Leather And Related Products,180,1.0,3.0,60,25,0.35
+PROD000044,Pashmina-blend Stole,Manufacture Of Wearing Apparel,400,0.8,6.0,70,60,0.45
+PROD000045,Handloom Table Runner & Mat Set,Manufacture Of Textiles,120,1.2,2.0,45,20,0.30
+PROD000046,Stitched Cotton Salwar Kameez,Manufacture Of Wearing Apparel,220,2.0,3.0,50,30,0.28
+PROD000047,Readymade Denim Jeans (Ludhiana Cluster),Manufacture Of Wearing Apparel,280,1.5,1.0,60,25,0.22
+PROD000048,Traditional Lungi / Tehmat,Manufacture Of Textiles,90,1.0,0.8,40,15,0.20
+                         PROD000021,Wooden Inlay Serving Tray,"Manufacture Of Wood And Products Of Wood And Cork, Except Furniture",150,1.2,4.0,60,40,0.30
+PROD000022,Hand-carved Sheesham Wood Spice Box,"Manufacture Of Wood And Products Of Wood And Cork, Except Furniture",220,1.5,5.0,65,45,0.35
+PROD000023,Brass-Inlay Wooden Wall Clock,"Manufacture Of Wood And Products Of Wood And Cork, Except Furniture",350,2.0,6.0,70,60,0.35
+PROD000024,Terracotta Garden Planter,Manufacture Of Non-Metallic Mineral Products,80,3.0,2.5,45,30,0.25
+PROD000025,Handmade Jute & Cotton Durries,Manufacture Of Textiles,180,2.5,4.0,50,40,0.30
+PROD000005,Forged Tractor Part (Linkage Pin),Manufacture Of Fabricated Metal Products,200,5.0,2.0,80,0,0.15
+PROD000006,Hand Tools (Agricultural Sickle/Spade),Manufacture Of Fabricated Metal Products,130,2.5,1.5,75,10,0.18
+PROD000007,Brass Utensils (Traditional Bartan),Manufacture Of Basic Metals,400,2.0,3.0,85,30,0.20
+PROD000008,Cycle Chain Components (Ludhiana Hub),"Manufacture Of Motor Vehicles, Trailers And Semi-Trailers",90,1.5,0.5,70,0,0.12
+PROD000009,Sewing Machine Shuttle & Parts,Manufacture Of Machinery And Equipment,110,1.0,1.0,75,5,0.15

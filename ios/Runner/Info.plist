@@ -70,5 +70,9 @@
 	<string>VyaparSetu needs camera access so you can take and upload photos of your products.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>VyaparSetu needs photo library access so you can select and upload photos of your products.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>VyaparSetu needs microphone access to create product catalogs from your voice.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>VyaparSetu uses speech recognition to create product catalogs from your voice.</string>
 </dict>
 </plist>

@@ -142,7 +142,27 @@ This log records permanent architectural, design, and structural decisions made 
 
 
 
+When an artisan looks at their product card in your Flutter app, your Python engine runs a 3-step calculation in milliseconds:
 
+Calculates the Break-Even Floor (Survival):
+It takes the artisan's base costs (labor, packaging) and multiplies the raw materials by the Government of India’s official Wholesale Price Index (WPI). This ensures that even during periods of high inflation, the artisan never sells at a loss.
+
+Predicts the Market Ceiling (Maximum Profit):
+It feeds the product description into a Machine Learning Model (Random Forest + NLP). The AI looks for premium keywords (like "organic," "handwoven," or "pure") and compares them to market benchmarks to predict the maximum price an online consumer is willing to pay.
+
+Outputs the "Recommended Price" (The Sweet Spot):
+The engine safely places the suggested price right between the break-even floor and the market ceiling.
+
+Bonus: It also checks your buyer_request.csv database. If a 5-star hotel wants to buy 200 units of that product, the AI automatically shifts the recommendation to a B2B Wholesale price and gives the artisan text advice to aggregate their inventory!
+
+⚙️ The Technical Architecture (The Flow)
+The Datasets (The Brains): You are using 4 real-world data sources: WPI Excel data (macro-economics), Artisan profiles (costs), Retail benchmarks (ML training), and B2B requests (demand signals).
+
+The Python Engine (The Math): The pure Python script (pricing_engine.py) ingests the data, runs the NLP text analysis, and executes the Random Forest machine learning prediction.
+
+The API Bridge (The Messenger): The lightweight server (which Copilot is building for you) exposes your Python math to the web.
+
+The Flutter UI (The Display): Your app sends the product info to the API, waits for the math to finish, and injects the dynamic Suggested Price, Break-Even Badge, and AI Guidance Text straight into your beautiful UI cards.
 
 
 
