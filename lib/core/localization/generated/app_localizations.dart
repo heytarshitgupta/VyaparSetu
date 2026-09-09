@@ -256,11 +256,83 @@ abstract class AppLocalizations {
   /// **'Create Account'**
   String get createAccountTitle;
 
+  /// Header for Step 1 producer signup
+  ///
+  /// In en, this message translates to:
+  /// **'Create Your Account'**
+  String get createYourAccountTitle;
+
   /// Subtitle on create account screen
   ///
   /// In en, this message translates to:
   /// **'Start your journey as an artisan producer and reach direct commercial buyers.'**
   String get createAccountSubtitle;
+
+  /// Supporting copy for Step 1 producer signup
+  ///
+  /// In en, this message translates to:
+  /// **'Start setting up your business on VyaparSetu.'**
+  String get createAccountSupportingCopy;
+
+  /// Header for email OTP verification screen
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Email'**
+  String get verifyYourEmailTitle;
+
+  /// Subtitle on email OTP screen showing masked email
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a 6-digit code to {email}'**
+  String verifyYourEmailSubtitle(String email);
+
+  /// Label above 6-digit OTP input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 6-digit verification code'**
+  String get enterOtpPrompt;
+
+  /// Primary action button to verify OTP
+  ///
+  /// In en, this message translates to:
+  /// **'Verify & Continue'**
+  String get verifyAndContinue;
+
+  /// Button to resend email verification code
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// Cooldown indicator on resend button
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code in {seconds}s'**
+  String resendCodeIn(int seconds);
+
+  /// Button to go back and change email address
+  ///
+  /// In en, this message translates to:
+  /// **'Change Email'**
+  String get changeEmail;
+
+  /// Error shown when OTP is fewer than 6 digits
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid 6-digit code'**
+  String get otpInvalidLength;
+
+  /// Error shown when OTP verification fails
+  ///
+  /// In en, this message translates to:
+  /// **'That code is incorrect or has expired.'**
+  String get otpIncorrectOrExpired;
+
+  /// Success message when OTP is resent
+  ///
+  /// In en, this message translates to:
+  /// **'A new 6-digit code has been sent to your email.'**
+  String get otpSentSuccess;
 
   /// Full name field label
   ///
@@ -2355,6 +2427,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Producer'**
   String get producerRoleBadge;
+
+  /// Button to sign in using email OTP
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with OTP'**
+  String get signInWithEmailOtp;
+
+  /// Divider text between login methods
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get orDivider;
+
+  /// Title for OTP sign-in verification stage
+  ///
+  /// In en, this message translates to:
+  /// **'Check Your Email'**
+  String get checkYourEmailTitle;
+
+  /// Subtitle for OTP sign-in showing masked email
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a verification code to {email}'**
+  String checkYourEmailSubtitle(String email);
+
+  /// Primary action button for OTP sign-in
+  ///
+  /// In en, this message translates to:
+  /// **'Verify & Sign In'**
+  String get verifyAndSignIn;
+
+  /// Title for password recovery email entry
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Your Password'**
+  String get forgotPasswordTitle;
+
+  /// Subtitle for password recovery email entry
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address to receive a recovery code.'**
+  String get forgotPasswordSubtitle;
+
+  /// Button to request password recovery code
+  ///
+  /// In en, this message translates to:
+  /// **'Send Recovery Code'**
+  String get sendRecoveryCode;
+
+  /// Account enumeration safe notice after requesting recovery
+  ///
+  /// In en, this message translates to:
+  /// **'If an account exists for this email, we\'ve sent a verification code.'**
+  String get recoveryEmailSentNeutralNotice;
+
+  /// Subtitle for recovery OTP verification showing masked email
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the verification code sent to {email}'**
+  String enterRecoveryCodeSubtitle(String email);
+
+  /// Button to verify recovery OTP code
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Code'**
+  String get verifyCode;
+
+  /// Title for set new password stage
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Password'**
+  String get createNewPasswordTitle;
+
+  /// Subtitle for set new password stage
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new strong password for your account.'**
+  String get createNewPasswordSubtitle;
+
+  /// Label for new password input
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// Hint for new password input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter new password (min 6 characters)'**
+  String get newPasswordHint;
+
+  /// Primary action button to update password
+  ///
+  /// In en, this message translates to:
+  /// **'Update Password'**
+  String get updatePassword;
+
+  /// Success message after password is updated
+  ///
+  /// In en, this message translates to:
+  /// **'Your password has been updated.'**
+  String get passwordUpdatedSuccess;
+
+  /// Error message when trying to sign in with OTP for an unregistered email
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this email. Try signing up.'**
+  String get noAccountFoundWithEmail;
 }
 
 class _AppLocalizationsDelegate

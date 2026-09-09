@@ -9,10 +9,22 @@ class AuthService {
   SupabaseClient get _client => SupabaseService.client;
 
   /// Returns the currently authenticated Supabase user, or null if unauthenticated.
-  User? get currentUser => _client.auth.currentUser;
+  User? get currentUser {
+    try {
+      return _client.auth.currentUser;
+    } catch (_) {
+      return null;
+    }
+  }
 
   /// Returns the current active session, or null.
-  Session? get currentSession => _client.auth.currentSession;
+  Session? get currentSession {
+    try {
+      return _client.auth.currentSession;
+    } catch (_) {
+      return null;
+    }
+  }
 
   /// Stream of Supabase Auth state changes (signed in, signed out, token refreshed).
   Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
@@ -120,4 +132,90 @@ class AuthService {
       type: OtpType.sms,
     );
   }
+
+  /// Verifies email OTP (e.g. for signup confirmation).
+  Future<AuthResponse> verifyEmailOtp({
+    required String email,
+    required String otp,
+    OtpType type = OtpType.signup,
+  }) async {
+    return await _client.auth.verifyOTP(
+      email: email.trim(),
+      token: otp.trim(),
+      type: type,
+    );
+  }
+
+  /// Sends a 6-digit email OTP for sign-in.
+  /// CRITICAL: shouldCreateUser is set to false to ensure new accounts are not created silently.
+  Future<void> signInWithEmailOtp({
+    required String email,
+  }) async {
+    await _client.auth.signInWithOtp(
+      email: email.trim(),
+      shouldCreateUser: false,
+    );
+  }
+
+  /// Verifies the 6-digit email OTP for sign-in (type: OtpType.email).
+  Future<AuthResponse> verifyEmailLoginOtp({
+    required String email,
+    required String otp,
+  }) async {
+    return await _client.auth.verifyOTP(
+      email: email.trim(),
+      token: otp.trim(),
+      type: OtpType.email,
+    );
+  }
+
+  /// Sends a password recovery 6-digit OTP code to the specified email.
+  Future<void> sendPasswordRecoveryOtp({
+    required String email,
+  }) async {
+    await _client.auth.resetPasswordForEmail(email.trim());
+  }
+
+  /// Verifies the password recovery 6-digit OTP (type: OtpType.recovery).
+  Future<AuthResponse> verifyRecoveryOtp({
+    required String email,
+    required String otp,
+  }) async {
+    return await _client.auth.verifyOTP(
+      email: email.trim(),
+      token: otp.trim(),
+      type: OtpType.recovery,
+    );
+  }
+
+  /// Updates the authenticated user's password.
+  Future<UserResponse> updatePassword({
+    required String newPassword,
+  }) async {
+    return await _client.auth.updateUser(
+      UserAttributes(password: newPassword),
+    );
+  }
+
+  /// Resends an OTP code to the specified email address.
+  Future<ResendResponse> resendEmailOtp({
+    required String email,
+    OtpType type = OtpType.signup,
+  }) async {
+    return await _client.auth.resend(
+      email: email.trim(),
+      type: type,
+    );
+  }
+}
+
+/// Shared authentication constants across Producer flows.
+class AuthConstants {
+  AuthConstants._();
+
+  /// Standard cooldown duration in seconds before an OTP resend can be requested.
+  static const int emailOtpCooldownSeconds = 60;
+
+  /// Expected length of numeric OTP codes.
+  static const int otpLength = 6;
 }

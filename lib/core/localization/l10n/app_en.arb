@@ -104,9 +104,67 @@
   "@createAccountTitle": {
     "description": "Header for create account screen"
   },
+  "createYourAccountTitle": "Create Your Account",
+  "@createYourAccountTitle": {
+    "description": "Header for Step 1 producer signup"
+  },
   "createAccountSubtitle": "Start your journey as an artisan producer and reach direct commercial buyers.",
   "@createAccountSubtitle": {
     "description": "Subtitle on create account screen"
+  },
+  "createAccountSupportingCopy": "Start setting up your business on VyaparSetu.",
+  "@createAccountSupportingCopy": {
+    "description": "Supporting copy for Step 1 producer signup"
+  },
+  "verifyYourEmailTitle": "Verify Your Email",
+  "@verifyYourEmailTitle": {
+    "description": "Header for email OTP verification screen"
+  },
+  "verifyYourEmailSubtitle": "We sent a 6-digit code to {email}",
+  "@verifyYourEmailSubtitle": {
+    "description": "Subtitle on email OTP screen showing masked email",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "enterOtpPrompt": "Enter 6-digit verification code",
+  "@enterOtpPrompt": {
+    "description": "Label above 6-digit OTP input"
+  },
+  "verifyAndContinue": "Verify & Continue",
+  "@verifyAndContinue": {
+    "description": "Primary action button to verify OTP"
+  },
+  "resendCode": "Resend Code",
+  "@resendCode": {
+    "description": "Button to resend email verification code"
+  },
+  "resendCodeIn": "Resend Code in {seconds}s",
+  "@resendCodeIn": {
+    "description": "Cooldown indicator on resend button",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "changeEmail": "Change Email",
+  "@changeEmail": {
+    "description": "Button to go back and change email address"
+  },
+  "otpInvalidLength": "Please enter a valid 6-digit code",
+  "@otpInvalidLength": {
+    "description": "Error shown when OTP is fewer than 6 digits"
+  },
+  "otpIncorrectOrExpired": "That code is incorrect or has expired.",
+  "@otpIncorrectOrExpired": {
+    "description": "Error shown when OTP verification fails"
+  },
+  "otpSentSuccess": "A new 6-digit code has been sent to your email.",
+  "@otpSentSuccess": {
+    "description": "Success message when OTP is resent"
   },
   "fullName": "Full Name",
   "@fullName": {
@@ -1530,6 +1588,88 @@
   "producerRoleBadge": "Producer",
   "@producerRoleBadge": {
     "description": "Role badge for producer"
+  },
+  "signInWithEmailOtp": "Sign in with OTP",
+  "@signInWithEmailOtp": {
+    "description": "Button to sign in using email OTP"
+  },
+  "orDivider": "OR",
+  "@orDivider": {
+    "description": "Divider text between login methods"
+  },
+  "checkYourEmailTitle": "Check Your Email",
+  "@checkYourEmailTitle": {
+    "description": "Title for OTP sign-in verification stage"
+  },
+  "checkYourEmailSubtitle": "We sent a verification code to {email}",
+  "@checkYourEmailSubtitle": {
+    "description": "Subtitle for OTP sign-in showing masked email",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyAndSignIn": "Verify & Sign In",
+  "@verifyAndSignIn": {
+    "description": "Primary action button for OTP sign-in"
+  },
+  "forgotPasswordTitle": "Reset Your Password",
+  "@forgotPasswordTitle": {
+    "description": "Title for password recovery email entry"
+  },
+  "forgotPasswordSubtitle": "Enter your email address to receive a recovery code.",
+  "@forgotPasswordSubtitle": {
+    "description": "Subtitle for password recovery email entry"
+  },
+  "sendRecoveryCode": "Send Recovery Code",
+  "@sendRecoveryCode": {
+    "description": "Button to request password recovery code"
+  },
+  "recoveryEmailSentNeutralNotice": "If an account exists for this email, we've sent a verification code.",
+  "@recoveryEmailSentNeutralNotice": {
+    "description": "Account enumeration safe notice after requesting recovery"
+  },
+  "enterRecoveryCodeSubtitle": "Enter the verification code sent to {email}",
+  "@enterRecoveryCodeSubtitle": {
+    "description": "Subtitle for recovery OTP verification showing masked email",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyCode": "Verify Code",
+  "@verifyCode": {
+    "description": "Button to verify recovery OTP code"
+  },
+  "createNewPasswordTitle": "Create New Password",
+  "@createNewPasswordTitle": {
+    "description": "Title for set new password stage"
+  },
+  "createNewPasswordSubtitle": "Create a new strong password for your account.",
+  "@createNewPasswordSubtitle": {
+    "description": "Subtitle for set new password stage"
+  },
+  "newPassword": "New Password",
+  "@newPassword": {
+    "description": "Label for new password input"
+  },
+  "newPasswordHint": "Enter new password (min 6 characters)",
+  "@newPasswordHint": {
+    "description": "Hint for new password input"
+  },
+  "updatePassword": "Update Password",
+  "@updatePassword": {
+    "description": "Primary action button to update password"
+  },
+  "passwordUpdatedSuccess": "Your password has been updated.",
+  "@passwordUpdatedSuccess": {
+    "description": "Success message after password is updated"
+  },
+  "noAccountFoundWithEmail": "No account found with this email. Try signing up.",
+  "@noAccountFoundWithEmail": {
+    "description": "Error message when trying to sign in with OTP for an unregistered email"
   }
 }
 

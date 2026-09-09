@@ -92,8 +92,50 @@ class AppLocalizationsHi extends AppLocalizations {
   String get createAccountTitle => 'खाता बनाएं';
 
   @override
+  String get createYourAccountTitle => 'अपना खाता बनाएं';
+
+  @override
   String get createAccountSubtitle =>
       'एक कारीगर उत्पादक के रूप में अपनी यात्रा शुरू करें और सीधे खरीदारों से जुड़ें।';
+
+  @override
+  String get createAccountSupportingCopy =>
+      'व्यापार सेतु पर अपना व्यवसाय शुरू करें।';
+
+  @override
+  String get verifyYourEmailTitle => 'अपना ईमेल सत्यापित करें';
+
+  @override
+  String verifyYourEmailSubtitle(String email) {
+    return 'हमने $email पर 6 अंकों का कोड भेजा है';
+  }
+
+  @override
+  String get enterOtpPrompt => '6 अंकों का सत्यापन कोड दर्ज करें';
+
+  @override
+  String get verifyAndContinue => 'सत्यापित करें और आगे बढ़ें';
+
+  @override
+  String get resendCode => 'कोड दोबारा भेजें';
+
+  @override
+  String resendCodeIn(int seconds) {
+    return '$seconds सेकंड में कोड दोबारा भेजें';
+  }
+
+  @override
+  String get changeEmail => 'ईमेल बदलें';
+
+  @override
+  String get otpInvalidLength => 'कृपया 6 अंकों का सही कोड दर्ज करें';
+
+  @override
+  String get otpIncorrectOrExpired => 'वह कोड गलत है या समाप्त हो गया है।';
+
+  @override
+  String get otpSentSuccess =>
+      'आपकी ईमेल पर एक नया 6 अंकों का कोड भेज दिया गया है।';
 
   @override
   String get fullName => 'पूरा नाम';
@@ -1213,4 +1255,66 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get producerRoleBadge => 'कारीगर / उत्पादक';
+
+  @override
+  String get signInWithEmailOtp => 'ओटीपी से लॉग इन करें';
+
+  @override
+  String get orDivider => 'या';
+
+  @override
+  String get checkYourEmailTitle => 'अपना ईमेल देखें';
+
+  @override
+  String checkYourEmailSubtitle(String email) {
+    return 'हमने $email पर एक सत्यापन कोड भेजा है';
+  }
+
+  @override
+  String get verifyAndSignIn => 'सत्यापित करें और लॉग इन करें';
+
+  @override
+  String get forgotPasswordTitle => 'अपना पासवर्ड रीसेट करें';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'रिकवरी कोड प्राप्त करने के लिए अपना ईमेल पता दर्ज करें।';
+
+  @override
+  String get sendRecoveryCode => 'रिकवरी कोड भेजें';
+
+  @override
+  String get recoveryEmailSentNeutralNotice =>
+      'यदि इस ईमेल के लिए कोई खाता मौजूद है, तो हमने एक सत्यापन कोड भेजा है।';
+
+  @override
+  String enterRecoveryCodeSubtitle(String email) {
+    return '$email पर भेजा गया सत्यापन कोड दर्ज करें';
+  }
+
+  @override
+  String get verifyCode => 'कोड सत्यापित करें';
+
+  @override
+  String get createNewPasswordTitle => 'नया पासवर्ड बनाएं';
+
+  @override
+  String get createNewPasswordSubtitle =>
+      'अपने खाते के लिए एक नया मजबूत पासवर्ड बनाएं।';
+
+  @override
+  String get newPassword => 'नया पासवर्ड';
+
+  @override
+  String get newPasswordHint => 'नया पासवर्ड दर्ज करें (न्यूनतम 6 वर्ण)';
+
+  @override
+  String get updatePassword => 'पासवर्ड अपडेट करें';
+
+  @override
+  String get passwordUpdatedSuccess => 'आपका पासवर्ड अपडेट कर दिया गया है।';
+
+  @override
+  String get noAccountFoundWithEmail =>
+      'इस ईमेल से कोई खाता नहीं मिला। खाता बनाने का प्रयास करें।';
 }

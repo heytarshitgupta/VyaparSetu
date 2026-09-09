@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthExceptionHandler {
@@ -7,7 +8,9 @@ class AuthExceptionHandler {
   /// Converts Supabase and network errors into clean, user-friendly messages.
   /// Never leaks database queries, stack traces, or internal server errors.
   static String getErrorMessage(dynamic error) {
-    print('### AUTH ERROR: $error'); // DEBUGGING
+    if (kDebugMode) {
+      debugPrint('### AUTH ERROR: $error');
+    }
     if (error is AuthException) {
       final message = error.message.toLowerCase();
       final statusCode = error.statusCode;
@@ -21,7 +24,30 @@ class AuthExceptionHandler {
       if (message.contains('user already registered') ||
           message.contains('already exists') ||
           message.contains('user_already_exists')) {
-        return 'An account with this email already exists. Please log in.';
+        return 'This email is already registered. Try signing in.';
+      }
+
+      if (message.contains('signups not allowed for otp') ||
+          message.contains('user not found') ||
+          message.contains('user_not_found')) {
+        return 'No account found with this email. Try signing up.';
+      }
+
+      if (message.contains('same_password') ||
+          message.contains('should be different from the old password')) {
+        return 'New password must be different from your old password.';
+      }
+
+      if (message.contains('token has expired') ||
+          message.contains('otp expired') ||
+          message.contains('invalid otp') ||
+          message.contains('token is invalid') ||
+          message.contains('bad_token') ||
+          message.contains('invalid token') ||
+          message.contains('token_expired') ||
+          message.contains('token not found') ||
+          message.contains('otp_expired')) {
+        return 'That code is incorrect or has expired.';
       }
 
       if (message.contains('email not confirmed') ||
@@ -29,8 +55,12 @@ class AuthExceptionHandler {
         return 'Please verify your email address before signing in.';
       }
 
+      if (message.contains('over_email_send_rate_limit') ||
+          (message.contains('rate limit') && message.contains('resend'))) {
+        return 'We couldn\'t send a new code. Please wait a moment and try again.';
+      }
+
       if (message.contains('rate limit') ||
-          message.contains('over_email_send_rate_limit') ||
           statusCode == '429') {
         return 'Too many attempts. Please wait a few moments and try again.';
       }

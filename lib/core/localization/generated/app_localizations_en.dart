@@ -92,8 +92,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccountTitle => 'Create Account';
 
   @override
+  String get createYourAccountTitle => 'Create Your Account';
+
+  @override
   String get createAccountSubtitle =>
       'Start your journey as an artisan producer and reach direct commercial buyers.';
+
+  @override
+  String get createAccountSupportingCopy =>
+      'Start setting up your business on VyaparSetu.';
+
+  @override
+  String get verifyYourEmailTitle => 'Verify Your Email';
+
+  @override
+  String verifyYourEmailSubtitle(String email) {
+    return 'We sent a 6-digit code to $email';
+  }
+
+  @override
+  String get enterOtpPrompt => 'Enter 6-digit verification code';
+
+  @override
+  String get verifyAndContinue => 'Verify & Continue';
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String resendCodeIn(int seconds) {
+    return 'Resend Code in ${seconds}s';
+  }
+
+  @override
+  String get changeEmail => 'Change Email';
+
+  @override
+  String get otpInvalidLength => 'Please enter a valid 6-digit code';
+
+  @override
+  String get otpIncorrectOrExpired => 'That code is incorrect or has expired.';
+
+  @override
+  String get otpSentSuccess =>
+      'A new 6-digit code has been sent to your email.';
 
   @override
   String get fullName => 'Full Name';
@@ -1214,4 +1256,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get producerRoleBadge => 'Producer';
+
+  @override
+  String get signInWithEmailOtp => 'Sign in with OTP';
+
+  @override
+  String get orDivider => 'OR';
+
+  @override
+  String get checkYourEmailTitle => 'Check Your Email';
+
+  @override
+  String checkYourEmailSubtitle(String email) {
+    return 'We sent a verification code to $email';
+  }
+
+  @override
+  String get verifyAndSignIn => 'Verify & Sign In';
+
+  @override
+  String get forgotPasswordTitle => 'Reset Your Password';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'Enter your email address to receive a recovery code.';
+
+  @override
+  String get sendRecoveryCode => 'Send Recovery Code';
+
+  @override
+  String get recoveryEmailSentNeutralNotice =>
+      'If an account exists for this email, we\'ve sent a verification code.';
+
+  @override
+  String enterRecoveryCodeSubtitle(String email) {
+    return 'Enter the verification code sent to $email';
+  }
+
+  @override
+  String get verifyCode => 'Verify Code';
+
+  @override
+  String get createNewPasswordTitle => 'Create New Password';
+
+  @override
+  String get createNewPasswordSubtitle =>
+      'Create a new strong password for your account.';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get newPasswordHint => 'Enter new password (min 6 characters)';
+
+  @override
+  String get updatePassword => 'Update Password';
+
+  @override
+  String get passwordUpdatedSuccess => 'Your password has been updated.';
+
+  @override
+  String get noAccountFoundWithEmail =>
+      'No account found with this email. Try signing up.';
 }

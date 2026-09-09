@@ -11,6 +11,8 @@ import 'package:buyer_section/core/theme/app_theme.dart';
 import 'package:buyer_section/core/theme/theme_provider.dart';
 import 'package:buyer_section/producer_section/auth/producer_login_screen.dart';
 import 'package:buyer_section/producer_section/auth/producer_signup_screen.dart';
+import 'package:buyer_section/producer_section/auth/services/producer_auth_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 Widget _createTestHarness({
   required Widget child,
@@ -31,6 +33,7 @@ Widget _createTestHarness({
           locale: lang.currentLocale,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
+          onGenerateRoute: AppRouter.generateRoute,
           home: child,
         );
       },
@@ -141,7 +144,8 @@ void main() {
       expect(find.text('Email Address'), findsOneWidget);
       expect(find.text('Password'), findsOneWidget);
       expect(find.text('Forgot Password?'), findsOneWidget);
-      expect(find.text('Sign in with Phone OTP'), findsOneWidget);
+      expect(find.text('Sign in with OTP'), findsOneWidget);
+      expect(find.text('Sign in with Phone OTP'), findsNothing);
       expect(find.text('Create Account'), findsOneWidget);
 
       // Trigger empty validation
@@ -160,7 +164,8 @@ void main() {
       expect(find.text('ईमेल पता'), findsOneWidget);
       expect(find.text('पासवर्ड'), findsOneWidget);
       expect(find.text('पासवर्ड भूल गए?'), findsOneWidget);
-      expect(find.text('फोन ओटीपी से लॉग इन करें'), findsOneWidget);
+      expect(find.text('ओटीपी से लॉग इन करें'), findsOneWidget);
+      expect(find.text('फोन ओटीपी से लॉग इन करें'), findsNothing);
       expect(find.text('खाता बनाएं'), findsOneWidget);
 
       // Switch to Punjabi
@@ -171,7 +176,8 @@ void main() {
       expect(find.text('ਈਮੇਲ ਪਤਾ'), findsOneWidget);
       expect(find.text('ਪਾਸਵਰਡ'), findsOneWidget);
       expect(find.text('ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ?'), findsOneWidget);
-      expect(find.text('ਫ਼ੋਨ ਓਟੀਪੀ ਨਾਲ ਲੌਗ ਇਨ ਕਰੋ'), findsOneWidget);
+      expect(find.text('ਓਟੀਪੀ ਨਾਲ ਲੌਗ ਇਨ ਕਰੋ'), findsOneWidget);
+      expect(find.text('ਫ਼ੋਨ ਓਟੀਪੀ ਨਾਲ ਲੌਗ ਇਨ ਕਰੋ'), findsNothing);
       expect(find.text('ਖਾਤਾ ਬਣਾਓ'), findsOneWidget);
     });
 
@@ -260,15 +266,15 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Create Account'), findsWidgets);
+      expect(find.text('Create Your Account'), findsOneWidget);
       expect(find.text('Full Name'), findsOneWidget);
       expect(find.text('Email Address'), findsOneWidget);
       expect(find.text('Password'), findsOneWidget);
-      expect(find.text('Confirm Password'), findsOneWidget);
-      expect(find.text('Sign up with Phone OTP'), findsOneWidget);
+      expect(find.text('Continue'), findsOneWidget);
+      expect(find.text('Sign up with Phone OTP'), findsNothing);
 
       // Trigger empty validation
-      final submitButton = find.widgetWithText(ElevatedButton, 'Create Account');
+      final submitButton = find.widgetWithText(ElevatedButton, 'Continue');
       await tester.ensureVisible(submitButton);
       await tester.tap(submitButton);
       await tester.pump();
@@ -279,17 +285,16 @@ void main() {
 
       // Enter user text
       final textFields = find.byType(TextField);
-      expect(textFields, findsNWidgets(4));
+      expect(textFields, findsNWidgets(3));
 
       await tester.enterText(textFields.at(0), 'Ramesh Kumar');
       await tester.enterText(textFields.at(1), 'ramesh@example.com');
       await tester.enterText(textFields.at(2), 'mypassword');
-      await tester.enterText(textFields.at(3), 'mypassword');
       await tester.pump();
 
       expect(find.text('Ramesh Kumar'), findsOneWidget);
       expect(find.text('ramesh@example.com'), findsOneWidget);
-      expect(find.text('mypassword'), findsNWidgets(2));
+      expect(find.text('mypassword'), findsOneWidget);
 
       // Live switch to Hindi
       langProvider.setAppLanguage(AppLanguage.hindi);
@@ -297,11 +302,12 @@ void main() {
 
       expect(find.text('पूरा नाम'), findsOneWidget);
       expect(find.text('ईमेल पता'), findsOneWidget);
-      expect(find.text('खाता बनाएं'), findsWidgets);
+      expect(find.text('अपना खाता बनाएं'), findsOneWidget);
+      expect(find.text('आगे बढ़ें'), findsOneWidget);
       // Values preserved
       expect(find.text('Ramesh Kumar'), findsOneWidget);
       expect(find.text('ramesh@example.com'), findsOneWidget);
-      expect(find.text('mypassword'), findsNWidgets(2));
+      expect(find.text('mypassword'), findsOneWidget);
 
       // Live switch to Dark theme
       themeProvider.setThemeOption(AppThemeOption.dark);
@@ -310,7 +316,7 @@ void main() {
       expect(themeProvider.themeMode, ThemeMode.dark);
       expect(find.text('Ramesh Kumar'), findsOneWidget);
       expect(find.text('ramesh@example.com'), findsOneWidget);
-      expect(find.text('mypassword'), findsNWidgets(2));
+      expect(find.text('mypassword'), findsOneWidget);
 
       // Live switch to Punjabi
       langProvider.setAppLanguage(AppLanguage.punjabi);
@@ -318,10 +324,455 @@ void main() {
 
       expect(find.text('ਪੂਰਾ ਨਾਮ'), findsOneWidget);
       expect(find.text('ਈਮੇਲ ਪਤਾ'), findsOneWidget);
-      expect(find.text('ਖਾਤਾ ਬਣਾਓ'), findsWidgets);
+      expect(find.text('ਆਪਣਾ ਖਾਤਾ ਬਣਾਓ'), findsOneWidget);
+      expect(find.text('ਅੱਗੇ ਵਧੋ'), findsOneWidget);
       expect(find.text('Ramesh Kumar'), findsOneWidget);
       expect(find.text('ramesh@example.com'), findsOneWidget);
-      expect(find.text('mypassword'), findsNWidgets(2));
+      expect(find.text('mypassword'), findsOneWidget);
+    });
+
+    testWidgets('Step 1 Email OTP flow: Transitions to OTP screen, handles Change Email, and verifies OTP', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      final langProvider = LanguageProvider();
+      final themeProvider = ThemeProvider();
+
+      bool signUpCalled = false;
+      bool verifyOtpCalled = false;
+      bool registrationCalled = false;
+
+      final testScreen = ProducerSignupScreen(
+        signUpHandler: ({required email, required password, data}) async {
+          signUpCalled = true;
+          return AuthResponse(
+            user: User(
+              id: 'test-user-id',
+              appMetadata: {},
+              userMetadata: data ?? {},
+              aud: 'authenticated',
+              createdAt: DateTime.now().toIso8601String(),
+            ),
+          );
+        },
+        verifyOtpHandler: ({required email, required otp}) async {
+          verifyOtpCalled = true;
+          return AuthResponse(
+            session: Session(
+              accessToken: 'test-token',
+              tokenType: 'bearer',
+              user: User(
+                id: 'test-user-id',
+                appMetadata: {},
+                userMetadata: {},
+                aud: 'authenticated',
+                createdAt: DateTime.now().toIso8601String(),
+              ),
+            ),
+            user: User(
+              id: 'test-user-id',
+              appMetadata: {},
+              userMetadata: {},
+              aud: 'authenticated',
+              createdAt: DateTime.now().toIso8601String(),
+            ),
+          );
+        },
+        profileRegistrationHandler: ({required fullName}) async {
+          registrationCalled = true;
+          return 'test-user-id';
+        },
+        accessValidationHandler: ({fallbackFullName}) async {
+          return const ProducerAuthValidationResult(
+            status: ProducerAuthStatus.success,
+            message: 'Success',
+            producerProfile: {'onboarding_status': 'not_started'},
+          );
+        },
+      );
+
+      await tester.pumpWidget(
+        _createTestHarness(
+          child: testScreen,
+          languageProvider: langProvider,
+          themeProvider: themeProvider,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // 1. Enter details
+      final textFields = find.byType(TextField);
+      await tester.enterText(textFields.at(0), 'Ramesh Kumar');
+      await tester.enterText(textFields.at(1), 'ramesh@example.com');
+      await tester.enterText(textFields.at(2), 'mypassword');
+      await tester.pump();
+
+      // 2. Submit initial form to send OTP
+      final continueButton = find.widgetWithText(ElevatedButton, 'Continue');
+      await tester.tap(continueButton);
+      await tester.pumpAndSettle();
+
+      expect(signUpCalled, isTrue);
+
+      // 3. Confirm transition to OTP verification view
+      expect(find.text('Verify Your Email'), findsWidgets);
+      expect(find.textContaining('ra***@example.com'), findsOneWidget);
+      expect(find.text('Verify & Continue'), findsOneWidget);
+      expect(find.text('Change Email'), findsOneWidget);
+      expect(find.textContaining('Resend Code in'), findsOneWidget);
+
+      // 4. Test "Change Email" returns to details without losing name or password
+      final changeEmailButton = find.text('Change Email');
+      await tester.tap(changeEmailButton);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Create Your Account'), findsOneWidget);
+      expect(find.text('Ramesh Kumar'), findsOneWidget);
+      expect(find.text('mypassword'), findsOneWidget);
+
+      // 5. Submit again to return to OTP
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Continue'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Verify Your Email'), findsWidgets);
+
+      // 6. Enter OTP and verify
+      // The hidden text field inside ProducerOtpInputField captures input
+      final otpTextField = find.byType(TextField);
+      await tester.enterText(otpTextField, '123456');
+      await tester.pump();
+
+      final verifyButton = find.widgetWithText(ElevatedButton, 'Verify & Continue');
+      await tester.tap(verifyButton);
+      await tester.pumpAndSettle();
+
+      expect(verifyOtpCalled, isTrue);
+      expect(registrationCalled, isTrue);
+    });
+
+    testWidgets('Normal Email/Password Login: authenticates and validates producer access', (WidgetTester tester) async {
+      bool signInCalled = false;
+      bool accessValidationCalled = false;
+
+      final testScreen = ProducerLoginScreen(
+        signInHandler: ({required email, required password}) async {
+          signInCalled = true;
+          return AuthResponse(
+            session: Session(
+              accessToken: 'test-token',
+              tokenType: 'bearer',
+              user: User(
+                id: 'test-user-id',
+                appMetadata: {},
+                userMetadata: {},
+                aud: 'authenticated',
+                createdAt: DateTime.now().toIso8601String(),
+              ),
+            ),
+            user: User(
+              id: 'test-user-id',
+              appMetadata: {},
+              userMetadata: {},
+              aud: 'authenticated',
+              createdAt: DateTime.now().toIso8601String(),
+            ),
+          );
+        },
+        accessValidationHandler: ({fallbackFullName}) async {
+          accessValidationCalled = true;
+          return const ProducerAuthValidationResult(
+            status: ProducerAuthStatus.success,
+            message: 'Success',
+            producerProfile: {'onboarding_status': 'not_started'},
+          );
+        },
+      );
+
+      await tester.pumpWidget(
+        _createTestHarness(
+          child: testScreen,
+          languageProvider: LanguageProvider(),
+          themeProvider: ThemeProvider(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final textFields = find.byType(TextField);
+      await tester.enterText(textFields.at(0), 'ramesh@example.com');
+      await tester.enterText(textFields.at(1), 'mypassword');
+      await tester.pump();
+
+      final signInBtn = find.widgetWithText(ElevatedButton, 'Sign In');
+      await tester.tap(signInBtn);
+      await tester.pumpAndSettle();
+
+      expect(signInCalled, isTrue);
+      expect(accessValidationCalled, isTrue);
+    });
+
+    testWidgets('ProducerLoginScreen rejects non-producer accounts safely', (WidgetTester tester) async {
+      final testScreen = ProducerLoginScreen(
+        signInHandler: ({required email, required password}) async {
+          return AuthResponse(
+            session: Session(
+              accessToken: 'test-token',
+              tokenType: 'bearer',
+              user: User(
+                id: 'buyer-user-id',
+                appMetadata: {},
+                userMetadata: {},
+                aud: 'authenticated',
+                createdAt: DateTime.now().toIso8601String(),
+              ),
+            ),
+            user: User(
+              id: 'buyer-user-id',
+              appMetadata: {},
+              userMetadata: {},
+              aud: 'authenticated',
+              createdAt: DateTime.now().toIso8601String(),
+            ),
+          );
+        },
+        accessValidationHandler: ({fallbackFullName}) async {
+          return const ProducerAuthValidationResult(
+            status: ProducerAuthStatus.buyerRejected,
+            message: 'This account is registered as a Buyer. Access to the Producer portal is restricted.',
+          );
+        },
+      );
+
+      await tester.pumpWidget(
+        _createTestHarness(
+          child: testScreen,
+          languageProvider: LanguageProvider(),
+          themeProvider: ThemeProvider(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final textFields = find.byType(TextField);
+      await tester.enterText(textFields.at(0), 'buyer@example.com');
+      await tester.enterText(textFields.at(1), 'buyerpassword');
+      await tester.pump();
+
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Sign In'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('This account is registered as a Buyer. Access to the Producer portal is restricted.'), findsOneWidget);
+    });
+
+    testWidgets('Sign in with Email OTP: transitions to OTP view, enforces 60s cooldown, verifies OTP and validates Producer', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      bool otpSent = false;
+      bool otpVerified = false;
+      bool accessValidationCalled = false;
+
+      final testScreen = ProducerLoginScreen(
+        signInWithOtpHandler: ({required email}) async {
+          otpSent = true;
+        },
+        verifyLoginOtpHandler: ({required email, required otp}) async {
+          otpVerified = true;
+          return AuthResponse(
+            session: Session(
+              accessToken: 'test-token',
+              tokenType: 'bearer',
+              user: User(
+                id: 'test-user-id',
+                appMetadata: {},
+                userMetadata: {},
+                aud: 'authenticated',
+                createdAt: DateTime.now().toIso8601String(),
+              ),
+            ),
+            user: User(
+              id: 'test-user-id',
+              appMetadata: {},
+              userMetadata: {},
+              aud: 'authenticated',
+              createdAt: DateTime.now().toIso8601String(),
+            ),
+          );
+        },
+        accessValidationHandler: ({fallbackFullName}) async {
+          accessValidationCalled = true;
+          return const ProducerAuthValidationResult(
+            status: ProducerAuthStatus.success,
+            message: 'Success',
+            producerProfile: {'onboarding_status': 'completed'},
+          );
+        },
+      );
+
+      await tester.pumpWidget(
+        _createTestHarness(
+          child: testScreen,
+          languageProvider: LanguageProvider(),
+          themeProvider: ThemeProvider(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Enter email and tap "Sign in with OTP"
+      final textFields = find.byType(TextField);
+      await tester.enterText(textFields.at(0), 'producer@example.com');
+      await tester.pump();
+
+      final otpLoginBtn = find.widgetWithText(OutlinedButton, 'Sign in with OTP');
+      await tester.ensureVisible(otpLoginBtn);
+      await tester.tap(otpLoginBtn);
+      await tester.pumpAndSettle();
+
+      expect(otpSent, isTrue);
+      expect(find.text('Check Your Email'), findsWidgets);
+      expect(find.textContaining('pr***@example.com'), findsOneWidget);
+      expect(find.textContaining('Resend Code in'), findsOneWidget);
+
+      // Enter 6-digit OTP
+      final otpInput = find.byType(TextField);
+      await tester.enterText(otpInput, '654321');
+      await tester.pump();
+
+      final verifyBtn = find.widgetWithText(ElevatedButton, 'Verify & Sign In');
+      await tester.ensureVisible(verifyBtn);
+      await tester.tap(verifyBtn);
+      await tester.pumpAndSettle();
+
+      expect(otpVerified, isTrue);
+      expect(accessValidationCalled, isTrue);
+    });
+
+    testWidgets('Forgot Password: sends recovery code with enumeration protection, verifies recovery OTP, and updates password', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      bool recoverySent = false;
+      bool recoveryVerified = false;
+      bool passwordUpdated = false;
+
+      final testScreen = ProducerLoginScreen(
+        sendRecoveryOtpHandler: ({required email}) async {
+          recoverySent = true;
+        },
+        verifyRecoveryOtpHandler: ({required email, required otp}) async {
+          recoveryVerified = true;
+          return AuthResponse(
+            session: Session(
+              accessToken: 'recovery-token',
+              tokenType: 'bearer',
+              user: User(
+                id: 'test-user-id',
+                appMetadata: {},
+                userMetadata: {},
+                aud: 'authenticated',
+                createdAt: DateTime.now().toIso8601String(),
+              ),
+            ),
+            user: User(
+              id: 'test-user-id',
+              appMetadata: {},
+              userMetadata: {},
+              aud: 'authenticated',
+              createdAt: DateTime.now().toIso8601String(),
+            ),
+          );
+        },
+        updatePasswordHandler: ({required newPassword}) async {
+          passwordUpdated = true;
+          return UserResponse.fromJson(<String, dynamic>{
+            'id': 'test-user-id',
+            'app_metadata': <String, dynamic>{},
+            'user_metadata': <String, dynamic>{},
+            'aud': 'authenticated',
+            'created_at': DateTime.now().toIso8601String(),
+          });
+        },
+      );
+
+      await tester.pumpWidget(
+        _createTestHarness(
+          child: testScreen,
+          languageProvider: LanguageProvider(),
+          themeProvider: ThemeProvider(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // 1. Tap Forgot Password?
+      final forgotPasswordBtn = find.text('Forgot Password?');
+      await tester.ensureVisible(forgotPasswordBtn);
+      await tester.tap(forgotPasswordBtn);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Reset Your Password'), findsOneWidget);
+      expect(find.text('Send Recovery Code'), findsOneWidget);
+
+      // 2. Enter email and submit recovery request
+      await tester.enterText(find.byType(TextField), 'forgot@example.com');
+      await tester.pump();
+
+      final sendRecoveryBtn = find.widgetWithText(ElevatedButton, 'Send Recovery Code');
+      await tester.ensureVisible(sendRecoveryBtn);
+      await tester.tap(sendRecoveryBtn);
+      await tester.pumpAndSettle();
+
+      expect(recoverySent, isTrue);
+      // Enumeration safe message
+      expect(find.text("If an account exists for this email, we've sent a verification code."), findsOneWidget);
+      expect(find.text('Verify Your Email'), findsWidgets);
+      expect(find.textContaining('fo***@example.com'), findsOneWidget);
+
+      // 3. Enter 6-digit recovery OTP
+      await tester.enterText(find.byType(TextField), '112233');
+      await tester.pump();
+
+      final verifyCodeBtn = find.widgetWithText(ElevatedButton, 'Verify Code');
+      await tester.ensureVisible(verifyCodeBtn);
+      await tester.tap(verifyCodeBtn);
+      await tester.pumpAndSettle();
+
+      expect(recoveryVerified, isTrue);
+      expect(find.text('Create New Password'), findsOneWidget);
+
+      // 4. Test password mismatch rejection
+      final passwordFields = find.byType(TextField);
+      await tester.enterText(passwordFields.at(0), 'newpassword123');
+      await tester.enterText(passwordFields.at(1), 'mismatchpassword');
+      await tester.pump();
+
+      final updatePasswordBtn = find.widgetWithText(ElevatedButton, 'Update Password');
+      await tester.ensureVisible(updatePasswordBtn);
+      await tester.tap(updatePasswordBtn);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Passwords do not match'), findsOneWidget);
+      expect(passwordUpdated, isFalse);
+
+      // 5. Enter matching password and submit
+      await tester.enterText(passwordFields.at(1), 'newpassword123');
+      await tester.pump();
+
+      await tester.ensureVisible(updatePasswordBtn);
+      await tester.tap(updatePasswordBtn);
+      await tester.pumpAndSettle();
+
+      expect(passwordUpdated, isTrue);
+      expect(find.text('Your password has been updated.'), findsOneWidget);
     });
   });
 }
