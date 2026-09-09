@@ -134,7 +134,7 @@ class BuyerProfileScreen extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 36,
-            backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
             child: Text(
               (profile != null && profile.name.isNotEmpty) ? profile.name[0].toUpperCase() : 'G',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
@@ -183,7 +183,7 @@ class BuyerProfileScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 24),
@@ -191,7 +191,7 @@ class BuyerProfileScreen extends StatelessWidget {
           const SizedBox(height: 12),
           Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
-          Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6), fontSize: 13)),
+          Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13)),
         ],
       ),
     );
@@ -208,7 +208,7 @@ class BuyerProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(label, style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text(label, style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
               const SizedBox(height: 2),
               Text(value, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
             ],
@@ -224,7 +224,7 @@ class BuyerProfileScreen extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: iconColor.withOpacity(0.1),
+          color: iconColor.withValues(alpha: 0.1),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: iconColor, size: 20),

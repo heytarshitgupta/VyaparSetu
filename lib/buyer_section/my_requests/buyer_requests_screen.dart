@@ -45,7 +45,7 @@ class BuyerRequestsScreen extends StatelessWidget {
           : ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: mockRequests.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final req = mockRequests[index];
                 final bool isActive = req['status'] == 'Receiving Quotes';
@@ -75,7 +75,7 @@ class BuyerRequestsScreen extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: isActive ? AppColors.success.withOpacity(0.1) : AppColors.border,
+                                  color: isActive ? AppColors.success.withValues(alpha: 0.1) : AppColors.border,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(

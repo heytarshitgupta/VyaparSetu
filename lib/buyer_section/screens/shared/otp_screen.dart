@@ -101,7 +101,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     'Code sent to your mobile number.',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.65),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65),
                       height: 1.4,
                     ),
                   ),

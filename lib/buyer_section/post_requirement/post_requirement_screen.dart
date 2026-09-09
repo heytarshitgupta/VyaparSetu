@@ -191,7 +191,7 @@ class _PostRequirementScreenState extends State<PostRequirementScreen> {
                         Expanded(
                           flex: 1,
                           child: DropdownButtonFormField<String>(
-                            value: _selectedUnit,
+                            initialValue: _selectedUnit,
                             items: ['kg', 'pcs', 'liters', 'tons'].map((unit) {
                               return DropdownMenuItem(value: unit, child: Text(unit));
                             }).toList(),

@@ -177,7 +177,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                         const SizedBox(height: 16),
                         BuyerAuthTextField(
                           controller: _businessNameController,
-                          label: l10n?.businessNameLabel?.replaceAll(' *', '') ?? 'Business / Organization Name',
+                          label: l10n?.businessNameLabel.replaceAll(' *', '') ?? 'Business / Organization Name',
                           hint: l10n?.businessNameHint ?? 'Optional',
                           prefixIcon: Icons.business_outlined,
                         ),
@@ -220,7 +220,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: theme.dividerColor)),
                             focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: theme.colorScheme.primary, width: 2)),
                           ),
-                          value: _selectedBuyerType,
+                          initialValue: _selectedBuyerType,
                           items: _buyerTypes.map((t) => DropdownMenuItem(value: t, child: Text(t, overflow: TextOverflow.ellipsis))).toList(),
                           onChanged: (val) => setState(() => _selectedBuyerType = val),
                         ),
@@ -238,14 +238,14 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                       children: [
                         BuyerAuthTextField(
                           controller: _businessCategoryController,
-                          label: l10n?.craftCategoryLabel?.replaceAll(' *', '') ?? 'Business Category',
+                          label: l10n?.craftCategoryLabel.replaceAll(' *', '') ?? 'Business Category',
                           hint: l10n?.specifyCategoryHint ?? 'E.g. Spices, Textiles',
                           prefixIcon: Icons.storefront_outlined,
                         ),
                         const SizedBox(height: 16),
                         BuyerAuthTextField(
                           controller: _addressController,
-                          label: l10n?.addressLabel?.replaceAll(' *', '') ?? 'Business Address',
+                          label: l10n?.addressLabel.replaceAll(' *', '') ?? 'Business Address',
                           hint: l10n?.addressHint ?? 'Enter full address',
                           prefixIcon: Icons.location_on_outlined,
                         ),
@@ -255,7 +255,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                             Expanded(
                               child: BuyerAuthTextField(
                                 controller: _cityController,
-                                label: l10n?.cityVillageLabel?.replaceAll(' *', '') ?? 'City',
+                                label: l10n?.cityVillageLabel.replaceAll(' *', '') ?? 'City',
                                 hint: l10n?.cityVillageHint ?? 'City',
                                 prefixIcon: Icons.location_city_outlined,
                               ),
@@ -264,7 +264,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                             Expanded(
                               child: BuyerAuthTextField(
                                 controller: _stateController,
-                                label: l10n?.stateLabel?.replaceAll(' *', '') ?? 'State',
+                                label: l10n?.stateLabel.replaceAll(' *', '') ?? 'State',
                                 hint: l10n?.selectStateHint ?? 'State',
                                 prefixIcon: Icons.map_outlined,
                               ),
@@ -274,7 +274,7 @@ class _BuyerOnboardingScreenState extends State<BuyerOnboardingScreen> {
                         const SizedBox(height: 16),
                         BuyerAuthTextField(
                           controller: _pincodeController,
-                          label: l10n?.pincodeLabel?.replaceAll(' *', '') ?? 'Pincode',
+                          label: l10n?.pincodeLabel.replaceAll(' *', '') ?? 'Pincode',
                           hint: l10n?.pincodeHint ?? '6-digit pincode',
                           prefixIcon: Icons.pin_drop_outlined,
                           keyboardType: TextInputType.number,
