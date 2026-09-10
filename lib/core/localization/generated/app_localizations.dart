@@ -3495,6 +3495,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit'**
   String get verifyAction;
+
+  /// Button label to request price guidance
+  ///
+  /// In en, this message translates to:
+  /// **'Set a Good Price'**
+  String get setGoodPriceButton;
+
+  /// Guidance when category or description is missing before requesting price
+  ///
+  /// In en, this message translates to:
+  /// **'Add a product category and description first so we can suggest a price.'**
+  String get setGoodPriceMissingInfo;
+
+  /// Message when no pricing profile is available for the product
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized price guidance is not available for this product yet.'**
+  String get setGoodPriceNotAvailable;
+
+  /// Loading message while fetching price guidance
+  ///
+  /// In en, this message translates to:
+  /// **'Getting price guidance...'**
+  String get setGoodPriceLoading;
+
+  /// Title of bottom sheet showing price guidance
+  ///
+  /// In en, this message translates to:
+  /// **'Price Guidance'**
+  String get priceGuidanceTitle;
+
+  /// Label for break-even floor cost
+  ///
+  /// In en, this message translates to:
+  /// **'Cost to make'**
+  String get priceCostToMake;
+
+  /// Label for market ceiling price
+  ///
+  /// In en, this message translates to:
+  /// **'Similar market price'**
+  String get priceSimilarMarket;
+
+  /// Label for recommended price
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested price'**
+  String get priceSuggested;
+
+  /// Disclosure text regarding pricing prototype data
+  ///
+  /// In en, this message translates to:
+  /// **'Prototype guidance based on sample market data. Final price is your choice.'**
+  String get priceGuidanceDisclosure;
+
+  /// Button to apply the suggested price to the form
+  ///
+  /// In en, this message translates to:
+  /// **'Use This Price'**
+  String get useThisPriceButton;
+
+  /// Message when pricing API is offline or times out
+  ///
+  /// In en, this message translates to:
+  /// **'Price guidance is temporarily unavailable. You can enter your price manually.'**
+  String get priceGuidanceUnavailable;
 }
 
 class _AppLocalizationsDelegate

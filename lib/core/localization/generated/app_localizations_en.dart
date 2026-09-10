@@ -1837,4 +1837,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verifyAction => 'Submit';
+
+  @override
+  String get setGoodPriceButton => 'Set a Good Price';
+
+  @override
+  String get setGoodPriceMissingInfo =>
+      'Add a product category and description first so we can suggest a price.';
+
+  @override
+  String get setGoodPriceNotAvailable =>
+      'Personalized price guidance is not available for this product yet.';
+
+  @override
+  String get setGoodPriceLoading => 'Getting price guidance...';
+
+  @override
+  String get priceGuidanceTitle => 'Price Guidance';
+
+  @override
+  String get priceCostToMake => 'Cost to make';
+
+  @override
+  String get priceSimilarMarket => 'Similar market price';
+
+  @override
+  String get priceSuggested => 'Suggested price';
+
+  @override
+  String get priceGuidanceDisclosure =>
+      'Prototype guidance based on sample market data. Final price is your choice.';
+
+  @override
+  String get useThisPriceButton => 'Use This Price';
+
+  @override
+  String get priceGuidanceUnavailable =>
+      'Price guidance is temporarily unavailable. You can enter your price manually.';
 }

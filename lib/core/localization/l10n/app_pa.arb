@@ -567,5 +567,16 @@
   "gstAlreadyLinkedError": "ਇਸ ਖਾਤੇ ਨਾਲ ਪਹਿਲਾਂ ਹੀ ਇੱਕ ਜੀਐਸਟੀਆਈਐਨ ਜੁੜਿਆ ਹੋਇਆ ਹੈ।",
   "gstVerificationFailedError": "ਜੀਐਸਟੀਆਈਐਨ ਵੇਰਵੇ ਦਰਜ ਨਹੀਂ ਹੋ ਸਕੇ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ 15-ਅੱਖਰੀ ਜੀਐਸਟੀਆਈਐਨ ਜਾਂਚੋ।",
   "verifyingAction": "ਜਾਂਚਿਆ ਜਾ ਰਿਹਾ ਹੈ...",
-  "verifyAction": "ਸਬਮਿਟ ਕਰੋ"
+  "verifyAction": "ਸਬਮਿਟ ਕਰੋ",
+  "setGoodPriceButton": "ਵਧੀਆ ਕੀਮਤ ਤੈਅ ਕਰੋ",
+  "setGoodPriceMissingInfo": "ਕੀਮਤ ਦਾ ਸੁਝਾਅ ਲੈਣ ਲਈ ਪਹਿਲਾਂ ਉਤਪਾਦ ਦੀ ਸ਼੍ਰੇਣੀ ਅਤੇ ਵੇਰਵਾ ਸ਼ਾਮਲ ਕਰੋ।",
+  "setGoodPriceNotAvailable": "ਇਸ ਉਤਪਾਦ ਲਈ ਹਾਲੇ ਨਿੱਜੀ ਕੀਮਤ ਸੁਝਾਅ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।",
+  "setGoodPriceLoading": "ਕੀਮਤ ਦਾ ਸੁਝਾਅ ਲਿਆ ਜਾ ਰਿਹਾ ਹੈ...",
+  "priceGuidanceTitle": "ਕੀਮਤ ਮਾਰਗਦਰਸ਼ਨ",
+  "priceCostToMake": "ਬਣਾਉਣ ਦੀ ਲਾਗਤ",
+  "priceSimilarMarket": "ਮਾਰਕੀਟ ਵਿੱਚ ਮਿਲਦੀ-ਜੁਲਦੀ ਕੀਮਤ",
+  "priceSuggested": "ਸੁਝਾਈ ਗਈ ਕੀਮਤ",
+  "priceGuidanceDisclosure": "ਇਹ ਸੁਝਾਅ ਨਮੂਨਾ ਮਾਰਕੀਟ ਡਾਟਾ ਉੱਤੇ ਆਧਾਰਿਤ ਹੈ। ਅੰਤਿਮ ਕੀਮਤ ਤੁਸੀਂ ਤੈਅ ਕਰੋ।",
+  "useThisPriceButton": "ਇਹ ਕੀਮਤ ਵਰਤੋ",
+  "priceGuidanceUnavailable": "ਕੀਮਤ ਦਾ ਸੁਝਾਅ ਅਸਥਾਈ ਤੌਰ 'ਤੇ ਉਪਲਬਧ ਨਹੀਂ ਹੈ। ਤੁਸੀਂ ਆਪਣੀ ਕੀਮਤ ਖ਼ੁਦ ਦਰਜ ਕਰ ਸਕਦੇ ਹੋ।"
 }

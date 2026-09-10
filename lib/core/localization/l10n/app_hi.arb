@@ -567,5 +567,16 @@
   "gstAlreadyLinkedError": "इस खाते के साथ पहले से ही एक जीएसटीआईएन जुड़ा हुआ है।",
   "gstVerificationFailedError": "जीएसटीआईएन विवरण दर्ज नहीं हो सका। कृपया अपना 15-अंकीय जीएसटीआईएन जांचें।",
   "verifyingAction": "जांचा जा रहा है...",
-  "verifyAction": "सबमिट करें"
+  "verifyAction": "सबमिट करें",
+  "setGoodPriceButton": "अच्छी कीमत तय करें",
+  "setGoodPriceMissingInfo": "कीमत का सुझाव पाने के लिए पहले उत्पाद की श्रेणी और विवरण जोड़ें।",
+  "setGoodPriceNotAvailable": "इस उत्पाद के लिए अभी व्यक्तिगत मूल्य सुझाव उपलब्ध नहीं है।",
+  "setGoodPriceLoading": "कीमत का सुझाव लिया जा रहा है...",
+  "priceGuidanceTitle": "मूल्य मार्गदर्शन",
+  "priceCostToMake": "बनाने की लागत",
+  "priceSimilarMarket": "बाज़ार में मिलती-जुलती कीमत",
+  "priceSuggested": "सुझाई गई कीमत",
+  "priceGuidanceDisclosure": "यह सुझाव नमूना बाज़ार डेटा पर आधारित है। अंतिम कीमत आप तय करें।",
+  "useThisPriceButton": "यह कीमत उपयोग करें",
+  "priceGuidanceUnavailable": "मूल्य सुझाव अस्थायी रूप से उपलब्ध नहीं है। आप अपनी कीमत मैन्युअली दर्ज कर सकते हैं।"
 }

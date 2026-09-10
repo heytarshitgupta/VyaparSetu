@@ -1842,4 +1842,41 @@ class AppLocalizationsPa extends AppLocalizations {
 
   @override
   String get verifyAction => 'ਸਬਮਿਟ ਕਰੋ';
+
+  @override
+  String get setGoodPriceButton => 'ਵਧੀਆ ਕੀਮਤ ਤੈਅ ਕਰੋ';
+
+  @override
+  String get setGoodPriceMissingInfo =>
+      'ਕੀਮਤ ਦਾ ਸੁਝਾਅ ਲੈਣ ਲਈ ਪਹਿਲਾਂ ਉਤਪਾਦ ਦੀ ਸ਼੍ਰੇਣੀ ਅਤੇ ਵੇਰਵਾ ਸ਼ਾਮਲ ਕਰੋ।';
+
+  @override
+  String get setGoodPriceNotAvailable =>
+      'ਇਸ ਉਤਪਾਦ ਲਈ ਹਾਲੇ ਨਿੱਜੀ ਕੀਮਤ ਸੁਝਾਅ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।';
+
+  @override
+  String get setGoodPriceLoading => 'ਕੀਮਤ ਦਾ ਸੁਝਾਅ ਲਿਆ ਜਾ ਰਿਹਾ ਹੈ...';
+
+  @override
+  String get priceGuidanceTitle => 'ਕੀਮਤ ਮਾਰਗਦਰਸ਼ਨ';
+
+  @override
+  String get priceCostToMake => 'ਬਣਾਉਣ ਦੀ ਲਾਗਤ';
+
+  @override
+  String get priceSimilarMarket => 'ਮਾਰਕੀਟ ਵਿੱਚ ਮਿਲਦੀ-ਜੁਲਦੀ ਕੀਮਤ';
+
+  @override
+  String get priceSuggested => 'ਸੁਝਾਈ ਗਈ ਕੀਮਤ';
+
+  @override
+  String get priceGuidanceDisclosure =>
+      'ਇਹ ਸੁਝਾਅ ਨਮੂਨਾ ਮਾਰਕੀਟ ਡਾਟਾ ਉੱਤੇ ਆਧਾਰਿਤ ਹੈ। ਅੰਤਿਮ ਕੀਮਤ ਤੁਸੀਂ ਤੈਅ ਕਰੋ।';
+
+  @override
+  String get useThisPriceButton => 'ਇਹ ਕੀਮਤ ਵਰਤੋ';
+
+  @override
+  String get priceGuidanceUnavailable =>
+      'ਕੀਮਤ ਦਾ ਸੁਝਾਅ ਅਸਥਾਈ ਤੌਰ \'ਤੇ ਉਪਲਬਧ ਨਹੀਂ ਹੈ। ਤੁਸੀਂ ਆਪਣੀ ਕੀਮਤ ਖ਼ੁਦ ਦਰਜ ਕਰ ਸਕਦੇ ਹੋ।';
 }

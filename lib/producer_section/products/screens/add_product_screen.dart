@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart';
 import '../../../core/localization/generated/app_localizations.dart';
+import '../../../core/services/pricing_api_service.dart';
 import '../models/producer_product.dart';
 import '../models/product_price_parser.dart';
 import '../providers/add_product_provider.dart';
@@ -29,6 +30,12 @@ class AddProductScreen extends StatefulWidget {
   final IProducerProductImageService? imageService;
   final IProducerImagePickerService? imagePickerService;
   final IProductPhotoEnhancementService? enhancementService;
+  final String? pricingProfileId;
+  final Future<PricingApiResponse?> Function({
+    required String productId,
+    required String category,
+    required String description,
+  })? pricingFetcher;
 
   const AddProductScreen({
     super.key,
@@ -38,6 +45,8 @@ class AddProductScreen extends StatefulWidget {
     this.imageService,
     this.imagePickerService,
     this.enhancementService,
+    this.pricingProfileId,
+    this.pricingFetcher,
   });
 
   /// Opens the Add Product screen as a responsive modal bottom sheet.
@@ -49,6 +58,12 @@ class AddProductScreen extends StatefulWidget {
     IProducerProductImageService? imageService,
     IProducerImagePickerService? imagePickerService,
     IProductPhotoEnhancementService? enhancementService,
+    String? pricingProfileId,
+    Future<PricingApiResponse?> Function({
+      required String productId,
+      required String category,
+      required String description,
+    })? pricingFetcher,
   }) {
     return showModalBottomSheet<bool>(
       context: context,
@@ -64,6 +79,8 @@ class AddProductScreen extends StatefulWidget {
         imageService: imageService,
         imagePickerService: imagePickerService,
         enhancementService: enhancementService,
+        pricingProfileId: pricingProfileId,
+        pricingFetcher: pricingFetcher,
       ),
     );
   }
@@ -87,6 +104,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   bool _isListening = false;
   String _spokenText = '';
   bool _isLoading = false;
+  bool _isPricingLoading = false;
   String? _hindiTitle;
   String? _hindiDescription;
 
@@ -1628,40 +1646,352 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   Widget _buildPriceField(AppLocalizations l10n, ColorScheme colorScheme) {
-    return TextFormField(
-      key: const Key('add_product_price_field'),
-      controller: _priceController,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
-      ],
-      decoration: InputDecoration(
-        labelText: '${l10n.priceLabel} *',
-        prefixText: '₹ ',
-        helperText: l10n.priceHelper,
-        errorText: _priceError,
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
-        ),
-      ),
-      onChanged: (val) {
-        if (val.trim().isEmpty) {
-          _provider.setPriceFromRupeesText('');
-          if (_priceError != null) setState(() => _priceError = null);
-          return;
-        }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextFormField(
+          key: const Key('add_product_price_field'),
+          controller: _priceController,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+          ],
+          decoration: InputDecoration(
+            labelText: '${l10n.priceLabel} *',
+            prefixText: '₹ ',
+            helperText: l10n.priceHelper,
+            errorText: _priceError,
+            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
+          ),
+          onChanged: (val) {
+            if (val.trim().isEmpty) {
+              _provider.setPriceFromRupeesText('');
+              if (_priceError != null) setState(() => _priceError = null);
+              return;
+            }
 
-        final success = _provider.setPriceFromRupeesText(val);
-        if (success) {
-          if (_priceError != null) setState(() => _priceError = null);
-        } else {
-          setState(() {
-            _priceError = l10n.priceInvalidError;
-          });
-        }
+            final success = _provider.setPriceFromRupeesText(val);
+            if (success) {
+              if (_priceError != null) setState(() => _priceError = null);
+            } else {
+              setState(() {
+                _priceError = l10n.priceInvalidError;
+              });
+            }
+          },
+        ),
+        const SizedBox(height: 6),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            key: const Key('set_good_price_button'),
+            onPressed: _isPricingLoading ? null : _handleSetGoodPrice,
+            icon: _isPricingLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.price_check, size: 20),
+            label: Text(
+              _isPricingLoading
+                  ? l10n.setGoodPriceLoading
+                  : l10n.setGoodPriceButton,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _handleSetGoodPrice() async {
+    final l10n = AppLocalizations.of(context);
+    final category = _provider.draft.category.trim().isNotEmpty
+        ? _provider.draft.category.trim()
+        : _customCategoryController.text.trim();
+    final description = _descriptionController.text.trim();
+
+    // Section 4: Input Requirements
+    if (category.isEmpty || description.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n?.setGoodPriceMissingInfo ??
+                'Add a product category and description first so we can suggest a price.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    // Section 5: Product ID Safety
+    final profileId = widget.pricingProfileId;
+    if (profileId == null || profileId.trim().isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n?.setGoodPriceNotAvailable ??
+                'Personalized price guidance is not available for this product yet.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isPricingLoading = true);
+    try {
+      final pricingFetcher =
+          widget.pricingFetcher ?? PricingApiService.fetchPrice;
+      final response = await pricingFetcher(
+        productId: profileId,
+        category: category,
+        description: description,
+      );
+
+      if (!mounted) return;
+
+      if (response == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              l10n?.priceGuidanceUnavailable ??
+                  'Price guidance is temporarily unavailable. You can enter your price manually.',
+            ),
+          ),
+        );
+        return;
+      }
+
+      _showPriceGuidanceSheet(response);
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n?.priceGuidanceUnavailable ??
+                'Price guidance is temporarily unavailable. You can enter your price manually.',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isPricingLoading = false);
+      }
+    }
+  }
+
+  void _showPriceGuidanceSheet(PricingApiResponse response) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 24,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.price_check,
+                      color: colorScheme.onPrimaryContainer,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      l10n?.priceGuidanceTitle ?? 'Price Guidance',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: colorScheme.outlineVariant),
+                ),
+                child: Column(
+                  children: [
+                    _buildGuidanceMetricRow(
+                      label: l10n?.priceCostToMake ?? 'Cost to make',
+                      value: '₹${response.breakEvenFloor.toStringAsFixed(0)}',
+                      textStyle: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const Divider(height: 16),
+                    _buildGuidanceMetricRow(
+                      label: l10n?.priceSimilarMarket ?? 'Similar market price',
+                      value: '₹${response.marketCeiling.toStringAsFixed(0)}',
+                      textStyle: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const Divider(height: 16),
+                    _buildGuidanceMetricRow(
+                      label: l10n?.priceSuggested ?? 'Suggested price',
+                      value: '₹${response.recommendedPrice.toStringAsFixed(0)}',
+                      textStyle: theme.textTheme.titleMedium?.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      isHighlight: true,
+                    ),
+                  ],
+                ),
+              ),
+              if (response.aiGuidance.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.auto_awesome,
+                          size: 16, color: colorScheme.primary),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          response.aiGuidance,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurface,
+                            height: 1.3,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: 15,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      l10n?.priceGuidanceDisclosure ??
+                          'Prototype guidance based on sample market data. Final price is your choice.',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      key: const Key('cancel_price_guidance_button'),
+                      onPressed: () => Navigator.of(sheetContext).pop(),
+                      child: Text(l10n?.cancel ?? 'Cancel'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: FilledButton.icon(
+                      key: const Key('use_this_price_button'),
+                      onPressed: () {
+                        final formattedPrice = response.recommendedPrice > 0
+                            ? (response.recommendedPrice ==
+                                    response.recommendedPrice.roundToDouble()
+                                ? response.recommendedPrice.toInt().toString()
+                                : response.recommendedPrice.toStringAsFixed(2))
+                            : '0';
+                        _priceController.text = formattedPrice;
+                        _provider.setPriceFromRupeesText(formattedPrice);
+                        if (_priceError != null) {
+                          setState(() => _priceError = null);
+                        }
+                        Navigator.of(sheetContext).pop();
+                      },
+                      icon: const Icon(Icons.check, size: 18),
+                      label: Text(l10n?.useThisPriceButton ?? 'Use This Price'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
       },
+    );
+  }
+
+  Widget _buildGuidanceMetricRow({
+    required String label,
+    required String value,
+    required TextStyle? textStyle,
+    bool isHighlight = false,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: isHighlight
+              ? textStyle?.copyWith(fontWeight: FontWeight.w700)
+              : textStyle,
+        ),
+        Text(
+          value,
+          style: isHighlight
+              ? textStyle?.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                )
+              : textStyle?.copyWith(fontWeight: FontWeight.w600),
+        ),
+      ],
     );
   }
 

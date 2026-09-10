@@ -1839,4 +1839,41 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get verifyAction => 'सबमिट करें';
+
+  @override
+  String get setGoodPriceButton => 'अच्छी कीमत तय करें';
+
+  @override
+  String get setGoodPriceMissingInfo =>
+      'कीमत का सुझाव पाने के लिए पहले उत्पाद की श्रेणी और विवरण जोड़ें।';
+
+  @override
+  String get setGoodPriceNotAvailable =>
+      'इस उत्पाद के लिए अभी व्यक्तिगत मूल्य सुझाव उपलब्ध नहीं है।';
+
+  @override
+  String get setGoodPriceLoading => 'कीमत का सुझाव लिया जा रहा है...';
+
+  @override
+  String get priceGuidanceTitle => 'मूल्य मार्गदर्शन';
+
+  @override
+  String get priceCostToMake => 'बनाने की लागत';
+
+  @override
+  String get priceSimilarMarket => 'बाज़ार में मिलती-जुलती कीमत';
+
+  @override
+  String get priceSuggested => 'सुझाई गई कीमत';
+
+  @override
+  String get priceGuidanceDisclosure =>
+      'यह सुझाव नमूना बाज़ार डेटा पर आधारित है। अंतिम कीमत आप तय करें।';
+
+  @override
+  String get useThisPriceButton => 'यह कीमत उपयोग करें';
+
+  @override
+  String get priceGuidanceUnavailable =>
+      'मूल्य सुझाव अस्थायी रूप से उपलब्ध नहीं है। आप अपनी कीमत मैन्युअली दर्ज कर सकते हैं।';
 }

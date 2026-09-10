@@ -2350,5 +2350,49 @@
   "verifyAction": "Submit",
   "@verifyAction": {
     "description": "Button label to submit format check"
+  },
+  "setGoodPriceButton": "Set a Good Price",
+  "@setGoodPriceButton": {
+    "description": "Button label to request price guidance"
+  },
+  "setGoodPriceMissingInfo": "Add a product category and description first so we can suggest a price.",
+  "@setGoodPriceMissingInfo": {
+    "description": "Guidance when category or description is missing before requesting price"
+  },
+  "setGoodPriceNotAvailable": "Personalized price guidance is not available for this product yet.",
+  "@setGoodPriceNotAvailable": {
+    "description": "Message when no pricing profile is available for the product"
+  },
+  "setGoodPriceLoading": "Getting price guidance...",
+  "@setGoodPriceLoading": {
+    "description": "Loading message while fetching price guidance"
+  },
+  "priceGuidanceTitle": "Price Guidance",
+  "@priceGuidanceTitle": {
+    "description": "Title of bottom sheet showing price guidance"
+  },
+  "priceCostToMake": "Cost to make",
+  "@priceCostToMake": {
+    "description": "Label for break-even floor cost"
+  },
+  "priceSimilarMarket": "Similar market price",
+  "@priceSimilarMarket": {
+    "description": "Label for market ceiling price"
+  },
+  "priceSuggested": "Suggested price",
+  "@priceSuggested": {
+    "description": "Label for recommended price"
+  },
+  "priceGuidanceDisclosure": "Prototype guidance based on sample market data. Final price is your choice.",
+  "@priceGuidanceDisclosure": {
+    "description": "Disclosure text regarding pricing prototype data"
+  },
+  "useThisPriceButton": "Use This Price",
+  "@useThisPriceButton": {
+    "description": "Button to apply the suggested price to the form"
+  },
+  "priceGuidanceUnavailable": "Price guidance is temporarily unavailable. You can enter your price manually.",
+  "@priceGuidanceUnavailable": {
+    "description": "Message when pricing API is offline or times out"
   }
 }

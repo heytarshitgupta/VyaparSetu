@@ -38,6 +38,9 @@ class PricingApiService {
     return 'http://localhost:8001';
   }
 
+  @visibleForTesting
+  static http.Client? customClient;
+
   static Future<PricingApiResponse?> fetchPrice({
     required String productId,
     required String category,
@@ -51,11 +54,18 @@ class PricingApiService {
     });
 
     try {
-      final response = await http.post(
-        uri,
-        headers: {'Content-Type': 'application/json'},
-        body: body,
-      ).timeout(const Duration(seconds: 4));
+      final postFuture = customClient != null
+          ? customClient!.post(
+              uri,
+              headers: {'Content-Type': 'application/json'},
+              body: body,
+            )
+          : http.post(
+              uri,
+              headers: {'Content-Type': 'application/json'},
+              body: body,
+            );
+      final response = await postFuture.timeout(const Duration(seconds: 4));
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
