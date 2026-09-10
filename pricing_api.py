@@ -110,11 +110,12 @@ else:
 
 
 if __name__ == '__main__':
+    port = int(os.getenv('PRICING_API_PORT', '8001'))
     if FastAPI is not None:
         import uvicorn
-        uvicorn.run(app, host='0.0.0.0', port=8000)
+        uvicorn.run(app, host='0.0.0.0', port=port)
     elif Flask is not None:
-        app.run(host='0.0.0.0', port=8000, debug=False)
+        app.run(host='0.0.0.0', port=port, debug=False)
     else:
         print('No web framework available. Install fastapi or flask.')
         sys.exit(1)
