@@ -51,3 +51,6 @@ app.*.map.json
 
 # Supabase CLI local temporary state
 supabase/.temp/
+
+# Python pricing virtual environment
+.venv-pricing/

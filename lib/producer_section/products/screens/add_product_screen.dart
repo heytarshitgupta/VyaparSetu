@@ -31,11 +31,7 @@ class AddProductScreen extends StatefulWidget {
   final IProducerImagePickerService? imagePickerService;
   final IProductPhotoEnhancementService? enhancementService;
   final String? pricingProfileId;
-  final Future<PricingApiResponse?> Function({
-    required String productId,
-    required String category,
-    required String description,
-  })? pricingFetcher;
+  final Future<PricingApiResponse?> Function(PricingRequestV2 request)? pricingFetcher;
 
   const AddProductScreen({
     super.key,
@@ -59,11 +55,7 @@ class AddProductScreen extends StatefulWidget {
     IProducerImagePickerService? imagePickerService,
     IProductPhotoEnhancementService? enhancementService,
     String? pricingProfileId,
-    Future<PricingApiResponse?> Function({
-      required String productId,
-      required String category,
-      required String description,
-    })? pricingFetcher,
+    Future<PricingApiResponse?> Function(PricingRequestV2 request)? pricingFetcher,
   }) {
     return showModalBottomSheet<bool>(
       context: context,
@@ -72,15 +64,20 @@ class AddProductScreen extends StatefulWidget {
       backgroundColor: Colors.transparent,
       isDismissible: true,
       enableDrag: true,
-      builder: (_) => AddProductScreen(
-        existingProduct: existingProduct,
-        provider: provider,
-        productService: productService,
-        imageService: imageService,
-        imagePickerService: imagePickerService,
-        enhancementService: enhancementService,
-        pricingProfileId: pricingProfileId,
-        pricingFetcher: pricingFetcher,
+      builder: (_) => ScaffoldMessenger(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: AddProductScreen(
+            existingProduct: existingProduct,
+            provider: provider,
+            productService: productService,
+            imageService: imageService,
+            imagePickerService: imagePickerService,
+            enhancementService: enhancementService,
+            pricingProfileId: pricingProfileId,
+            pricingFetcher: pricingFetcher,
+          ),
+        ),
       ),
     );
   }
@@ -1716,8 +1713,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
         ? _provider.draft.category.trim()
         : _customCategoryController.text.trim();
     final description = _descriptionController.text.trim();
+    final productName = _nameController.text.trim();
 
-    // Section 4: Input Requirements
+    // Require category and description; product_id is no longer required
     if (category.isEmpty || description.isEmpty) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1726,72 +1724,348 @@ class _AddProductScreenState extends State<AddProductScreen> {
             l10n?.setGoodPriceMissingInfo ??
                 'Add a product category and description first so we can suggest a price.',
           ),
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return;
     }
 
-    // Section 5: Product ID Safety
-    final profileId = widget.pricingProfileId;
-    if (profileId == null || profileId.trim().isEmpty) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            l10n?.setGoodPriceNotAvailable ??
-                'Personalized price guidance is not available for this product yet.',
-          ),
-        ),
-      );
-      return;
-    }
+    // Open cost input sheet first, then fetch when Producer taps Get Price Suggestion
+    _showCostInputSheet(
+      productName: productName.isEmpty ? description : productName,
+      category: category,
+      description: description,
+    );
+  }
 
-    setState(() => _isPricingLoading = true);
-    try {
-      final pricingFetcher =
-          widget.pricingFetcher ?? PricingApiService.fetchPrice;
-      final response = await pricingFetcher(
-        productId: profileId,
-        category: category,
-        description: description,
-      );
+  void _showCostInputSheet({
+    required String productName,
+    required String category,
+    required String description,
+  }) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-      if (!mounted) return;
+    // Cost controllers - local to this sheet
+    final rawMatCtrl = TextEditingController();
+    final packCtrl = TextEditingController();
+    final labourCtrl = TextEditingController();
+    final otherCtrl = TextEditingController();
+    final qtyCtrl = TextEditingController();
+    final marginCtrl = TextEditingController();
+    String? costError;
 
-      if (response == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              l10n?.priceGuidanceUnavailable ??
-                  'Price guidance is temporarily unavailable. You can enter your price manually.',
-            ),
-          ),
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (ctx, setSheetState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 24,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Header
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.price_check,
+                            color: colorScheme.onPrimaryContainer,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            l10n?.priceGuidanceTitle ?? 'Price Guidance',
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      productName,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Cost inputs section
+                    Text(
+                      l10n?.pricingCostInputsTitle ?? 'Your making cost (optional)',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildCostField(
+                            key: const Key('pricing_raw_material_field'),
+                            controller: rawMatCtrl,
+                            label: l10n?.pricingRawMaterialCost ?? 'Raw material cost (₹)',
+                            colorScheme: colorScheme,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildCostField(
+                            key: const Key('pricing_packaging_field'),
+                            controller: packCtrl,
+                            label: l10n?.pricingPackagingCost ?? 'Packaging cost (₹)',
+                            colorScheme: colorScheme,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildCostField(
+                            key: const Key('pricing_labour_field'),
+                            controller: labourCtrl,
+                            label: l10n?.pricingLabourCost ?? 'Labour cost (₹)',
+                            colorScheme: colorScheme,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildCostField(
+                            key: const Key('pricing_other_cost_field'),
+                            controller: otherCtrl,
+                            label: l10n?.pricingOtherCost ?? 'Other cost (₹)',
+                            colorScheme: colorScheme,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildCostField(
+                            key: const Key('pricing_quantity_field'),
+                            controller: qtyCtrl,
+                            label: l10n?.pricingProductionQuantity ?? 'Quantity made',
+                            colorScheme: colorScheme,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildCostField(
+                            key: const Key('pricing_margin_field'),
+                            controller: marginCtrl,
+                            label: l10n?.pricingDesiredMargin ?? 'Desired profit %',
+                            colorScheme: colorScheme,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    if (costError != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        costError!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.error,
+                        ),
+                      ),
+                    ],
+
+                    const SizedBox(height: 20),
+
+                    FilledButton.icon(
+                      key: const Key('pricing_get_suggestion_button'),
+                      icon: const Icon(Icons.price_check, size: 18),
+                      label: Text(
+                        l10n?.pricingGetSuggestion ?? 'Get Price Suggestion',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      onPressed: () async {
+                        // Client-side validation
+                        double? parseOptional(TextEditingController c) {
+                          final t = c.text.trim();
+                          if (t.isEmpty) return null;
+                          return double.tryParse(t);
+                        }
+
+                        final rawMat = parseOptional(rawMatCtrl);
+                        final pack = parseOptional(packCtrl);
+                        final labour = parseOptional(labourCtrl);
+                        final other = parseOptional(otherCtrl);
+                        final qty = parseOptional(qtyCtrl);
+                        final margin = parseOptional(marginCtrl);
+
+                        // Validate negatives
+                        final hasBadCost = [rawMat, pack, labour, other].any(
+                          (v) => v != null && v < 0,
+                        );
+                        if (hasBadCost) {
+                          setSheetState(() {
+                            costError = l10n?.pricingNegativeCostError ??
+                                'Cost values cannot be negative';
+                          });
+                          return;
+                        }
+
+                        // Validate quantity
+                        if (qty != null && qty <= 0) {
+                          setSheetState(() {
+                            costError = l10n?.pricingInvalidQuantityError ??
+                                'Quantity must be greater than zero';
+                          });
+                          return;
+                        }
+
+                        if (margin != null && margin < 0) {
+                          setSheetState(() {
+                            costError = l10n?.pricingNegativeCostError ??
+                                'Desired profit cannot be negative';
+                          });
+                          return;
+                        }
+
+                        setSheetState(() => costError = null);
+
+                        // Build V2 request
+                        final request = PricingRequestV2(
+                          productName: productName,
+                          category: category,
+                          description: description,
+                          productId: widget.pricingProfileId,
+                          unit: _provider.draft.unit.isNotEmpty
+                              ? _provider.draft.unit
+                              : null,
+                          currentPrice: _provider.draft.pricePaise != null
+                              ? _provider.draft.pricePaise! / 100.0
+                              : null,
+                          rawMaterialCost: rawMat,
+                          packagingCost: pack,
+                          laborCost: labour,
+                          otherCost: other,
+                          productionQuantity: qty,
+                          desiredMarginPercent: margin,
+                        );
+
+                        // Dismiss cost sheet, then show loading + result
+                        if (ctx.mounted) Navigator.of(ctx).pop();
+                        if (!mounted) return;
+
+                        setState(() => _isPricingLoading = true);
+                        try {
+                          final fetcher = widget.pricingFetcher ??
+                              (PricingRequestV2 req) =>
+                                  PricingApiService.fetchPrice(req);
+                          final response = await fetcher(request);
+
+                          if (!mounted) return;
+
+                          if (response == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  l10n?.priceGuidanceUnavailable ??
+                                      'Price guidance is temporarily unavailable. You can enter your price manually.',
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                            return;
+                          }
+
+                          _showPriceGuidanceSheet(response);
+                        } catch (_) {
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                l10n?.priceGuidanceUnavailable ??
+                                    'Price guidance is temporarily unavailable. You can enter your price manually.',
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        } finally {
+                          if (mounted) setState(() => _isPricingLoading = false);
+                        }
+                      },
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(0, 48),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
-        return;
-      }
+      },
+    );
+  }
 
-      _showPriceGuidanceSheet(response);
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            l10n?.priceGuidanceUnavailable ??
-                'Price guidance is temporarily unavailable. You can enter your price manually.',
-          ),
-        ),
-      );
-    } finally {
-      if (mounted) {
-        setState(() => _isPricingLoading = false);
-      }
-    }
+  Widget _buildCostField({
+    required Key key,
+    required TextEditingController controller,
+    required String label,
+    required ColorScheme colorScheme,
+  }) {
+    return TextFormField(
+      key: key,
+      controller: controller,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      ),
+    );
   }
 
   void _showPriceGuidanceSheet(PricingApiResponse response) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    // Confidence label
+    String confidenceLabel;
+    switch (response.confidence) {
+      case 'high':
+        confidenceLabel = l10n?.pricingConfidenceStrong ?? 'Strong estimate';
+        break;
+      case 'medium':
+        confidenceLabel = l10n?.pricingConfidenceGood ?? 'Good estimate';
+        break;
+      default:
+        confidenceLabel = l10n?.pricingConfidenceBasic ?? 'Basic estimate';
+    }
 
     showModalBottomSheet<void>(
       context: context,
@@ -1809,158 +2083,243 @@ class _AddProductScreenState extends State<AddProductScreen> {
             top: 20,
             bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 24,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      Icons.price_check,
-                      color: colorScheme.onPrimaryContainer,
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      l10n?.priceGuidanceTitle ?? 'Price Guidance',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: colorScheme.outlineVariant),
-                ),
-                child: Column(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Header
+                Row(
                   children: [
-                    _buildGuidanceMetricRow(
-                      label: l10n?.priceCostToMake ?? 'Cost to make',
-                      value: '₹${response.breakEvenFloor.toStringAsFixed(0)}',
-                      textStyle: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.price_check,
+                        color: colorScheme.onPrimaryContainer,
+                        size: 24,
                       ),
                     ),
-                    const Divider(height: 16),
-                    _buildGuidanceMetricRow(
-                      label: l10n?.priceSimilarMarket ?? 'Similar market price',
-                      value: '₹${response.marketCeiling.toStringAsFixed(0)}',
-                      textStyle: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n?.priceGuidanceTitle ?? 'Price Guidance',
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            confidenceLabel,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const Divider(height: 16),
-                    _buildGuidanceMetricRow(
-                      label: l10n?.priceSuggested ?? 'Suggested price',
-                      value: '₹${response.recommendedPrice.toStringAsFixed(0)}',
-                      textStyle: theme.textTheme.titleMedium?.copyWith(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.w800,
-                      ),
-                      isHighlight: true,
                     ),
                   ],
                 ),
-              ),
-              if (response.aiGuidance.isNotEmpty) ...[
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
+
+                // Primary: Suggested Price (prominent)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: colorScheme.primary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(8),
+                    color: colorScheme.primaryContainer.withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: colorScheme.primary.withValues(alpha: 0.3),
+                    ),
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
                     children: [
-                      Icon(Icons.auto_awesome,
-                          size: 16, color: colorScheme.primary),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          response.aiGuidance,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface,
-                            height: 1.3,
-                          ),
+                      Text(
+                        l10n?.priceSuggested ?? 'Suggested price',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '₹${response.suggestedPrice.toStringAsFixed(0)}',
+                        style: theme.textTheme.displaySmall?.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
-              const SizedBox(height: 12),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    size: 15,
-                    color: colorScheme.onSurfaceVariant,
+                const SizedBox(height: 12),
+
+                // Secondary metrics card
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: colorScheme.outlineVariant),
                   ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      l10n?.priceGuidanceDisclosure ??
-                          'Prototype guidance based on sample market data. Final price is your choice.',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                  child: Column(
+                    children: [
+                      // Market range
+                      _buildGuidanceMetricRow(
+                        label: l10n?.pricingSimilarItemsRange ?? 'Similar items sell for',
+                        value: '₹${response.suggestedPriceLow.toStringAsFixed(0)}'
+                            ' – ₹${response.suggestedPriceHigh.toStringAsFixed(0)}',
+                        textStyle: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+
+                      // Cost to make — only when available
+                      if (response.estimatedUnitCost != null) ...[
+                        const Divider(height: 16),
+                        _buildGuidanceMetricRow(
+                          label: l10n?.priceCostToMake ?? 'Cost to make',
+                          value: '₹${response.estimatedUnitCost!.toStringAsFixed(0)}',
+                          textStyle: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+
+                      // Minimum sustainable price — only when available
+                      if (response.costFloor != null) ...[
+                        const Divider(height: 16),
+                        _buildGuidanceMetricRow(
+                          label: l10n?.pricingMinSustainable ?? 'Minimum sustainable price',
+                          value: '₹${response.costFloor!.toStringAsFixed(0)}',
+                          textStyle: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+
+                      // Bulk price — only when available
+                      if (response.bulkPrice != null) ...[
+                        const Divider(height: 16),
+                        _buildGuidanceMetricRow(
+                          label: l10n?.pricingBulkPrice ?? 'Bulk price',
+                          value: '₹${response.bulkPrice!.toStringAsFixed(0)}',
+                          textStyle: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+
+                // Why this price? (reason)
+                if (response.reason.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.auto_awesome, size: 16, color: colorScheme.primary),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n?.pricingWhyThisPrice ?? 'Why this price?',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: colorScheme.primary,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                response.reason,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurface,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
+                // Disclosure
+                const SizedBox(height: 12),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: 15,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        l10n?.priceGuidanceDisclosure ??
+                            'Prototype guidance based on sample market data. Final price is your choice.',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      key: const Key('cancel_price_guidance_button'),
-                      onPressed: () => Navigator.of(sheetContext).pop(),
-                      child: Text(l10n?.cancel ?? 'Cancel'),
+                  ],
+                ),
+
+                // Actions
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        key: const Key('cancel_price_guidance_button'),
+                        onPressed: () => Navigator.of(sheetContext).pop(),
+                        child: Text(l10n?.cancel ?? 'Cancel'),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    flex: 2,
-                    child: FilledButton.icon(
-                      key: const Key('use_this_price_button'),
-                      onPressed: () {
-                        final formattedPrice = response.recommendedPrice > 0
-                            ? (response.recommendedPrice ==
-                                    response.recommendedPrice.roundToDouble()
-                                ? response.recommendedPrice.toInt().toString()
-                                : response.recommendedPrice.toStringAsFixed(2))
-                            : '0';
-                        _priceController.text = formattedPrice;
-                        _provider.setPriceFromRupeesText(formattedPrice);
-                        if (_priceError != null) {
-                          setState(() => _priceError = null);
-                        }
-                        Navigator.of(sheetContext).pop();
-                      },
-                      icon: const Icon(Icons.check, size: 18),
-                      label: Text(l10n?.useThisPriceButton ?? 'Use This Price'),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: FilledButton.icon(
+                        key: const Key('use_this_price_button'),
+                        onPressed: () {
+                          final price = response.suggestedPrice;
+                          final formattedPrice = price > 0
+                              ? (price == price.roundToDouble()
+                                  ? price.toInt().toString()
+                                  : price.toStringAsFixed(2))
+                              : '0';
+                          _priceController.text = formattedPrice;
+                          _provider.setPriceFromRupeesText(formattedPrice);
+                          if (_priceError != null) {
+                            setState(() => _priceError = null);
+                          }
+                          Navigator.of(sheetContext).pop();
+                        },
+                        icon: const Icon(Icons.check, size: 18),
+                        label: Text(l10n?.useThisPriceButton ?? 'Use This Price'),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

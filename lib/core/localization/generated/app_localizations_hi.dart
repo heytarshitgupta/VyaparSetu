@@ -1954,4 +1954,55 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get dashboardUnavailable => 'बाज़ार अपडेट उपलब्ध नहीं हैं';
+
+  @override
+  String get pricingCostInputsTitle => 'आपकी बनाने की लागत (वैकल्पिक)';
+
+  @override
+  String get pricingRawMaterialCost => 'कच्चे माल की लागत (₹)';
+
+  @override
+  String get pricingPackagingCost => 'पैकेजिंग लागत (₹)';
+
+  @override
+  String get pricingLabourCost => 'श्रम लागत (₹)';
+
+  @override
+  String get pricingOtherCost => 'अन्य लागत (₹)';
+
+  @override
+  String get pricingProductionQuantity => 'बनाई गई मात्रा';
+
+  @override
+  String get pricingDesiredMargin => 'इच्छित लाभ %';
+
+  @override
+  String get pricingGetSuggestion => 'कीमत का सुझाव लें';
+
+  @override
+  String get pricingSimilarItemsRange => 'मिलती-जुलती वस्तुएं बिकती हैं';
+
+  @override
+  String get pricingMinSustainable => 'न्यूनतम टिकाऊ मूल्य';
+
+  @override
+  String get pricingBulkPrice => 'थोक मूल्य';
+
+  @override
+  String get pricingWhyThisPrice => 'यह कीमत क्यों?';
+
+  @override
+  String get pricingConfidenceStrong => 'मजबूत अनुमान';
+
+  @override
+  String get pricingConfidenceGood => 'अच्छा अनुमान';
+
+  @override
+  String get pricingConfidenceBasic => 'बुनियादी अनुमान';
+
+  @override
+  String get pricingNegativeCostError => 'लागत के मूल्य नकारात्मक नहीं हो सकते';
+
+  @override
+  String get pricingInvalidQuantityError => 'मात्रा शून्य से अधिक होनी चाहिए';
 }

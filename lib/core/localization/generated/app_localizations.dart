@@ -3705,6 +3705,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Marketplace updates unavailable'**
   String get dashboardUnavailable;
+
+  /// Section title for optional cost breakdown inputs in pricing sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Your making cost (optional)'**
+  String get pricingCostInputsTitle;
+
+  /// Label for raw material cost input
+  ///
+  /// In en, this message translates to:
+  /// **'Raw material cost (₹)'**
+  String get pricingRawMaterialCost;
+
+  /// Label for packaging cost input
+  ///
+  /// In en, this message translates to:
+  /// **'Packaging cost (₹)'**
+  String get pricingPackagingCost;
+
+  /// Label for labour cost input
+  ///
+  /// In en, this message translates to:
+  /// **'Labour cost (₹)'**
+  String get pricingLabourCost;
+
+  /// Label for other miscellaneous cost input
+  ///
+  /// In en, this message translates to:
+  /// **'Other cost (₹)'**
+  String get pricingOtherCost;
+
+  /// Label for quantity produced in this batch
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity made'**
+  String get pricingProductionQuantity;
+
+  /// Label for desired profit margin percentage input
+  ///
+  /// In en, this message translates to:
+  /// **'Desired profit %'**
+  String get pricingDesiredMargin;
+
+  /// Primary action button to request V2 pricing
+  ///
+  /// In en, this message translates to:
+  /// **'Get Price Suggestion'**
+  String get pricingGetSuggestion;
+
+  /// Label for the market comparable price range
+  ///
+  /// In en, this message translates to:
+  /// **'Similar items sell for'**
+  String get pricingSimilarItemsRange;
+
+  /// Label for cost floor (minimum price covering costs + margin)
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum sustainable price'**
+  String get pricingMinSustainable;
+
+  /// Label for suggested wholesale/bulk price
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk price'**
+  String get pricingBulkPrice;
+
+  /// Section label for the AI reason text
+  ///
+  /// In en, this message translates to:
+  /// **'Why this price?'**
+  String get pricingWhyThisPrice;
+
+  /// Confidence label when confidence=high
+  ///
+  /// In en, this message translates to:
+  /// **'Strong estimate'**
+  String get pricingConfidenceStrong;
+
+  /// Confidence label when confidence=medium
+  ///
+  /// In en, this message translates to:
+  /// **'Good estimate'**
+  String get pricingConfidenceGood;
+
+  /// Confidence label when confidence=low
+  ///
+  /// In en, this message translates to:
+  /// **'Basic estimate'**
+  String get pricingConfidenceBasic;
+
+  /// Validation error for negative cost inputs
+  ///
+  /// In en, this message translates to:
+  /// **'Cost values cannot be negative'**
+  String get pricingNegativeCostError;
+
+  /// Validation error for zero or negative quantity
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity must be greater than zero'**
+  String get pricingInvalidQuantityError;
 }
 
 class _AppLocalizationsDelegate

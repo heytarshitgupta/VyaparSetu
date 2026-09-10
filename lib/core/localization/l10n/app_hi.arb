@@ -239,9 +239,9 @@
   "categoryJewellery": "आभूषण",
   "categoryOther": "अन्य",
   "customCategoryLabel": "श्रेणी बताएं",
-  "unitLabel": "मात्रा इकाई",
+  "unitLabel": "इकाई",
   "unitPiece": "नग / पीस",
-  "unitKg": "किलोग्राम (kg)",
+  "unitKg": "किग्रा (Kg)",
   "unitGram": "ग्राम (g)",
   "unitLitre": "लीटर (L)",
   "unitMl": "मिलीलीटर (ml)",
@@ -496,10 +496,8 @@
   "productionCapacityTitle": "आप आमतौर पर कितना उत्पादन कर सकते हैं?",
   "quantityLabel": "मात्रा",
   "quantityHint": "जैसे 50",
-  "unitLabel": "इकाई",
   "periodLabel": "अवधि",
   "unitPieces": "पीस (Pieces)",
-  "unitKg": "किग्रा (Kg)",
   "unitLitres": "लीटर (Litres)",
   "unitPacks": "पैक (Packs)",
   "unitBoxes": "बॉक्स (Boxes)",
@@ -594,7 +592,6 @@
   "marketDemandTitle": "बाज़ार मांग",
   "viewMarketRadarAction": "मार्केट रडार देखें",
   "targetPriceLabel": "लक्षित: {price}",
-  "quantityLabel": "मात्रा",
   "quantityWithUnit": "मात्रा: {quantity} {unit}",
   "highUrgency": "उच्च",
   "mediumUrgency": "मध्यम",
@@ -603,5 +600,73 @@
   "growingDemand": "बढ़ती मांग",
   "steadyDemand": "स्थिर मांग",
   "loadingDashboard": "बाज़ार अपडेट लोड हो रहे हैं...",
-  "dashboardUnavailable": "बाज़ार अपडेट उपलब्ध नहीं हैं"
+  "dashboardUnavailable": "बाज़ार अपडेट उपलब्ध नहीं हैं",
+  "pricingCostInputsTitle": "आपकी बनाने की लागत (वैकल्पिक)",
+  "@pricingCostInputsTitle": {
+    "description": "Section title for optional cost breakdown inputs in pricing sheet"
+  },
+  "pricingRawMaterialCost": "कच्चे माल की लागत (₹)",
+  "@pricingRawMaterialCost": {
+    "description": "Label for raw material cost input"
+  },
+  "pricingPackagingCost": "पैकेजिंग लागत (₹)",
+  "@pricingPackagingCost": {
+    "description": "Label for packaging cost input"
+  },
+  "pricingLabourCost": "श्रम लागत (₹)",
+  "@pricingLabourCost": {
+    "description": "Label for labour cost input"
+  },
+  "pricingOtherCost": "अन्य लागत (₹)",
+  "@pricingOtherCost": {
+    "description": "Label for other miscellaneous cost input"
+  },
+  "pricingProductionQuantity": "बनाई गई मात्रा",
+  "@pricingProductionQuantity": {
+    "description": "Label for quantity produced in this batch"
+  },
+  "pricingDesiredMargin": "इच्छित लाभ %",
+  "@pricingDesiredMargin": {
+    "description": "Label for desired profit margin percentage input"
+  },
+  "pricingGetSuggestion": "कीमत का सुझाव लें",
+  "@pricingGetSuggestion": {
+    "description": "Primary action button to request V2 pricing"
+  },
+  "pricingSimilarItemsRange": "मिलती-जुलती वस्तुएं बिकती हैं",
+  "@pricingSimilarItemsRange": {
+    "description": "Label for the market comparable price range"
+  },
+  "pricingMinSustainable": "न्यूनतम टिकाऊ मूल्य",
+  "@pricingMinSustainable": {
+    "description": "Label for cost floor"
+  },
+  "pricingBulkPrice": "थोक मूल्य",
+  "@pricingBulkPrice": {
+    "description": "Label for bulk price"
+  },
+  "pricingWhyThisPrice": "यह कीमत क्यों?",
+  "@pricingWhyThisPrice": {
+    "description": "Section label for reason text"
+  },
+  "pricingConfidenceStrong": "मजबूत अनुमान",
+  "@pricingConfidenceStrong": {
+    "description": "Confidence label high"
+  },
+  "pricingConfidenceGood": "अच्छा अनुमान",
+  "@pricingConfidenceGood": {
+    "description": "Confidence label medium"
+  },
+  "pricingConfidenceBasic": "बुनियादी अनुमान",
+  "@pricingConfidenceBasic": {
+    "description": "Confidence label low"
+  },
+  "pricingNegativeCostError": "लागत के मूल्य नकारात्मक नहीं हो सकते",
+  "@pricingNegativeCostError": {
+    "description": "Validation error negative cost"
+  },
+  "pricingInvalidQuantityError": "मात्रा शून्य से अधिक होनी चाहिए",
+  "@pricingInvalidQuantityError": {
+    "description": "Validation error zero quantity"
+  }
 }

@@ -1952,4 +1952,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashboardUnavailable => 'Marketplace updates unavailable';
+
+  @override
+  String get pricingCostInputsTitle => 'Your making cost (optional)';
+
+  @override
+  String get pricingRawMaterialCost => 'Raw material cost (₹)';
+
+  @override
+  String get pricingPackagingCost => 'Packaging cost (₹)';
+
+  @override
+  String get pricingLabourCost => 'Labour cost (₹)';
+
+  @override
+  String get pricingOtherCost => 'Other cost (₹)';
+
+  @override
+  String get pricingProductionQuantity => 'Quantity made';
+
+  @override
+  String get pricingDesiredMargin => 'Desired profit %';
+
+  @override
+  String get pricingGetSuggestion => 'Get Price Suggestion';
+
+  @override
+  String get pricingSimilarItemsRange => 'Similar items sell for';
+
+  @override
+  String get pricingMinSustainable => 'Minimum sustainable price';
+
+  @override
+  String get pricingBulkPrice => 'Bulk price';
+
+  @override
+  String get pricingWhyThisPrice => 'Why this price?';
+
+  @override
+  String get pricingConfidenceStrong => 'Strong estimate';
+
+  @override
+  String get pricingConfidenceGood => 'Good estimate';
+
+  @override
+  String get pricingConfidenceBasic => 'Basic estimate';
+
+  @override
+  String get pricingNegativeCostError => 'Cost values cannot be negative';
+
+  @override
+  String get pricingInvalidQuantityError =>
+      'Quantity must be greater than zero';
 }

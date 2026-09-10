@@ -1,121 +1,267 @@
+"""
+VyaparSetu Pricing API — V2
+============================
+FastAPI server exposing the V2 pricing engine.
+
+Port: 8001  (PRICING_API_PORT env override)
+
+Start:
+    .venv-pricing/bin/uvicorn pricing_api:app --host 0.0.0.0 --port 8001
+"""
+
+from __future__ import annotations
+
+import math
 import os
 import sys
 from pathlib import Path
+from typing import Any, List, Optional
 
-try:
-    from fastapi import FastAPI, HTTPException
-    from pydantic import BaseModel
-except Exception:
-    FastAPI = None
-    HTTPException = None
-    BaseModel = None
-
-try:
-    from flask import Flask, jsonify, request
-except Exception:
-    Flask = None
-
-# Ensure imports resolve from this repo root, because the attached engine reads
-# CSV/XLSX files relative to the working directory.
+# Ensure working directory = repo root so data files resolve correctly
 BASE_DIR = Path(__file__).resolve().parent
 os.chdir(str(BASE_DIR))
+sys.path.insert(0, str(BASE_DIR))
 
-try:
-    from pricing_engine import VyaparSetuPricingEngine
-except Exception as exc:
-    VyaparSetuPricingEngine = None
-    ENGINE_IMPORT_ERROR = exc
-else:
-    ENGINE_IMPORT_ERROR = None
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, field_validator, model_validator
+
+from pricing_engine import VyaparSetuPricingEngine
+
+# ---------------------------------------------------------------------------
+# App
+# ---------------------------------------------------------------------------
+app = FastAPI(
+    title="VyaparSetu Pricing API",
+    version="2.0.0",
+    description="Dynamic pricing for artisan and MSME producers. product_id is optional.",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$",
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+# Singleton engine loaded at startup
+_engine: Optional[VyaparSetuPricingEngine] = None
+_engine_error: Optional[str] = None
 
 
-if FastAPI is not None:
-    class PriceRequest(BaseModel):
-        product_id: str
-        category: str
-        description: str
+@app.on_event("startup")
+def _load_engine() -> None:
+    global _engine, _engine_error
+    try:
+        _engine = VyaparSetuPricingEngine()
+    except Exception as exc:  # noqa: BLE001
+        _engine_error = str(exc)
 
-    app = FastAPI(title='VyaparSetu Pricing API')
 
-    @app.get('/health')
-    def health():
-        return {'ok': True}
+# ---------------------------------------------------------------------------
+# Request / Response models
+# ---------------------------------------------------------------------------
 
-    @app.post('/price')
-    def price(payload: PriceRequest):
+def _reject_non_finite(v: Optional[float], field: str) -> Optional[float]:
+    if v is None:
+        return v
+    if math.isnan(v) or math.isinf(v):
+        raise ValueError(f"{field} must be a finite number")
+    return v
+
+
+def _reject_negative(v: Optional[float], field: str) -> Optional[float]:
+    if v is None:
+        return v
+    if v < 0:
+        raise ValueError(f"{field} must be >= 0")
+    return v
+
+
+class PriceRequestV2(BaseModel):
+    # Required
+    product_name: str
+    category: str
+    description: str
+
+    # Optional metadata (never used as predictive features)
+    product_id: Optional[str] = None
+    producer_id: Optional[str] = None
+    unit: Optional[str] = None
+    current_price: Optional[float] = None
+
+    # Cost fields
+    raw_material_cost: Optional[float] = None
+    packaging_cost: Optional[float] = None
+    labor_cost: Optional[float] = None
+    other_cost: Optional[float] = None
+    production_quantity: Optional[float] = None
+    desired_margin_percent: Optional[float] = None
+
+    # Demand signals
+    active_request_count: Optional[int] = None
+    average_target_price: Optional[float] = None
+    recent_completed_price: Optional[float] = None
+    completed_order_count: Optional[int] = None
+
+    @field_validator("product_name", "category", "description")
+    @classmethod
+    def _non_empty_str(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("Field must not be blank")
+        return v.strip()
+
+    @field_validator(
+        "raw_material_cost", "packaging_cost", "labor_cost", "other_cost",
+        mode="before",
+    )
+    @classmethod
+    def _validate_cost(cls, v: Any) -> Any:
+        if v is None:
+            return v
         try:
-            engine = VyaparSetuPricingEngine() if VyaparSetuPricingEngine else None
-            if engine is None:
-                raise RuntimeError(f'Pricing engine import failed: {ENGINE_IMPORT_ERROR}')
+            fv = float(v)
+        except (TypeError, ValueError):
+            raise ValueError("Cost field must be a number")
+        if math.isnan(fv) or math.isinf(fv):
+            raise ValueError("Cost field must be a finite number")
+        if fv < 0:
+            raise ValueError("Cost field must be >= 0")
+        return fv
 
-            result = engine.calculate_price_for_product(
-                product_id=payload.product_id,
-                category=payload.category,
-                description=payload.description,
-                is_bulk=False,
-            )
-
-            return {
-                'product_id': result.get('product_id', payload.product_id),
-                'pricing_tier': result.get('pricing_tier', 'B2C Retail Tier'),
-                'break_even_floor': float(result.get('break_even_floor', 0.0)),
-                'recommended_price': float(result.get('recommended_price', result.get('break_even_floor', 0.0))),
-                'market_ceiling': float(result.get('market_ceiling', 0.0)),
-                'ai_guidance': str(result.get('ai_guidance', '')),
-            }
-        except Exception as exc:
-            raise HTTPException(status_code=500, detail=str(exc))
-
-else:
-    app = Flask(__name__)
-
-    class PriceRequest:
-        def __init__(self, product_id, category, description):
-            self.product_id = product_id
-            self.category = category
-            self.description = description
-
-    @app.get('/health')
-    def health():
-        return jsonify({'ok': True})
-
-    @app.post('/price')
-    def price():
-        payload = request.get_json(silent=True) or {}
-        product_id = str(payload.get('product_id', ''))
-        category = str(payload.get('category', ''))
-        description = str(payload.get('description', ''))
-
+    @field_validator("production_quantity", mode="before")
+    @classmethod
+    def _validate_qty(cls, v: Any) -> Any:
+        if v is None:
+            return v
         try:
-            engine = VyaparSetuPricingEngine() if VyaparSetuPricingEngine else None
-            if engine is None:
-                raise RuntimeError(f'Pricing engine import failed: {ENGINE_IMPORT_ERROR}')
+            fv = float(v)
+        except (TypeError, ValueError):
+            raise ValueError("production_quantity must be a number")
+        if math.isnan(fv) or math.isinf(fv):
+            raise ValueError("production_quantity must be a finite number")
+        if fv <= 0:
+            raise ValueError("production_quantity must be > 0")
+        return fv
 
-            result = engine.calculate_price_for_product(
-                product_id=product_id,
-                category=category,
-                description=description,
-                is_bulk=False,
-            )
-            return jsonify({
-                'product_id': result.get('product_id', product_id),
-                'pricing_tier': result.get('pricing_tier', 'B2C Retail Tier'),
-                'break_even_floor': float(result.get('break_even_floor', 0.0)),
-                'recommended_price': float(result.get('recommended_price', result.get('break_even_floor', 0.0))),
-                'market_ceiling': float(result.get('market_ceiling', 0.0)),
-                'ai_guidance': str(result.get('ai_guidance', '')),
-            })
-        except Exception as exc:
-            return jsonify({'error': str(exc)}), 500
+    @field_validator("desired_margin_percent", mode="before")
+    @classmethod
+    def _validate_margin(cls, v: Any) -> Any:
+        if v is None:
+            return v
+        try:
+            fv = float(v)
+        except (TypeError, ValueError):
+            raise ValueError("desired_margin_percent must be a number")
+        if math.isnan(fv) or math.isinf(fv):
+            raise ValueError("desired_margin_percent must be a finite number")
+        if fv < 0:
+            raise ValueError("desired_margin_percent must be >= 0")
+        return fv
+
+    @field_validator("average_target_price", "recent_completed_price", mode="before")
+    @classmethod
+    def _validate_signal_price(cls, v: Any) -> Any:
+        if v is None:
+            return v
+        try:
+            fv = float(v)
+        except (TypeError, ValueError):
+            raise ValueError("Signal price must be a number")
+        if math.isnan(fv) or math.isinf(fv):
+            raise ValueError("Signal price must be a finite number")
+        return fv
+
+    @field_validator("active_request_count", "completed_order_count", mode="before")
+    @classmethod
+    def _validate_count(cls, v: Any) -> Any:
+        if v is None:
+            return v
+        try:
+            iv = int(v)
+        except (TypeError, ValueError):
+            raise ValueError("Count field must be an integer")
+        if iv < 0:
+            raise ValueError("Count field must be >= 0")
+        return iv
 
 
-if __name__ == '__main__':
-    port = int(os.getenv('PRICING_API_PORT', '8001'))
-    if FastAPI is not None:
-        import uvicorn
-        uvicorn.run(app, host='0.0.0.0', port=port)
-    elif Flask is not None:
-        app.run(host='0.0.0.0', port=port, debug=False)
-    else:
-        print('No web framework available. Install fastapi or flask.')
-        sys.exit(1)
+class PriceResponseV2(BaseModel):
+    suggested_price: float
+    suggested_price_low: float
+    suggested_price_high: float
+    market_typical_price: Optional[float]
+    estimated_unit_cost: Optional[float]
+    cost_floor: Optional[float]
+    bulk_price: Optional[float]
+    confidence: str
+    reason: str
+    signals_used: List[str]
+
+
+# ---------------------------------------------------------------------------
+# Exception handlers
+# ---------------------------------------------------------------------------
+
+@app.exception_handler(Exception)
+async def _generic_handler(request: Request, exc: Exception) -> JSONResponse:
+    return JSONResponse(status_code=500, content={"error": "Internal pricing error."})
+
+
+# ---------------------------------------------------------------------------
+# Endpoints
+# ---------------------------------------------------------------------------
+
+@app.get("/health")
+def health() -> dict:
+    return {
+        "ok": True,
+        "engine_loaded": _engine is not None,
+        "engine_error": _engine_error,
+        "version": "2.0.0",
+    }
+
+
+@app.post("/price", response_model=PriceResponseV2)
+def price(payload: PriceRequestV2) -> dict:
+    if _engine is None:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Pricing engine not available: {_engine_error}",
+        )
+    try:
+        result = _engine.price_product(
+            product_name=payload.product_name,
+            category=payload.category,
+            description=payload.description,
+            unit=payload.unit,
+            product_id=payload.product_id,
+            producer_id=payload.producer_id,
+            current_price=payload.current_price,
+            raw_material_cost=payload.raw_material_cost,
+            packaging_cost=payload.packaging_cost,
+            labor_cost=payload.labor_cost,
+            other_cost=payload.other_cost,
+            production_quantity=payload.production_quantity,
+            desired_margin_percent=payload.desired_margin_percent,
+            active_request_count=payload.active_request_count,
+            average_target_price=payload.average_target_price,
+            recent_completed_price=payload.recent_completed_price,
+            completed_order_count=payload.completed_order_count,
+        )
+        return result
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail="Pricing calculation failed.") from exc
+
+
+# ---------------------------------------------------------------------------
+# CLI entry-point
+# ---------------------------------------------------------------------------
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PRICING_API_PORT", "8001"))
+    uvicorn.run(app, host="0.0.0.0", port=port)

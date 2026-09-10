@@ -1957,4 +1957,56 @@ class AppLocalizationsPa extends AppLocalizations {
 
   @override
   String get dashboardUnavailable => 'ਮਾਰਕੀਟ ਅੱਪਡੇਟ ਉਪਲਬਧ ਨਹੀਂ ਹਨ';
+
+  @override
+  String get pricingCostInputsTitle => 'ਤੁਹਾਡੀ ਬਣਾਉਣ ਦੀ ਲਾਗਤ (ਵਿਕਲਪਿਕ)';
+
+  @override
+  String get pricingRawMaterialCost => 'ਕੱਚੇ ਮਾਲ ਦੀ ਲਾਗਤ (₹)';
+
+  @override
+  String get pricingPackagingCost => 'ਪੈਕੇਜਿੰਗ ਲਾਗਤ (₹)';
+
+  @override
+  String get pricingLabourCost => 'ਮਜ਼ਦੂਰੀ ਲਾਗਤ (₹)';
+
+  @override
+  String get pricingOtherCost => 'ਹੋਰ ਲਾਗਤ (₹)';
+
+  @override
+  String get pricingProductionQuantity => 'ਬਣਾਈ ਮਾਤਰਾ';
+
+  @override
+  String get pricingDesiredMargin => 'ਲੋੜੀਂਦਾ ਮੁਨਾਫ਼ਾ %';
+
+  @override
+  String get pricingGetSuggestion => 'ਕੀਮਤ ਦਾ ਸੁਝਾਅ ਲਓ';
+
+  @override
+  String get pricingSimilarItemsRange => 'ਮਿਲਦੀਆਂ-ਜੁਲਦੀਆਂ ਵਸਤਾਂ ਵਿਕਦੀਆਂ ਹਨ';
+
+  @override
+  String get pricingMinSustainable => 'ਘੱਟੋ-ਘੱਟ ਟਿਕਾਊ ਕੀਮਤ';
+
+  @override
+  String get pricingBulkPrice => 'ਥੋਕ ਕੀਮਤ';
+
+  @override
+  String get pricingWhyThisPrice => 'ਇਹ ਕੀਮਤ ਕਿਉਂ?';
+
+  @override
+  String get pricingConfidenceStrong => 'ਮਜ਼ਬੂਤ ਅਨੁਮਾਨ';
+
+  @override
+  String get pricingConfidenceGood => 'ਚੰਗਾ ਅਨੁਮਾਨ';
+
+  @override
+  String get pricingConfidenceBasic => 'ਬੁਨਿਆਦੀ ਅਨੁਮਾਨ';
+
+  @override
+  String get pricingNegativeCostError => 'ਲਾਗਤ ਦੇ ਮੁੱਲ ਨਕਾਰਾਤਮਕ ਨਹੀਂ ਹੋ ਸਕਦੇ';
+
+  @override
+  String get pricingInvalidQuantityError =>
+      'ਮਾਤਰਾ ਜ਼ੀਰੋ ਤੋਂ ਵੱਧ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ';
 }

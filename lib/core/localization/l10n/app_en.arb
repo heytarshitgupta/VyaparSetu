@@ -2512,5 +2512,74 @@
   "dashboardUnavailable": "Marketplace updates unavailable",
   "@dashboardUnavailable": {
     "description": "Error fallback message for home dashboard"
+  },
+
+  "pricingCostInputsTitle": "Your making cost (optional)",
+  "@pricingCostInputsTitle": {
+    "description": "Section title for optional cost breakdown inputs in pricing sheet"
+  },
+  "pricingRawMaterialCost": "Raw material cost (₹)",
+  "@pricingRawMaterialCost": {
+    "description": "Label for raw material cost input"
+  },
+  "pricingPackagingCost": "Packaging cost (₹)",
+  "@pricingPackagingCost": {
+    "description": "Label for packaging cost input"
+  },
+  "pricingLabourCost": "Labour cost (₹)",
+  "@pricingLabourCost": {
+    "description": "Label for labour cost input"
+  },
+  "pricingOtherCost": "Other cost (₹)",
+  "@pricingOtherCost": {
+    "description": "Label for other miscellaneous cost input"
+  },
+  "pricingProductionQuantity": "Quantity made",
+  "@pricingProductionQuantity": {
+    "description": "Label for quantity produced in this batch"
+  },
+  "pricingDesiredMargin": "Desired profit %",
+  "@pricingDesiredMargin": {
+    "description": "Label for desired profit margin percentage input"
+  },
+  "pricingGetSuggestion": "Get Price Suggestion",
+  "@pricingGetSuggestion": {
+    "description": "Primary action button to request V2 pricing"
+  },
+  "pricingSimilarItemsRange": "Similar items sell for",
+  "@pricingSimilarItemsRange": {
+    "description": "Label for the market comparable price range"
+  },
+  "pricingMinSustainable": "Minimum sustainable price",
+  "@pricingMinSustainable": {
+    "description": "Label for cost floor (minimum price covering costs + margin)"
+  },
+  "pricingBulkPrice": "Bulk price",
+  "@pricingBulkPrice": {
+    "description": "Label for suggested wholesale/bulk price"
+  },
+  "pricingWhyThisPrice": "Why this price?",
+  "@pricingWhyThisPrice": {
+    "description": "Section label for the AI reason text"
+  },
+  "pricingConfidenceStrong": "Strong estimate",
+  "@pricingConfidenceStrong": {
+    "description": "Confidence label when confidence=high"
+  },
+  "pricingConfidenceGood": "Good estimate",
+  "@pricingConfidenceGood": {
+    "description": "Confidence label when confidence=medium"
+  },
+  "pricingConfidenceBasic": "Basic estimate",
+  "@pricingConfidenceBasic": {
+    "description": "Confidence label when confidence=low"
+  },
+  "pricingNegativeCostError": "Cost values cannot be negative",
+  "@pricingNegativeCostError": {
+    "description": "Validation error for negative cost inputs"
+  },
+  "pricingInvalidQuantityError": "Quantity must be greater than zero",
+  "@pricingInvalidQuantityError": {
+    "description": "Validation error for zero or negative quantity"
   }
 }

@@ -239,9 +239,9 @@
   "categoryJewellery": "ਗਹਿਣੇ",
   "categoryOther": "ਹੋਰ",
   "customCategoryLabel": "ਸ਼੍ਰੇਣੀ ਦੱਸੋ",
-  "unitLabel": "ਮਾਤਰਾ ਇਕਾਈ",
+  "unitLabel": "ਇਕਾਈ",
   "unitPiece": "ਪੀਸ",
-  "unitKg": "ਕਿਲੋਗ੍ਰਾਮ (kg)",
+  "unitKg": "ਕਿਲੋਗ੍ਰਾਮ (Kg)",
   "unitGram": "ਗ੍ਰਾਮ (g)",
   "unitLitre": "ਲੀਟਰ (L)",
   "unitMl": "ਮਿਲੀਲੀਟਰ (ml)",
@@ -496,10 +496,8 @@
   "productionCapacityTitle": "ਤੁਸੀਂ ਆਮ ਤੌਰ 'ਤੇ ਕਿੰਨਾ ਉਤਪਾਦਨ ਕਰ ਸਕਦੇ ਹੋ?",
   "quantityLabel": "ਮਾਤਰਾ",
   "quantityHint": "ਜਿਵੇਂ 50",
-  "unitLabel": "ਇਕਾਈ",
   "periodLabel": "ਮਿਆਦ",
   "unitPieces": "ਨਗ (Pieces)",
-  "unitKg": "ਕਿਲੋਗ੍ਰਾਮ (Kg)",
   "unitLitres": "ਲਿਟਰ (Litres)",
   "unitPacks": "ਪੈਕ (Packs)",
   "unitBoxes": "ਡੱਬੇ (Boxes)",
@@ -594,7 +592,6 @@
   "marketDemandTitle": "ਮਾਰਕੀਟ ਮੰਗ",
   "viewMarketRadarAction": "ਮਾਰਕੀਟ ਰਾਡਾਰ ਵੇਖੋ",
   "targetPriceLabel": "ਨਿਸ਼ਾਨਾ: {price}",
-  "quantityLabel": "ਮਾਤਰਾ",
   "quantityWithUnit": "ਮਾਤਰਾ: {quantity} {unit}",
   "highUrgency": "ਉੱਚ",
   "mediumUrgency": "ਦਰਮਿਆਨਾ",
@@ -603,5 +600,73 @@
   "growingDemand": "ਵਧਦੀ ਮੰਗ",
   "steadyDemand": "ਸਥਿਰ ਮੰਗ",
   "loadingDashboard": "ਮਾਰਕੀਟ ਅੱਪਡੇਟ ਲੋਡ ਹੋ ਰਹੇ ਹਨ...",
-  "dashboardUnavailable": "ਮਾਰਕੀਟ ਅੱਪਡੇਟ ਉਪਲਬਧ ਨਹੀਂ ਹਨ"
+  "dashboardUnavailable": "ਮਾਰਕੀਟ ਅੱਪਡੇਟ ਉਪਲਬਧ ਨਹੀਂ ਹਨ",
+  "pricingCostInputsTitle": "ਤੁਹਾਡੀ ਬਣਾਉਣ ਦੀ ਲਾਗਤ (ਵਿਕਲਪਿਕ)",
+  "@pricingCostInputsTitle": {
+    "description": "Section title for optional cost breakdown inputs in pricing sheet"
+  },
+  "pricingRawMaterialCost": "ਕੱਚੇ ਮਾਲ ਦੀ ਲਾਗਤ (₹)",
+  "@pricingRawMaterialCost": {
+    "description": "Label for raw material cost input"
+  },
+  "pricingPackagingCost": "ਪੈਕੇਜਿੰਗ ਲਾਗਤ (₹)",
+  "@pricingPackagingCost": {
+    "description": "Label for packaging cost input"
+  },
+  "pricingLabourCost": "ਮਜ਼ਦੂਰੀ ਲਾਗਤ (₹)",
+  "@pricingLabourCost": {
+    "description": "Label for labour cost input"
+  },
+  "pricingOtherCost": "ਹੋਰ ਲਾਗਤ (₹)",
+  "@pricingOtherCost": {
+    "description": "Label for other miscellaneous cost input"
+  },
+  "pricingProductionQuantity": "ਬਣਾਈ ਮਾਤਰਾ",
+  "@pricingProductionQuantity": {
+    "description": "Label for quantity produced in this batch"
+  },
+  "pricingDesiredMargin": "ਲੋੜੀਂਦਾ ਮੁਨਾਫ਼ਾ %",
+  "@pricingDesiredMargin": {
+    "description": "Label for desired profit margin percentage input"
+  },
+  "pricingGetSuggestion": "ਕੀਮਤ ਦਾ ਸੁਝਾਅ ਲਓ",
+  "@pricingGetSuggestion": {
+    "description": "Primary action button to request V2 pricing"
+  },
+  "pricingSimilarItemsRange": "ਮਿਲਦੀਆਂ-ਜੁਲਦੀਆਂ ਵਸਤਾਂ ਵਿਕਦੀਆਂ ਹਨ",
+  "@pricingSimilarItemsRange": {
+    "description": "Label for the market comparable price range"
+  },
+  "pricingMinSustainable": "ਘੱਟੋ-ਘੱਟ ਟਿਕਾਊ ਕੀਮਤ",
+  "@pricingMinSustainable": {
+    "description": "Label for cost floor"
+  },
+  "pricingBulkPrice": "ਥੋਕ ਕੀਮਤ",
+  "@pricingBulkPrice": {
+    "description": "Label for bulk price"
+  },
+  "pricingWhyThisPrice": "ਇਹ ਕੀਮਤ ਕਿਉਂ?",
+  "@pricingWhyThisPrice": {
+    "description": "Section label for reason text"
+  },
+  "pricingConfidenceStrong": "ਮਜ਼ਬੂਤ ਅਨੁਮਾਨ",
+  "@pricingConfidenceStrong": {
+    "description": "Confidence label high"
+  },
+  "pricingConfidenceGood": "ਚੰਗਾ ਅਨੁਮਾਨ",
+  "@pricingConfidenceGood": {
+    "description": "Confidence label medium"
+  },
+  "pricingConfidenceBasic": "ਬੁਨਿਆਦੀ ਅਨੁਮਾਨ",
+  "@pricingConfidenceBasic": {
+    "description": "Confidence label low"
+  },
+  "pricingNegativeCostError": "ਲਾਗਤ ਦੇ ਮੁੱਲ ਨਕਾਰਾਤਮਕ ਨਹੀਂ ਹੋ ਸਕਦੇ",
+  "@pricingNegativeCostError": {
+    "description": "Validation error negative cost"
+  },
+  "pricingInvalidQuantityError": "ਮਾਤਰਾ ਜ਼ੀਰੋ ਤੋਂ ਵੱਧ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ",
+  "@pricingInvalidQuantityError": {
+    "description": "Validation error zero quantity"
+  }
 }
