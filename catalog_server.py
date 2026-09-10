@@ -30,6 +30,11 @@ app.add_middleware(
 )
 
 
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "catalog"}
+
+
 class VoicePayload(BaseModel):
     transcript: str
 

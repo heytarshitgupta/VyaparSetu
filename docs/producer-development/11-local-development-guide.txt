@@ -1,0 +1,52 @@
+============================================================
+VYAPARSETU — PRODUCER LOCAL DEVELOPMENT & TESTING GUIDE
+============================================================
+
+LOCAL FULL PROJECT TEST
+------------------------------------------------------------
+
+1. Start local services:
+   ./run_vyaparsetu.sh
+
+   This single command:
+   - Auto-detects local Python environments (or uses CATALOG_PYTHON / PRICING_PYTHON)
+   - Starts Catalog / Voice AI backend on port 8000
+   - Starts Dynamic Pricing backend on port 8001
+   - Performs automatic HTTP health checks against /health endpoints
+   - Cleans up child processes on Ctrl+C without leaving orphan processes
+
+2. Start Flutter client:
+   Open another terminal window and run:
+   flutter run
+
+   Platform targets:
+   - Web:     flutter run -d chrome
+   - macOS:   flutter run -d macos
+   - Android: flutter run (automatically connects to 10.0.2.2:8000 & 10.0.2.2:8001)
+
+3. End-to-End Test Flows:
+   - Producer Login / Signup
+   - Business Onboarding (Steps 0 through 5)
+   - Add Product flow:
+     * Voice AI catalog generation (mic recording -> Gemini 2.5 Flash -> title & description)
+     * Photo upload & AI photo improvement
+     * "Set a Good Price" button:
+       - Checks for minimum inputs (category & description)
+       - Fetches pricing guidance (break-even floor, market ceiling, recommended price)
+       - Populates price without automatic submission
+     * Note: "Set a Good Price" V1 may truthfully report that personalized pricing
+       is unavailable for products not mapped to current prototype pricing profiles.
+       That is a known safe limitation pending Dynamic Pricing V2.
+   - My Products catalog management
+   - Business Verification (PAN & GSTIN truthful status display)
+   - Multi-language switching (English, Hindi, Punjabi)
+
+4. Cloud Supabase Architecture:
+   Supabase features do not require a local Supabase instance because the
+   application connects directly to the configured cloud Supabase project.
+
+5. API Server Root Notes:
+   Opening http://localhost:8000/ or http://localhost:8001/ directly in a web
+   browser may return HTTP 404. This is expected and normal because these are
+   REST API servers with specific endpoints (/health, /api/generate-catalog,
+   /price), not web application pages.
