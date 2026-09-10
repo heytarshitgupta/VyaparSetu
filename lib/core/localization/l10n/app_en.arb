@@ -2394,5 +2394,123 @@
   "priceGuidanceUnavailable": "Price guidance is temporarily unavailable. You can enter your price manually.",
   "@priceGuidanceUnavailable": {
     "description": "Message when pricing API is offline or times out"
+  },
+  "ordersAndSalesTitle": "Orders & Sales",
+  "@ordersAndSalesTitle": {
+    "description": "Title for orders and sales section on producer home"
+  },
+  "ordersSummarySubtitle": "Your completed marketplace sales",
+  "@ordersSummarySubtitle": {
+    "description": "Subtitle explaining completed sales"
+  },
+  "completedSalesLabel": "Completed Sales",
+  "@completedSalesLabel": {
+    "description": "Label for completed sales amount"
+  },
+  "completedOrdersLabel": "Completed Orders",
+  "@completedOrdersLabel": {
+    "description": "Label for completed orders count"
+  },
+  "pendingOrdersLabel": "Pending / Confirmed",
+  "@pendingOrdersLabel": {
+    "description": "Label for pending or confirmed orders count"
+  },
+  "totalOrdersLabel": "Total Orders",
+  "@totalOrdersLabel": {
+    "description": "Label for total orders count"
+  },
+  "yourProductsTitle": "Your Products",
+  "@yourProductsTitle": {
+    "description": "Title for products section on producer home"
+  },
+  "activeProductsBadge": "{count} Active",
+  "@activeProductsBadge": {
+    "description": "Badge showing active product count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewAllAction": "View All",
+  "@viewAllAction": {
+    "description": "Action link to view all items"
+  },
+  "activeBuyerNeedsTitle": "Active Buyer Needs",
+  "@activeBuyerNeedsTitle": {
+    "description": "Title for active buyer requests section on producer home"
+  },
+  "viewBuyerNeedsAction": "View Buyer Needs",
+  "@viewBuyerNeedsAction": {
+    "description": "Button to open buyer needs tab"
+  },
+  "noActiveBuyerNeeds": "No active buyer requests right now",
+  "@noActiveBuyerNeeds": {
+    "description": "Empty state text when no active buyer requests"
+  },
+  "marketDemandTitle": "Market Demand",
+  "@marketDemandTitle": {
+    "description": "Title for market demand signals preview on producer home"
+  },
+  "viewMarketRadarAction": "View Market Radar",
+  "@viewMarketRadarAction": {
+    "description": "Action button to open full market intelligence"
+  },
+  "targetPriceLabel": "Target: {price}",
+  "@targetPriceLabel": {
+    "description": "Display label for buyer target price",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "quantityLabel": "Quantity",
+  "@quantityLabel": {
+    "description": "Label for quantity input"
+  },
+  "quantityWithUnit": "Qty: {quantity} {unit}",
+  "@quantityWithUnit": {
+    "description": "Display label for buyer requested quantity and unit",
+    "placeholders": {
+      "quantity": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "highUrgency": "High",
+  "@highUrgency": {
+    "description": "Urgency badge high"
+  },
+  "mediumUrgency": "Medium",
+  "@mediumUrgency": {
+    "description": "Urgency badge medium"
+  },
+  "lowUrgency": "Low",
+  "@lowUrgency": {
+    "description": "Urgency badge low"
+  },
+  "highInterestDemand": "High interest",
+  "@highInterestDemand": {
+    "description": "Demand level high interest"
+  },
+  "growingDemand": "Growing demand",
+  "@growingDemand": {
+    "description": "Demand level growing demand"
+  },
+  "steadyDemand": "Steady demand",
+  "@steadyDemand": {
+    "description": "Demand level steady demand"
+  },
+  "loadingDashboard": "Loading marketplace updates...",
+  "@loadingDashboard": {
+    "description": "Loading state message for home dashboard"
+  },
+  "dashboardUnavailable": "Marketplace updates unavailable",
+  "@dashboardUnavailable": {
+    "description": "Error fallback message for home dashboard"
   }
 }

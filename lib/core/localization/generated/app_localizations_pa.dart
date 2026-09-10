@@ -1879,4 +1879,82 @@ class AppLocalizationsPa extends AppLocalizations {
   @override
   String get priceGuidanceUnavailable =>
       'ਕੀਮਤ ਦਾ ਸੁਝਾਅ ਅਸਥਾਈ ਤੌਰ \'ਤੇ ਉਪਲਬਧ ਨਹੀਂ ਹੈ। ਤੁਸੀਂ ਆਪਣੀ ਕੀਮਤ ਖ਼ੁਦ ਦਰਜ ਕਰ ਸਕਦੇ ਹੋ।';
+
+  @override
+  String get ordersAndSalesTitle => 'ਆਰਡਰ ਅਤੇ ਵਿਕਰੀ';
+
+  @override
+  String get ordersSummarySubtitle => 'ਤੁਹਾਡੀ ਪੂਰੀ ਹੋਈ ਮਾਰਕੀਟ ਵਿਕਰੀ';
+
+  @override
+  String get completedSalesLabel => 'ਪੂਰੀ ਹੋਈ ਵਿਕਰੀ';
+
+  @override
+  String get completedOrdersLabel => 'ਪੂਰੇ ਹੋਏ ਆਰਡਰ';
+
+  @override
+  String get pendingOrdersLabel => 'ਬਕਾਇਆ / ਪੁਸ਼ਟ';
+
+  @override
+  String get totalOrdersLabel => 'ਕੁੱਲ ਆਰਡਰ';
+
+  @override
+  String get yourProductsTitle => 'ਤੁਹਾਡੇ ਉਤਪਾਦ';
+
+  @override
+  String activeProductsBadge(int count) {
+    return '$count ਸਰਗਰਮ';
+  }
+
+  @override
+  String get viewAllAction => 'ਸਾਰੇ ਵੇਖੋ';
+
+  @override
+  String get activeBuyerNeedsTitle => 'ਖਰੀਦਦਾਰਾਂ ਦੀ ਸਰਗਰਮ ਮੰਗ';
+
+  @override
+  String get viewBuyerNeedsAction => 'ਖਰੀਦਦਾਰ ਮੰਗਾਂ ਵੇਖੋ';
+
+  @override
+  String get noActiveBuyerNeeds => 'ਫਿਲਹਾਲ ਕੋਈ ਸਰਗਰਮ ਖਰੀਦਦਾਰ ਮੰਗ ਨਹੀਂ ਹੈ';
+
+  @override
+  String get marketDemandTitle => 'ਮਾਰਕੀਟ ਮੰਗ';
+
+  @override
+  String get viewMarketRadarAction => 'ਮਾਰਕੀਟ ਰਾਡਾਰ ਵੇਖੋ';
+
+  @override
+  String targetPriceLabel(String price) {
+    return 'ਨਿਸ਼ਾਨਾ: $price';
+  }
+
+  @override
+  String quantityWithUnit(String quantity, String unit) {
+    return 'ਮਾਤਰਾ: $quantity $unit';
+  }
+
+  @override
+  String get highUrgency => 'ਉੱਚ';
+
+  @override
+  String get mediumUrgency => 'ਦਰਮਿਆਨਾ';
+
+  @override
+  String get lowUrgency => 'ਘੱਟ';
+
+  @override
+  String get highInterestDemand => 'ਉੱਚ ਦਿਲਚਸਪੀ';
+
+  @override
+  String get growingDemand => 'ਵਧਦੀ ਮੰਗ';
+
+  @override
+  String get steadyDemand => 'ਸਥਿਰ ਮੰਗ';
+
+  @override
+  String get loadingDashboard => 'ਮਾਰਕੀਟ ਅੱਪਡੇਟ ਲੋਡ ਹੋ ਰਹੇ ਹਨ...';
+
+  @override
+  String get dashboardUnavailable => 'ਮਾਰਕੀਟ ਅੱਪਡੇਟ ਉਪਲਬਧ ਨਹੀਂ ਹਨ';
 }

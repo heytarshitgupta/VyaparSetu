@@ -13,6 +13,8 @@ import '../verification/screens/business_verification_overview_screen.dart';
 import '../verification/services/business_verification_session.dart';
 import '../widgets/producer_quick_action_menu.dart';
 import 'models/producer_shell_profile.dart';
+import 'providers/producer_home_dashboard_provider.dart';
+import 'services/producer_home_service.dart';
 import 'tabs/producer_home_tab.dart';
 import 'tabs/what_buyers_want_screen.dart';
 
@@ -22,6 +24,8 @@ class ProducerMainScreen extends StatefulWidget {
   final Future<ProducerShellProfile?> Function()? profileLoader;
   final ProducerProductsProvider? productsProvider;
   final IProducerProductService? productService;
+  final ProducerHomeDashboardProvider? dashboardProvider;
+  final IProducerHomeService? homeService;
 
   const ProducerMainScreen({
     super.key,
@@ -30,6 +34,8 @@ class ProducerMainScreen extends StatefulWidget {
     this.profileLoader,
     this.productsProvider,
     this.productService,
+    this.dashboardProvider,
+    this.homeService,
   });
 
   @override
@@ -40,6 +46,7 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
   late int _currentIndex;
   ProducerShellProfile? _profile;
   late final ProducerProductsProvider _productsProvider;
+  late final ProducerHomeDashboardProvider _dashboardProvider;
 
   @override
   void initState() {
@@ -48,9 +55,17 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
     _profile = widget.initialProfile;
     _productsProvider = widget.productsProvider ??
         ProducerProductsProvider(service: widget.productService);
+    _dashboardProvider = widget.dashboardProvider ??
+        ProducerHomeDashboardProvider(service: widget.homeService);
+
     if (_profile == null) {
       _loadProfileOnce();
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _loadDashboardData();
+      }
+    });
   }
 
   @override
@@ -58,7 +73,56 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
     if (widget.productsProvider == null) {
       _productsProvider.dispose();
     }
+    if (widget.dashboardProvider == null) {
+      _dashboardProvider.dispose();
+    }
     super.dispose();
+  }
+
+  List<String> _resolveRelevantCategories() {
+    final productCategories = _productsProvider.allProducts
+        .map((p) => p.category.trim())
+        .where((c) => c.isNotEmpty);
+    return <String>{
+      ...productCategories,
+      if (_profile?.craftCategory?.trim().isNotEmpty ?? false)
+        _profile!.craftCategory!.trim(),
+    }.toList();
+  }
+
+  Future<void> _loadDashboardData() async {
+    if (_productsProvider.allProducts.isEmpty) {
+      await _productsProvider.loadProducts();
+    }
+    await _dashboardProvider.loadDashboard(
+      relevantCategories: _resolveRelevantCategories(),
+      state: _profile?.state,
+      district: _profile?.district,
+    );
+  }
+
+  Future<void> _reloadProfile() async {
+    try {
+      final loader = widget.profileLoader ?? _defaultProfileLoader;
+      final loaded = await loader();
+      if (mounted && loaded != null) {
+        setState(() {
+          _profile = loaded;
+        });
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _handleHomeRefresh() async {
+    await Future.wait([
+      _reloadProfile(),
+      _productsProvider.loadProducts(),
+    ]);
+    await _dashboardProvider.refresh(
+      relevantCategories: _resolveRelevantCategories(),
+      state: _profile?.state,
+      district: _profile?.district,
+    );
   }
 
   Future<void> _loadProfileOnce() async {
@@ -207,6 +271,9 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
           });
         },
         isBannerDismissed: BusinessVerificationSession.instance.isHomeBannerDismissed,
+        productsProvider: _productsProvider,
+        dashboardProvider: _dashboardProvider,
+        onRefresh: _handleHomeRefresh,
       ),
       ProducerProductsTab(
         provider: _productsProvider,

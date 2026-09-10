@@ -43,7 +43,11 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
     _provider.addListener(_onProviderChanged);
 
     if (_provider.isInitial) {
-      _provider.loadProducts();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _provider.loadProducts();
+        }
+      });
     }
   }
 
@@ -436,7 +440,7 @@ class _ProducerProductsTabState extends State<ProducerProductsTab> {
     bool isPhone,
   ) {
     // 1. Loading State
-    if (_provider.isLoading) {
+    if (_provider.isLoading || _provider.isInitial) {
       return SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 80.0),

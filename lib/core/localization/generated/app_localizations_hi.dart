@@ -1876,4 +1876,82 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get priceGuidanceUnavailable =>
       'मूल्य सुझाव अस्थायी रूप से उपलब्ध नहीं है। आप अपनी कीमत मैन्युअली दर्ज कर सकते हैं।';
+
+  @override
+  String get ordersAndSalesTitle => 'ऑर्डर और बिक्री';
+
+  @override
+  String get ordersSummarySubtitle => 'आपकी पूरी हुई बाज़ार बिक्री';
+
+  @override
+  String get completedSalesLabel => 'पूरी हुई बिक्री';
+
+  @override
+  String get completedOrdersLabel => 'पूरे हुए ऑर्डर';
+
+  @override
+  String get pendingOrdersLabel => 'लंबित / पुष्ट';
+
+  @override
+  String get totalOrdersLabel => 'कुल ऑर्डर';
+
+  @override
+  String get yourProductsTitle => 'आपके उत्पाद';
+
+  @override
+  String activeProductsBadge(int count) {
+    return '$count सक्रिय';
+  }
+
+  @override
+  String get viewAllAction => 'सभी देखें';
+
+  @override
+  String get activeBuyerNeedsTitle => 'खरीदारों की सक्रिय मांग';
+
+  @override
+  String get viewBuyerNeedsAction => 'खरीदार मांगें देखें';
+
+  @override
+  String get noActiveBuyerNeeds => 'फिलहाल कोई सक्रिय खरीदार मांग नहीं है';
+
+  @override
+  String get marketDemandTitle => 'बाज़ार मांग';
+
+  @override
+  String get viewMarketRadarAction => 'मार्केट रडार देखें';
+
+  @override
+  String targetPriceLabel(String price) {
+    return 'लक्षित: $price';
+  }
+
+  @override
+  String quantityWithUnit(String quantity, String unit) {
+    return 'मात्रा: $quantity $unit';
+  }
+
+  @override
+  String get highUrgency => 'उच्च';
+
+  @override
+  String get mediumUrgency => 'मध्यम';
+
+  @override
+  String get lowUrgency => 'कम';
+
+  @override
+  String get highInterestDemand => 'उच्च रुचि';
+
+  @override
+  String get growingDemand => 'बढ़ती मांग';
+
+  @override
+  String get steadyDemand => 'स्थिर मांग';
+
+  @override
+  String get loadingDashboard => 'बाज़ार अपडेट लोड हो रहे हैं...';
+
+  @override
+  String get dashboardUnavailable => 'बाज़ार अपडेट उपलब्ध नहीं हैं';
 }

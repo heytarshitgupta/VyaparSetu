@@ -3064,7 +3064,7 @@ abstract class AppLocalizations {
   /// **'How much can you usually produce?'**
   String get productionCapacityTitle;
 
-  /// Label for production capacity quantity
+  /// Label for quantity input
   ///
   /// In en, this message translates to:
   /// **'Quantity'**
@@ -3561,6 +3561,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Price guidance is temporarily unavailable. You can enter your price manually.'**
   String get priceGuidanceUnavailable;
+
+  /// Title for orders and sales section on producer home
+  ///
+  /// In en, this message translates to:
+  /// **'Orders & Sales'**
+  String get ordersAndSalesTitle;
+
+  /// Subtitle explaining completed sales
+  ///
+  /// In en, this message translates to:
+  /// **'Your completed marketplace sales'**
+  String get ordersSummarySubtitle;
+
+  /// Label for completed sales amount
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Sales'**
+  String get completedSalesLabel;
+
+  /// Label for completed orders count
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Orders'**
+  String get completedOrdersLabel;
+
+  /// Label for pending or confirmed orders count
+  ///
+  /// In en, this message translates to:
+  /// **'Pending / Confirmed'**
+  String get pendingOrdersLabel;
+
+  /// Label for total orders count
+  ///
+  /// In en, this message translates to:
+  /// **'Total Orders'**
+  String get totalOrdersLabel;
+
+  /// Title for products section on producer home
+  ///
+  /// In en, this message translates to:
+  /// **'Your Products'**
+  String get yourProductsTitle;
+
+  /// Badge showing active product count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Active'**
+  String activeProductsBadge(int count);
+
+  /// Action link to view all items
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAllAction;
+
+  /// Title for active buyer requests section on producer home
+  ///
+  /// In en, this message translates to:
+  /// **'Active Buyer Needs'**
+  String get activeBuyerNeedsTitle;
+
+  /// Button to open buyer needs tab
+  ///
+  /// In en, this message translates to:
+  /// **'View Buyer Needs'**
+  String get viewBuyerNeedsAction;
+
+  /// Empty state text when no active buyer requests
+  ///
+  /// In en, this message translates to:
+  /// **'No active buyer requests right now'**
+  String get noActiveBuyerNeeds;
+
+  /// Title for market demand signals preview on producer home
+  ///
+  /// In en, this message translates to:
+  /// **'Market Demand'**
+  String get marketDemandTitle;
+
+  /// Action button to open full market intelligence
+  ///
+  /// In en, this message translates to:
+  /// **'View Market Radar'**
+  String get viewMarketRadarAction;
+
+  /// Display label for buyer target price
+  ///
+  /// In en, this message translates to:
+  /// **'Target: {price}'**
+  String targetPriceLabel(String price);
+
+  /// Display label for buyer requested quantity and unit
+  ///
+  /// In en, this message translates to:
+  /// **'Qty: {quantity} {unit}'**
+  String quantityWithUnit(String quantity, String unit);
+
+  /// Urgency badge high
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get highUrgency;
+
+  /// Urgency badge medium
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get mediumUrgency;
+
+  /// Urgency badge low
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get lowUrgency;
+
+  /// Demand level high interest
+  ///
+  /// In en, this message translates to:
+  /// **'High interest'**
+  String get highInterestDemand;
+
+  /// Demand level growing demand
+  ///
+  /// In en, this message translates to:
+  /// **'Growing demand'**
+  String get growingDemand;
+
+  /// Demand level steady demand
+  ///
+  /// In en, this message translates to:
+  /// **'Steady demand'**
+  String get steadyDemand;
+
+  /// Loading state message for home dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Loading marketplace updates...'**
+  String get loadingDashboard;
+
+  /// Error fallback message for home dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Marketplace updates unavailable'**
+  String get dashboardUnavailable;
 }
 
 class _AppLocalizationsDelegate

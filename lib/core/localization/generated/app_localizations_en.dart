@@ -1874,4 +1874,82 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get priceGuidanceUnavailable =>
       'Price guidance is temporarily unavailable. You can enter your price manually.';
+
+  @override
+  String get ordersAndSalesTitle => 'Orders & Sales';
+
+  @override
+  String get ordersSummarySubtitle => 'Your completed marketplace sales';
+
+  @override
+  String get completedSalesLabel => 'Completed Sales';
+
+  @override
+  String get completedOrdersLabel => 'Completed Orders';
+
+  @override
+  String get pendingOrdersLabel => 'Pending / Confirmed';
+
+  @override
+  String get totalOrdersLabel => 'Total Orders';
+
+  @override
+  String get yourProductsTitle => 'Your Products';
+
+  @override
+  String activeProductsBadge(int count) {
+    return '$count Active';
+  }
+
+  @override
+  String get viewAllAction => 'View All';
+
+  @override
+  String get activeBuyerNeedsTitle => 'Active Buyer Needs';
+
+  @override
+  String get viewBuyerNeedsAction => 'View Buyer Needs';
+
+  @override
+  String get noActiveBuyerNeeds => 'No active buyer requests right now';
+
+  @override
+  String get marketDemandTitle => 'Market Demand';
+
+  @override
+  String get viewMarketRadarAction => 'View Market Radar';
+
+  @override
+  String targetPriceLabel(String price) {
+    return 'Target: $price';
+  }
+
+  @override
+  String quantityWithUnit(String quantity, String unit) {
+    return 'Qty: $quantity $unit';
+  }
+
+  @override
+  String get highUrgency => 'High';
+
+  @override
+  String get mediumUrgency => 'Medium';
+
+  @override
+  String get lowUrgency => 'Low';
+
+  @override
+  String get highInterestDemand => 'High interest';
+
+  @override
+  String get growingDemand => 'Growing demand';
+
+  @override
+  String get steadyDemand => 'Steady demand';
+
+  @override
+  String get loadingDashboard => 'Loading marketplace updates...';
+
+  @override
+  String get dashboardUnavailable => 'Marketplace updates unavailable';
 }
