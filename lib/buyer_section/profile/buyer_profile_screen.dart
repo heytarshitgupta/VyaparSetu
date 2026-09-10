@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/widgets/app_card.dart';
-import '../../../core/widgets/secondary_button.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../theme/buyer_colors.dart';
 import '../../../core/routes/app_router.dart';
 import '../../../core/localization/generated/app_localizations.dart';
 import '../onboarding/buyer_profile_provider.dart';
 import '../../../producer_section/localization/widgets/language_switcher_widget.dart';
+import '../../../core/theme/theme_provider.dart';
 
 class BuyerProfileScreen extends StatelessWidget {
   const BuyerProfileScreen({super.key});
@@ -14,57 +14,85 @@ class BuyerProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profile = context.watch<BuyerProfileProvider>().profile;
-    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: BuyerColors.of(context).background,
       appBar: AppBar(
-        title: Text(l10n?.myProfile ?? 'Profile', style: TextStyle(color: theme.colorScheme.onSurface, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        title: Text(
+          l10n?.myProfile ?? 'My Account', 
+          style: GoogleFonts.inter(color: BuyerColors.of(context).textPrimary, fontWeight: FontWeight.w600, fontSize: 18),
+        ),
+        backgroundColor: BuyerColors.of(context).surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 1,
+        shadowColor: Colors.black12,
         centerTitle: false,
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+      body: SafeArea(
+        child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
         children: [
           // User Header
-          _buildProfileHeader(context, profile, theme),
+          _buildProfileHeader(context, profile),
           const SizedBox(height: 24),
 
-          // Analytics Overview
-          Text('Overview', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+          // Quick Links
+          Text(l10n?.quickLinks ?? 'Quick Links', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: BuyerColors.of(context).textPrimary)),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(child: _buildAnalyticsCard(context, 'Total Orders', '12', Icons.shopping_bag_outlined, AppColors.primary)),
-              const SizedBox(width: 12),
-              Expanded(child: _buildAnalyticsCard(context, 'Saved Producers', '8', Icons.bookmark_border, AppColors.accent)),
-            ],
+          Material(
+            color: BuyerColors.of(context).surface,
+            borderRadius: BorderRadius.circular(8),
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: BuyerColors.of(context).borderLight),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8, offset: const Offset(0, 2)),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildListTile(context, Icons.shopping_bag_outlined, l10n?.myOrders ?? 'My Orders', '/buyer_orders', BuyerColors.of(context).primary),
+                  Divider(height: 1, color: BuyerColors.of(context).borderLight),
+                  _buildListTile(context, Icons.favorite_border, l10n?.wishlist ?? 'Wishlist', '/wishlist', BuyerColors.of(context).orangeAccent),
+                  Divider(height: 1, color: BuyerColors.of(context).borderLight),
+                  _buildListTile(context, Icons.chat_bubble_outline, l10n?.myRequirements ?? 'My Requirements', '/my_requests', BuyerColors.of(context).badgeGreen),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(height: 12),
-          _buildAnalyticsCard(context, 'Active Enquiries', '3 Pending', Icons.chat_bubble_outline, AppColors.success),
           
           const SizedBox(height: 24),
 
           // Business Information
-          Text('Business Information', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+          Text(l10n?.businessInformation ?? 'Business Information', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: BuyerColors.of(context).textPrimary)),
           const SizedBox(height: 12),
-          AppCard(
+          Container(
             padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: BuyerColors.of(context).surface,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: BuyerColors.of(context).borderLight),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8, offset: const Offset(0, 2)),
+              ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildInfoRow(Icons.business, 'Business Name', (profile != null && profile.businessName != null && profile.businessName!.isNotEmpty) ? profile.businessName! : 'Not provided', theme),
-                const Divider(height: 24),
-                _buildInfoRow(Icons.category, 'Category', (profile != null && profile.businessCategory != null && profile.businessCategory!.isNotEmpty) ? profile.businessCategory! : 'Not provided', theme),
-                const Divider(height: 24),
-                _buildInfoRow(Icons.email, 'Email', (profile != null && profile.email.isNotEmpty) ? profile.email : 'Not provided', theme),
-                const Divider(height: 24),
-                _buildInfoRow(Icons.phone, 'Phone', (profile != null && profile.mobile.isNotEmpty) ? profile.mobile : 'Not provided', theme),
-                const Divider(height: 24),
-                _buildInfoRow(Icons.location_on, 'Address', (profile != null && profile.address.isNotEmpty) ? '${profile.address}, ${profile.city}, ${profile.state} - ${profile.pincode}' : 'Not provided', theme),
+                _buildInfoRow(context, Icons.business, l10n?.businessName ?? 'Business Name', (profile != null && profile.businessName != null && profile.businessName!.isNotEmpty) ? profile.businessName! : l10n?.notProvided ?? 'Not provided'),
+                Divider(height: 24, color: BuyerColors.of(context).borderLight),
+                _buildInfoRow(context, Icons.category, l10n?.category ?? 'Category', (profile != null && profile.businessCategory != null && profile.businessCategory!.isNotEmpty) ? profile.businessCategory! : l10n?.notProvided ?? 'Not provided'),
+                Divider(height: 24, color: BuyerColors.of(context).borderLight),
+                _buildInfoRow(context, Icons.email, l10n?.email ?? 'Email', (profile != null && profile.email.isNotEmpty) ? profile.email : l10n?.notProvided ?? 'Not provided'),
+                Divider(height: 24, color: BuyerColors.of(context).borderLight),
+                _buildInfoRow(context, Icons.phone, l10n?.phone ?? 'Phone', (profile != null && profile.mobile.isNotEmpty) ? profile.mobile : l10n?.notProvided ?? 'Not provided'),
+                Divider(height: 24, color: BuyerColors.of(context).borderLight),
+                _buildInfoRow(context, Icons.location_on, l10n?.address ?? 'Address', (profile != null && profile.address.isNotEmpty) ? '${profile.address}, ${profile.city}, ${profile.state} - ${profile.pincode}' : l10n?.notProvided ?? 'Not provided'),
               ],
             ),
           ),
@@ -72,99 +100,156 @@ class BuyerProfileScreen extends StatelessWidget {
           const SizedBox(height: 24),
           
           // Recent Activity (Mock)
-          Text('Recent Activity', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+          Text(l10n?.recentActivity ?? 'Recent Activity', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: BuyerColors.of(context).textPrimary)),
           const SizedBox(height: 12),
-          AppCard(
-            padding: EdgeInsets.zero,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildActivityTile(context, 'Order placed: Handwoven Stoles', '2 days ago', Icons.check_circle_outline, AppColors.success),
-                const Divider(height: 1),
-                _buildActivityTile(context, 'Enquiry sent to Sharma Pottery', '5 days ago', Icons.send_outlined, AppColors.primary),
-                const Divider(height: 1),
-                _buildActivityTile(context, 'Saved "Organic Spices" product', '1 week ago', Icons.bookmark_outline, AppColors.accent),
-              ],
+          Material(
+            color: BuyerColors.of(context).surface,
+            borderRadius: BorderRadius.circular(8),
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: BuyerColors.of(context).borderLight),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8, offset: const Offset(0, 2)),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildActivityTile(context, 'Order placed: Handwoven Stoles', '2 days ago', Icons.check_circle_outline, BuyerColors.of(context).badgeGreen),
+                  Divider(height: 1, color: BuyerColors.of(context).borderLight),
+                  _buildActivityTile(context, 'Enquiry sent to Sharma Pottery', '5 days ago', Icons.send_outlined, BuyerColors.of(context).primary),
+                  Divider(height: 1, color: BuyerColors.of(context).borderLight),
+                  _buildActivityTile(context, 'Saved "Organic Spices" product', '1 week ago', Icons.bookmark_outline, BuyerColors.of(context).orangeAccent),
+                ],
+              ),
             ),
           ),
 
           const SizedBox(height: 24),
 
           // Preferences
-          Text(l10n?.settings ?? 'Preferences', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+          Text(l10n?.settings ?? 'Preferences', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: BuyerColors.of(context).textPrimary)),
           const SizedBox(height: 12),
-          AppCard(
-            padding: EdgeInsets.zero,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.language, color: AppColors.primary),
-                  title: Text(l10n?.language ?? 'Language'),
-                  trailing: const LanguageSwitcherWidget(),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.notifications_outlined, color: AppColors.primary),
-                  title: const Text('Notifications'),
-                  trailing: Switch(value: true, onChanged: (v) {}),
-                ),
-              ],
+          Material(
+            color: BuyerColors.of(context).surface,
+            borderRadius: BorderRadius.circular(8),
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: BuyerColors.of(context).borderLight),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8, offset: const Offset(0, 2)),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                      ListTile(
+                        leading: Icon(Icons.language, color: BuyerColors.of(context).primary),
+                        title: Text(l10n?.language ?? 'Language', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: BuyerColors.of(context).textPrimary)),
+                        trailing: const Row(mainAxisSize: MainAxisSize.min, children: [LanguageSwitcherWidget(isCompact: true)]),
+                      ),
+                      Divider(height: 1, color: BuyerColors.of(context).borderLight),
+                      Consumer<ThemeProvider>(
+                        builder: (context, themeProvider, _) {
+                          return ListTile(
+                            leading: Icon(Icons.dark_mode_outlined, color: BuyerColors.of(context).primary),
+                            title: Text(l10n?.darkMode ?? 'Dark Mode', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: BuyerColors.of(context).textPrimary)),
+                            trailing: Switch(
+                              value: themeProvider.isDarkMode(context),
+                              onChanged: (val) {
+                                themeProvider.setThemeMode(val ? ThemeMode.dark : ThemeMode.light);
+                              },
+                              activeColor: BuyerColors.of(context).primary,
+                            ),
+                          );
+                        },
+                      ),
+                      Divider(height: 1, color: BuyerColors.of(context).borderLight),
+                      ListTile(
+                        leading: Icon(Icons.notifications_outlined, color: BuyerColors.of(context).primary),
+                        title: Text(l10n?.notifications ?? 'Notifications', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: BuyerColors.of(context).textPrimary)),
+                        trailing: Switch(
+                          value: true,
+                          onChanged: (val) {},
+                          activeColor: BuyerColors.of(context).primary,
+                        ),
+                      ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 32),
 
           // Logout Button
-          SecondaryButton(
-            text: 'Log out',
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, AppRouter.buyerAuthRoute);
-            },
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: OutlinedButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, AppRouter.buyerAuthRoute);
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: BuyerColors.of(context).badgePinkText,
+                side: BorderSide(color: BuyerColors.of(context).badgePinkText),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: Text(
+                'Log out',
+                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 40),
         ],
+      ),
       ),
     );
   }
 
-  Widget _buildProfileHeader(BuildContext context, BuyerProfile? profile, ThemeData theme) {
-    return AppCard(
+  Widget _buildListTile(BuildContext context, IconData icon, String title, String route, Color iconColor) {
+    return ListTile(
+      leading: Icon(icon, color: iconColor),
+      title: Text(title, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: BuyerColors.of(context).textPrimary)),
+      trailing: Icon(Icons.chevron_right, color: BuyerColors.of(context).textSecondary),
+      onTap: () => Navigator.pushNamed(context, route),
+    );
+  }
+
+  Widget _buildProfileHeader(BuildContext context, dynamic profile) {
+    return Container(
       padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: BuyerColors.of(context).primary,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Row(
         children: [
           CircleAvatar(
-            radius: 36,
-            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+            radius: 32,
+            backgroundColor: Colors.white,
             child: Text(
-              (profile != null && profile.name.isNotEmpty) ? profile.name[0].toUpperCase() : 'G',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+              (profile?.fullName.isNotEmpty ?? false) ? profile!.fullName[0].toUpperCase() : 'B',
+              style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.bold, color: BuyerColors.of(context).primary),
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  profile?.name ?? 'Guest User',
-                  style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  profile?.fullName ?? 'Guest Buyer',
+                  style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  profile?.buyerType ?? 'Buyer',
-                  style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.accent, fontWeight: FontWeight.w600),
+                  profile?.mobile ?? '+91 - Not provided',
+                  style: GoogleFonts.inter(fontSize: 14, color: Colors.white70),
                 ),
-                if (profile?.isMobileVerified == true) ...[
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Icon(Icons.verified, color: AppColors.success, size: 14),
-                      const SizedBox(width: 4),
-                      Text('Verified Buyer', style: theme.textTheme.bodySmall?.copyWith(color: AppColors.success, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ],
               ],
             ),
           ),
@@ -173,44 +258,19 @@ class BuyerProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAnalyticsCard(BuildContext context, String title, String value, IconData icon, Color color) {
-    return AppCard(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(height: 12),
-          Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(IconData icon, String label, String value, ThemeData theme) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String label, String value) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20, color: theme.colorScheme.primary),
+        Icon(icon, size: 20, color: BuyerColors.of(context).textSecondary),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(label, style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
-              const SizedBox(height: 2),
-              Text(value, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+              Text(label, style: GoogleFonts.inter(fontSize: 12, color: BuyerColors.of(context).textSecondary)),
+              const SizedBox(height: 4),
+              Text(value, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: BuyerColors.of(context).textPrimary)),
             ],
           ),
         ),
@@ -218,19 +278,15 @@ class BuyerProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActivityTile(BuildContext context, String title, String subtitle, IconData icon, Color iconColor) {
+  Widget _buildActivityTile(BuildContext context, String title, String time, IconData icon, Color color) {
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: iconColor.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: iconColor, size: 20),
+      leading: CircleAvatar(
+        radius: 16,
+        backgroundColor: color.withOpacity(0.1),
+        child: Icon(icon, size: 16, color: color),
       ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-      subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+      title: Text(title, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500, color: BuyerColors.of(context).textPrimary)),
+      subtitle: Text(time, style: GoogleFonts.inter(fontSize: 11, color: BuyerColors.of(context).textSecondary)),
     );
   }
 }

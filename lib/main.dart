@@ -7,6 +7,7 @@ import 'core/theme/theme_provider.dart';
 import 'core/routes/app_router.dart';
 import 'buyer_section/onboarding/buyer_profile_provider.dart';
 import 'buyer_section/post_requirement/requests_provider.dart';
+import 'buyer_section/wishlist/wishlist_provider.dart';
 import 'core/services/supabase_service.dart';
 
 void main() async {
@@ -20,6 +21,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => RequestsProvider()),
+        ChangeNotifierProvider(create: (_) => WishlistProvider()),
       ],
       child: const VyaparSetuApp(),
     ),

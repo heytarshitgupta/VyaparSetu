@@ -7,24 +7,24 @@ class AppTextStyles {
 
   static TextTheme get textTheme {
     return GoogleFonts.interTextTheme().copyWith(
-      headlineLarge: GoogleFonts.inter(
+      headlineLarge: GoogleFonts.outfit(
         fontSize: 32,
         fontWeight: FontWeight.w700,
         color: AppColors.textPrimary,
         letterSpacing: -0.5,
       ),
-      headlineMedium: GoogleFonts.inter(
+      headlineMedium: GoogleFonts.outfit(
         fontSize: 24,
         fontWeight: FontWeight.w700,
         color: AppColors.textPrimary,
         letterSpacing: -0.5,
       ),
-      titleLarge: GoogleFonts.inter(
+      titleLarge: GoogleFonts.outfit(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       ),
-      titleMedium: GoogleFonts.inter(
+      titleMedium: GoogleFonts.outfit(
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,

@@ -92,50 +92,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccountTitle => 'Create Account';
 
   @override
-  String get createYourAccountTitle => 'Create Your Account';
-
-  @override
   String get createAccountSubtitle =>
       'Start your journey as an artisan producer and reach direct commercial buyers.';
-
-  @override
-  String get createAccountSupportingCopy =>
-      'Start setting up your business on VyaparSetu.';
-
-  @override
-  String get verifyYourEmailTitle => 'Verify Your Email';
-
-  @override
-  String verifyYourEmailSubtitle(String email) {
-    return 'We sent a 6-digit code to $email';
-  }
-
-  @override
-  String get enterOtpPrompt => 'Enter 6-digit verification code';
-
-  @override
-  String get verifyAndContinue => 'Verify & Continue';
-
-  @override
-  String get resendCode => 'Resend Code';
-
-  @override
-  String resendCodeIn(int seconds) {
-    return 'Resend Code in ${seconds}s';
-  }
-
-  @override
-  String get changeEmail => 'Change Email';
-
-  @override
-  String get otpInvalidLength => 'Please enter a valid 6-digit code';
-
-  @override
-  String get otpIncorrectOrExpired => 'That code is incorrect or has expired.';
-
-  @override
-  String get otpSentSuccess =>
-      'A new 6-digit code has been sent to your email.';
 
   @override
   String get fullName => 'Full Name';
@@ -685,9 +643,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterHidden => 'Inactive';
 
   @override
-  String get filterInactive => 'Inactive';
-
-  @override
   String get statusActive => 'Active';
 
   @override
@@ -695,56 +650,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusHidden => 'Inactive';
-
-  @override
-  String get statusInactive => 'Inactive';
-
-  @override
-  String get editAction => 'Edit';
-
-  @override
-  String get continueEditingAction => 'Continue Editing';
-
-  @override
-  String get saveChangesAction => 'Save Changes';
-
-  @override
-  String get makeActiveAction => 'Make Active';
-
-  @override
-  String get makeInactiveAction => 'Make Inactive';
-
-  @override
-  String get editProductTitle => 'Edit Product';
-
-  @override
-  String get editProductHelper => 'Update your product details and photos';
-
-  @override
-  String get deleteProductConfirmTitle => 'Delete product?';
-
-  @override
-  String get deleteProductConfirmBody =>
-      'This will permanently remove this product and its photos.';
-
-  @override
-  String get productUpdatedSuccess => 'Product updated';
-
-  @override
-  String get productMadeActiveSuccess => 'Product made active';
-
-  @override
-  String get productMadeInactiveSuccess => 'Product made inactive';
-
-  @override
-  String get couldNotUpdateProduct => 'Could not update product';
-
-  @override
-  String get couldNotLoadProductPhoto => 'Could not load product photo';
-
-  @override
-  String get incompleteProductCannotActivate =>
-      'Please edit product to fill name, category, and price before making it active.';
 
   @override
   String get priceNotSet => 'Price not set';
@@ -772,13 +677,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get noHiddenProductsSubtitle =>
       'Products you temporarily hide will appear here';
-
-  @override
-  String get noInactiveProductsTitle => 'No inactive products';
-
-  @override
-  String get noInactiveProductsSubtitle =>
-      'Products you mark as inactive will appear here';
 
   @override
   String get showAllProducts => 'Show All Products';
@@ -950,6 +848,245 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get markReadyFailed => 'Could not mark ready. Please try again.';
+
+  @override
+  String get myOrders => 'My Orders';
+
+  @override
+  String get wishlist => 'Wishlist';
+
+  @override
+  String get myRequirements => 'My Requirements';
+
+  @override
+  String get businessInformation => 'Business Information';
+
+  @override
+  String get businessName => 'Business Name';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get recentActivity => 'Recent Activity';
+
+  @override
+  String get quickLinks => 'Quick Links';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get navDiscover => 'Discover';
+
+  @override
+  String get navSearch => 'Search';
+
+  @override
+  String get navOrders => 'Orders';
+
+  @override
+  String get navAccount => 'Account';
+
+  @override
+  String get searchHint => 'Search for Products, Brands and More';
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get handlooms => 'Handlooms';
+
+  @override
+  String get spices => 'Spices';
+
+  @override
+  String get handicrafts => 'Handicrafts';
+
+  @override
+  String get food => 'Food';
+
+  @override
+  String get gifting => 'Gifting';
+
+  @override
+  String get forYou => 'For You';
+
+  @override
+  String get textiles => 'Textiles';
+
+  @override
+  String get recommendedForYou => 'Recommended For You';
+
+  @override
+  String get viewAll => 'VIEW ALL';
+
+  @override
+  String get noProductsFound => 'No products found.';
+
+  @override
+  String get orderNow => 'Order Now';
+
+  @override
+  String get addedToWishlist => 'Added to wishlist';
+
+  @override
+  String get removedFromWishlist => 'Removed from wishlist';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get filterByCategory => 'Filter by Category';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get searchProducts => 'Search products...';
+
+  @override
+  String get myCart => 'My Cart';
+
+  @override
+  String get noProducts => 'No Products';
+
+  @override
+  String get noProductsCategory =>
+      'No products available in this category yet.';
+
+  @override
+  String get noRequests => 'No requests yet';
+
+  @override
+  String get noRequestsSub =>
+      'Post a custom requirement to start receiving quotes from verified producers.';
+
+  @override
+  String get responsesText => 'Responses';
+
+  @override
+  String get receivingQuotes => 'Receiving Quotes';
+
+  @override
+  String get closed => 'Closed';
+
+  @override
+  String get createYourAccountTitle => 'Create Your Account';
+
+  @override
+  String get createAccountSupportingCopy =>
+      'Start setting up your business on VyaparSetu.';
+
+  @override
+  String get verifyYourEmailTitle => 'Verify Your Email';
+
+  @override
+  String verifyYourEmailSubtitle(String email) {
+    return 'We sent a 6-digit code to $email';
+  }
+
+  @override
+  String get enterOtpPrompt => 'Enter 6-digit verification code';
+
+  @override
+  String get verifyAndContinue => 'Verify & Continue';
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String resendCodeIn(int seconds) {
+    return 'Resend Code in ${seconds}s';
+  }
+
+  @override
+  String get changeEmail => 'Change Email';
+
+  @override
+  String get otpInvalidLength => 'Please enter a valid 6-digit code';
+
+  @override
+  String get otpIncorrectOrExpired => 'That code is incorrect or has expired.';
+
+  @override
+  String get otpSentSuccess =>
+      'A new 6-digit code has been sent to your email.';
+
+  @override
+  String get filterInactive => 'Inactive';
+
+  @override
+  String get statusInactive => 'Inactive';
+
+  @override
+  String get editAction => 'Edit';
+
+  @override
+  String get continueEditingAction => 'Continue Editing';
+
+  @override
+  String get saveChangesAction => 'Save Changes';
+
+  @override
+  String get makeActiveAction => 'Make Active';
+
+  @override
+  String get makeInactiveAction => 'Make Inactive';
+
+  @override
+  String get editProductTitle => 'Edit Product';
+
+  @override
+  String get editProductHelper => 'Update your product details and photos';
+
+  @override
+  String get deleteProductConfirmTitle => 'Delete product?';
+
+  @override
+  String get deleteProductConfirmBody =>
+      'This will permanently remove this product and its photos.';
+
+  @override
+  String get productUpdatedSuccess => 'Product updated';
+
+  @override
+  String get productMadeActiveSuccess => 'Product made active';
+
+  @override
+  String get productMadeInactiveSuccess => 'Product made inactive';
+
+  @override
+  String get couldNotUpdateProduct => 'Could not update product';
+
+  @override
+  String get couldNotLoadProductPhoto => 'Could not load product photo';
+
+  @override
+  String get incompleteProductCannotActivate =>
+      'Please edit product to fill name, category, and price before making it active.';
+
+  @override
+  String get noInactiveProductsTitle => 'No inactive products';
+
+  @override
+  String get noInactiveProductsSubtitle =>
+      'Products you mark as inactive will appear here';
 
   @override
   String get whatBuyersWantSubtitle =>
@@ -1243,13 +1380,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickMenuTitle => 'Quick Actions';
 
   @override
-  String get email => 'Email';
-
-  @override
   String get ok => 'OK';
-
-  @override
-  String get businessName => 'Business Name';
 
   @override
   String get craftCategory => 'Craft Category';

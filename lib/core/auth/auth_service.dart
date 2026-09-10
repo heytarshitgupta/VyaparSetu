@@ -35,15 +35,28 @@ class AuthService {
     required String password,
     Map<String, dynamic>? data,
   }) async {
+    final response = await _client.auth.signUp(
+      email: email.trim(),
+      password: password,
+      data: data,
+    );
+    return response;
+  }
+
+  /// Registers a new user account with phone and password.
+  Future<AuthResponse> signUpWithPhone({
+    required String phone,
+    required String password,
+    Map<String, dynamic>? data,
+  }) async {
     try {
       final response = await _client.auth.signUp(
-        email: email.trim(),
+        phone: phone,
         password: password,
         data: data,
       );
       return response;
     } on AuthException catch (e) {
-      // Mock successful response if rate limited during testing
       if (e.statusCode == '429' || e.message.contains('rate limit')) {
         await Future.delayed(const Duration(seconds: 1));
         return AuthResponse(
@@ -118,7 +131,19 @@ class AuthService {
   /// Sends an OTP via SMS to the specified phone number.
   Future<void> sendPhoneOtp(String phone) async {
     // Supabase expects E.164 format (e.g., +919999999999)
-    await _client.auth.signInWithOtp(phone: phone);
+    await _client.auth.signInWithOtp(
+      phone: phone,
+      channel: OtpChannel.sms,
+    );
+  }
+
+  /// Sends an OTP via WhatsApp to the specified phone number.
+  Future<void> sendWhatsAppOtp(String phone) async {
+    // Supabase expects E.164 format (e.g., +919999999999)
+    await _client.auth.signInWithOtp(
+      phone: phone,
+      channel: OtpChannel.whatsapp,
+    );
   }
 
   /// Verifies the OTP sent to the specified phone number.
@@ -133,28 +158,19 @@ class AuthService {
     );
   }
 
-  /// Verifies email OTP (e.g. for signup confirmation).
-  Future<AuthResponse> verifyEmailOtp({
-    required String email,
-    required String otp,
-    OtpType type = OtpType.signup,
-  }) async {
-    return await _client.auth.verifyOTP(
-      email: email.trim(),
-      token: otp.trim(),
-      type: type,
-    );
-  }
-
-  /// Sends a 6-digit email OTP for sign-in.
-  /// CRITICAL: shouldCreateUser is set to false to ensure new accounts are not created silently.
-  Future<void> signInWithEmailOtp({
-    required String email,
-  }) async {
+  /// Sends an OTP via email for sign in.
+  Future<void> sendEmailOtp(String email) async {
     await _client.auth.signInWithOtp(
       email: email.trim(),
       shouldCreateUser: false,
     );
+  }
+
+  /// Sends a 6-digit email OTP for sign-in (Producer alias).
+  Future<void> signInWithEmailOtp({
+    required String email,
+  }) async {
+    await sendEmailOtp(email);
   }
 
   /// Verifies the 6-digit email OTP for sign-in (type: OtpType.email).
@@ -169,11 +185,16 @@ class AuthService {
     );
   }
 
-  /// Sends a password recovery 6-digit OTP code to the specified email.
+  /// Sends a password reset OTP to the email.
+  Future<void> sendPasswordResetOtp(String email) async {
+    await _client.auth.resetPasswordForEmail(email.trim());
+  }
+
+  /// Sends a password recovery 6-digit OTP code to the specified email (Producer alias).
   Future<void> sendPasswordRecoveryOtp({
     required String email,
   }) async {
-    await _client.auth.resetPasswordForEmail(email.trim());
+    await sendPasswordResetOtp(email);
   }
 
   /// Verifies the password recovery 6-digit OTP (type: OtpType.recovery).
@@ -188,12 +209,28 @@ class AuthService {
     );
   }
 
-  /// Updates the authenticated user's password.
+  /// Verifies the OTP sent to the email.
+  /// [type] defaults to OtpType.signup.
+  Future<AuthResponse> verifyEmailOtp({
+    required String email,
+    required String otp,
+    OtpType type = OtpType.signup,
+  }) async {
+    return await _client.auth.verifyOTP(
+      email: email.trim(),
+      token: otp.trim(),
+      type: type,
+    );
+  }
+
+  /// Updates the user's password.
   Future<UserResponse> updatePassword({
     required String newPassword,
   }) async {
     return await _client.auth.updateUser(
-      UserAttributes(password: newPassword),
+      UserAttributes(
+        password: newPassword.trim(),
+      ),
     );
   }
 

@@ -18,17 +18,14 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _mobileController = TextEditingController();
 
   bool _obscurePassword = true;
   bool _isLoading = false;
-  bool _isLoadingOtp = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _mobileController.dispose();
     super.dispose();
   }
 
@@ -53,103 +50,31 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } catch (e) {
       if (!mounted) return;
+      
       final msg = AuthExceptionHandler.getErrorMessage(e);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: AppColors.error));
+      if (msg.toLowerCase().contains('email not confirmed')) {
+        Navigator.pushNamed(
+          context,
+          AppRouter.buyerVerifyEmailRoute,
+          arguments: _emailController.text.trim(),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: AppColors.error));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  void _showPhoneOtpBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                left: 24,
-                right: 24,
-                top: 32,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Sign in with Phone',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'We will send a 4-digit code to verify your number.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  BuyerAuthTextField(
-                    controller: _mobileController,
-                    label: 'Mobile Number',
-                    hint: 'Enter your 10-digit number',
-                    prefixIcon: Icons.phone_android_outlined,
-                    keyboardType: TextInputType.phone,
-                    prefixText: '+91 ',
-                    onChanged: (_) => setModalState(() {}),
-                  ),
-                  const SizedBox(height: 32),
-                  _buildPrimaryButton(
-                    text: 'Send OTP',
-                    icon: Icons.message_outlined,
-                    enabled: _mobileController.text.isNotEmpty && !_isLoadingOtp,
-                    isLoading: _isLoadingOtp,
-                    onPressed: () async {
-                      setModalState(() => _isLoadingOtp = true);
-                      try {
-                        String phone = _mobileController.text.trim();
-                        if (phone.length == 10) phone = '+91$phone';
-                        
-                        // MOCK: Fake delay to simulate network request
-                        await Future.delayed(const Duration(seconds: 1));
-                        // await AuthService.instance.sendPhoneOtp(phone);
-                        
-                        if (context.mounted) {
-                          Navigator.pop(context); // Close bottom sheet
-                          Navigator.pushNamed(
-                            context, 
-                            AppRouter.otpRoute,
-                            arguments: {'mobile': phone},
-                          );
-                        }
-                      } catch (e) {
-                        if (context.mounted) {
-                          final msg = AuthExceptionHandler.getErrorMessage(e);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: AppColors.error));
-                        }
-                      } finally {
-                        if (mounted) setModalState(() => _isLoadingOtp = false);
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 32),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
+
+
+
+    void _handleOtpLogin() {
+    Navigator.pushNamed(context, AppRouter.buyerSignInEmailRoute);
+  }
+
+    void _handleForgotPassword() {
+    Navigator.pushNamed(context, AppRouter.buyerForgotPasswordEmailRoute);
   }
 
   @override
@@ -276,11 +201,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(l10n?.forgotPasswordUpcoming ?? 'Password recovery will be available in a future update.'), backgroundColor: AppColors.primaryLight),
-                          );
-                        },
+                        onPressed: _handleForgotPassword,
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(0, 32),
@@ -298,6 +219,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     const SizedBox(height: 24),
 
+                    
                     // Login Button
                     _buildPrimaryButton(
                       text: l10n?.signInTitle ?? 'Sign In',
@@ -307,22 +229,40 @@ class _AuthScreenState extends State<AuthScreen> {
                       onPressed: _handleLogin,
                     ),
                     const SizedBox(height: 20),
-
-                    // Alternate Auth Method (Phone OTP)
-                    OutlinedButton.icon(
-                      onPressed: _showPhoneOtpBottomSheet,
-                      icon: const Icon(Icons.phone_android_outlined, size: 18),
-                      label: Text(l10n?.signInWithPhone ?? 'Sign in with Phone OTP'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.onSurface,
-                        side: BorderSide(color: Theme.of(context).dividerColor),
-                        minimumSize: const Size.fromHeight(48),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                    
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1))),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'OR',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                            ),
+                          ),
                         ),
+                        Expanded(child: Divider(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1))),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    
+                    OutlinedButton.icon(
+                      onPressed: _isLoading ? null : _handleOtpLogin,
+                      icon: const Icon(Icons.mark_email_unread_outlined),
+                      label: const Text('Sign in with OTP'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        side: BorderSide(color: AppColors.primary.withOpacity(0.2)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        foregroundColor: AppColors.primary,
+                        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 24),
+
                   Wrap(
                     alignment: WrapAlignment.center,
                     crossAxisAlignment: WrapCrossAlignment.center,

@@ -72,9 +72,7 @@ class _BuyerVerificationScreenState extends State<BuyerVerificationScreen> {
                   }
                   
                   try {
-                    // MOCK: Fake delay to simulate network request
-                    await Future.delayed(const Duration(seconds: 1));
-                    // await AuthService.instance.sendPhoneOtp(phone);
+                    await AuthService.instance.sendPhoneOtp(phone);
                     
                     if (!mounted) return;
                     
@@ -90,6 +88,46 @@ class _BuyerVerificationScreenState extends State<BuyerVerificationScreen> {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Mobile number verified successfully.'), backgroundColor: AppColors.success),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      final msg = AuthExceptionHandler.getErrorMessage(e);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: AppColors.error));
+                    }
+                  } finally {
+                    if (mounted) setState(() => _isSendingOtp = false);
+                  }
+                },
+                onVerifyWhatsApp: () async {
+                  if (profile?.mobile == null || profile!.mobile.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No mobile number found.'), backgroundColor: AppColors.error));
+                    return;
+                  }
+                  
+                  setState(() => _isSendingOtp = true);
+                  String phone = profile.mobile.trim();
+                  if (phone.length == 10) {
+                    phone = '+91$phone'; // Default to India for 10-digit numbers
+                  }
+                  
+                  try {
+                    await AuthService.instance.sendWhatsAppOtp(phone);
+                    
+                    if (!mounted) return;
+                    
+                    final result = await Navigator.pushNamed(
+                      context, 
+                      AppRouter.otpRoute,
+                      arguments: {'isVerificationMode': true, 'mobile': phone},
+                    );
+                    
+                    if (result == true && context.mounted && profile != null) {
+                      context.read<BuyerProfileProvider>().saveProfile(
+                        profile.copyWith(isMobileVerified: true),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Mobile number verified successfully via WhatsApp.'), backgroundColor: AppColors.success),
                       );
                     }
                   } catch (e) {
@@ -144,6 +182,7 @@ class _BuyerVerificationScreenState extends State<BuyerVerificationScreen> {
     required String subtitle, 
     required bool isVerified,
     VoidCallback? onVerify,
+    VoidCallback? onVerifyWhatsApp,
     bool isLoading = false,
   }) {
     return Card(
@@ -181,10 +220,32 @@ class _BuyerVerificationScreenState extends State<BuyerVerificationScreen> {
                 )
               : isLoading 
                 ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2.5))
-                : TextButton(
-                    onPressed: onVerify, 
-                    child: Text(AppLocalizations.of(context)?.verify ?? 'Verify', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ),
+                : onVerifyWhatsApp != null
+                    ? PopupMenuButton<String>(
+                        onSelected: (value) {
+                          if (value == 'sms') {
+                            onVerify?.call();
+                          } else if (value == 'wa') {
+                            onVerifyWhatsApp();
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(value: 'sms', child: Text('Send via SMS')),
+                          const PopupMenuItem(value: 'wa', child: Text('Send via WhatsApp')),
+                        ],
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.primary),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(AppLocalizations.of(context)?.verify ?? 'Verify', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary)),
+                        ),
+                      )
+                    : TextButton(
+                        onPressed: onVerify, 
+                        child: Text(AppLocalizations.of(context)?.verify ?? 'Verify', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ),
         ),
       ),
     );

@@ -92,50 +92,8 @@ class AppLocalizationsPa extends AppLocalizations {
   String get createAccountTitle => 'ਖਾਤਾ ਬਣਾਓ';
 
   @override
-  String get createYourAccountTitle => 'ਆਪਣਾ ਖਾਤਾ ਬਣਾਓ';
-
-  @override
   String get createAccountSubtitle =>
       'ਇੱਕ ਕਾਰੀਗਰ ਉਤਪਾਦਕ ਵਜੋਂ ਆਪਣਾ ਸਫ਼ਰ ਸ਼ੁਰੂ ਕਰੋ ਅਤੇ ਸਿੱਧਾ ਖਰੀਦਦਾਰਾਂ ਨਾਲ ਜੁੜੋ।';
-
-  @override
-  String get createAccountSupportingCopy =>
-      'ਵਪਾਰ ਸੇਤੂ \'ਤੇ ਆਪਣਾ ਕਾਰੋਬਾਰ ਸ਼ੁਰੂ ਕਰੋ।';
-
-  @override
-  String get verifyYourEmailTitle => 'ਆਪਣੀ ਈਮੇਲ ਤਸਦੀਕ ਕਰੋ';
-
-  @override
-  String verifyYourEmailSubtitle(String email) {
-    return 'ਅਸੀਂ $email \'ਤੇ 6 ਅੰਕਾਂ ਦਾ ਕੋਡ ਭੇਜਿਆ ਹੈ';
-  }
-
-  @override
-  String get enterOtpPrompt => '6 ਅੰਕਾਂ ਦਾ ਤਸਦੀਕ ਕੋਡ ਦਰਜ ਕਰੋ';
-
-  @override
-  String get verifyAndContinue => 'ਤਸਦੀਕ ਕਰੋ ਅਤੇ ਅੱਗੇ ਵਧੋ';
-
-  @override
-  String get resendCode => 'ਕੋਡ ਮੁੜ ਭੇਜੋ';
-
-  @override
-  String resendCodeIn(int seconds) {
-    return '$seconds ਸਕਿੰਟਾਂ ਵਿੱਚ ਕੋਡ ਮੁੜ ਭੇਜੋ';
-  }
-
-  @override
-  String get changeEmail => 'ਈਮੇਲ ਬਦਲੋ';
-
-  @override
-  String get otpInvalidLength => 'ਕਿਰਪਾ ਕਰਕੇ 6 ਅੰਕਾਂ ਦਾ ਸਹੀ ਕੋਡ ਦਰਜ ਕਰੋ';
-
-  @override
-  String get otpIncorrectOrExpired => 'ਉਹ ਕੋਡ ਗਲਤ ਹੈ ਜਾਂ ਮਿਆਦ ਪੁੱਗ ਚੁੱਕੀ ਹੈ।';
-
-  @override
-  String get otpSentSuccess =>
-      'ਤੁਹਾਡੀ ਈਮੇਲ \'ਤੇ ਇੱਕ ਨਵਾਂ 6 ਅੰਕਾਂ ਦਾ ਕੋਡ ਭੇਜ ਦਿੱਤਾ ਗਿਆ ਹੈ।';
 
   @override
   String get fullName => 'ਪੂਰਾ ਨਾਮ';
@@ -682,9 +640,6 @@ class AppLocalizationsPa extends AppLocalizations {
   String get filterHidden => 'ਅਕਿਰਿਆਸ਼ੀਲ';
 
   @override
-  String get filterInactive => 'ਅਕਿਰਿਆਸ਼ੀਲ';
-
-  @override
   String get statusActive => 'ਸਰਗਰਮ';
 
   @override
@@ -692,56 +647,6 @@ class AppLocalizationsPa extends AppLocalizations {
 
   @override
   String get statusHidden => 'ਅਕਿਰਿਆਸ਼ੀਲ';
-
-  @override
-  String get statusInactive => 'ਅਕਿਰਿਆਸ਼ੀਲ';
-
-  @override
-  String get editAction => 'ਸੋਧੋ';
-
-  @override
-  String get continueEditingAction => 'ਸੋਧ ਜਾਰੀ ਰੱਖੋ';
-
-  @override
-  String get saveChangesAction => 'ਬਦਲਾਅ ਸੁਰੱਖਿਅਤ ਕਰੋ';
-
-  @override
-  String get makeActiveAction => 'ਸਰਗਰਮ ਕਰੋ';
-
-  @override
-  String get makeInactiveAction => 'ਅਕਿਰਿਆਸ਼ੀਲ ਕਰੋ';
-
-  @override
-  String get editProductTitle => 'ਉਤਪਾਦ ਸੋਧੋ';
-
-  @override
-  String get editProductHelper => 'ਆਪਣੇ ਉਤਪਾਦ ਦਾ ਵੇਰਵਾ ਅਤੇ ਫ਼ੋਟੋਆਂ ਅੱਪਡੇਟ ਕਰੋ';
-
-  @override
-  String get deleteProductConfirmTitle => 'ਕੀ ਉਤਪਾਦ ਹਟਾਉਣਾ ਹੈ?';
-
-  @override
-  String get deleteProductConfirmBody =>
-      'ਇਹ ਇਸ ਉਤਪਾਦ ਅਤੇ ਇਸ ਦੀਆਂ ਫ਼ੋਟੋਆਂ ਨੂੰ ਪੱਕੇ ਤੌਰ \'ਤੇ ਹਟਾ ਦੇਵੇਗਾ।';
-
-  @override
-  String get productUpdatedSuccess => 'ਉਤਪਾਦ ਅੱਪਡੇਟ ਕੀਤਾ ਗਿਆ';
-
-  @override
-  String get productMadeActiveSuccess => 'ਉਤਪਾਦ ਸਰਗਰਮ ਕਰ ਦਿੱਤਾ ਗਿਆ';
-
-  @override
-  String get productMadeInactiveSuccess => 'ਉਤਪਾਦ ਅਕਿਰਿਆਸ਼ੀਲ ਕਰ ਦਿੱਤਾ ਗਿਆ';
-
-  @override
-  String get couldNotUpdateProduct => 'ਉਤਪਾਦ ਅੱਪਡੇਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ';
-
-  @override
-  String get couldNotLoadProductPhoto => 'ਉਤਪਾਦ ਦੀ ਫ਼ੋਟੋ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ';
-
-  @override
-  String get incompleteProductCannotActivate =>
-      'ਸਰਗਰਮ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਨਾਮ, ਸ਼੍ਰੇਣੀ ਅਤੇ ਕੀਮਤ ਭਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਉਤਪਾਦ ਨੂੰ ਸੋਧੋ।';
 
   @override
   String get priceNotSet => 'ਕੀਮਤ ਤੈਅ ਨਹੀਂ';
@@ -768,13 +673,6 @@ class AppLocalizationsPa extends AppLocalizations {
   @override
   String get noHiddenProductsSubtitle =>
       'ਅਸਥਾਈ ਤੌਰ \'ਤੇ ਅਕਿਰਿਆਸ਼ੀਲ ਕੀਤੇ ਗਏ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
-
-  @override
-  String get noInactiveProductsTitle => 'ਕੋਈ ਅਕਿਰਿਆਸ਼ੀਲ ਉਤਪਾਦ ਨਹੀਂ';
-
-  @override
-  String get noInactiveProductsSubtitle =>
-      'ਤੁਹਾਡੇ ਵੱਲੋਂ ਅਕਿਰਿਆਸ਼ੀਲ ਕੀਤੇ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
 
   @override
   String get showAllProducts => 'ਸਾਰੇ ਉਤਪਾਦ ਵੇਖੋ';
@@ -949,6 +847,245 @@ class AppLocalizationsPa extends AppLocalizations {
   @override
   String get markReadyFailed =>
       'ਤਿਆਰ ਚਿੰਨ੍ਹਿਤ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String get myOrders => 'ਮੇਰੇ ਆਰਡਰ';
+
+  @override
+  String get wishlist => 'ਵਿਸ਼ਲਿਸਟ';
+
+  @override
+  String get myRequirements => 'ਮੇਰੀਆਂ ਜ਼ਰੂਰਤਾਂ';
+
+  @override
+  String get businessInformation => 'ਕਾਰੋਬਾਰੀ ਜਾਣਕਾਰੀ';
+
+  @override
+  String get businessName => 'ਕਾਰੋਬਾਰ ਦਾ ਨਾਮ';
+
+  @override
+  String get category => 'ਸ਼੍ਰੇਣੀ';
+
+  @override
+  String get email => 'ਈਮੇਲ';
+
+  @override
+  String get phone => 'ਫੋਨ';
+
+  @override
+  String get address => 'ਪਤਾ';
+
+  @override
+  String get recentActivity => 'ਹਾਲੀਆ ਗਤੀਵਿਧੀ';
+
+  @override
+  String get quickLinks => 'ਤੁਰੰਤ ਲਿੰਕ';
+
+  @override
+  String get darkMode => 'ਡਾਰਕ ਮੋਡ';
+
+  @override
+  String get notifications => 'ਸੂਚਨਾਵਾਂ';
+
+  @override
+  String get logout => 'ਲੌਗ ਆਊਟ';
+
+  @override
+  String get navDiscover => 'ਖੋਜੋ';
+
+  @override
+  String get navSearch => 'ਸਰਚ';
+
+  @override
+  String get navOrders => 'ਆਰਡਰ';
+
+  @override
+  String get navAccount => 'ਖਾਤਾ';
+
+  @override
+  String get searchHint => 'ਉਤਪਾਦ, ਬ੍ਰਾਂਡ ਅਤੇ ਹੋਰ ਖੋਜੋ';
+
+  @override
+  String get allCategories => 'ਸਾਰੀਆਂ ਸ਼੍ਰੇਣੀਆਂ';
+
+  @override
+  String get handlooms => 'ਹੱਥਖੱਡੀ';
+
+  @override
+  String get spices => 'ਮਸਾਲੇ';
+
+  @override
+  String get handicrafts => 'ਹੈਂਡੀਕ੍ਰਾਫਟ';
+
+  @override
+  String get food => 'ਭੋਜਨ';
+
+  @override
+  String get gifting => 'ਤੋਹਫ਼ੇ';
+
+  @override
+  String get forYou => 'ਤੁਹਾਡੇ ਲਈ';
+
+  @override
+  String get textiles => 'ਟੈਕਸਟਾਈਲ';
+
+  @override
+  String get recommendedForYou => 'ਤੁਹਾਡੇ ਲਈ ਸਿਫਾਰਸ਼ ਕੀਤੀ ਗਈ';
+
+  @override
+  String get viewAll => 'ਸਾਰੇ ਦੇਖੋ';
+
+  @override
+  String get noProductsFound => 'ਕੋਈ ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ।';
+
+  @override
+  String get orderNow => 'ਹੁਣੇ ਆਰਡਰ ਕਰੋ';
+
+  @override
+  String get addedToWishlist => 'ਵਿਸ਼ਲਿਸਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get removedFromWishlist => 'ਵਿਸ਼ਲਿਸਟ ਤੋਂ ਹਟਾਇਆ ਗਿਆ';
+
+  @override
+  String get filters => 'ਫਿਲਟਰ';
+
+  @override
+  String get filterByCategory => 'ਸ਼੍ਰੇਣੀ ਦੁਆਰਾ ਫਿਲਟਰ ਕਰੋ';
+
+  @override
+  String get close => 'ਬੰਦ ਕਰੋ';
+
+  @override
+  String get searchProducts => 'ਉਤਪਾਦ ਖੋਜੋ...';
+
+  @override
+  String get myCart => 'ਮੇਰੀ ਕਾਰਟ';
+
+  @override
+  String get noProducts => 'ਕੋਈ ਉਤਪਾਦ ਨਹੀਂ';
+
+  @override
+  String get noProductsCategory =>
+      'ਇਸ ਸ਼੍ਰੇਣੀ ਵਿੱਚ ਅਜੇ ਕੋਈ ਉਤਪਾਦ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।';
+
+  @override
+  String get noRequests => 'ਅਜੇ ਕੋਈ ਬੇਨਤੀ ਨਹੀਂ';
+
+  @override
+  String get noRequestsSub =>
+      'ਪ੍ਰਮਾਣਿਤ ਉਤਪਾਦਕਾਂ ਤੋਂ ਹਵਾਲੇ ਪ੍ਰਾਪਤ ਕਰਨਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਇੱਕ ਕਸਟਮ ਲੋੜ ਪੋਸਟ ਕਰੋ।';
+
+  @override
+  String get responsesText => 'ਜਵਾਬ';
+
+  @override
+  String get receivingQuotes => 'ਹਵਾਲੇ ਪ੍ਰਾਪਤ ਕਰ ਰਹੇ ਹਾਂ';
+
+  @override
+  String get closed => 'ਬੰਦ';
+
+  @override
+  String get createYourAccountTitle => 'ਆਪਣਾ ਖਾਤਾ ਬਣਾਓ';
+
+  @override
+  String get createAccountSupportingCopy =>
+      'ਵਪਾਰ ਸੇਤੂ \'ਤੇ ਆਪਣਾ ਕਾਰੋਬਾਰ ਸ਼ੁਰੂ ਕਰੋ।';
+
+  @override
+  String get verifyYourEmailTitle => 'ਆਪਣੀ ਈਮੇਲ ਤਸਦੀਕ ਕਰੋ';
+
+  @override
+  String verifyYourEmailSubtitle(String email) {
+    return 'ਅਸੀਂ $email \'ਤੇ 6 ਅੰਕਾਂ ਦਾ ਕੋਡ ਭੇਜਿਆ ਹੈ';
+  }
+
+  @override
+  String get enterOtpPrompt => '6 ਅੰਕਾਂ ਦਾ ਤਸਦੀਕ ਕੋਡ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get verifyAndContinue => 'ਤਸਦੀਕ ਕਰੋ ਅਤੇ ਅੱਗੇ ਵਧੋ';
+
+  @override
+  String get resendCode => 'ਕੋਡ ਮੁੜ ਭੇਜੋ';
+
+  @override
+  String resendCodeIn(int seconds) {
+    return '$seconds ਸਕਿੰਟਾਂ ਵਿੱਚ ਕੋਡ ਮੁੜ ਭੇਜੋ';
+  }
+
+  @override
+  String get changeEmail => 'ਈਮੇਲ ਬਦਲੋ';
+
+  @override
+  String get otpInvalidLength => 'ਕਿਰਪਾ ਕਰਕੇ 6 ਅੰਕਾਂ ਦਾ ਸਹੀ ਕੋਡ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get otpIncorrectOrExpired => 'ਉਹ ਕੋਡ ਗਲਤ ਹੈ ਜਾਂ ਮਿਆਦ ਪੁੱਗ ਚੁੱਕੀ ਹੈ।';
+
+  @override
+  String get otpSentSuccess =>
+      'ਤੁਹਾਡੀ ਈਮੇਲ \'ਤੇ ਇੱਕ ਨਵਾਂ 6 ਅੰਕਾਂ ਦਾ ਕੋਡ ਭੇਜ ਦਿੱਤਾ ਗਿਆ ਹੈ।';
+
+  @override
+  String get filterInactive => 'ਅਕਿਰਿਆਸ਼ੀਲ';
+
+  @override
+  String get statusInactive => 'ਅਕਿਰਿਆਸ਼ੀਲ';
+
+  @override
+  String get editAction => 'ਸੋਧੋ';
+
+  @override
+  String get continueEditingAction => 'ਸੋਧ ਜਾਰੀ ਰੱਖੋ';
+
+  @override
+  String get saveChangesAction => 'ਬਦਲਾਅ ਸੁਰੱਖਿਅਤ ਕਰੋ';
+
+  @override
+  String get makeActiveAction => 'ਸਰਗਰਮ ਕਰੋ';
+
+  @override
+  String get makeInactiveAction => 'ਅਕਿਰਿਆਸ਼ੀਲ ਕਰੋ';
+
+  @override
+  String get editProductTitle => 'ਉਤਪਾਦ ਸੋਧੋ';
+
+  @override
+  String get editProductHelper => 'ਆਪਣੇ ਉਤਪਾਦ ਦਾ ਵੇਰਵਾ ਅਤੇ ਫ਼ੋਟੋਆਂ ਅੱਪਡੇਟ ਕਰੋ';
+
+  @override
+  String get deleteProductConfirmTitle => 'ਕੀ ਉਤਪਾਦ ਹਟਾਉਣਾ ਹੈ?';
+
+  @override
+  String get deleteProductConfirmBody =>
+      'ਇਹ ਇਸ ਉਤਪਾਦ ਅਤੇ ਇਸ ਦੀਆਂ ਫ਼ੋਟੋਆਂ ਨੂੰ ਪੱਕੇ ਤੌਰ \'ਤੇ ਹਟਾ ਦੇਵੇਗਾ।';
+
+  @override
+  String get productUpdatedSuccess => 'ਉਤਪਾਦ ਅੱਪਡੇਟ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get productMadeActiveSuccess => 'ਉਤਪਾਦ ਸਰਗਰਮ ਕਰ ਦਿੱਤਾ ਗਿਆ';
+
+  @override
+  String get productMadeInactiveSuccess => 'ਉਤਪਾਦ ਅਕਿਰਿਆਸ਼ੀਲ ਕਰ ਦਿੱਤਾ ਗਿਆ';
+
+  @override
+  String get couldNotUpdateProduct => 'ਉਤਪਾਦ ਅੱਪਡੇਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ';
+
+  @override
+  String get couldNotLoadProductPhoto => 'ਉਤਪਾਦ ਦੀ ਫ਼ੋਟੋ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ';
+
+  @override
+  String get incompleteProductCannotActivate =>
+      'ਸਰਗਰਮ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਨਾਮ, ਸ਼੍ਰੇਣੀ ਅਤੇ ਕੀਮਤ ਭਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਉਤਪਾਦ ਨੂੰ ਸੋਧੋ।';
+
+  @override
+  String get noInactiveProductsTitle => 'ਕੋਈ ਅਕਿਰਿਆਸ਼ੀਲ ਉਤਪਾਦ ਨਹੀਂ';
+
+  @override
+  String get noInactiveProductsSubtitle =>
+      'ਤੁਹਾਡੇ ਵੱਲੋਂ ਅਕਿਰਿਆਸ਼ੀਲ ਕੀਤੇ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
 
   @override
   String get whatBuyersWantSubtitle =>
@@ -1243,13 +1380,7 @@ class AppLocalizationsPa extends AppLocalizations {
   String get quickMenuTitle => 'ਤੇਜ਼ ਕਾਰਵਾਈਆਂ';
 
   @override
-  String get email => 'ਈਮੇਲ';
-
-  @override
   String get ok => 'ਠੀਕ ਹੈ';
-
-  @override
-  String get businessName => 'ਕਾਰੋਬਾਰ ਦਾ ਨਾਮ';
 
   @override
   String get craftCategory => 'ਕਾਰੀਗਰੀ ਸ਼੍ਰੇਣੀ';

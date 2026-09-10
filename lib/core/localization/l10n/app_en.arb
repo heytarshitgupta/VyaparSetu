@@ -104,67 +104,9 @@
   "@createAccountTitle": {
     "description": "Header for create account screen"
   },
-  "createYourAccountTitle": "Create Your Account",
-  "@createYourAccountTitle": {
-    "description": "Header for Step 1 producer signup"
-  },
   "createAccountSubtitle": "Start your journey as an artisan producer and reach direct commercial buyers.",
   "@createAccountSubtitle": {
     "description": "Subtitle on create account screen"
-  },
-  "createAccountSupportingCopy": "Start setting up your business on VyaparSetu.",
-  "@createAccountSupportingCopy": {
-    "description": "Supporting copy for Step 1 producer signup"
-  },
-  "verifyYourEmailTitle": "Verify Your Email",
-  "@verifyYourEmailTitle": {
-    "description": "Header for email OTP verification screen"
-  },
-  "verifyYourEmailSubtitle": "We sent a 6-digit code to {email}",
-  "@verifyYourEmailSubtitle": {
-    "description": "Subtitle on email OTP screen showing masked email",
-    "placeholders": {
-      "email": {
-        "type": "String"
-      }
-    }
-  },
-  "enterOtpPrompt": "Enter 6-digit verification code",
-  "@enterOtpPrompt": {
-    "description": "Label above 6-digit OTP input"
-  },
-  "verifyAndContinue": "Verify & Continue",
-  "@verifyAndContinue": {
-    "description": "Primary action button to verify OTP"
-  },
-  "resendCode": "Resend Code",
-  "@resendCode": {
-    "description": "Button to resend email verification code"
-  },
-  "resendCodeIn": "Resend Code in {seconds}s",
-  "@resendCodeIn": {
-    "description": "Cooldown indicator on resend button",
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
-  "changeEmail": "Change Email",
-  "@changeEmail": {
-    "description": "Button to go back and change email address"
-  },
-  "otpInvalidLength": "Please enter a valid 6-digit code",
-  "@otpInvalidLength": {
-    "description": "Error shown when OTP is fewer than 6 digits"
-  },
-  "otpIncorrectOrExpired": "That code is incorrect or has expired.",
-  "@otpIncorrectOrExpired": {
-    "description": "Error shown when OTP verification fails"
-  },
-  "otpSentSuccess": "A new 6-digit code has been sent to your email.",
-  "@otpSentSuccess": {
-    "description": "Success message when OTP is resent"
   },
   "fullName": "Full Name",
   "@fullName": {
@@ -290,7 +232,6 @@
   "@themeSystem": {
     "description": "Appearance mode following system/phone setting"
   },
-
   "producerSetup": "Producer Setup",
   "@producerSetup": {
     "description": "Screen title for producer onboarding"
@@ -303,15 +244,21 @@
   "@stepOf": {
     "description": "Progress step indicator",
     "placeholders": {
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "percentCompleted": "{percent}% Completed",
   "@percentCompleted": {
     "description": "Progress percentage indicator",
     "placeholders": {
-      "percent": { "type": "int" }
+      "percent": {
+        "type": "int"
+      }
     }
   },
   "submitApplication": "Submit Application",
@@ -322,7 +269,6 @@
   "@onboardingReviewSubmitted": {
     "description": "Snackbar shown upon onboarding completion"
   },
-
   "step1Title": "About You",
   "@step1Title": {
     "description": "Step 1 simplified title"
@@ -363,7 +309,6 @@
   "@step5Subtitle": {
     "description": "Step 5 simplified subtitle"
   },
-
   "step1Header": "Artisan Basic Details",
   "@step1Header": {
     "description": "Header inside Step 1 card"
@@ -390,7 +335,7 @@
   },
   "notProvided": "Not provided",
   "@notProvided": {
-    "description": "Placeholder when data is not provided"
+    "description": "Placeholder when an optional profile field was not provided"
   },
   "readOnly": "Read Only",
   "@readOnly": {
@@ -424,7 +369,6 @@
   "@contactPhoneHelper": {
     "description": "Helper for contact phone"
   },
-
   "step2Header": "Business & Craft Details",
   "@step2Header": {
     "description": "Header inside Step 2 card"
@@ -477,28 +421,46 @@
   "@shortDescriptionHelper": {
     "description": "Bio description helper"
   },
-
   "catFood": "Food & Homemade Products",
-  "@catFood": { "description": "Category: Food" },
+  "@catFood": {
+    "description": "Category: Food"
+  },
   "catHandicrafts": "Handicrafts",
-  "@catHandicrafts": { "description": "Category: Handicrafts" },
+  "@catHandicrafts": {
+    "description": "Category: Handicrafts"
+  },
   "catHandloom": "Handloom & Textiles",
-  "@catHandloom": { "description": "Category: Handloom" },
+  "@catHandloom": {
+    "description": "Category: Handloom"
+  },
   "catClothing": "Clothing & Embroidery",
-  "@catClothing": { "description": "Category: Clothing" },
+  "@catClothing": {
+    "description": "Category: Clothing"
+  },
   "catJewellery": "Jewellery & Accessories",
-  "@catJewellery": { "description": "Category: Jewellery" },
+  "@catJewellery": {
+    "description": "Category: Jewellery"
+  },
   "catWoodwork": "Woodwork",
-  "@catWoodwork": { "description": "Category: Woodwork" },
+  "@catWoodwork": {
+    "description": "Category: Woodwork"
+  },
   "catMetalCraft": "Metal Craft",
-  "@catMetalCraft": { "description": "Category: Metal" },
+  "@catMetalCraft": {
+    "description": "Category: Metal"
+  },
   "catHomeDecor": "Home Decor",
-  "@catHomeDecor": { "description": "Category: Home Decor" },
+  "@catHomeDecor": {
+    "description": "Category: Home Decor"
+  },
   "catBeauty": "Beauty / Personal Care",
-  "@catBeauty": { "description": "Category: Beauty" },
+  "@catBeauty": {
+    "description": "Category: Beauty"
+  },
   "catOther": "Other",
-  "@catOther": { "description": "Category: Other" },
-
+  "@catOther": {
+    "description": "Category: Other"
+  },
   "step3Header": "Workshop Location",
   "@step3Header": {
     "description": "Header inside Step 3 card"
@@ -563,7 +525,6 @@
   "@addressHelper": {
     "description": "Address helper"
   },
-
   "step4Header": "Identity & Compliance",
   "@step4Header": {
     "description": "Header inside Step 4 card"
@@ -580,9 +541,9 @@
   "@panVerification": {
     "description": "Title for PAN card in unverified state"
   },
-  "panVerified": "PAN Verified",
+  "panVerified": "Verified",
   "@panVerified": {
-    "description": "Title for PAN card in verified state"
+    "description": "Badge when PAN is verified"
   },
   "secureIdentityVerification": "Secure identity verification",
   "@secureIdentityVerification": {
@@ -652,7 +613,6 @@
   "@tryAgain": {
     "description": "Button label when verification failed"
   },
-
   "aadhaarVerification": "Aadhaar Verification",
   "@aadhaarVerification": {
     "description": "Title for Aadhaar card"
@@ -677,7 +637,6 @@
   "@gotIt": {
     "description": "Action button on Aadhaar dialog"
   },
-
   "gstRegistration": "GST Registration",
   "@gstRegistration": {
     "description": "Title for GST card"
@@ -726,20 +685,30 @@
   "@gstUpcomingNotice": {
     "description": "Information message after format-checking GSTIN"
   },
-
   "badgeNotVerified": "Not Verified",
-  "@badgeNotVerified": { "description": "Verification badge: not verified" },
+  "@badgeNotVerified": {
+    "description": "Verification badge: not verified"
+  },
   "badgeChecking": "Checking...",
-  "@badgeChecking": { "description": "Verification badge: checking" },
+  "@badgeChecking": {
+    "description": "Verification badge: checking"
+  },
   "badgeVerified": "Verified",
-  "@badgeVerified": { "description": "Verification badge: verified" },
+  "@badgeVerified": {
+    "description": "Verification badge: verified"
+  },
   "badgeCouldNotVerify": "Could Not Verify",
-  "@badgeCouldNotVerify": { "description": "Verification badge: could not verify" },
+  "@badgeCouldNotVerify": {
+    "description": "Verification badge: could not verify"
+  },
   "badgeComingSoon": "Coming Soon",
-  "@badgeComingSoon": { "description": "Verification badge: coming soon" },
+  "@badgeComingSoon": {
+    "description": "Verification badge: coming soon"
+  },
   "badgeNotRegistered": "Not Registered",
-  "@badgeNotRegistered": { "description": "Verification badge: not registered" },
-
+  "@badgeNotRegistered": {
+    "description": "Verification badge: not registered"
+  },
   "step5CardTitle": "Review & Submit Onboarding",
   "@step5CardTitle": {
     "description": "Title on Step 5 review card"
@@ -841,10 +810,6 @@
   "@filterHidden": {
     "description": "Filter tab for inactive products"
   },
-  "filterInactive": "Inactive",
-  "@filterInactive": {
-    "description": "Filter tab for inactive products"
-  },
   "statusActive": "Active",
   "@statusActive": {
     "description": "Status badge for active products"
@@ -856,70 +821,6 @@
   "statusHidden": "Inactive",
   "@statusHidden": {
     "description": "Status badge for hidden/inactive products"
-  },
-  "statusInactive": "Inactive",
-  "@statusInactive": {
-    "description": "Status badge for inactive products"
-  },
-  "editAction": "Edit",
-  "@editAction": {
-    "description": "Action button to edit a product"
-  },
-  "continueEditingAction": "Continue Editing",
-  "@continueEditingAction": {
-    "description": "Action button to continue editing a draft product"
-  },
-  "saveChangesAction": "Save Changes",
-  "@saveChangesAction": {
-    "description": "Action button to save edits to an existing product"
-  },
-  "makeActiveAction": "Make Active",
-  "@makeActiveAction": {
-    "description": "Action button to make an inactive product active"
-  },
-  "makeInactiveAction": "Make Inactive",
-  "@makeInactiveAction": {
-    "description": "Action button to make an active product inactive"
-  },
-  "editProductTitle": "Edit Product",
-  "@editProductTitle": {
-    "description": "Modal title when editing an existing product"
-  },
-  "editProductHelper": "Update your product details and photos",
-  "@editProductHelper": {
-    "description": "Modal subtitle when editing an existing product"
-  },
-  "deleteProductConfirmTitle": "Delete product?",
-  "@deleteProductConfirmTitle": {
-    "description": "Confirmation title when deleting a product"
-  },
-  "deleteProductConfirmBody": "This will permanently remove this product and its photos.",
-  "@deleteProductConfirmBody": {
-    "description": "Confirmation body when deleting a product"
-  },
-  "productUpdatedSuccess": "Product updated",
-  "@productUpdatedSuccess": {
-    "description": "Toast message when product details are updated"
-  },
-  "productMadeActiveSuccess": "Product made active",
-  "@productMadeActiveSuccess": {
-    "description": "Toast message when product is made active"
-  },
-  "productMadeInactiveSuccess": "Product made inactive",
-  "@productMadeInactiveSuccess": {
-    "description": "Toast message when product is made inactive"
-  },
-  "couldNotUpdateProduct": "Could not update product",
-  "@couldNotUpdateProduct": {
-    "description": "Error toast when product update fails"
-  },
-  "couldNotLoadProductPhoto": "Could not load product photo",
-  "@couldNotLoadProductPhoto": {
-    "description": "Error toast when product photo fails to load"
-  },
-  "incompleteProductCannotActivate": "Please edit product to fill name, category, and price before making it active.",
-  "@incompleteProductCannotActivate": {
-    "description": "Guidance toast when trying to activate an incomplete product"
   },
   "priceNotSet": "Price not set",
   "@priceNotSet": {
@@ -952,14 +853,6 @@
   "noHiddenProductsSubtitle": "Products you temporarily hide will appear here",
   "@noHiddenProductsSubtitle": {
     "description": "Subtitle when hidden/inactive filter has zero results"
-  },
-  "noInactiveProductsTitle": "No inactive products",
-  "@noInactiveProductsTitle": {
-    "description": "Title when inactive filter has zero results"
-  },
-  "noInactiveProductsSubtitle": "Products you mark as inactive will appear here",
-  "@noInactiveProductsSubtitle": {
-    "description": "Subtitle when inactive filter has zero results"
   },
   "showAllProducts": "Show All Products",
   "@showAllProducts": {
@@ -1184,6 +1077,320 @@
   "markReadyFailed": "Could not mark ready. Please try again.",
   "@markReadyFailed": {
     "description": "Error feedback when marking ready fails"
+  },
+  "myOrders": "My Orders",
+  "@myOrders": {
+    "description": "Added for profile screen"
+  },
+  "wishlist": "Wishlist",
+  "@wishlist": {
+    "description": "Added for profile screen"
+  },
+  "myRequirements": "My Requirements",
+  "@myRequirements": {
+    "description": "Added for profile screen"
+  },
+  "businessInformation": "Business Information",
+  "@businessInformation": {
+    "description": "Added for profile screen"
+  },
+  "businessName": "Business Name",
+  "@businessName": {
+    "description": "Label for business name"
+  },
+  "category": "Category",
+  "@category": {
+    "description": "Added for profile screen"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Label for email"
+  },
+  "phone": "Phone",
+  "@phone": {
+    "description": "Added for profile screen"
+  },
+  "address": "Address",
+  "@address": {
+    "description": "Added for profile screen"
+  },
+  "recentActivity": "Recent Activity",
+  "@recentActivity": {
+    "description": "Added for profile screen"
+  },
+  "quickLinks": "Quick Links",
+  "@quickLinks": {
+    "description": "Added for profile screen"
+  },
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Added for profile screen"
+  },
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Added for profile screen"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Added for profile screen"
+  },
+  "navDiscover": "Discover",
+  "@navDiscover": {
+    "description": "Bottom navigation bar item"
+  },
+  "navSearch": "Search",
+  "@navSearch": {
+    "description": "Bottom navigation bar item"
+  },
+  "navOrders": "Orders",
+  "@navOrders": {
+    "description": "Bottom navigation bar item"
+  },
+  "navAccount": "Account",
+  "@navAccount": {
+    "description": "Bottom navigation bar item"
+  },
+  "searchHint": "Search for Products, Brands and More",
+  "@searchHint": {
+    "description": "Added for Home tab"
+  },
+  "allCategories": "All Categories",
+  "@allCategories": {
+    "description": "Added for Home tab"
+  },
+  "handlooms": "Handlooms",
+  "@handlooms": {
+    "description": "Added for Home tab"
+  },
+  "spices": "Spices",
+  "@spices": {
+    "description": "Added for Home tab"
+  },
+  "handicrafts": "Handicrafts",
+  "@handicrafts": {
+    "description": "Added for Home tab"
+  },
+  "food": "Food",
+  "@food": {
+    "description": "Added for Home tab"
+  },
+  "gifting": "Gifting",
+  "@gifting": {
+    "description": "Added for Home tab"
+  },
+  "forYou": "For You",
+  "@forYou": {
+    "description": "Added for Home tab"
+  },
+  "textiles": "Textiles",
+  "@textiles": {
+    "description": "Added for Home tab"
+  },
+  "recommendedForYou": "Recommended For You",
+  "@recommendedForYou": {
+    "description": "Added for Home tab"
+  },
+  "viewAll": "VIEW ALL",
+  "@viewAll": {
+    "description": "Added for Home tab"
+  },
+  "noProductsFound": "No products found.",
+  "@noProductsFound": {
+    "description": "Added for Home tab"
+  },
+  "orderNow": "Order Now",
+  "@orderNow": {
+    "description": "Added for Home tab"
+  },
+  "addedToWishlist": "Added to wishlist",
+  "@addedToWishlist": {
+    "description": "Added for Home tab"
+  },
+  "removedFromWishlist": "Removed from wishlist",
+  "@removedFromWishlist": {
+    "description": "Added for Home tab"
+  },
+  "filters": "Filters",
+  "@filters": {
+    "description": "Added for Home tab"
+  },
+  "filterByCategory": "Filter by Category",
+  "@filterByCategory": {
+    "description": "Added for Home tab"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Added for Home tab"
+  },
+  "searchProducts": "Search products...",
+  "@searchProducts": {
+    "description": "Added for search and requests screen"
+  },
+  "myCart": "My Cart",
+  "@myCart": {
+    "description": "Added for search and requests screen"
+  },
+  "noProducts": "No Products",
+  "@noProducts": {
+    "description": "Added for search and requests screen"
+  },
+  "noProductsCategory": "No products available in this category yet.",
+  "@noProductsCategory": {
+    "description": "Added for search and requests screen"
+  },
+  "noRequests": "No requests yet",
+  "@noRequests": {
+    "description": "Added for search and requests screen"
+  },
+  "noRequestsSub": "Post a custom requirement to start receiving quotes from verified producers.",
+  "@noRequestsSub": {
+    "description": "Added for search and requests screen"
+  },
+  "responsesText": "Responses",
+  "@responsesText": {
+    "description": "Added for search and requests screen"
+  },
+  "receivingQuotes": "Receiving Quotes",
+  "@receivingQuotes": {
+    "description": "Added for search and requests screen"
+  },
+  "closed": "Closed",
+  "@closed": {
+    "description": "Added for search and requests screen"
+  },
+  "createYourAccountTitle": "Create Your Account",
+  "@createYourAccountTitle": {
+    "description": "Header for Step 1 producer signup"
+  },
+  "createAccountSupportingCopy": "Start setting up your business on VyaparSetu.",
+  "@createAccountSupportingCopy": {
+    "description": "Supporting copy for Step 1 producer signup"
+  },
+  "verifyYourEmailTitle": "Verify Your Email",
+  "@verifyYourEmailTitle": {
+    "description": "Header for email OTP verification screen"
+  },
+  "verifyYourEmailSubtitle": "We sent a 6-digit code to {email}",
+  "@verifyYourEmailSubtitle": {
+    "description": "Subtitle on email OTP screen showing masked email",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "enterOtpPrompt": "Enter 6-digit verification code",
+  "@enterOtpPrompt": {
+    "description": "Label above 6-digit OTP input"
+  },
+  "verifyAndContinue": "Verify & Continue",
+  "@verifyAndContinue": {
+    "description": "Primary action button to verify OTP"
+  },
+  "resendCode": "Resend Code",
+  "@resendCode": {
+    "description": "Button to resend email verification code"
+  },
+  "resendCodeIn": "Resend Code in {seconds}s",
+  "@resendCodeIn": {
+    "description": "Cooldown indicator on resend button",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "changeEmail": "Change Email",
+  "@changeEmail": {
+    "description": "Button to go back and change email address"
+  },
+  "otpInvalidLength": "Please enter a valid 6-digit code",
+  "@otpInvalidLength": {
+    "description": "Error shown when OTP is fewer than 6 digits"
+  },
+  "otpIncorrectOrExpired": "That code is incorrect or has expired.",
+  "@otpIncorrectOrExpired": {
+    "description": "Error shown when OTP verification fails"
+  },
+  "otpSentSuccess": "A new 6-digit code has been sent to your email.",
+  "@otpSentSuccess": {
+    "description": "Success message when OTP is resent"
+  },
+  "filterInactive": "Inactive",
+  "@filterInactive": {
+    "description": "Filter tab for inactive products"
+  },
+  "statusInactive": "Inactive",
+  "@statusInactive": {
+    "description": "Status badge for inactive products"
+  },
+  "editAction": "Edit",
+  "@editAction": {
+    "description": "Action button to edit a product"
+  },
+  "continueEditingAction": "Continue Editing",
+  "@continueEditingAction": {
+    "description": "Action button to continue editing a draft product"
+  },
+  "saveChangesAction": "Save Changes",
+  "@saveChangesAction": {
+    "description": "Action button to save edits to an existing product"
+  },
+  "makeActiveAction": "Make Active",
+  "@makeActiveAction": {
+    "description": "Action button to make an inactive product active"
+  },
+  "makeInactiveAction": "Make Inactive",
+  "@makeInactiveAction": {
+    "description": "Action button to make an active product inactive"
+  },
+  "editProductTitle": "Edit Product",
+  "@editProductTitle": {
+    "description": "Modal title when editing an existing product"
+  },
+  "editProductHelper": "Update your product details and photos",
+  "@editProductHelper": {
+    "description": "Modal subtitle when editing an existing product"
+  },
+  "deleteProductConfirmTitle": "Delete product?",
+  "@deleteProductConfirmTitle": {
+    "description": "Confirmation title when deleting a product"
+  },
+  "deleteProductConfirmBody": "This will permanently remove this product and its photos.",
+  "@deleteProductConfirmBody": {
+    "description": "Confirmation body when deleting a product"
+  },
+  "productUpdatedSuccess": "Product updated",
+  "@productUpdatedSuccess": {
+    "description": "Toast message when product details are updated"
+  },
+  "productMadeActiveSuccess": "Product made active",
+  "@productMadeActiveSuccess": {
+    "description": "Toast message when product is made active"
+  },
+  "productMadeInactiveSuccess": "Product made inactive",
+  "@productMadeInactiveSuccess": {
+    "description": "Toast message when product is made inactive"
+  },
+  "couldNotUpdateProduct": "Could not update product",
+  "@couldNotUpdateProduct": {
+    "description": "Error toast when product update fails"
+  },
+  "couldNotLoadProductPhoto": "Could not load product photo",
+  "@couldNotLoadProductPhoto": {
+    "description": "Error toast when product photo fails to load"
+  },
+  "incompleteProductCannotActivate": "Please edit product to fill name, category, and price before making it active.",
+  "@incompleteProductCannotActivate": {
+    "description": "Guidance toast when trying to activate an incomplete product"
+  },
+  "noInactiveProductsTitle": "No inactive products",
+  "@noInactiveProductsTitle": {
+    "description": "Title when inactive filter has zero results"
+  },
+  "noInactiveProductsSubtitle": "Products you mark as inactive will appear here",
+  "@noInactiveProductsSubtitle": {
+    "description": "Subtitle when inactive filter has zero results"
   },
   "whatBuyersWantSubtitle": "See sample market demand trends from different places.",
   "@whatBuyersWantSubtitle": {
@@ -1461,10 +1668,6 @@
   "@unverifiedProducer": {
     "description": "Badge for unverified producer"
   },
-  "panVerified": "Verified",
-  "@panVerified": {
-    "description": "Badge when PAN is verified"
-  },
   "panNotVerified": "Not Verified",
   "@panNotVerified": {
     "description": "Badge when PAN is not verified"
@@ -1561,25 +1764,13 @@
   "@phoneLabel": {
     "description": "Label for contact phone"
   },
-  "notProvided": "Not provided",
-  "@notProvided": {
-    "description": "Placeholder when an optional profile field was not provided"
-  },
   "quickMenuTitle": "Quick Actions",
   "@quickMenuTitle": {
     "description": "Accessibility and tooltip for quick action menu"
   },
-  "email": "Email",
-  "@email": {
-    "description": "Label for email"
-  },
   "ok": "OK",
   "@ok": {
     "description": "Button label for OK"
-  },
-  "businessName": "Business Name",
-  "@businessName": {
-    "description": "Label for business name"
   },
   "craftCategory": "Craft Category",
   "@craftCategory": {
@@ -2161,4 +2352,3 @@
     "description": "Button label to submit format check"
   }
 }
-

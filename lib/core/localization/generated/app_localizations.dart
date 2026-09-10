@@ -256,83 +256,11 @@ abstract class AppLocalizations {
   /// **'Create Account'**
   String get createAccountTitle;
 
-  /// Header for Step 1 producer signup
-  ///
-  /// In en, this message translates to:
-  /// **'Create Your Account'**
-  String get createYourAccountTitle;
-
   /// Subtitle on create account screen
   ///
   /// In en, this message translates to:
   /// **'Start your journey as an artisan producer and reach direct commercial buyers.'**
   String get createAccountSubtitle;
-
-  /// Supporting copy for Step 1 producer signup
-  ///
-  /// In en, this message translates to:
-  /// **'Start setting up your business on VyaparSetu.'**
-  String get createAccountSupportingCopy;
-
-  /// Header for email OTP verification screen
-  ///
-  /// In en, this message translates to:
-  /// **'Verify Your Email'**
-  String get verifyYourEmailTitle;
-
-  /// Subtitle on email OTP screen showing masked email
-  ///
-  /// In en, this message translates to:
-  /// **'We sent a 6-digit code to {email}'**
-  String verifyYourEmailSubtitle(String email);
-
-  /// Label above 6-digit OTP input
-  ///
-  /// In en, this message translates to:
-  /// **'Enter 6-digit verification code'**
-  String get enterOtpPrompt;
-
-  /// Primary action button to verify OTP
-  ///
-  /// In en, this message translates to:
-  /// **'Verify & Continue'**
-  String get verifyAndContinue;
-
-  /// Button to resend email verification code
-  ///
-  /// In en, this message translates to:
-  /// **'Resend Code'**
-  String get resendCode;
-
-  /// Cooldown indicator on resend button
-  ///
-  /// In en, this message translates to:
-  /// **'Resend Code in {seconds}s'**
-  String resendCodeIn(int seconds);
-
-  /// Button to go back and change email address
-  ///
-  /// In en, this message translates to:
-  /// **'Change Email'**
-  String get changeEmail;
-
-  /// Error shown when OTP is fewer than 6 digits
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid 6-digit code'**
-  String get otpInvalidLength;
-
-  /// Error shown when OTP verification fails
-  ///
-  /// In en, this message translates to:
-  /// **'That code is incorrect or has expired.'**
-  String get otpIncorrectOrExpired;
-
-  /// Success message when OTP is resent
-  ///
-  /// In en, this message translates to:
-  /// **'A new 6-digit code has been sent to your email.'**
-  String get otpSentSuccess;
 
   /// Full name field label
   ///
@@ -1360,12 +1288,6 @@ abstract class AppLocalizations {
   /// **'Inactive'**
   String get filterHidden;
 
-  /// Filter tab for inactive products
-  ///
-  /// In en, this message translates to:
-  /// **'Inactive'**
-  String get filterInactive;
-
   /// Status badge for active products
   ///
   /// In en, this message translates to:
@@ -1383,102 +1305,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Inactive'**
   String get statusHidden;
-
-  /// Status badge for inactive products
-  ///
-  /// In en, this message translates to:
-  /// **'Inactive'**
-  String get statusInactive;
-
-  /// Action button to edit a product
-  ///
-  /// In en, this message translates to:
-  /// **'Edit'**
-  String get editAction;
-
-  /// Action button to continue editing a draft product
-  ///
-  /// In en, this message translates to:
-  /// **'Continue Editing'**
-  String get continueEditingAction;
-
-  /// Action button to save edits to an existing product
-  ///
-  /// In en, this message translates to:
-  /// **'Save Changes'**
-  String get saveChangesAction;
-
-  /// Action button to make an inactive product active
-  ///
-  /// In en, this message translates to:
-  /// **'Make Active'**
-  String get makeActiveAction;
-
-  /// Action button to make an active product inactive
-  ///
-  /// In en, this message translates to:
-  /// **'Make Inactive'**
-  String get makeInactiveAction;
-
-  /// Modal title when editing an existing product
-  ///
-  /// In en, this message translates to:
-  /// **'Edit Product'**
-  String get editProductTitle;
-
-  /// Modal subtitle when editing an existing product
-  ///
-  /// In en, this message translates to:
-  /// **'Update your product details and photos'**
-  String get editProductHelper;
-
-  /// Confirmation title when deleting a product
-  ///
-  /// In en, this message translates to:
-  /// **'Delete product?'**
-  String get deleteProductConfirmTitle;
-
-  /// Confirmation body when deleting a product
-  ///
-  /// In en, this message translates to:
-  /// **'This will permanently remove this product and its photos.'**
-  String get deleteProductConfirmBody;
-
-  /// Toast message when product details are updated
-  ///
-  /// In en, this message translates to:
-  /// **'Product updated'**
-  String get productUpdatedSuccess;
-
-  /// Toast message when product is made active
-  ///
-  /// In en, this message translates to:
-  /// **'Product made active'**
-  String get productMadeActiveSuccess;
-
-  /// Toast message when product is made inactive
-  ///
-  /// In en, this message translates to:
-  /// **'Product made inactive'**
-  String get productMadeInactiveSuccess;
-
-  /// Error toast when product update fails
-  ///
-  /// In en, this message translates to:
-  /// **'Could not update product'**
-  String get couldNotUpdateProduct;
-
-  /// Error toast when product photo fails to load
-  ///
-  /// In en, this message translates to:
-  /// **'Could not load product photo'**
-  String get couldNotLoadProductPhoto;
-
-  /// Guidance toast when trying to activate an incomplete product
-  ///
-  /// In en, this message translates to:
-  /// **'Please edit product to fill name, category, and price before making it active.'**
-  String get incompleteProductCannotActivate;
 
   /// Label when product price is not specified
   ///
@@ -1527,18 +1353,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Products you temporarily hide will appear here'**
   String get noHiddenProductsSubtitle;
-
-  /// Title when inactive filter has zero results
-  ///
-  /// In en, this message translates to:
-  /// **'No inactive products'**
-  String get noInactiveProductsTitle;
-
-  /// Subtitle when inactive filter has zero results
-  ///
-  /// In en, this message translates to:
-  /// **'Products you mark as inactive will appear here'**
-  String get noInactiveProductsSubtitle;
 
   /// Button to clear filters and view all products
   ///
@@ -1863,6 +1677,462 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not mark ready. Please try again.'**
   String get markReadyFailed;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'My Orders'**
+  String get myOrders;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist'**
+  String get wishlist;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'My Requirements'**
+  String get myRequirements;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Business Information'**
+  String get businessInformation;
+
+  /// Label for business name
+  ///
+  /// In en, this message translates to:
+  /// **'Business Name'**
+  String get businessName;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// Label for email
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get recentActivity;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Links'**
+  String get quickLinks;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// Added for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// Bottom navigation bar item
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get navDiscover;
+
+  /// Bottom navigation bar item
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get navSearch;
+
+  /// Bottom navigation bar item
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get navOrders;
+
+  /// Bottom navigation bar item
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get navAccount;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Search for Products, Brands and More'**
+  String get searchHint;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get allCategories;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Handlooms'**
+  String get handlooms;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Spices'**
+  String get spices;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Handicrafts'**
+  String get handicrafts;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get food;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Gifting'**
+  String get gifting;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'For You'**
+  String get forYou;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Textiles'**
+  String get textiles;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended For You'**
+  String get recommendedForYou;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'VIEW ALL'**
+  String get viewAll;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'No products found.'**
+  String get noProductsFound;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Order Now'**
+  String get orderNow;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Added to wishlist'**
+  String get addedToWishlist;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from wishlist'**
+  String get removedFromWishlist;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Category'**
+  String get filterByCategory;
+
+  /// Added for Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Search products...'**
+  String get searchProducts;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'My Cart'**
+  String get myCart;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'No Products'**
+  String get noProducts;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'No products available in this category yet.'**
+  String get noProductsCategory;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'No requests yet'**
+  String get noRequests;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Post a custom requirement to start receiving quotes from verified producers.'**
+  String get noRequestsSub;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Responses'**
+  String get responsesText;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Receiving Quotes'**
+  String get receivingQuotes;
+
+  /// Added for search and requests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get closed;
+
+  /// Header for Step 1 producer signup
+  ///
+  /// In en, this message translates to:
+  /// **'Create Your Account'**
+  String get createYourAccountTitle;
+
+  /// Supporting copy for Step 1 producer signup
+  ///
+  /// In en, this message translates to:
+  /// **'Start setting up your business on VyaparSetu.'**
+  String get createAccountSupportingCopy;
+
+  /// Header for email OTP verification screen
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Email'**
+  String get verifyYourEmailTitle;
+
+  /// Subtitle on email OTP screen showing masked email
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a 6-digit code to {email}'**
+  String verifyYourEmailSubtitle(String email);
+
+  /// Label above 6-digit OTP input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 6-digit verification code'**
+  String get enterOtpPrompt;
+
+  /// Primary action button to verify OTP
+  ///
+  /// In en, this message translates to:
+  /// **'Verify & Continue'**
+  String get verifyAndContinue;
+
+  /// Button to resend email verification code
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// Cooldown indicator on resend button
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code in {seconds}s'**
+  String resendCodeIn(int seconds);
+
+  /// Button to go back and change email address
+  ///
+  /// In en, this message translates to:
+  /// **'Change Email'**
+  String get changeEmail;
+
+  /// Error shown when OTP is fewer than 6 digits
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid 6-digit code'**
+  String get otpInvalidLength;
+
+  /// Error shown when OTP verification fails
+  ///
+  /// In en, this message translates to:
+  /// **'That code is incorrect or has expired.'**
+  String get otpIncorrectOrExpired;
+
+  /// Success message when OTP is resent
+  ///
+  /// In en, this message translates to:
+  /// **'A new 6-digit code has been sent to your email.'**
+  String get otpSentSuccess;
+
+  /// Filter tab for inactive products
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get filterInactive;
+
+  /// Status badge for inactive products
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get statusInactive;
+
+  /// Action button to edit a product
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editAction;
+
+  /// Action button to continue editing a draft product
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Editing'**
+  String get continueEditingAction;
+
+  /// Action button to save edits to an existing product
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChangesAction;
+
+  /// Action button to make an inactive product active
+  ///
+  /// In en, this message translates to:
+  /// **'Make Active'**
+  String get makeActiveAction;
+
+  /// Action button to make an active product inactive
+  ///
+  /// In en, this message translates to:
+  /// **'Make Inactive'**
+  String get makeInactiveAction;
+
+  /// Modal title when editing an existing product
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Product'**
+  String get editProductTitle;
+
+  /// Modal subtitle when editing an existing product
+  ///
+  /// In en, this message translates to:
+  /// **'Update your product details and photos'**
+  String get editProductHelper;
+
+  /// Confirmation title when deleting a product
+  ///
+  /// In en, this message translates to:
+  /// **'Delete product?'**
+  String get deleteProductConfirmTitle;
+
+  /// Confirmation body when deleting a product
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently remove this product and its photos.'**
+  String get deleteProductConfirmBody;
+
+  /// Toast message when product details are updated
+  ///
+  /// In en, this message translates to:
+  /// **'Product updated'**
+  String get productUpdatedSuccess;
+
+  /// Toast message when product is made active
+  ///
+  /// In en, this message translates to:
+  /// **'Product made active'**
+  String get productMadeActiveSuccess;
+
+  /// Toast message when product is made inactive
+  ///
+  /// In en, this message translates to:
+  /// **'Product made inactive'**
+  String get productMadeInactiveSuccess;
+
+  /// Error toast when product update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update product'**
+  String get couldNotUpdateProduct;
+
+  /// Error toast when product photo fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load product photo'**
+  String get couldNotLoadProductPhoto;
+
+  /// Guidance toast when trying to activate an incomplete product
+  ///
+  /// In en, this message translates to:
+  /// **'Please edit product to fill name, category, and price before making it active.'**
+  String get incompleteProductCannotActivate;
+
+  /// Title when inactive filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'No inactive products'**
+  String get noInactiveProductsTitle;
+
+  /// Subtitle when inactive filter has zero results
+  ///
+  /// In en, this message translates to:
+  /// **'Products you mark as inactive will appear here'**
+  String get noInactiveProductsSubtitle;
 
   /// Subtitle for What Buyers Want screen
   ///
@@ -2398,23 +2668,11 @@ abstract class AppLocalizations {
   /// **'Quick Actions'**
   String get quickMenuTitle;
 
-  /// Label for email
-  ///
-  /// In en, this message translates to:
-  /// **'Email'**
-  String get email;
-
   /// Button label for OK
   ///
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
-
-  /// Label for business name
-  ///
-  /// In en, this message translates to:
-  /// **'Business Name'**
-  String get businessName;
 
   /// Label for craft category
   ///

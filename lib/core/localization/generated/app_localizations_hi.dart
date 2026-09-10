@@ -92,50 +92,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get createAccountTitle => 'खाता बनाएं';
 
   @override
-  String get createYourAccountTitle => 'अपना खाता बनाएं';
-
-  @override
   String get createAccountSubtitle =>
       'एक कारीगर उत्पादक के रूप में अपनी यात्रा शुरू करें और सीधे खरीदारों से जुड़ें।';
-
-  @override
-  String get createAccountSupportingCopy =>
-      'व्यापार सेतु पर अपना व्यवसाय शुरू करें।';
-
-  @override
-  String get verifyYourEmailTitle => 'अपना ईमेल सत्यापित करें';
-
-  @override
-  String verifyYourEmailSubtitle(String email) {
-    return 'हमने $email पर 6 अंकों का कोड भेजा है';
-  }
-
-  @override
-  String get enterOtpPrompt => '6 अंकों का सत्यापन कोड दर्ज करें';
-
-  @override
-  String get verifyAndContinue => 'सत्यापित करें और आगे बढ़ें';
-
-  @override
-  String get resendCode => 'कोड दोबारा भेजें';
-
-  @override
-  String resendCodeIn(int seconds) {
-    return '$seconds सेकंड में कोड दोबारा भेजें';
-  }
-
-  @override
-  String get changeEmail => 'ईमेल बदलें';
-
-  @override
-  String get otpInvalidLength => 'कृपया 6 अंकों का सही कोड दर्ज करें';
-
-  @override
-  String get otpIncorrectOrExpired => 'वह कोड गलत है या समाप्त हो गया है।';
-
-  @override
-  String get otpSentSuccess =>
-      'आपकी ईमेल पर एक नया 6 अंकों का कोड भेज दिया गया है।';
 
   @override
   String get fullName => 'पूरा नाम';
@@ -680,9 +638,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get filterHidden => 'निष्क्रिय';
 
   @override
-  String get filterInactive => 'निष्क्रिय';
-
-  @override
   String get statusActive => 'सक्रिय';
 
   @override
@@ -690,56 +645,6 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get statusHidden => 'निष्क्रिय';
-
-  @override
-  String get statusInactive => 'निष्क्रिय';
-
-  @override
-  String get editAction => 'संपादित करें';
-
-  @override
-  String get continueEditingAction => 'संपादन जारी रखें';
-
-  @override
-  String get saveChangesAction => 'बदलाव सहेजें';
-
-  @override
-  String get makeActiveAction => 'सक्रिय करें';
-
-  @override
-  String get makeInactiveAction => 'निष्क्रिय करें';
-
-  @override
-  String get editProductTitle => 'उत्पाद संपादित करें';
-
-  @override
-  String get editProductHelper => 'अपने उत्पाद का विवरण और फ़ोटो अपडेट करें';
-
-  @override
-  String get deleteProductConfirmTitle => 'उत्पाद हटाएं?';
-
-  @override
-  String get deleteProductConfirmBody =>
-      'यह इस उत्पाद और इसकी तस्वीरों को स्थायी रूप से हटा देगा।';
-
-  @override
-  String get productUpdatedSuccess => 'उत्पाद अपडेट हो गया';
-
-  @override
-  String get productMadeActiveSuccess => 'उत्पाद सक्रिय कर दिया गया';
-
-  @override
-  String get productMadeInactiveSuccess => 'उत्पाद निष्क्रिय कर दिया गया';
-
-  @override
-  String get couldNotUpdateProduct => 'उत्पाद अपडेट नहीं किया जा सका';
-
-  @override
-  String get couldNotLoadProductPhoto => 'उत्पाद की फ़ोटो लोड नहीं हो सकी';
-
-  @override
-  String get incompleteProductCannotActivate =>
-      'सक्रिय करने से पहले नाम, श्रेणी और कीमत भरने के लिए कृपया उत्पाद संपादित करें।';
 
   @override
   String get priceNotSet => 'कीमत तय नहीं';
@@ -767,13 +672,6 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get noHiddenProductsSubtitle =>
       'अस्थायी रूप से निष्क्रिय किए गए उत्पाद यहाँ दिखाई देंगे';
-
-  @override
-  String get noInactiveProductsTitle => 'कोई निष्क्रिय उत्पाद नहीं';
-
-  @override
-  String get noInactiveProductsSubtitle =>
-      'आपके द्वारा निष्क्रिय किए गए उत्पाद यहां दिखाई देंगे';
 
   @override
   String get showAllProducts => 'सभी उत्पाद देखें';
@@ -948,6 +846,245 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get markReadyFailed =>
       'तैयार चिह्नित नहीं हो सका। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get myOrders => 'मेरे ऑर्डर';
+
+  @override
+  String get wishlist => 'विशलिस्ट';
+
+  @override
+  String get myRequirements => 'मेरी ज़रूरतें';
+
+  @override
+  String get businessInformation => 'व्यावसायिक जानकारी';
+
+  @override
+  String get businessName => 'व्यवसाय का नाम';
+
+  @override
+  String get category => 'श्रेणी';
+
+  @override
+  String get email => 'ईमेल';
+
+  @override
+  String get phone => 'फ़ोन';
+
+  @override
+  String get address => 'पता';
+
+  @override
+  String get recentActivity => 'हाल की गतिविधि';
+
+  @override
+  String get quickLinks => 'त्वरित लिंक';
+
+  @override
+  String get darkMode => 'डार्क मोड';
+
+  @override
+  String get notifications => 'सूचनाएं';
+
+  @override
+  String get logout => 'लॉग आउट';
+
+  @override
+  String get navDiscover => 'खोजें';
+
+  @override
+  String get navSearch => 'सर्च';
+
+  @override
+  String get navOrders => 'ऑर्डर';
+
+  @override
+  String get navAccount => 'खाता';
+
+  @override
+  String get searchHint => 'उत्पाद, ब्रांड और बहुत कुछ खोजें';
+
+  @override
+  String get allCategories => 'सभी श्रेणियां';
+
+  @override
+  String get handlooms => 'हथकरघा';
+
+  @override
+  String get spices => 'मसाले';
+
+  @override
+  String get handicrafts => 'हस्तशिल्प';
+
+  @override
+  String get food => 'भोजन';
+
+  @override
+  String get gifting => 'उपहार';
+
+  @override
+  String get forYou => 'आपके लिए';
+
+  @override
+  String get textiles => 'कपड़ा';
+
+  @override
+  String get recommendedForYou => 'आपके लिए अनुशंसित';
+
+  @override
+  String get viewAll => 'सभी देखें';
+
+  @override
+  String get noProductsFound => 'कोई उत्पाद नहीं मिला।';
+
+  @override
+  String get orderNow => 'अभी ऑर्डर करें';
+
+  @override
+  String get addedToWishlist => 'विशलिस्ट में जोड़ा गया';
+
+  @override
+  String get removedFromWishlist => 'विशलिस्ट से हटाया गया';
+
+  @override
+  String get filters => 'फ़िल्टर';
+
+  @override
+  String get filterByCategory => 'श्रेणी के आधार पर फ़िल्टर करें';
+
+  @override
+  String get close => 'बंद करें';
+
+  @override
+  String get searchProducts => 'उत्पाद खोजें...';
+
+  @override
+  String get myCart => 'मेरी कार्ट';
+
+  @override
+  String get noProducts => 'कोई उत्पाद नहीं';
+
+  @override
+  String get noProductsCategory =>
+      'इस श्रेणी में अभी तक कोई उत्पाद उपलब्ध नहीं है।';
+
+  @override
+  String get noRequests => 'अभी तक कोई अनुरोध नहीं';
+
+  @override
+  String get noRequestsSub =>
+      'सत्यापित उत्पादकों से उद्धरण प्राप्त करना शुरू करने के लिए एक कस्टम आवश्यकता पोस्ट करें।';
+
+  @override
+  String get responsesText => 'प्रतिक्रियाएं';
+
+  @override
+  String get receivingQuotes => 'उद्धरण प्राप्त कर रहे हैं';
+
+  @override
+  String get closed => 'बंद';
+
+  @override
+  String get createYourAccountTitle => 'अपना खाता बनाएं';
+
+  @override
+  String get createAccountSupportingCopy =>
+      'व्यापार सेतु पर अपना व्यवसाय शुरू करें।';
+
+  @override
+  String get verifyYourEmailTitle => 'अपना ईमेल सत्यापित करें';
+
+  @override
+  String verifyYourEmailSubtitle(String email) {
+    return 'हमने $email पर 6 अंकों का कोड भेजा है';
+  }
+
+  @override
+  String get enterOtpPrompt => '6 अंकों का सत्यापन कोड दर्ज करें';
+
+  @override
+  String get verifyAndContinue => 'सत्यापित करें और आगे बढ़ें';
+
+  @override
+  String get resendCode => 'कोड दोबारा भेजें';
+
+  @override
+  String resendCodeIn(int seconds) {
+    return '$seconds सेकंड में कोड दोबारा भेजें';
+  }
+
+  @override
+  String get changeEmail => 'ईमेल बदलें';
+
+  @override
+  String get otpInvalidLength => 'कृपया 6 अंकों का सही कोड दर्ज करें';
+
+  @override
+  String get otpIncorrectOrExpired => 'वह कोड गलत है या समाप्त हो गया है।';
+
+  @override
+  String get otpSentSuccess =>
+      'आपकी ईमेल पर एक नया 6 अंकों का कोड भेज दिया गया है।';
+
+  @override
+  String get filterInactive => 'निष्क्रिय';
+
+  @override
+  String get statusInactive => 'निष्क्रिय';
+
+  @override
+  String get editAction => 'संपादित करें';
+
+  @override
+  String get continueEditingAction => 'संपादन जारी रखें';
+
+  @override
+  String get saveChangesAction => 'बदलाव सहेजें';
+
+  @override
+  String get makeActiveAction => 'सक्रिय करें';
+
+  @override
+  String get makeInactiveAction => 'निष्क्रिय करें';
+
+  @override
+  String get editProductTitle => 'उत्पाद संपादित करें';
+
+  @override
+  String get editProductHelper => 'अपने उत्पाद का विवरण और फ़ोटो अपडेट करें';
+
+  @override
+  String get deleteProductConfirmTitle => 'उत्पाद हटाएं?';
+
+  @override
+  String get deleteProductConfirmBody =>
+      'यह इस उत्पाद और इसकी तस्वीरों को स्थायी रूप से हटा देगा।';
+
+  @override
+  String get productUpdatedSuccess => 'उत्पाद अपडेट हो गया';
+
+  @override
+  String get productMadeActiveSuccess => 'उत्पाद सक्रिय कर दिया गया';
+
+  @override
+  String get productMadeInactiveSuccess => 'उत्पाद निष्क्रिय कर दिया गया';
+
+  @override
+  String get couldNotUpdateProduct => 'उत्पाद अपडेट नहीं किया जा सका';
+
+  @override
+  String get couldNotLoadProductPhoto => 'उत्पाद की फ़ोटो लोड नहीं हो सकी';
+
+  @override
+  String get incompleteProductCannotActivate =>
+      'सक्रिय करने से पहले नाम, श्रेणी और कीमत भरने के लिए कृपया उत्पाद संपादित करें।';
+
+  @override
+  String get noInactiveProductsTitle => 'कोई निष्क्रिय उत्पाद नहीं';
+
+  @override
+  String get noInactiveProductsSubtitle =>
+      'आपके द्वारा निष्क्रिय किए गए उत्पाद यहां दिखाई देंगे';
 
   @override
   String get whatBuyersWantSubtitle =>
@@ -1242,13 +1379,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get quickMenuTitle => 'त्वरित क्रियाएं';
 
   @override
-  String get email => 'ईमेल';
-
-  @override
   String get ok => 'ठीक है';
-
-  @override
-  String get businessName => 'व्यवसाय का नाम';
 
   @override
   String get craftCategory => 'शिल्प श्रेणी';

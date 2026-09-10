@@ -17,6 +17,7 @@ class BuyerSignupScreen extends StatefulWidget {
 class _BuyerSignupScreenState extends State<BuyerSignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -28,6 +29,7 @@ class _BuyerSignupScreenState extends State<BuyerSignupScreen> {
   @override
   void dispose() {
     _fullNameController.dispose();
+    _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -46,30 +48,44 @@ class _BuyerSignupScreenState extends State<BuyerSignupScreen> {
     });
 
     try {
+      final finalEmail = _emailController.text.trim();
+
+      // Use standard Email/Password signup
       final response = await AuthService.instance.signUpWithEmail(
-        email: _emailController.text,
+        email: finalEmail,
         password: _passwordController.text,
         data: {
           'full_name': _fullNameController.text.trim(),
+          'phone': _phoneController.text.trim(),
         },
       );
 
       if (!mounted) return;
 
       if (response.user != null) {
-        // Upon successful creation, move directly to onboarding/setup.
-        Navigator.pushReplacementNamed(
-          context,
-          AppRouter.buyerOnboardingRoute,
-        );
+        if (response.session != null) {
+          // "Confirm email" is OFF in Supabase, user is instantly logged in
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRouter.homeRoute,
+            (route) => false,
+          );
+        } else {
+          // "Confirm email" is ON, session is null until verified
+          Navigator.pushNamed(
+            context,
+            AppRouter.buyerOtpVerificationRoute,
+            arguments: {
+              'email': finalEmail,
+              'mode': 'signUp',
+            },
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(
-              'Account created, but we could not log you in automatically.',
-            ),
+            content: Text('Account created, but we could not log you in.'),
             backgroundColor: AppColors.primary,
-            duration: Duration(seconds: 5),
           ),
         );
       }
@@ -92,14 +108,7 @@ class _BuyerSignupScreenState extends State<BuyerSignupScreen> {
     }
   }
 
-  void _showPhoneSignupPlaceholder() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Phone login will be available in the next update.'),
-        backgroundColor: AppColors.primaryLight,
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -214,6 +223,23 @@ class _BuyerSignupScreenState extends State<BuyerSignupScreen> {
                     ),
                     const SizedBox(height: 18),
 
+                    // Phone Field
+                    BuyerAuthTextField(
+                      controller: _phoneController,
+                      label: 'Phone Number',
+                      hint: 'e.g. +919999999999',
+                      prefixIcon: Icons.phone_outlined,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 18),
+
                     // Email Field
                     BuyerAuthTextField(
                       controller: _emailController,
@@ -224,7 +250,7 @@ class _BuyerSignupScreenState extends State<BuyerSignupScreen> {
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return l10n?.enterEmail ?? 'Please enter your email address';
+                          return l10n?.enterValidEmail ?? 'Please enter a valid email address';
                         }
                         final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
                         if (!emailRegex.hasMatch(value.trim())) {
@@ -335,25 +361,9 @@ class _BuyerSignupScreenState extends State<BuyerSignupScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  const Icon(Icons.check_circle_outline, size: 18),
+                                  const Icon(Icons.arrow_forward, size: 18),
                                 ],
                               ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Alternate Auth Method (Phone OTP Placeholder)
-                    OutlinedButton.icon(
-                      onPressed: () => _showPhoneSignupPlaceholder(),
-                      icon: const Icon(Icons.phone_android_outlined, size: 18),
-                      label: Text(l10n?.signUpWithPhone ?? 'Sign up with Phone OTP'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onSurface,
-                        side: BorderSide(color: theme.dividerColor),
-                        minimumSize: const Size.fromHeight(48),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
                       ),
                     ),
                     const SizedBox(height: 28),
