@@ -1,6 +1,11 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/supabase_service.dart';
 
+class AuthConstants {
+  static const int emailOtpCooldownSeconds = 45;
+  static const int otpLength = 6;
+}
+
 class AuthService {
   AuthService._();
 
@@ -159,6 +164,37 @@ class AuthService {
     await _client.auth.resetPasswordForEmail(email.trim());
   }
 
+  /// Sign in using a passwordless email OTP flow.
+  Future<void> signInWithEmailOtp({required String email}) async {
+    await _client.auth.signInWithOtp(
+      email: email.trim(),
+      shouldCreateUser: false,
+    );
+  }
+
+  /// Sends a password recovery OTP using the built-in recovery email flow.
+  Future<void> sendPasswordRecoveryOtp({required String email}) async {
+    await _client.auth.resetPasswordForEmail(email.trim());
+  }
+
+  /// Sends a fresh email OTP for the requested email flow.
+  Future<void> resendEmailOtp({
+    required String email,
+    OtpType type = OtpType.signup,
+  }) async {
+    final normalizedEmail = email.trim();
+
+    if (type == OtpType.recovery) {
+      await sendPasswordRecoveryOtp(email: normalizedEmail);
+      return;
+    }
+
+    await _client.auth.signInWithOtp(
+      email: normalizedEmail,
+      shouldCreateUser: false,
+    );
+  }
+
   /// Verifies the OTP sent to the email.
   /// [type] can be OtpType.magiclink (for sign in), OtpType.signup (for signup), or OtpType.recovery (for password reset).
   Future<AuthResponse> verifyEmailOtp({
@@ -173,8 +209,32 @@ class AuthService {
     );
   }
 
+  /// Verifies a login OTP sent via email for the magic-link email flow.
+  Future<AuthResponse> verifyEmailLoginOtp({
+    required String email,
+    required String otp,
+  }) async {
+    return verifyEmailOtp(
+      email: email,
+      otp: otp,
+      type: OtpType.magiclink,
+    );
+  }
+
+  /// Verifies a recovery OTP sent via email for password recovery.
+  Future<AuthResponse> verifyRecoveryOtp({
+    required String email,
+    required String otp,
+  }) async {
+    return verifyEmailOtp(
+      email: email,
+      otp: otp,
+      type: OtpType.recovery,
+    );
+  }
+
   /// Updates the user's password (typically used after verifying a recovery OTP).
-  Future<UserResponse> updatePassword(String newPassword) async {
+  Future<UserResponse> updatePassword({required String newPassword}) async {
     return await _client.auth.updateUser(
       UserAttributes(
         password: newPassword,

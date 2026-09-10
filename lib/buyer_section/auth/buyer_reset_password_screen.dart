@@ -34,7 +34,9 @@ class _BuyerResetPasswordScreenState extends State<BuyerResetPasswordScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await AuthService.instance.updatePassword(_passwordController.text);
+      await AuthService.instance.updatePassword(
+        newPassword: _passwordController.text,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

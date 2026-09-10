@@ -262,7 +262,7 @@ class AppLocalizationsPa extends AppLocalizations {
   String get emailAddressLogin => 'ਈਮੇਲ ਪਤਾ (ਲੌਗ ਇਨ)';
 
   @override
-  String get notProvided => 'ਮੁਹੱਈਆ ਨਹੀਂ ਕੀਤਾ ਗਿਆ';
+  String get notProvided => 'ਮੁਹੱਈਆ ਨਹੀਂ';
 
   @override
   String get readOnly => 'ਸਿਰਫ਼ ਪੜ੍ਹਨ ਲਈ';
@@ -426,7 +426,7 @@ class AppLocalizationsPa extends AppLocalizations {
   String get panVerification => 'ਪੈਨ ਤਸਦੀਕ';
 
   @override
-  String get panVerified => 'ਪੈਨ ਤਸਦੀਕਸ਼ੁਦਾ';
+  String get panVerified => 'ਤਸਦੀਕਸ਼ੁਦਾ';
 
   @override
   String get secureIdentityVerification => 'ਸੁਰੱਖਿਅਤ ਪਛਾਣ ਤਸਦੀਕ';
@@ -618,8 +618,7 @@ class AppLocalizationsPa extends AppLocalizations {
       'ਖਰੀਦਦਾਰਾਂ ਦੀਆਂ ਮੰਗਾਂ ਉਪਲਬਧ ਹੋਣ \'ਤੇ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੀਆਂ';
 
   @override
-  String get featureComingSoon =>
-      'This feature will be available in the next update';
+  String get featureComingSoon => 'ਇਹ ਵਿਸ਼ੇਸ਼ਤਾ ਅਗਲੇ ਅੱਪਡੇਟ ਵਿੱਚ ਉਪਲਬਧ ਹੋਵੇਗੀ';
 
   @override
   String get signOutAction => 'ਸਾਈਨ ਆਉਟ';
@@ -638,7 +637,7 @@ class AppLocalizationsPa extends AppLocalizations {
   String get filterDraft => 'ਡਰਾਫਟ';
 
   @override
-  String get filterHidden => 'ਲੁਕਵੇਂ';
+  String get filterHidden => 'ਅਕਿਰਿਆਸ਼ੀਲ';
 
   @override
   String get statusActive => 'ਸਰਗਰਮ';
@@ -647,7 +646,7 @@ class AppLocalizationsPa extends AppLocalizations {
   String get statusDraft => 'ਡਰਾਫਟ';
 
   @override
-  String get statusHidden => 'ਲੁਕਵਾਂ';
+  String get statusHidden => 'ਅਕਿਰਿਆਸ਼ੀਲ';
 
   @override
   String get priceNotSet => 'ਕੀਮਤ ਤੈਅ ਨਹੀਂ';
@@ -669,11 +668,11 @@ class AppLocalizationsPa extends AppLocalizations {
       'ਅਧੂਰੇ ਉਤਪਾਦ ਜਿਨ੍ਹਾਂ \'ਤੇ ਕੰਮ ਬਾਕੀ ਹੈ, ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
 
   @override
-  String get noHiddenProductsTitle => 'ਕੋਈ ਲੁਕਵਾਂ ਉਤਪਾਦ ਨਹੀਂ';
+  String get noHiddenProductsTitle => 'ਕੋਈ ਅਕਿਰਿਆਸ਼ੀਲ ਉਤਪਾਦ ਨਹੀਂ';
 
   @override
   String get noHiddenProductsSubtitle =>
-      'ਅਸਥਾਈ ਤੌਰ \'ਤੇ ਲੁਕਾਏ ਗਏ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
+      'ਅਸਥਾਈ ਤੌਰ \'ਤੇ ਅਕਿਰਿਆਸ਼ੀਲ ਕੀਤੇ ਗਏ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
 
   @override
   String get showAllProducts => 'ਸਾਰੇ ਉਤਪਾਦ ਵੇਖੋ';
@@ -847,7 +846,7 @@ class AppLocalizationsPa extends AppLocalizations {
 
   @override
   String get markReadyFailed =>
-      'ਤਿਆਰ ਵਜੋਂ ਮਾਰਕ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+      'ਤਿਆਰ ਚਿੰਨ੍ਹਿਤ ਨਹੀਂ ਹੋ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
 
   @override
   String get myOrders => 'ਮੇਰੇ ਆਰਡਰ';
@@ -985,4 +984,469 @@ class AppLocalizationsPa extends AppLocalizations {
 
   @override
   String get closed => 'ਬੰਦ';
+
+  @override
+  String get createYourAccountTitle => 'ਆਪਣਾ ਖਾਤਾ ਬਣਾਓ';
+
+  @override
+  String get createAccountSupportingCopy =>
+      'ਵਪਾਰ ਸੇਤੂ \'ਤੇ ਆਪਣਾ ਕਾਰੋਬਾਰ ਸ਼ੁਰੂ ਕਰੋ।';
+
+  @override
+  String get verifyYourEmailTitle => 'ਆਪਣੀ ਈਮੇਲ ਤਸਦੀਕ ਕਰੋ';
+
+  @override
+  String verifyYourEmailSubtitle(String email) {
+    return 'ਅਸੀਂ $email \'ਤੇ 6 ਅੰਕਾਂ ਦਾ ਕੋਡ ਭੇਜਿਆ ਹੈ';
+  }
+
+  @override
+  String get enterOtpPrompt => '6 ਅੰਕਾਂ ਦਾ ਤਸਦੀਕ ਕੋਡ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get verifyAndContinue => 'ਤਸਦੀਕ ਕਰੋ ਅਤੇ ਅੱਗੇ ਵਧੋ';
+
+  @override
+  String get resendCode => 'ਕੋਡ ਮੁੜ ਭੇਜੋ';
+
+  @override
+  String resendCodeIn(int seconds) {
+    return '$seconds ਸਕਿੰਟਾਂ ਵਿੱਚ ਕੋਡ ਮੁੜ ਭੇਜੋ';
+  }
+
+  @override
+  String get changeEmail => 'ਈਮੇਲ ਬਦਲੋ';
+
+  @override
+  String get otpInvalidLength => 'ਕਿਰਪਾ ਕਰਕੇ 6 ਅੰਕਾਂ ਦਾ ਸਹੀ ਕੋਡ ਦਰਜ ਕਰੋ';
+
+  @override
+  String get otpIncorrectOrExpired => 'ਉਹ ਕੋਡ ਗਲਤ ਹੈ ਜਾਂ ਮਿਆਦ ਪੁੱਗ ਚੁੱਕੀ ਹੈ।';
+
+  @override
+  String get otpSentSuccess =>
+      'ਤੁਹਾਡੀ ਈਮੇਲ \'ਤੇ ਇੱਕ ਨਵਾਂ 6 ਅੰਕਾਂ ਦਾ ਕੋਡ ਭੇਜ ਦਿੱਤਾ ਗਿਆ ਹੈ।';
+
+  @override
+  String get filterInactive => 'ਅਕਿਰਿਆਸ਼ੀਲ';
+
+  @override
+  String get statusInactive => 'ਅਕਿਰਿਆਸ਼ੀਲ';
+
+  @override
+  String get editAction => 'ਸੋਧੋ';
+
+  @override
+  String get continueEditingAction => 'ਸੋਧ ਜਾਰੀ ਰੱਖੋ';
+
+  @override
+  String get saveChangesAction => 'ਬਦਲਾਅ ਸੁਰੱਖਿਅਤ ਕਰੋ';
+
+  @override
+  String get makeActiveAction => 'ਸਰਗਰਮ ਕਰੋ';
+
+  @override
+  String get makeInactiveAction => 'ਅਕਿਰਿਆਸ਼ੀਲ ਕਰੋ';
+
+  @override
+  String get editProductTitle => 'ਉਤਪਾਦ ਸੋਧੋ';
+
+  @override
+  String get editProductHelper => 'ਆਪਣੇ ਉਤਪਾਦ ਦਾ ਵੇਰਵਾ ਅਤੇ ਫ਼ੋਟੋਆਂ ਅੱਪਡੇਟ ਕਰੋ';
+
+  @override
+  String get deleteProductConfirmTitle => 'ਕੀ ਉਤਪਾਦ ਹਟਾਉਣਾ ਹੈ?';
+
+  @override
+  String get deleteProductConfirmBody =>
+      'ਇਹ ਇਸ ਉਤਪਾਦ ਅਤੇ ਇਸ ਦੀਆਂ ਫ਼ੋਟੋਆਂ ਨੂੰ ਪੱਕੇ ਤੌਰ \'ਤੇ ਹਟਾ ਦੇਵੇਗਾ।';
+
+  @override
+  String get productUpdatedSuccess => 'ਉਤਪਾਦ ਅੱਪਡੇਟ ਕੀਤਾ ਗਿਆ';
+
+  @override
+  String get productMadeActiveSuccess => 'ਉਤਪਾਦ ਸਰਗਰਮ ਕਰ ਦਿੱਤਾ ਗਿਆ';
+
+  @override
+  String get productMadeInactiveSuccess => 'ਉਤਪਾਦ ਅਕਿਰਿਆਸ਼ੀਲ ਕਰ ਦਿੱਤਾ ਗਿਆ';
+
+  @override
+  String get couldNotUpdateProduct => 'ਉਤਪਾਦ ਅੱਪਡੇਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ';
+
+  @override
+  String get couldNotLoadProductPhoto => 'ਉਤਪਾਦ ਦੀ ਫ਼ੋਟੋ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ';
+
+  @override
+  String get incompleteProductCannotActivate =>
+      'ਸਰਗਰਮ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਨਾਮ, ਸ਼੍ਰੇਣੀ ਅਤੇ ਕੀਮਤ ਭਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਉਤਪਾਦ ਨੂੰ ਸੋਧੋ।';
+
+  @override
+  String get noInactiveProductsTitle => 'ਕੋਈ ਅਕਿਰਿਆਸ਼ੀਲ ਉਤਪਾਦ ਨਹੀਂ';
+
+  @override
+  String get noInactiveProductsSubtitle =>
+      'ਤੁਹਾਡੇ ਵੱਲੋਂ ਅਕਿਰਿਆਸ਼ੀਲ ਕੀਤੇ ਉਤਪਾਦ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ';
+
+  @override
+  String get whatBuyersWantSubtitle =>
+      'ਵੱਖ-ਵੱਖ ਥਾਵਾਂ ਤੋਂ ਮੰਗ ਦੇ ਨਮੂਨਾ ਰੁਝਾਨ ਦੇਖੋ।';
+
+  @override
+  String get sampleMarketInsightsBadge => 'ਨਮੂਨਾ ਮੰਡੀ ਰੁਝਾਨ';
+
+  @override
+  String get sampleMarketInsightsNote =>
+      'ਇਹ ਖੇਤਰੀ ਰੁਝਾਨ ਖਰੀਦਦਾਰਾਂ ਦੀ ਦਿਲਚਸਪੀ ਨੂੰ ਸਮਝਣ ਵਿੱਚ ਮਦਦ ਕਰਨ ਲਈ ਨਮੂਨਾ ਡੇਟਾ \'ਤੇ ਆਧਾਰਿਤ ਹਨ।';
+
+  @override
+  String get demandHigh => 'ਵੱਧ ਮੰਗ';
+
+  @override
+  String get demandMedium => 'ਦਰਮਿਆਨੀ ਮੰਗ';
+
+  @override
+  String get demandLow => 'ਘੱਟ ਮੰਗ';
+
+  @override
+  String demandScoreOutOf(String score) {
+    return '$score/100';
+  }
+
+  @override
+  String signalDistrictLabel(String district) {
+    return 'ਜ਼ਿਲ੍ਹਾ: $district';
+  }
+
+  @override
+  String topBuyingCityLabel(String city) {
+    return 'ਮੁੱਖ ਖਰੀਦਦਾਰ ਸ਼ਹਿਰ: $city';
+  }
+
+  @override
+  String get estimatedMonthlyDemandLabel => 'ਅੰਦਾਜ਼ਨ ਮਹੀਨਾਵਾਰ ਮੰਗ';
+
+  @override
+  String estimatedUnitsValue(String count) {
+    return '$count ਇਕਾਈਆਂ';
+  }
+
+  @override
+  String get typicalOrderValueLabel => 'ਆਮ ਆਰਡਰ ਮੁੱਲ';
+
+  @override
+  String get categoryAgriculture => 'ਖੇਤੀਬਾੜੀ';
+
+  @override
+  String get categoryTextile => 'ਕੱਪੜਾ ਉਦਯੋਗ';
+
+  @override
+  String get categoryFoodProcessing => 'ਭੋਜਨ ਪ੍ਰੋਸੈਸਿੰਗ';
+
+  @override
+  String get categoryManufacturing => 'ਨਿਰਮਾਣ';
+
+  @override
+  String get noMarketInsights => 'ਅਜੇ ਕੋਈ ਮੰਡੀ ਰੁਝਾਨ ਉਪਲਬਧ ਨਹੀਂ ਹਨ।';
+
+  @override
+  String get takePhotoAction => 'ਫੋਟੋ ਖਿੱਚੋ';
+
+  @override
+  String get chooseFromGalleryAction => 'ਗੈਲਰੀ ਤੋਂ ਚੁਣੋ';
+
+  @override
+  String get uploadingPhotoProgress => 'ਫੋਟੋ ਅੱਪਲੋਡ ਹੋ ਰਹੀ ਹੈ...';
+
+  @override
+  String get removePhotoAction => 'ਫੋਟੋ ਹਟਾਓ';
+
+  @override
+  String get photoUploadFailed =>
+      'ਫੋਟੋ ਅੱਪਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String get unsupportedPhotoFormat =>
+      'ਅਸਮਰਥਿਤ ਫੋਟੋ ਫਾਰਮੈਟ। ਕਿਰਪਾ ਕਰਕੇ JPEG, PNG ਜਾਂ WebP ਫੋਟੋ ਚੁਣੋ।';
+
+  @override
+  String get photoTooLarge =>
+      'ਫੋਟੋ 5 MB ਸੀਮਾ ਤੋਂ ਵੱਧ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਛੋਟੀ ਫੋਟੋ ਚੁਣੋ।';
+
+  @override
+  String get maxPhotosReached => 'ਵੱਧ ਤੋਂ ਵੱਧ 4 ਫੋਟੋਆਂ ਦੀ ਸੀਮਾ ਪੂਰੀ ਹੋ ਗਈ ਹੈ';
+
+  @override
+  String get tryAnotherPhoto => 'ਕਿਰਪਾ ਕਰਕੇ ਕੋਈ ਹੋਰ ਫੋਟੋ ਚੁਣੋ';
+
+  @override
+  String get removePhotoConfirmation => 'ਕੀ ਤੁਸੀਂ ਇਹ ਫੋਟੋ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?';
+
+  @override
+  String get photoRemovedMessage => 'ਫੋਟੋ ਹਟਾ ਦਿੱਤੀ ਗਈ';
+
+  @override
+  String get choosePhotoSource => 'ਉਤਪਾਦ ਫੋਟੋ ਸ਼ਾਮਲ ਕਰੋ';
+
+  @override
+  String get deletePhoto => 'ਹਟਾਓ';
+
+  @override
+  String get productMustBeSavedBeforePhotos =>
+      'ਫੋਟੋਆਂ ਸ਼ਾਮਲ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਕਿਰਪਾ ਕਰਕੇ ਉਤਪਾਦ ਡਰਾਫਟ ਸੰਭਾਲੋ';
+
+  @override
+  String get improvePhotoAction => 'ਫੋਟੋ ਸੁਧਾਰੋ';
+
+  @override
+  String get improvingPhotoProgress => 'ਫੋਟੋ ਸੁਧਾਰੀ ਜਾ ਰਹੀ ਹੈ...';
+
+  @override
+  String get originalPhotoLabel => 'ਅਸਲ ਫੋਟੋ';
+
+  @override
+  String get improvedPhotoLabel => 'ਸੁਧਾਰੀ ਗਈ ਫੋਟੋ';
+
+  @override
+  String get keepOriginalAction => 'ਅਸਲ ਫੋਟੋ ਰੱਖੋ';
+
+  @override
+  String get useImprovedAction => 'ਸੁਧਾਰੀ ਗਈ ਫੋਟੋ ਵਰਤੋ';
+
+  @override
+  String get photoImprovedTitle => 'ਫੋਟੋ ਵਿੱਚ ਸੁਧਾਰ ਹੋਇਆ';
+
+  @override
+  String get photoImproveFailed =>
+      'ਫੋਟੋ ਸੁਧਾਰੀ ਨਹੀਂ ਜਾ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
+
+  @override
+  String get aiImproveDisclaimer =>
+      'AI ਸਿਰਫ਼ ਪੇਸ਼ਕਾਰੀ ਵਿੱਚ ਸੁਧਾਰ ਕਰਦਾ ਹੈ, ਤੁਹਾਡੇ ਉਤਪਾਦ ਵਿੱਚ ਨਹੀਂ।';
+
+  @override
+  String get aiImproveHelpText =>
+      'ਪਿਛੋਕੜ ਸਾਫ਼ ਕਰਦਾ ਹੈ, ਰੋਸ਼ਨੀ ਸੁਧਾਰਦਾ ਹੈ ਅਤੇ ਉਤਪਾਦ ਨੂੰ ਕੇਂਦਰਿਤ ਕਰਦਾ ਹੈ।';
+
+  @override
+  String get comparePhotosTitle => 'ਫੋਟੋਆਂ ਦੀ ਤੁਲਨਾ ਕਰੋ';
+
+  @override
+  String get photoImproveSuccessMessage => 'ਸੁਧਾਰੀ ਗਈ ਫੋਟੋ ਲਾਗੂ ਕੀਤੀ ਗਈ';
+
+  @override
+  String get productPhotosTitle => 'ਉਤਪਾਦ ਦੀਆਂ ਤਸਵੀਰਾਂ';
+
+  @override
+  String get addPhotosNameFirst =>
+      'ਤਸਵੀਰਾਂ ਜੋੜਨ ਤੋਂ ਪਹਿਲਾਂ ਉਤਪਾਦ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ।';
+
+  @override
+  String get choosePhotoAction => 'ਤਸਵੀਰ ਚੁਣੋ';
+
+  @override
+  String get addProductHelper => 'ਉਤਪਾਦ ਦਾ ਵੇਰਵਾ, ਮੁੱਲ ਅਤੇ ਤਸਵੀਰਾਂ ਦਰਜ ਕਰੋ।';
+
+  @override
+  String get discardChangesTitle => 'ਤਬਦੀਲੀਆਂ ਛੱਡਣੀਆਂ ਹਨ?';
+
+  @override
+  String get discardChangesMessage => 'ਤੁਹਾਡੇ ਅਣਸਾਂਭੇ ਉਤਪਾਦ ਵੇਰਵੇ ਗੁਆਚ ਜਾਣਗੇ।';
+
+  @override
+  String get keepEditingAction => 'ਸੰਪਾਦਨ ਜਾਰੀ ਰੱਖੋ';
+
+  @override
+  String get discardAction => 'ਛੱਡੋ';
+
+  @override
+  String get pickerUnavailableError =>
+      'ਇਸ ਡਿਵਾਈਸ \'ਤੇ ਫੋਟੋ ਚੋਣ ਉਪਲਬਧ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਮੁੜ ਚਾਲੂ ਕਰੋ।';
+
+  @override
+  String get storageUnavailableError => 'ਫੋਟੋ ਸਟੋਰੇਜ ਸੇਵਾ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।';
+
+  @override
+  String get productDetailsTitle => 'ਉਤਪਾਦ ਵੇਰਵੇ';
+
+  @override
+  String get noDescriptionAdded => 'ਕੋਈ ਵੇਰਵਾ ਨਹੀਂ ਜੋੜਿਆ ਗਿਆ';
+
+  @override
+  String get deleteProductAction => 'ਉਤਪਾਦ ਮਿਟਾਓ';
+
+  @override
+  String get verificationAndCompliance => 'ਤਸਦੀਕ ਅਤੇ ਪਾਲਣਾ';
+
+  @override
+  String get businessProducerInfo => 'ਕਾਰੋਬਾਰ ਅਤੇ ਉਤਪਾਦਕ ਵੇਰਵੇ';
+
+  @override
+  String get accountAndSecurity => 'ਖਾਤਾ ਅਤੇ ਸੁਰੱਖਿਆ';
+
+  @override
+  String get helpAndAbout => 'ਮਦਦ ਅਤੇ ਜਾਣਕਾਰੀ';
+
+  @override
+  String get voiceGuidanceLanguage => 'ਆਵਾਜ਼ ਮਾਰਗਦਰਸ਼ਨ ਭਾਸ਼ਾ';
+
+  @override
+  String get voiceGuidanceSameAsApp => 'ਐਪ ਭਾਸ਼ਾ ਵਾਂਗ ਹੀ';
+
+  @override
+  String get verifiedProducer => 'ਤਸਦੀਕਸ਼ੁਦਾ ਉਤਪਾਦਕ';
+
+  @override
+  String get unverifiedProducer => 'ਉਤਪਾਦਕ';
+
+  @override
+  String get panNotVerified => 'ਤਸਦੀਕ ਨਹੀਂ ਹੋਇਆ';
+
+  @override
+  String get identityVerified => 'ਪੂਰਾ ਹੋਇਆ';
+
+  @override
+  String get identityNotVerified => 'ਬਾਕੀ ਹੈ';
+
+  @override
+  String get gstRegisteredBadge => 'ਰਜਿਸਟਰਡ';
+
+  @override
+  String get gstNotRegisteredBadge => 'ਰਜਿਸਟਰਡ ਨਹੀਂ';
+
+  @override
+  String get aadhaarStatusLabel => 'ਆਧਾਰ ਪਛਾਣ';
+
+  @override
+  String get panIdentityLabel => 'ਪੈਨ ਪਛਾਣ';
+
+  @override
+  String get gstComplianceLabel => 'ਜੀਐਸਟੀ (GST)';
+
+  @override
+  String get workshopLocationLabel => 'ਵਰਕਸ਼ਾਪ ਦਾ ਟਿਕਾਣਾ';
+
+  @override
+  String get resetPassword => 'ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਕਰੋ';
+
+  @override
+  String get resetPasswordDesc =>
+      'ਆਪਣੀ ਰਜਿਸਟਰਡ ਈਮੇਲ \'ਤੇ ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਹਦਾਇਤਾਂ ਭੇਜੋ';
+
+  @override
+  String get resetPasswordSuccess =>
+      'ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਲਿੰਕ ਤੁਹਾਡੀ ਈਮੇਲ \'ਤੇ ਭੇਜ ਦਿੱਤਾ ਗਿਆ ਹੈ';
+
+  @override
+  String get activeSession => 'ਮੌਜੂਦਾ ਸੈਸ਼ਨ';
+
+  @override
+  String get activeSessionTruthful => 'ਸਾਈਨ ਇਨ';
+
+  @override
+  String get signOutConfirmTitle => 'ਵਪਾਰਸੇਤੂ ਤੋਂ ਸਾਈਨ ਆਊਟ ਕਰਨਾ ਹੈ?';
+
+  @override
+  String get signOutConfirmMessage =>
+      'ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਸਾਈਨ ਆਊਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?';
+
+  @override
+  String get howVyaparSetuWorks => 'ਵਪਾਰਸੇਤੂ ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ';
+
+  @override
+  String get howVyaparSetuWorksContent =>
+      'ਵਪਾਰਸੇਤੂ ਕਾਰੀਗਰ ਉਤਪਾਦਕਾਂ ਨੂੰ ਸਿੱਧੇ ਤਸਦੀਕਸ਼ੁਦਾ ਥੋਕ ਅਤੇ ਪ੍ਰਚੂਨ ਖਰੀਦਦਾਰਾਂ ਨਾਲ ਜੋੜਦਾ ਹੈ। ਆਪਣੇ ਉਤਪਾਦ ਸ਼ਾਮਲ ਕਰੋ, ਫੋਟੋਆਂ ਸਾਂਝੀਆਂ ਕਰੋ ਅਤੇ ਪੂਰੀ ਪਾਰਦਰਸ਼ਤਾ ਨਾਲ ਖਰੀਦਦਾਰਾਂ ਦੇ ਸਵਾਲਾਂ ਦੇ ਜਵਾਬ ਦਿਓ।';
+
+  @override
+  String get privacyAndData => 'ਗੋਪਨੀਯਤਾ ਅਤੇ ਡਾਟਾ';
+
+  @override
+  String get privacyAndDataContent =>
+      'ਸੰਵੇਦਨਸ਼ੀਲ ਪਛਾਣ ਜਾਣਕਾਰੀ ਨੂੰ ਘੱਟ ਤੋਂ ਘੱਟ ਰੱਖਿਆ ਗਿਆ ਹੈ। ਐਪ ਵਿੱਚ ਮੂਲ ਪੈਨ (PAN) ਨਹੀਂ ਦਿਖਾਇਆ ਜਾਂਦਾ। ਆਧਾਰ ਨੰਬਰ ਪ੍ਰੋਫਾਈਲ ਵਿੱਚ ਪ੍ਰਦਰਸ਼ਿਤ ਜਾਂ ਸ਼ਾਮਲ ਨਹੀਂ ਕੀਤੇ ਜਾਂਦੇ। ਉਤਪਾਦਕ ਡੇਟਾ ਤੱਕ ਪਹੁੰਚ ਪ੍ਰਮਾਣੀਕਰਨ ਅਤੇ ਡੇਟਾਬੇਸ ਮਲਕੀਅਤ ਨੀਤੀਆਂ ਦੁਆਰਾ ਸੁਰੱਖਿਅਤ ਹੈ।';
+
+  @override
+  String get aboutVyaparSetu => 'ਵਪਾਰਸੇਤੂ ਬਾਰੇ';
+
+  @override
+  String get aboutVyaparSetuContent =>
+      'ਵਪਾਰਸੇਤੂ v1.0 — ਸਿੱਧੇ ਵਪਾਰ, ਸਥਾਨਕੀਕਰਨ ਅਤੇ ਭਰੋਸੇਯੋਗ ਤਸਦੀਕ ਰਾਹੀਂ ਭਾਰਤੀ ਕਾਰੀਗਰ ਉਤਪਾਦਕਾਂ ਨੂੰ ਸ਼ਕਤੀਸ਼ਾਲੀ ਬਣਾਉਣਾ।';
+
+  @override
+  String get phoneLabel => 'ਸੰਪਰਕ ਫ਼ੋਨ';
+
+  @override
+  String get quickMenuTitle => 'ਤੇਜ਼ ਕਾਰਵਾਈਆਂ';
+
+  @override
+  String get ok => 'ਠੀਕ ਹੈ';
+
+  @override
+  String get craftCategory => 'ਕਾਰੀਗਰੀ ਸ਼੍ਰੇਣੀ';
+
+  @override
+  String get identityVerification => 'ਪਛਾਣ ਤਸਦੀਕ';
+
+  @override
+  String get producerRoleBadge => 'ਉਤਪਾਦਕ';
+
+  @override
+  String get signInWithEmailOtp => 'ਓਟੀਪੀ ਨਾਲ ਲੌਗ ਇਨ ਕਰੋ';
+
+  @override
+  String get orDivider => 'ਜਾਂ';
+
+  @override
+  String get checkYourEmailTitle => 'ਆਪਣਾ ਈਮੇਲ ਦੇਖੋ';
+
+  @override
+  String checkYourEmailSubtitle(String email) {
+    return 'ਅਸੀਂ $email \'ਤੇ ਇੱਕ ਪੁਸ਼ਟੀਕਰਨ ਕੋਡ ਭੇਜਿਆ ਹੈ';
+  }
+
+  @override
+  String get verifyAndSignIn => 'ਪੁਸ਼ਟੀ ਕਰੋ ਅਤੇ ਲੌਗ ਇਨ ਕਰੋ';
+
+  @override
+  String get forgotPasswordTitle => 'ਆਪਣਾ ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਕਰੋ';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'ਰਿਕਵਰੀ ਕੋਡ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਆਪਣਾ ਈਮੇਲ ਪਤਾ ਦਰਜ ਕਰੋ।';
+
+  @override
+  String get sendRecoveryCode => 'ਰਿਕਵਰੀ ਕੋਡ ਭੇਜੋ';
+
+  @override
+  String get recoveryEmailSentNeutralNotice =>
+      'ਜੇਕਰ ਇਸ ਈਮੇਲ ਲਈ ਕੋਈ ਖਾਤਾ ਮੌਜੂਦ ਹੈ, ਤਾਂ ਅਸੀਂ ਇੱਕ ਪੁਸ਼ਟੀਕਰਨ ਕੋਡ ਭੇਜਿਆ ਹੈ।';
+
+  @override
+  String enterRecoveryCodeSubtitle(String email) {
+    return '$email \'ਤੇ ਭੇਜਿਆ ਗਿਆ ਪੁਸ਼ਟੀਕਰਨ ਕੋਡ ਦਰਜ ਕਰੋ';
+  }
+
+  @override
+  String get verifyCode => 'ਕੋਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ';
+
+  @override
+  String get createNewPasswordTitle => 'ਨਵਾਂ ਪਾਸਵਰਡ ਬਣਾਓ';
+
+  @override
+  String get createNewPasswordSubtitle =>
+      'ਆਪਣੇ ਖਾਤੇ ਲਈ ਇੱਕ ਨਵਾਂ ਮਜ਼ਬੂਤ ਪਾਸਵਰਡ ਬਣਾਓ।';
+
+  @override
+  String get newPassword => 'ਨਵਾਂ ਪਾਸਵਰਡ';
+
+  @override
+  String get newPasswordHint => 'ਨਵਾਂ ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ (ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰ)';
+
+  @override
+  String get updatePassword => 'ਪਾਸਵਰਡ ਅੱਪਡੇਟ ਕਰੋ';
+
+  @override
+  String get passwordUpdatedSuccess => 'ਤੁਹਾਡਾ ਪਾਸਵਰਡ ਅੱਪਡੇਟ ਕਰ ਦਿੱਤਾ ਗਿਆ ਹੈ।';
+
+  @override
+  String get noAccountFoundWithEmail =>
+      'ਇਸ ਈਮੇਲ ਨਾਲ ਕੋਈ ਖਾਤਾ ਨਹੀਂ ਮਿਲਿਆ। ਖਾਤਾ ਬਣਾਉਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ।';
 }

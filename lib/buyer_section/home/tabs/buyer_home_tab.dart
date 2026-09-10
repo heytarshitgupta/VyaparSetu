@@ -1,12 +1,15 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import '../../../../core/localization/generated/app_localizations.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import '../../../../core/localization/generated/app_localizations.dart';
 import '../../theme/buyer_colors.dart';
 import '../../../core/mock_data/products.dart';
 import '../../../core/routes/app_router.dart';
-import '../../onboarding/buyer_profile_provider.dart';
 import '../widgets/product_card.dart';
 
 class BuyerHomeTab extends StatefulWidget {
@@ -18,10 +21,34 @@ class BuyerHomeTab extends StatefulWidget {
 
 class _BuyerHomeTabState extends State<BuyerHomeTab> {
   final TextEditingController _searchController = TextEditingController();
+  final stt.SpeechToText _speechToText = stt.SpeechToText();
+
   String _searchQuery = '';
+  bool _speechAvailable = false;
+  bool _isListening = false;
+  bool _isAssistantLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeSpeech();
+  }
+
+  Future<void> _initializeSpeech() async {
+    try {
+      _speechAvailable = await _speechToText.initialize(
+        onError: (error) => debugPrint('Speech error: ${error.errorMsg}'),
+        onStatus: (status) => debugPrint('Speech status: $status'),
+      );
+      if (mounted) setState(() {});
+    } catch (_) {
+      _speechAvailable = false;
+    }
+  }
 
   @override
   void dispose() {
+    _speechToText.stop();
     _searchController.dispose();
     super.dispose();
   }
@@ -68,7 +95,6 @@ class _BuyerHomeTabState extends State<BuyerHomeTab> {
   }
 
   Widget _buildFilterChip(BuildContext context, String label) {
-    final l10n = AppLocalizations.of(context);
     final isSelected = _searchQuery.toLowerCase() == label.toLowerCase();
     return FilterChip(
       label: Text(label),
@@ -84,6 +110,160 @@ class _BuyerHomeTabState extends State<BuyerHomeTab> {
     );
   }
 
+  Future<void> _handleVoiceAssistantTap() async {
+    if (!_speechAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Mic support is not available right now.')),
+      );
+      return;
+    }
+
+    if (_isListening) {
+      await _speechToText.stop();
+      if (mounted) setState(() => _isListening = false);
+      return;
+    }
+
+    try {
+      if (mounted) setState(() => _isListening = true);
+      await _speechToText.listen(
+        onResult: (result) {
+          if (result.finalResult && result.recognizedWords.trim().isNotEmpty) {
+            _sendTranscript(result.recognizedWords.trim());
+          }
+        },
+        listenFor: const Duration(seconds: 20),
+        pauseFor: const Duration(seconds: 3),
+        localeId: 'en_IN',
+      );
+    } catch (_) {
+      if (mounted) {
+        setState(() => _isListening = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unable to start the microphone. Please try again.')),
+        );
+      }
+    }
+  }
+
+  Future<void> _sendTranscript(String transcript) async {
+    if (transcript.trim().isEmpty) return;
+
+    if (!mounted) return;
+    setState(() {
+      _isListening = false;
+      _isAssistantLoading = true;
+    });
+
+    try {
+      final response = await http
+          .post(
+            Uri.parse('http://10.0.2.2:8000/api/voice-assistant'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'transcript': transcript}),
+          )
+          .timeout(const Duration(seconds: 12));
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw Exception('Assistant server returned ${response.statusCode}');
+      }
+
+      final decoded = jsonDecode(response.body);
+      if (decoded is! Map<String, dynamic>) {
+        throw const FormatException('Invalid assistant response.');
+      }
+
+      final answer = decoded['answer'] as String? ?? 'I could not understand that yet.';
+      if (mounted) {
+        _showAssistantSheet(answer);
+      }
+    } on TimeoutException {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Saathi is taking longer than expected. Please retry.')),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Saathi could not answer right now. Please try again.')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isAssistantLoading = false;
+        });
+      }
+    }
+  }
+
+  void _showAssistantSheet(String answer) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 26),
+          decoration: BoxDecoration(
+            color: BuyerColors.of(context).surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.mic, color: BuyerColors.of(context).primary),
+                    const SizedBox(width: 8),
+                    Text(
+                      'VyaparSetu Saathi',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: BuyerColors.of(context).textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: BuyerColors.of(context).background,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: BuyerColors.of(context).border),
+                  ),
+                  child: Text(
+                    answer,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: BuyerColors.of(context).textPrimary,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(sheetContext),
+                    child: Text('Close', style: TextStyle(color: BuyerColors.of(context).primary)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -91,7 +271,9 @@ class _BuyerHomeTabState extends State<BuyerHomeTab> {
         ? mockProducts 
         : mockProducts.where((p) => p.name.toLowerCase().contains(_searchQuery.toLowerCase()) || p.category.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
 
-    return CustomScrollView(
+    return Stack(
+      children: [
+        CustomScrollView(
       slivers: [
         // Top App Bar
         SliverAppBar(
@@ -278,7 +460,108 @@ class _BuyerHomeTabState extends State<BuyerHomeTab> {
                   ),
                 ),
         ),
+
+        // FAQ & Artisan Helper Section appended cleanly above the existing grid tail.
+        SliverToBoxAdapter(
+          child: Container(
+            color: BuyerColors.of(context).surface,
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 28),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'VyaparSetu Saathi • Artisan FAQ',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: BuyerColors.of(context).textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                    color: BuyerColors.of(context).cardSurface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: BuyerColors.of(context).border),
+                  ),
+                  child: Column(
+                    children: [
+                      _buildFaqTile(
+                        question: 'Do I need a GST number to sell on VyaparSetu?',
+                        answer: 'No. Small artisans with annual turnover under ₹40 Lakhs selling intra-state are legally exempt under government e-commerce rules. You only need an Enrolment ID.',
+                      ),
+                      Divider(height: 1, color: BuyerColors.of(context).border),
+                      _buildFaqTile(
+                        question: 'What benefits can I get from the PM Vishwakarma Scheme?',
+                        answer: 'Eligible traditional artisans receive a ₹15,000 modern toolkit grant, ₹500/day training stipend, and collateral-free credit support up to ₹3 Lakh at 5% interest.',
+                      ),
+                      Divider(height: 1, color: BuyerColors.of(context).border),
+                      _buildFaqTile(
+                        question: 'How does the AI suggested price work?',
+                        answer: 'We track raw material inflation using Government WPI indices, factor in your labor time for a break-even safety floor, and use machine learning to suggest the most profitable market ceiling.',
+                      ),
+                      Divider(height: 1, color: BuyerColors.of(context).border),
+                      _buildFaqTile(
+                        question: 'Can I add products if I cannot write English?',
+                        answer: 'Yes! Tap the mic button when adding a product and speak in Punjabi or Hindi. Our auto-cataloger writes the SEO title and description for you automatically.',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         const SliverToBoxAdapter(child: SizedBox(height: 48)),
+      ],
+    ),
+    Positioned(
+      right: 16,
+      bottom: 80,
+      child: FloatingActionButton.extended(
+        onPressed: _handleVoiceAssistantTap,
+        icon: _isAssistantLoading
+            ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+            : Icon(_isListening ? Icons.mic_off : Icons.mic),
+        label: Text(
+          _isListening ? 'Listening...' : 'Ask Saathi / ਸਵਾਲ ਪੁੱਛੋ',
+          style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w800),
+        ),
+        backgroundColor: BuyerColors.of(context).primary,
+        foregroundColor: Colors.white,
+        heroTag: 'vyapar_saathi_fab',
+      ),
+    ),
+  ],
+);
+  }
+
+  Widget _buildFaqTile({required String question, required String answer}) {
+    return ExpansionTile(
+      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      title: Text(
+        question,
+        style: GoogleFonts.inter(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          color: BuyerColors.of(context).textPrimary,
+        ),
+      ),
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            answer,
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: BuyerColors.of(context).textSecondary,
+              height: 1.5,
+            ),
+          ),
+        ),
       ],
     );
   }

@@ -431,7 +431,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get panVerification => 'PAN Verification';
 
   @override
-  String get panVerified => 'PAN Verified';
+  String get panVerified => 'Verified';
 
   @override
   String get secureIdentityVerification => 'Secure identity verification';
@@ -640,7 +640,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterDraft => 'Draft';
 
   @override
-  String get filterHidden => 'Hidden';
+  String get filterHidden => 'Inactive';
 
   @override
   String get statusActive => 'Active';
@@ -649,7 +649,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusDraft => 'Draft';
 
   @override
-  String get statusHidden => 'Hidden';
+  String get statusHidden => 'Inactive';
 
   @override
   String get priceNotSet => 'Price not set';
@@ -672,7 +672,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Products that still need details will appear here';
 
   @override
-  String get noHiddenProductsTitle => 'No hidden products';
+  String get noHiddenProductsTitle => 'No inactive products';
 
   @override
   String get noHiddenProductsSubtitle =>
@@ -985,4 +985,468 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get closed => 'Closed';
+
+  @override
+  String get createYourAccountTitle => 'Create Your Account';
+
+  @override
+  String get createAccountSupportingCopy =>
+      'Start setting up your business on VyaparSetu.';
+
+  @override
+  String get verifyYourEmailTitle => 'Verify Your Email';
+
+  @override
+  String verifyYourEmailSubtitle(String email) {
+    return 'We sent a 6-digit code to $email';
+  }
+
+  @override
+  String get enterOtpPrompt => 'Enter 6-digit verification code';
+
+  @override
+  String get verifyAndContinue => 'Verify & Continue';
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String resendCodeIn(int seconds) {
+    return 'Resend Code in ${seconds}s';
+  }
+
+  @override
+  String get changeEmail => 'Change Email';
+
+  @override
+  String get otpInvalidLength => 'Please enter a valid 6-digit code';
+
+  @override
+  String get otpIncorrectOrExpired => 'That code is incorrect or has expired.';
+
+  @override
+  String get otpSentSuccess =>
+      'A new 6-digit code has been sent to your email.';
+
+  @override
+  String get filterInactive => 'Inactive';
+
+  @override
+  String get statusInactive => 'Inactive';
+
+  @override
+  String get editAction => 'Edit';
+
+  @override
+  String get continueEditingAction => 'Continue Editing';
+
+  @override
+  String get saveChangesAction => 'Save Changes';
+
+  @override
+  String get makeActiveAction => 'Make Active';
+
+  @override
+  String get makeInactiveAction => 'Make Inactive';
+
+  @override
+  String get editProductTitle => 'Edit Product';
+
+  @override
+  String get editProductHelper => 'Update your product details and photos';
+
+  @override
+  String get deleteProductConfirmTitle => 'Delete product?';
+
+  @override
+  String get deleteProductConfirmBody =>
+      'This will permanently remove this product and its photos.';
+
+  @override
+  String get productUpdatedSuccess => 'Product updated';
+
+  @override
+  String get productMadeActiveSuccess => 'Product made active';
+
+  @override
+  String get productMadeInactiveSuccess => 'Product made inactive';
+
+  @override
+  String get couldNotUpdateProduct => 'Could not update product';
+
+  @override
+  String get couldNotLoadProductPhoto => 'Could not load product photo';
+
+  @override
+  String get incompleteProductCannotActivate =>
+      'Please edit product to fill name, category, and price before making it active.';
+
+  @override
+  String get noInactiveProductsTitle => 'No inactive products';
+
+  @override
+  String get noInactiveProductsSubtitle =>
+      'Products you mark as inactive will appear here';
+
+  @override
+  String get whatBuyersWantSubtitle =>
+      'See sample market demand trends from different places.';
+
+  @override
+  String get sampleMarketInsightsBadge => 'Sample market insights';
+
+  @override
+  String get sampleMarketInsightsNote =>
+      'These regional trends are based on sample market activity to help you understand buyer interest.';
+
+  @override
+  String get demandHigh => 'High demand';
+
+  @override
+  String get demandMedium => 'Medium demand';
+
+  @override
+  String get demandLow => 'Low demand';
+
+  @override
+  String demandScoreOutOf(String score) {
+    return '$score/100';
+  }
+
+  @override
+  String signalDistrictLabel(String district) {
+    return 'District: $district';
+  }
+
+  @override
+  String topBuyingCityLabel(String city) {
+    return 'Top buying city: $city';
+  }
+
+  @override
+  String get estimatedMonthlyDemandLabel => 'Estimated monthly demand';
+
+  @override
+  String estimatedUnitsValue(String count) {
+    return '$count units';
+  }
+
+  @override
+  String get typicalOrderValueLabel => 'Typical order value';
+
+  @override
+  String get categoryAgriculture => 'Agriculture';
+
+  @override
+  String get categoryTextile => 'Textile';
+
+  @override
+  String get categoryFoodProcessing => 'Food processing';
+
+  @override
+  String get categoryManufacturing => 'Manufacturing';
+
+  @override
+  String get noMarketInsights => 'No market insights available yet.';
+
+  @override
+  String get takePhotoAction => 'Take Photo';
+
+  @override
+  String get chooseFromGalleryAction => 'Choose from Gallery';
+
+  @override
+  String get uploadingPhotoProgress => 'Uploading photo...';
+
+  @override
+  String get removePhotoAction => 'Remove photo';
+
+  @override
+  String get photoUploadFailed =>
+      'Photo could not be uploaded. Please try again.';
+
+  @override
+  String get unsupportedPhotoFormat =>
+      'Unsupported photo format. Please select a JPEG, PNG, or WebP photo.';
+
+  @override
+  String get photoTooLarge =>
+      'Photo exceeds 5 MB limit. Please select a smaller photo.';
+
+  @override
+  String get maxPhotosReached => 'Maximum 4 photos reached';
+
+  @override
+  String get tryAnotherPhoto => 'Please choose another photo';
+
+  @override
+  String get removePhotoConfirmation => 'Do you want to remove this photo?';
+
+  @override
+  String get photoRemovedMessage => 'Photo removed';
+
+  @override
+  String get choosePhotoSource => 'Add Product Photo';
+
+  @override
+  String get deletePhoto => 'Delete';
+
+  @override
+  String get productMustBeSavedBeforePhotos =>
+      'Please save product draft before adding photos';
+
+  @override
+  String get improvePhotoAction => 'Improve Photo';
+
+  @override
+  String get improvingPhotoProgress => 'Improving photo...';
+
+  @override
+  String get originalPhotoLabel => 'Original';
+
+  @override
+  String get improvedPhotoLabel => 'Improved';
+
+  @override
+  String get keepOriginalAction => 'Keep Original';
+
+  @override
+  String get useImprovedAction => 'Use Improved Photo';
+
+  @override
+  String get photoImprovedTitle => 'Photo Improved';
+
+  @override
+  String get photoImproveFailed => 'Could not improve photo. Please try again.';
+
+  @override
+  String get aiImproveDisclaimer =>
+      'AI improves only the presentation, not your product.';
+
+  @override
+  String get aiImproveHelpText =>
+      'Cleans background, improves lighting, and centers the product.';
+
+  @override
+  String get comparePhotosTitle => 'Compare Photos';
+
+  @override
+  String get photoImproveSuccessMessage => 'Improved photo applied';
+
+  @override
+  String get productPhotosTitle => 'Product Photos';
+
+  @override
+  String get addPhotosNameFirst => 'Add a product name before adding photos.';
+
+  @override
+  String get choosePhotoAction => 'Choose Photo';
+
+  @override
+  String get addProductHelper =>
+      'Enter product details, price, and optional photos.';
+
+  @override
+  String get discardChangesTitle => 'Discard changes?';
+
+  @override
+  String get discardChangesMessage =>
+      'Your unsaved product details will be lost.';
+
+  @override
+  String get keepEditingAction => 'Keep Editing';
+
+  @override
+  String get discardAction => 'Discard';
+
+  @override
+  String get pickerUnavailableError =>
+      'Photo picker is not available on this device. Please restart the application.';
+
+  @override
+  String get storageUnavailableError =>
+      'Image storage service is not available.';
+
+  @override
+  String get productDetailsTitle => 'Product Details';
+
+  @override
+  String get noDescriptionAdded => 'No description added';
+
+  @override
+  String get deleteProductAction => 'Delete Product';
+
+  @override
+  String get verificationAndCompliance => 'Verification & Compliance';
+
+  @override
+  String get businessProducerInfo => 'Business & Producer Details';
+
+  @override
+  String get accountAndSecurity => 'Account & Security';
+
+  @override
+  String get helpAndAbout => 'Help & About';
+
+  @override
+  String get voiceGuidanceLanguage => 'Voice Guidance Language';
+
+  @override
+  String get voiceGuidanceSameAsApp => 'Same as App Language';
+
+  @override
+  String get verifiedProducer => 'Verified Producer';
+
+  @override
+  String get unverifiedProducer => 'Producer';
+
+  @override
+  String get panNotVerified => 'Not Verified';
+
+  @override
+  String get identityVerified => 'Completed';
+
+  @override
+  String get identityNotVerified => 'Pending';
+
+  @override
+  String get gstRegisteredBadge => 'Registered';
+
+  @override
+  String get gstNotRegisteredBadge => 'Not Registered';
+
+  @override
+  String get aadhaarStatusLabel => 'Aadhaar Identity';
+
+  @override
+  String get panIdentityLabel => 'PAN Identity';
+
+  @override
+  String get gstComplianceLabel => 'GST';
+
+  @override
+  String get workshopLocationLabel => 'Workshop Location';
+
+  @override
+  String get resetPassword => 'Reset Password';
+
+  @override
+  String get resetPasswordDesc =>
+      'Send password reset instructions to your registered email';
+
+  @override
+  String get resetPasswordSuccess => 'Password reset link sent to your email';
+
+  @override
+  String get activeSession => 'Current Session';
+
+  @override
+  String get activeSessionTruthful => 'Signed in';
+
+  @override
+  String get signOutConfirmTitle => 'Sign out of VyaparSetu?';
+
+  @override
+  String get signOutConfirmMessage => 'Are you sure you want to sign out?';
+
+  @override
+  String get howVyaparSetuWorks => 'How VyaparSetu Works';
+
+  @override
+  String get howVyaparSetuWorksContent =>
+      'VyaparSetu connects artisan producers directly with verified bulk and retail buyers. Add your products, share photos, and respond to buyer inquiries with complete transparency.';
+
+  @override
+  String get privacyAndData => 'Privacy & Data';
+
+  @override
+  String get privacyAndDataContent =>
+      'Sensitive identity information is minimized. Raw PAN is not displayed in the app. Aadhaar numbers are not displayed or carried in the Profile UI. Access to producer data is protected by authentication and database ownership policies.';
+
+  @override
+  String get aboutVyaparSetu => 'About VyaparSetu';
+
+  @override
+  String get aboutVyaparSetuContent =>
+      'VyaparSetu v1.0 — Empowering Indian artisan producers and manufacturers through direct commerce, localization, and trusted verification.';
+
+  @override
+  String get phoneLabel => 'Contact Phone';
+
+  @override
+  String get quickMenuTitle => 'Quick Actions';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get craftCategory => 'Craft Category';
+
+  @override
+  String get identityVerification => 'Identity Verification';
+
+  @override
+  String get producerRoleBadge => 'Producer';
+
+  @override
+  String get signInWithEmailOtp => 'Sign in with OTP';
+
+  @override
+  String get orDivider => 'OR';
+
+  @override
+  String get checkYourEmailTitle => 'Check Your Email';
+
+  @override
+  String checkYourEmailSubtitle(String email) {
+    return 'We sent a verification code to $email';
+  }
+
+  @override
+  String get verifyAndSignIn => 'Verify & Sign In';
+
+  @override
+  String get forgotPasswordTitle => 'Reset Your Password';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'Enter your email address to receive a recovery code.';
+
+  @override
+  String get sendRecoveryCode => 'Send Recovery Code';
+
+  @override
+  String get recoveryEmailSentNeutralNotice =>
+      'If an account exists for this email, we\'ve sent a verification code.';
+
+  @override
+  String enterRecoveryCodeSubtitle(String email) {
+    return 'Enter the verification code sent to $email';
+  }
+
+  @override
+  String get verifyCode => 'Verify Code';
+
+  @override
+  String get createNewPasswordTitle => 'Create New Password';
+
+  @override
+  String get createNewPasswordSubtitle =>
+      'Create a new strong password for your account.';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get newPasswordHint => 'Enter new password (min 6 characters)';
+
+  @override
+  String get updatePassword => 'Update Password';
+
+  @override
+  String get passwordUpdatedSuccess => 'Your password has been updated.';
+
+  @override
+  String get noAccountFoundWithEmail =>
+      'No account found with this email. Try signing up.';
 }

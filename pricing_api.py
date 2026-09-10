@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 try:
-    from fastapi import FastAPI, HTTPException
+    from fastapi import FastAPI, HTTPException, Response
     from pydantic import BaseModel
 except Exception:
     FastAPI = None
@@ -36,6 +36,10 @@ if FastAPI is not None:
         description: str
 
     app = FastAPI(title='VyaparSetu Pricing API')
+
+    @app.options('/price')
+    def price_options() -> Response:
+        return Response(status_code=200)
 
     @app.get('/health')
     def health():

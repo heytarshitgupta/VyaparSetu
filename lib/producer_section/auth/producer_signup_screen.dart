@@ -191,7 +191,11 @@ class _ProducerSignupScreenState extends State<ProducerSignupScreen> {
     try {
       final response = widget.verifyOtpHandler != null
           ? await widget.verifyOtpHandler!(email: email, otp: otp)
-          : await AuthService.instance.verifyEmailOtp(email: email, otp: otp);
+          : await AuthService.instance.verifyEmailOtp(
+              email: email,
+              otp: otp,
+              type: OtpType.signup,
+            );
 
       if (!mounted) return;
 
