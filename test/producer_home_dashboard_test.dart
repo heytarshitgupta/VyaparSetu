@@ -60,13 +60,16 @@ class FakeProducerHomeService implements IProducerHomeService {
     List<String>? relevantCategories,
     String? state,
     String? district,
-    int limit = 3,
+    int? limit,
   }) async =>
       buyerNeedsToReturn;
 
   @override
   Future<List<ProducerMarketSignalItem>> fetchMarketSignals({
     List<String>? relevantCategories,
+    String? state,
+    String? district,
+    int? limit,
   }) async =>
       marketSignalsToReturn;
 }

@@ -1007,7 +1007,7 @@ class ProducerHomeTab extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              ...needs.map((item) => _buildBuyerNeedCard(context, item)),
+              ...needs.take(3).map((item) => _buildBuyerNeedCard(context, item)),
             ],
           ),
         );

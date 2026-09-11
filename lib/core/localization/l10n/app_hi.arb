@@ -668,5 +668,103 @@
   "pricingInvalidQuantityError": "मात्रा शून्य से अधिक होनी चाहिए",
   "@pricingInvalidQuantityError": {
     "description": "Validation error zero quantity"
+  },
+  "whatBuyersWantLiveSubtitle": "विभिन्न क्षेत्रों से वास्तविक खरीदार मांग और अनुरोध देखें।",
+  "@whatBuyersWantLiveSubtitle": {
+    "description": "Subtitle for What Buyers Want screen with live data"
+  },
+  "noActiveBuyerDemand": "फ़िलहाल कोई सक्रिय खरीदार मांग नहीं मिली। बाद में दोबारा देखें।",
+  "@noActiveBuyerDemand": {
+    "description": "Message shown when there is zero active buyer demand"
+  },
+  "marketDemandLoadError": "हम अभी बाज़ार की मांग लोड नहीं कर सके।",
+  "@marketDemandLoadError": {
+    "description": "Error message when loading market demand fails"
+  },
+  "activeBuyerNeedsLabel": "सक्रिय खरीदार ज़रूरतें",
+  "@activeBuyerNeedsLabel": {
+    "description": "Label for active buyer requests count"
+  },
+  "requestsCount": "{count, plural, =1{1 अनुरोध} other{{count} अनुरोध}}",
+  "@requestsCount": {
+    "description": "Count of buyer requests",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quantityWantedLabel": "वांछित मात्रा",
+  "@quantityWantedLabel": {
+    "description": "Label for aggregate quantity requested"
+  },
+  "buyerPriceRangeLabel": "खरीदार मूल्य सीमा",
+  "@buyerPriceRangeLabel": {
+    "description": "Label for buyer target price range"
+  },
+  "whereBuyersAreLabel": "खरीदार कहाँ से हैं",
+  "@whereBuyersAreLabel": {
+    "description": "Label for geographic demand location"
+  },
+  "urgentNeedsCount": "{count, plural, =1{1 अति आवश्यक} other{{count} अति आवश्यक}}",
+  "@urgentNeedsCount": {
+    "description": "Count of high urgency buyer requests",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "multipleUnitTypes": "विभिन्न इकाइयाँ",
+  "@multipleUnitTypes": {
+    "description": "Notice when requested items have different units"
+  },
+  "buyerNeedsSubtitle": "खरीदारों की सक्रिय आवश्यकताएं जो उत्पादकों की प्रतीक्षा कर रही हैं",
+  "@buyerNeedsSubtitle": {
+    "description": "Subtitle for Buyer Needs tab"
+  },
+  "searchBuyerNeedsHint": "उत्पाद, श्रेणी या स्थान से खोजें...",
+  "@searchBuyerNeedsHint": {
+    "description": "Hint text for buyer needs search input"
+  },
+  "filterForYou": "आपके लिए",
+  "@filterForYou": {
+    "description": "Filter tab for buyer needs matching producer category"
+  },
+  "filterNearby": "आस-पास",
+  "@filterNearby": {
+    "description": "Filter tab for buyer needs from same district or state"
+  },
+  "filterUrgent": "अति आवश्यक",
+  "@filterUrgent": {
+    "description": "Filter tab for high urgency buyer requests"
+  },
+  "noActiveBuyerNeeds": "फ़िलहाल कोई सक्रिय खरीदार आवश्यकताएं नहीं हैं। बाद में दोबारा देखें।",
+  "@noActiveBuyerNeeds": {
+    "description": "Empty state message when there are zero active buyer requests"
+  },
+  "noBuyerNeedsMatchSearch": "आपकी खोज से मेल खाती कोई आवश्यकता नहीं मिली।",
+  "@noBuyerNeedsMatchSearch": {
+    "description": "Empty state message when no buyer needs match query"
+  },
+  "noBuyerNeedsMatchFilter": "इस फ़िल्टर के लिए कोई अवसर नहीं मिले।",
+  "@noBuyerNeedsMatchFilter": {
+    "description": "Empty state message when no buyer needs match selected filter"
+  },
+  "buyerNeedsLoadError": "हम अभी खरीदार आवश्यकताएं लोड नहीं कर सके।",
+  "@buyerNeedsLoadError": {
+    "description": "Error message when loading buyer needs fails"
+  },
+  "buyerWantsLabel": "खरीदार को चाहिए",
+  "@buyerWantsLabel": {
+    "description": "Label for buyer requested quantity"
+  },
+  "buyerTargetPriceLabel": "लक्षित मूल्य",
+  "@buyerTargetPriceLabel": {
+    "description": "Label for buyer target price"
+  },
+  "urgentBadge": "जरूरी",
+  "@urgentBadge": {
+    "description": "Badge for high urgency buyer needs"
   }
 }

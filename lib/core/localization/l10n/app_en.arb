@@ -2581,5 +2581,103 @@
   "pricingInvalidQuantityError": "Quantity must be greater than zero",
   "@pricingInvalidQuantityError": {
     "description": "Validation error for zero or negative quantity"
+  },
+  "whatBuyersWantLiveSubtitle": "See real-time demand and buyer requests across regions.",
+  "@whatBuyersWantLiveSubtitle": {
+    "description": "Subtitle for What Buyers Want screen with live data"
+  },
+  "noActiveBuyerDemand": "No active buyer demand found right now. Check again later.",
+  "@noActiveBuyerDemand": {
+    "description": "Message shown when there is zero active buyer demand"
+  },
+  "marketDemandLoadError": "We couldn't load market demand right now.",
+  "@marketDemandLoadError": {
+    "description": "Error message when loading market demand fails"
+  },
+  "activeBuyerNeedsLabel": "Active buyer needs",
+  "@activeBuyerNeedsLabel": {
+    "description": "Label for active buyer requests count"
+  },
+  "requestsCount": "{count, plural, =1{1 request} other{{count} requests}}",
+  "@requestsCount": {
+    "description": "Count of buyer requests",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quantityWantedLabel": "Quantity wanted",
+  "@quantityWantedLabel": {
+    "description": "Label for aggregate quantity requested"
+  },
+  "buyerPriceRangeLabel": "Buyer price range",
+  "@buyerPriceRangeLabel": {
+    "description": "Label for buyer target price range"
+  },
+  "whereBuyersAreLabel": "Where buyers are",
+  "@whereBuyersAreLabel": {
+    "description": "Label for geographic demand location"
+  },
+  "urgentNeedsCount": "{count, plural, =1{1 urgent} other{{count} urgent}}",
+  "@urgentNeedsCount": {
+    "description": "Count of high urgency buyer requests",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "multipleUnitTypes": "Multiple unit types",
+  "@multipleUnitTypes": {
+    "description": "Notice when requested items have different units"
+  },
+  "buyerNeedsSubtitle": "Active requirements from buyers waiting for producers",
+  "@buyerNeedsSubtitle": {
+    "description": "Subtitle for Buyer Needs tab"
+  },
+  "searchBuyerNeedsHint": "Search by product, category, location...",
+  "@searchBuyerNeedsHint": {
+    "description": "Hint text for buyer needs search input"
+  },
+  "filterForYou": "For You",
+  "@filterForYou": {
+    "description": "Filter tab for buyer needs matching producer category"
+  },
+  "filterNearby": "Nearby",
+  "@filterNearby": {
+    "description": "Filter tab for buyer needs from same district or state"
+  },
+  "filterUrgent": "Urgent",
+  "@filterUrgent": {
+    "description": "Filter tab for high urgency buyer requests"
+  },
+  "noActiveBuyerNeeds": "No active buyer needs right now. Check again later.",
+  "@noActiveBuyerNeeds": {
+    "description": "Empty state message when there are zero active buyer requests"
+  },
+  "noBuyerNeedsMatchSearch": "No buyer needs match your search.",
+  "@noBuyerNeedsMatchSearch": {
+    "description": "Empty state message when no buyer needs match query"
+  },
+  "noBuyerNeedsMatchFilter": "No opportunities found for this filter.",
+  "@noBuyerNeedsMatchFilter": {
+    "description": "Empty state message when no buyer needs match selected filter"
+  },
+  "buyerNeedsLoadError": "We couldn't load buyer needs right now.",
+  "@buyerNeedsLoadError": {
+    "description": "Error message when loading buyer needs fails"
+  },
+  "buyerWantsLabel": "Buyer wants",
+  "@buyerWantsLabel": {
+    "description": "Label for buyer requested quantity"
+  },
+  "buyerTargetPriceLabel": "Target price",
+  "@buyerTargetPriceLabel": {
+    "description": "Label for buyer target price"
+  },
+  "urgentBadge": "Urgent",
+  "@urgentBadge": {
+    "description": "Badge for high urgency buyer needs"
   }
 }

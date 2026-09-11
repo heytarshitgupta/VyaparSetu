@@ -227,9 +227,15 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
   }
 
   void openWhatBuyersWant() {
+    final craftCat = _profile?.craftCategory?.trim();
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const WhatBuyersWantScreen(),
+        builder: (_) => WhatBuyersWantScreen(
+          dashboardProvider: _dashboardProvider,
+          relevantCategories: (craftCat != null && craftCat.isNotEmpty) ? [craftCat] : null,
+          state: _profile?.state,
+          district: _profile?.district,
+        ),
       ),
     );
   }
@@ -280,7 +286,11 @@ class _ProducerMainScreenState extends State<ProducerMainScreen> {
         service: widget.productService,
         onAddProduct: openAddProduct,
       ),
-      const BuyerNeedsTab(),
+      BuyerNeedsTab(
+        dashboardProvider: _dashboardProvider,
+        homeService: widget.homeService,
+        profile: _profile,
+      ),
       ProducerProfileTab(
         profile: _profile,
         onSignOut: _handleSignOut,

@@ -193,12 +193,32 @@ class ProducerMarketSignalItem {
   final String title;
   final String subtitle;
 
+  // BI V2 Extended Metrics
+  final double? totalRequestedQuantity;
+  final String? representativeUnit;
+  final double? minTargetPrice;
+  final double? maxTargetPrice;
+  final double? averageTargetPrice;
+  final String? topState;
+  final String? topDistrict;
+  final int highUrgencyCount;
+  final int relevanceScore;
+
   const ProducerMarketSignalItem({
     required this.category,
     required this.level,
-    required this.activeRequestCount,
-    required this.completedOrderCount,
-    required this.title,
-    required this.subtitle,
+    this.activeRequestCount = 0,
+    this.completedOrderCount = 0,
+    this.title = '',
+    this.subtitle = '',
+    this.totalRequestedQuantity,
+    this.representativeUnit,
+    this.minTargetPrice,
+    this.maxTargetPrice,
+    this.averageTargetPrice,
+    this.topState,
+    this.topDistrict,
+    this.highUrgencyCount = 0,
+    this.relevanceScore = 0,
   });
 }

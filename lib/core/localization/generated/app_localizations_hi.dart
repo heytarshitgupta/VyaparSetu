@@ -1913,7 +1913,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get viewBuyerNeedsAction => 'खरीदार मांगें देखें';
 
   @override
-  String get noActiveBuyerNeeds => 'फिलहाल कोई सक्रिय खरीदार मांग नहीं है';
+  String get noActiveBuyerNeeds =>
+      'फ़िलहाल कोई सक्रिय खरीदार आवश्यकताएं नहीं हैं। बाद में दोबारा देखें।';
 
   @override
   String get marketDemandTitle => 'बाज़ार मांग';
@@ -2005,4 +2006,87 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get pricingInvalidQuantityError => 'मात्रा शून्य से अधिक होनी चाहिए';
+
+  @override
+  String get whatBuyersWantLiveSubtitle =>
+      'विभिन्न क्षेत्रों से वास्तविक खरीदार मांग और अनुरोध देखें।';
+
+  @override
+  String get noActiveBuyerDemand =>
+      'फ़िलहाल कोई सक्रिय खरीदार मांग नहीं मिली। बाद में दोबारा देखें।';
+
+  @override
+  String get marketDemandLoadError => 'हम अभी बाज़ार की मांग लोड नहीं कर सके।';
+
+  @override
+  String get activeBuyerNeedsLabel => 'सक्रिय खरीदार ज़रूरतें';
+
+  @override
+  String requestsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count अनुरोध',
+      one: '1 अनुरोध',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get quantityWantedLabel => 'वांछित मात्रा';
+
+  @override
+  String get buyerPriceRangeLabel => 'खरीदार मूल्य सीमा';
+
+  @override
+  String get whereBuyersAreLabel => 'खरीदार कहाँ से हैं';
+
+  @override
+  String urgentNeedsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count अति आवश्यक',
+      one: '1 अति आवश्यक',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get multipleUnitTypes => 'विभिन्न इकाइयाँ';
+
+  @override
+  String get buyerNeedsSubtitle =>
+      'खरीदारों की सक्रिय आवश्यकताएं जो उत्पादकों की प्रतीक्षा कर रही हैं';
+
+  @override
+  String get searchBuyerNeedsHint => 'उत्पाद, श्रेणी या स्थान से खोजें...';
+
+  @override
+  String get filterForYou => 'आपके लिए';
+
+  @override
+  String get filterNearby => 'आस-पास';
+
+  @override
+  String get filterUrgent => 'अति आवश्यक';
+
+  @override
+  String get noBuyerNeedsMatchSearch =>
+      'आपकी खोज से मेल खाती कोई आवश्यकता नहीं मिली।';
+
+  @override
+  String get noBuyerNeedsMatchFilter => 'इस फ़िल्टर के लिए कोई अवसर नहीं मिले।';
+
+  @override
+  String get buyerNeedsLoadError => 'हम अभी खरीदार आवश्यकताएं लोड नहीं कर सके।';
+
+  @override
+  String get buyerWantsLabel => 'खरीदार को चाहिए';
+
+  @override
+  String get buyerTargetPriceLabel => 'लक्षित मूल्य';
+
+  @override
+  String get urgentBadge => 'जरूरी';
 }

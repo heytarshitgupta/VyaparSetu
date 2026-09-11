@@ -1911,7 +1911,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewBuyerNeedsAction => 'View Buyer Needs';
 
   @override
-  String get noActiveBuyerNeeds => 'No active buyer requests right now';
+  String get noActiveBuyerNeeds =>
+      'No active buyer needs right now. Check again later.';
 
   @override
   String get marketDemandTitle => 'Market Demand';
@@ -2004,4 +2005,88 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pricingInvalidQuantityError =>
       'Quantity must be greater than zero';
+
+  @override
+  String get whatBuyersWantLiveSubtitle =>
+      'See real-time demand and buyer requests across regions.';
+
+  @override
+  String get noActiveBuyerDemand =>
+      'No active buyer demand found right now. Check again later.';
+
+  @override
+  String get marketDemandLoadError =>
+      'We couldn\'t load market demand right now.';
+
+  @override
+  String get activeBuyerNeedsLabel => 'Active buyer needs';
+
+  @override
+  String requestsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count requests',
+      one: '1 request',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get quantityWantedLabel => 'Quantity wanted';
+
+  @override
+  String get buyerPriceRangeLabel => 'Buyer price range';
+
+  @override
+  String get whereBuyersAreLabel => 'Where buyers are';
+
+  @override
+  String urgentNeedsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count urgent',
+      one: '1 urgent',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get multipleUnitTypes => 'Multiple unit types';
+
+  @override
+  String get buyerNeedsSubtitle =>
+      'Active requirements from buyers waiting for producers';
+
+  @override
+  String get searchBuyerNeedsHint => 'Search by product, category, location...';
+
+  @override
+  String get filterForYou => 'For You';
+
+  @override
+  String get filterNearby => 'Nearby';
+
+  @override
+  String get filterUrgent => 'Urgent';
+
+  @override
+  String get noBuyerNeedsMatchSearch => 'No buyer needs match your search.';
+
+  @override
+  String get noBuyerNeedsMatchFilter =>
+      'No opportunities found for this filter.';
+
+  @override
+  String get buyerNeedsLoadError => 'We couldn\'t load buyer needs right now.';
+
+  @override
+  String get buyerWantsLabel => 'Buyer wants';
+
+  @override
+  String get buyerTargetPriceLabel => 'Target price';
+
+  @override
+  String get urgentBadge => 'Urgent';
 }

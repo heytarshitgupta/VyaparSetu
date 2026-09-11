@@ -70,7 +70,11 @@ class ProducerHomeDashboardProvider extends ChangeNotifier {
         state: state,
         district: district,
       ),
-      _loadMarketSignalsSafe(relevantCategories: relevantCategories),
+      _loadMarketSignalsSafe(
+        relevantCategories: relevantCategories,
+        state: state,
+        district: district,
+      ),
     ]);
 
     notifyListeners();
@@ -119,7 +123,6 @@ class ProducerHomeDashboardProvider extends ChangeNotifier {
         relevantCategories: relevantCategories,
         state: state,
         district: district,
-        limit: 3,
       );
       _hasBuyerNeedsError = false;
     } catch (_) {
@@ -132,10 +135,16 @@ class ProducerHomeDashboardProvider extends ChangeNotifier {
 
   Future<void> _loadMarketSignalsSafe({
     List<String>? relevantCategories,
+    String? state,
+    String? district,
+    int? limit,
   }) async {
     try {
       _marketSignals = await _service.fetchMarketSignals(
         relevantCategories: relevantCategories,
+        state: state,
+        district: district,
+        limit: limit,
       );
       _hasSignalsError = false;
     } catch (_) {

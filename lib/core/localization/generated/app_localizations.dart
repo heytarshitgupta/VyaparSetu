@@ -3628,10 +3628,10 @@ abstract class AppLocalizations {
   /// **'View Buyer Needs'**
   String get viewBuyerNeedsAction;
 
-  /// Empty state text when no active buyer requests
+  /// Empty state message when there are zero active buyer requests
   ///
   /// In en, this message translates to:
-  /// **'No active buyer requests right now'**
+  /// **'No active buyer needs right now. Check again later.'**
   String get noActiveBuyerNeeds;
 
   /// Title for market demand signals preview on producer home
@@ -3807,6 +3807,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quantity must be greater than zero'**
   String get pricingInvalidQuantityError;
+
+  /// Subtitle for What Buyers Want screen with live data
+  ///
+  /// In en, this message translates to:
+  /// **'See real-time demand and buyer requests across regions.'**
+  String get whatBuyersWantLiveSubtitle;
+
+  /// Message shown when there is zero active buyer demand
+  ///
+  /// In en, this message translates to:
+  /// **'No active buyer demand found right now. Check again later.'**
+  String get noActiveBuyerDemand;
+
+  /// Error message when loading market demand fails
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load market demand right now.'**
+  String get marketDemandLoadError;
+
+  /// Label for active buyer requests count
+  ///
+  /// In en, this message translates to:
+  /// **'Active buyer needs'**
+  String get activeBuyerNeedsLabel;
+
+  /// Count of buyer requests
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 request} other{{count} requests}}'**
+  String requestsCount(int count);
+
+  /// Label for aggregate quantity requested
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity wanted'**
+  String get quantityWantedLabel;
+
+  /// Label for buyer target price range
+  ///
+  /// In en, this message translates to:
+  /// **'Buyer price range'**
+  String get buyerPriceRangeLabel;
+
+  /// Label for geographic demand location
+  ///
+  /// In en, this message translates to:
+  /// **'Where buyers are'**
+  String get whereBuyersAreLabel;
+
+  /// Count of high urgency buyer requests
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 urgent} other{{count} urgent}}'**
+  String urgentNeedsCount(int count);
+
+  /// Notice when requested items have different units
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple unit types'**
+  String get multipleUnitTypes;
+
+  /// Subtitle for Buyer Needs tab
+  ///
+  /// In en, this message translates to:
+  /// **'Active requirements from buyers waiting for producers'**
+  String get buyerNeedsSubtitle;
+
+  /// Hint text for buyer needs search input
+  ///
+  /// In en, this message translates to:
+  /// **'Search by product, category, location...'**
+  String get searchBuyerNeedsHint;
+
+  /// Filter tab for buyer needs matching producer category
+  ///
+  /// In en, this message translates to:
+  /// **'For You'**
+  String get filterForYou;
+
+  /// Filter tab for buyer needs from same district or state
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby'**
+  String get filterNearby;
+
+  /// Filter tab for high urgency buyer requests
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get filterUrgent;
+
+  /// Empty state message when no buyer needs match query
+  ///
+  /// In en, this message translates to:
+  /// **'No buyer needs match your search.'**
+  String get noBuyerNeedsMatchSearch;
+
+  /// Empty state message when no buyer needs match selected filter
+  ///
+  /// In en, this message translates to:
+  /// **'No opportunities found for this filter.'**
+  String get noBuyerNeedsMatchFilter;
+
+  /// Error message when loading buyer needs fails
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load buyer needs right now.'**
+  String get buyerNeedsLoadError;
+
+  /// Label for buyer requested quantity
+  ///
+  /// In en, this message translates to:
+  /// **'Buyer wants'**
+  String get buyerWantsLabel;
+
+  /// Label for buyer target price
+  ///
+  /// In en, this message translates to:
+  /// **'Target price'**
+  String get buyerTargetPriceLabel;
+
+  /// Badge for high urgency buyer needs
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get urgentBadge;
 }
 
 class _AppLocalizationsDelegate

@@ -2,14 +2,64 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:buyer_section/core/localization/generated/app_localizations.dart';
 import 'package:buyer_section/core/theme/app_theme.dart';
+import 'package:buyer_section/producer_section/home/models/producer_home_models.dart';
+import 'package:buyer_section/producer_section/home/models/producer_shell_profile.dart';
 import 'package:buyer_section/producer_section/home/producer_main_screen.dart';
+import 'package:buyer_section/producer_section/home/providers/producer_home_dashboard_provider.dart';
+import 'package:buyer_section/producer_section/home/services/producer_home_service.dart';
 import 'package:buyer_section/producer_section/home/tabs/what_buyers_want_screen.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product.dart';
-import 'package:buyer_section/producer_section/products/producer_market_intelligence.dart';
 import 'package:buyer_section/producer_section/products/models/producer_product_draft.dart';
 import 'package:buyer_section/producer_section/products/providers/producer_products_provider.dart';
 import 'package:buyer_section/producer_section/products/services/producer_product_image_service.dart';
 import 'package:buyer_section/producer_section/products/services/producer_product_service.dart';
+
+class FakeProducerHomeService implements IProducerHomeService {
+  final ProducerOrdersSummary ordersSummaryToReturn;
+  final List<ProducerBuyerNeedItem> buyerNeedsToReturn;
+  final List<ProducerMarketSignalItem> marketSignalsToReturn;
+  final bool shouldThrowOnSignals;
+  int refreshCallCount = 0;
+
+  FakeProducerHomeService({
+    this.ordersSummaryToReturn = const ProducerOrdersSummary(
+      completedSales: 45000,
+      completedOrders: 6,
+      pendingOrConfirmedOrders: 2,
+      totalOrders: 8,
+      cancelledOrders: 0,
+    ),
+    this.buyerNeedsToReturn = const [],
+    this.marketSignalsToReturn = const [],
+    this.shouldThrowOnSignals = false,
+  });
+
+  @override
+  Future<ProducerOrdersSummary> fetchOrdersSummary() async => ordersSummaryToReturn;
+
+  @override
+  Future<List<ProducerBuyerNeedItem>> fetchActiveBuyerNeeds({
+    List<String>? relevantCategories,
+    String? state,
+    String? district,
+    int? limit,
+  }) async =>
+      buyerNeedsToReturn;
+
+  @override
+  Future<List<ProducerMarketSignalItem>> fetchMarketSignals({
+    List<String>? relevantCategories,
+    String? state,
+    String? district,
+    int? limit,
+  }) async {
+    refreshCallCount++;
+    if (shouldThrowOnSignals) {
+      throw const ProducerHomeOperationException('Network simulated failure');
+    }
+    return marketSignalsToReturn;
+  }
+}
 
 class FakeProductService implements IProducerProductService {
   @override
@@ -22,33 +72,29 @@ class FakeProductService implements IProducerProductService {
   Future<ProducerProduct> updateProductStatus({
     required String productId,
     required ProductStatus newStatus,
-  }) async {
-    throw UnimplementedError();
-  }
+  }) async =>
+      throw UnimplementedError();
 
   @override
   Future<void> deleteProduct(String productId) async {}
 
   @override
-  Future<ProducerProduct> createDraft(ProducerProductDraft draft) async {
-    throw UnimplementedError();
-  }
+  Future<ProducerProduct> createDraft(ProducerProductDraft draft) async =>
+      throw UnimplementedError();
 
   @override
   Future<ProducerProduct> updateDraft({
     required String productId,
     required ProducerProductDraft draft,
-  }) async {
-    throw UnimplementedError();
-  }
+  }) async =>
+      throw UnimplementedError();
 
   @override
   Future<ProducerProduct> updateProductImages({
     required String productId,
     required List<String> imagePaths,
-  }) async {
-    throw UnimplementedError();
-  }
+  }) async =>
+      throw UnimplementedError();
 }
 
 Widget _buildTestApp({
@@ -68,262 +114,541 @@ Widget _buildTestApp({
 }
 
 void main() {
-  group('What Buyers Want / Market Intelligence Tests (Step BI-2)', () {
-    test('MarketDemandLevel thresholds calculate deterministically', () {
-      expect(MarketDemandLevel.fromScore(96.4), MarketDemandLevel.high);
-      expect(MarketDemandLevel.fromScore(75.0), MarketDemandLevel.high);
-      expect(MarketDemandLevel.fromScore(74.9), MarketDemandLevel.medium);
-      expect(MarketDemandLevel.fromScore(50.0), MarketDemandLevel.medium);
-      expect(MarketDemandLevel.fromScore(49.9), MarketDemandLevel.low);
-      expect(MarketDemandLevel.fromScore(0.0), MarketDemandLevel.low);
+  group('ProducerHomeService Market Signals BI Aggregation (Offline)', () {
+    test('3. multiple requests aggregate by category and 4. request count correct', () async {
+      final service = ProducerHomeService(
+        buyerRequestsFetcher: () async => [
+          {
+            'category': 'handicrafts',
+            'product_name': 'Brass Bell',
+            'quantity': 10,
+            'unit': 'piece',
+            'target_price': 500,
+            'urgency': 'normal',
+            'state': 'Rajasthan',
+            'district': 'Jaipur',
+          },
+          {
+            'category': 'handicrafts',
+            'product_name': 'Wooden Box',
+            'quantity': 20,
+            'unit': 'piece',
+            'target_price': 800,
+            'urgency': 'high',
+            'state': 'Rajasthan',
+            'district': 'Jodhpur',
+          },
+          {
+            'category': 'candles',
+            'product_name': 'Scented Candle',
+            'quantity': 50,
+            'unit': 'piece',
+            'target_price': 150,
+            'urgency': 'normal',
+            'state': 'Delhi',
+            'district': 'New Delhi',
+          },
+        ],
+      );
+
+      final signals = await service.fetchMarketSignals();
+      expect(signals.length, 2);
+
+      final handicraftSignal = signals.firstWhere((s) => s.category == 'handicraft');
+      expect(handicraftSignal.activeRequestCount, 2);
+
+      final candleSignal = signals.firstWhere((s) => s.category == 'candles');
+      expect(candleSignal.activeRequestCount, 1);
     });
 
-    testWidgets('Home shortcut opens real WhatBuyersWantScreen without "Feature coming soon"', (tester) async {
+    test('5. same-unit quantity total correct', () async {
+      final service = ProducerHomeService(
+        buyerRequestsFetcher: () async => [
+          {'category': 'pottery', 'quantity': 15, 'unit': 'piece'},
+          {'category': 'pottery', 'quantity': 35, 'unit': 'piece'},
+        ],
+      );
+
+      final signals = await service.fetchMarketSignals();
+      final pottery = signals.firstWhere((s) => s.category == 'pottery');
+      expect(pottery.totalRequestedQuantity, 50.0);
+      expect(pottery.representativeUnit, 'piece');
+    });
+
+    test('6. mixed units do not produce misleading total', () async {
+      final service = ProducerHomeService(
+        buyerRequestsFetcher: () async => [
+          {'category': 'honey', 'quantity': 50, 'unit': 'kg'},
+          {'category': 'honey', 'quantity': 200, 'unit': 'bottle'},
+        ],
+      );
+
+      final signals = await service.fetchMarketSignals();
+      final honey = signals.firstWhere((s) => s.category == 'honey');
+      expect(honey.totalRequestedQuantity, isNull);
+      expect(honey.representativeUnit, isNull);
+    });
+
+    test('7. min target price, 8. max target price, 9. average target price correct', () async {
+      final service = ProducerHomeService(
+        buyerRequestsFetcher: () async => [
+          {'category': 'spices', 'target_price': 200.0},
+          {'category': 'spices', 'target_price': 500.0},
+          {'category': 'spices', 'target_price': 350.0},
+        ],
+      );
+
+      final signals = await service.fetchMarketSignals();
+      final spices = signals.firstWhere((s) => s.category == 'spices');
+      expect(spices.minTargetPrice, 200.0);
+      expect(spices.maxTargetPrice, 500.0);
+      expect(spices.averageTargetPrice, 350.0);
+    });
+
+    test('10. null target prices handled gracefully without crash', () async {
+      final service = ProducerHomeService(
+        buyerRequestsFetcher: () async => [
+          {'category': 'textiles', 'target_price': null},
+          {'category': 'textiles', 'target_price': null},
+        ],
+      );
+
+      final signals = await service.fetchMarketSignals();
+      final textiles = signals.firstWhere((s) => s.category == 'clothing');
+      expect(textiles.minTargetPrice, isNull);
+      expect(textiles.maxTargetPrice, isNull);
+      expect(textiles.averageTargetPrice, isNull);
+    });
+
+    test('11. top state and 12. top district correct with producer relevance', () async {
+      final service = ProducerHomeService(
+        buyerRequestsFetcher: () async => [
+          {'category': 'woodcraft', 'state': 'Punjab', 'district': 'Amritsar'},
+          {'category': 'woodcraft', 'state': 'Delhi', 'district': 'Central Delhi'},
+          {'category': 'woodcraft', 'state': 'Punjab', 'district': 'Amritsar'},
+        ],
+      );
+
+      final signals = await service.fetchMarketSignals(state: 'Punjab', district: 'Amritsar');
+      final woodcraft = signals.firstWhere((s) => s.category == 'woodcraft');
+      expect(woodcraft.topState, 'Punjab');
+      expect(woodcraft.topDistrict, 'Amritsar');
+    });
+
+    test('13. urgency count correct', () async {
+      final service = ProducerHomeService(
+        buyerRequestsFetcher: () async => [
+          {'category': 'metalcraft', 'urgency': 'high'},
+          {'category': 'metalcraft', 'urgency': 'high'},
+          {'category': 'metalcraft', 'urgency': 'normal'},
+        ],
+      );
+
+      final signals = await service.fetchMarketSignals();
+      final metalcraft = signals.firstWhere((s) => s.category == 'metalcraft');
+      expect(metalcraft.highUrgencyCount, 2);
+    });
+
+    test('14. existing category expansion works for craft categories', () async {
+      final service = ProducerHomeService(
+        buyerRequestsFetcher: () async => [
+          {'category': 'apparel', 'quantity': 10, 'unit': 'piece'},
+        ],
+      );
+
+      final signals = await service.fetchMarketSignals(
+        relevantCategories: ['clothing_textiles'],
+      );
+      expect(signals.any((s) => s.category == 'clothing'), isTrue);
+    });
+
+    test('15. unseen category does not crash and gets deterministic metrics', () async {
+      final service = ProducerHomeService(
+        buyerRequestsFetcher: () async => [
+          {
+            'category': 'artisanal_soap',
+            'product_name': 'Lavender Bar',
+            'quantity': 40,
+            'unit': 'bar',
+            'target_price': 120,
+            'urgency': 'high',
+            'state': 'Goa',
+            'district': 'North Goa',
+          },
+        ],
+      );
+
+      final signals = await service.fetchMarketSignals();
+      final soap = signals.firstWhere((s) => s.category == 'artisanal soap');
+      expect(soap.title, 'Artisanal Soap');
+      expect(soap.activeRequestCount, 1);
+      expect(soap.totalRequestedQuantity, 40.0);
+      expect(soap.representativeUnit, 'bar');
+      expect(soap.minTargetPrice, 120.0);
+      expect(soap.highUrgencyCount, 1);
+      expect(soap.topState, 'Goa');
+      expect(soap.topDistrict, 'North Goa');
+    });
+  });
+
+  group('WhatBuyersWantScreen UI & Provider Integration Tests', () {
+    testWidgets('1. What Buyers Want uses live provider data', (tester) async {
       tester.view.physicalSize = const Size(800, 1200);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
-      final fakeService = FakeProductService();
-      final provider = ProducerProductsProvider(service: fakeService);
+      final liveSignals = [
+        const ProducerMarketSignalItem(
+          category: 'handicraft',
+          title: 'Handicraft',
+          level: MarketDemandLevel.high,
+          activeRequestCount: 5,
+          totalRequestedQuantity: 250,
+          representativeUnit: 'pieces',
+          minTargetPrice: 400,
+          maxTargetPrice: 850,
+          averageTargetPrice: 625,
+          topState: 'Rajasthan',
+          topDistrict: 'Jaipur',
+          highUrgencyCount: 2,
+        ),
+      ];
+
+      final fakeService = FakeProducerHomeService(marketSignalsToReturn: liveSignals);
+      final provider = ProducerHomeDashboardProvider(service: fakeService);
+      await provider.loadDashboard();
 
       await tester.pumpWidget(
         _buildTestApp(
-          child: ProducerMainScreen(
-            productsProvider: provider,
-            productService: fakeService,
+          child: WhatBuyersWantScreen(
+            dashboardProvider: provider,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      // Find and tap "What Buyers Want" shortcut card
-      final shortcutCard = find.text('What Buyers Want');
-      expect(shortcutCard, findsOneWidget);
-      await tester.tap(shortcutCard);
-      await tester.pumpAndSettle();
+      // Check category and metrics rendered from provider data
+      expect(find.text('Handicraft'), findsOneWidget);
+      expect(find.text('5 requests'), findsOneWidget);
+      expect(find.text('250 pieces'), findsOneWidget);
+      expect(find.text('₹400 – ₹850'), findsOneWidget);
+      expect(find.text('Jaipur, Rajasthan'), findsOneWidget);
+      expect(find.text('2 urgent'), findsOneWidget);
+      expect(find.text('High interest'), findsOneWidget);
 
-      // Verify WhatBuyersWantScreen is open
-      expect(find.byType(WhatBuyersWantScreen), findsOneWidget);
-
-      // Verify old "Feature coming soon" is NOT present
-      expect(find.text('Feature coming soon'), findsNothing);
-
-      // Verify sample market insights note is present
-      expect(find.text('Sample market insights'), findsOneWidget);
+      // Verify no numerical relevance score is rendered
+      expect(find.textContaining('relevanceScore'), findsNothing);
+      expect(find.textContaining('/100'), findsNothing);
     });
 
-    testWidgets('Signal cards render product details truthfully', (tester) async {
+    testWidgets('2. hardcoded csvSeedSignals are not used in normal runtime', (tester) async {
       tester.view.physicalSize = const Size(800, 1200);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
-      await tester.pumpWidget(
-        _buildTestApp(
-          child: const WhatBuyersWantScreen(),
-        ),
+      final fakeService = FakeProducerHomeService(
+        marketSignalsToReturn: [
+          const ProducerMarketSignalItem(
+            category: 'woodcraft',
+            title: 'Woodcraft',
+            level: MarketDemandLevel.growing,
+            activeRequestCount: 2,
+          ),
+        ],
       );
-      await tester.pumpAndSettle();
+      final provider = ProducerHomeDashboardProvider(service: fakeService);
+      await provider.loadDashboard();
 
-      // Sample product from Rajat seed
-      expect(find.text('Basmati (Rice)'), findsOneWidget);
-      expect(find.text('Agriculture'), findsWidgets);
-
-      // Demand score and high demand label
-      expect(find.textContaining('High demand • 96/100'), findsOneWidget);
-
-      // District & Top City location text
-      expect(find.textContaining('District: Tarn Taran'), findsOneWidget);
-      expect(find.textContaining('Top buying city: Amritsar'), findsOneWidget);
-
-      // Activity metrics
-      expect(find.textContaining('2840 units'), findsOneWidget);
-      expect(find.textContaining('₹1280'), findsOneWidget);
-
-      // Truthfulness check: Technical CSV terms removed from user-facing UI
-      expect(find.text('CSV-backed'), findsNothing);
-      expect(find.textContaining('products.csv'), findsNothing);
-
-      // Visual hierarchy check: "What Buyers Want" appears once in AppBar, section heading is "Sample market insights"
-      expect(find.text('What Buyers Want'), findsOneWidget);
-      expect(find.text('Sample market insights'), findsOneWidget);
-    });
-
-    testWidgets('Empty signal list displays safe localized empty state', (tester) async {
       await tester.pumpWidget(
         _buildTestApp(
-          child: const WhatBuyersWantScreen(
-            signals: [],
+          child: WhatBuyersWantScreen(
+            dashboardProvider: provider,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('No market insights available yet.'), findsOneWidget);
+      // Verify old hardcoded CSV seed data is NOT rendered
       expect(find.text('Basmati (Rice)'), findsNothing);
+      expect(find.text('Sample market insights'), findsNothing);
+      expect(find.textContaining('CSV-backed'), findsNothing);
+      expect(find.textContaining('products.csv'), findsNothing);
+      expect(find.text('Woodcraft'), findsOneWidget);
     });
 
-    testWidgets('Demand levels (High, Medium, Low) render correctly', (tester) async {
-      const sampleSignals = [
-        ProducerMarketSignal(
-          productId: 'P1',
-          productName: 'High Item',
-          category: 'Agriculture',
-          district: 'District 1',
-          marketDemandScore: 85.0,
-          monthlyUnits: 500,
-          avgOrderValue: 200.0,
-          topState: 'State',
-          topCity: 'City 1',
+    testWidgets('16. empty state renders clean user message', (tester) async {
+      tester.view.physicalSize = const Size(800, 1200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      final fakeService = FakeProducerHomeService(marketSignalsToReturn: []);
+      final provider = ProducerHomeDashboardProvider(service: fakeService);
+      await provider.loadDashboard();
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          child: WhatBuyersWantScreen(
+            dashboardProvider: provider,
+          ),
         ),
-        ProducerMarketSignal(
-          productId: 'P2',
-          productName: 'Medium Item',
-          category: 'Textile',
-          district: 'District 2',
-          marketDemandScore: 60.0,
-          monthlyUnits: 250,
-          avgOrderValue: 150.0,
-          topState: 'State',
-          topCity: 'City 2',
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('No active buyer demand found right now. Check again later.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('17. error state renders clean message and retry button', (tester) async {
+      tester.view.physicalSize = const Size(800, 1200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      final fakeService = FakeProducerHomeService(shouldThrowOnSignals: true);
+      final provider = ProducerHomeDashboardProvider(service: fakeService);
+      await provider.loadDashboard();
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          child: WhatBuyersWantScreen(
+            dashboardProvider: provider,
+          ),
         ),
-        ProducerMarketSignal(
-          productId: 'P3',
-          productName: 'Low Item',
-          category: 'Manufacturing',
-          district: 'District 3',
-          marketDemandScore: 35.0,
-          monthlyUnits: 50,
-          avgOrderValue: 100.0,
-          topState: 'State',
-          topCity: 'City 3',
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text("We couldn't load market demand right now."), findsOneWidget);
+      expect(find.text('Try Again'), findsOneWidget);
+
+      // Verify Supabase technical exception is not exposed
+      expect(find.textContaining('ProducerHomeOperationException'), findsNothing);
+      expect(find.textContaining('Network simulated failure'), findsNothing);
+    });
+
+    testWidgets('18. refresh invokes provider refresh', (tester) async {
+      tester.view.physicalSize = const Size(800, 1200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      final fakeService = FakeProducerHomeService(
+        marketSignalsToReturn: [
+          const ProducerMarketSignalItem(
+            category: 'pottery',
+            title: 'Pottery',
+            level: MarketDemandLevel.steady,
+            activeRequestCount: 1,
+          ),
+        ],
+      );
+      final provider = ProducerHomeDashboardProvider(service: fakeService);
+      await provider.loadDashboard();
+      expect(fakeService.refreshCallCount, 1);
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          child: WhatBuyersWantScreen(
+            dashboardProvider: provider,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Tap AppBar refresh button
+      final refreshIcon = find.byIcon(Icons.refresh).first;
+      await tester.tap(refreshIcon);
+      await tester.pumpAndSettle();
+
+      expect(fakeService.refreshCallCount, 2);
+    });
+
+    testWidgets('Mixed units display Multiple unit types instead of misleading number', (tester) async {
+      tester.view.physicalSize = const Size(800, 1200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      final signals = [
+        const ProducerMarketSignalItem(
+          category: 'honey',
+          title: 'Honey',
+          level: MarketDemandLevel.growing,
+          activeRequestCount: 3,
+          totalRequestedQuantity: null,
+          representativeUnit: null,
         ),
       ];
 
       await tester.pumpWidget(
         _buildTestApp(
-          child: const WhatBuyersWantScreen(
-            signals: sampleSignals,
+          child: WhatBuyersWantScreen(
+            signals: signals,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('High demand • 85/100'), findsOneWidget);
-      expect(find.textContaining('Medium demand • 60/100'), findsOneWidget);
-      expect(find.textContaining('Low demand • 35/100'), findsOneWidget);
+      expect(find.text('Multiple unit types'), findsOneWidget);
     });
 
-    testWidgets('Dark mode renders cleanly without crash or overflow', (tester) async {
+    testWidgets('19. EN localization renders correctly', (tester) async {
       tester.view.physicalSize = const Size(800, 1200);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         _buildTestApp(
-          child: const WhatBuyersWantScreen(),
-          themeMode: ThemeMode.dark,
+          locale: const Locale('en'),
+          child: const WhatBuyersWantScreen(
+            signals: [
+              ProducerMarketSignalItem(
+                category: 'handicraft',
+                title: 'Handicraft',
+                level: MarketDemandLevel.high,
+                activeRequestCount: 4,
+                totalRequestedQuantity: 100,
+                representativeUnit: 'pieces',
+                minTargetPrice: 500,
+                maxTargetPrice: 700,
+                topState: 'Punjab',
+                topDistrict: 'Amritsar',
+                highUrgencyCount: 1,
+              ),
+            ],
+          ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(WhatBuyersWantScreen), findsOneWidget);
-      expect(find.text('Basmati (Rice)'), findsOneWidget);
+      expect(find.text('What Buyers Want'), findsOneWidget);
+      expect(find.text('See real-time demand and buyer requests across regions.'), findsOneWidget);
+      expect(find.text('Active buyer needs'), findsOneWidget);
+      expect(find.text('Quantity wanted'), findsOneWidget);
+      expect(find.text('Buyer price range'), findsOneWidget);
+      expect(find.text('Where buyers are'), findsOneWidget);
+      expect(find.text('High interest'), findsOneWidget);
+      expect(find.text('1 urgent'), findsOneWidget);
     });
 
-    testWidgets('Hindi localization renders naturally in Devanagari', (tester) async {
+    testWidgets('20. HI localization renders Devanagari correctly', (tester) async {
       tester.view.physicalSize = const Size(800, 1200);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         _buildTestApp(
-          child: const WhatBuyersWantScreen(),
           locale: const Locale('hi'),
+          child: const WhatBuyersWantScreen(
+            signals: [
+              ProducerMarketSignalItem(
+                category: 'handicraft',
+                title: 'Handicraft',
+                level: MarketDemandLevel.high,
+                activeRequestCount: 4,
+                totalRequestedQuantity: 100,
+                representativeUnit: 'pieces',
+                minTargetPrice: 500,
+                maxTargetPrice: 700,
+                topState: 'Punjab',
+                topDistrict: 'Amritsar',
+                highUrgencyCount: 1,
+              ),
+            ],
+          ),
         ),
       );
       await tester.pumpAndSettle();
 
-      // Hindi title & badge (title only appears once in AppBar)
       expect(find.text('खरीदार क्या चाहते हैं'), findsOneWidget);
-      expect(find.text('नमूना बाज़ार रुझान'), findsOneWidget);
-
-      // Hindi demand label
-      expect(find.textContaining('अधिक मांग'), findsWidgets);
-
-      // Hindi category mapping
-      expect(find.text('कृषि'), findsWidgets);
+      expect(find.text('सक्रिय खरीदार ज़रूरतें'), findsOneWidget);
+      expect(find.text('वांछित मात्रा'), findsOneWidget);
+      expect(find.text('खरीदार मूल्य सीमा'), findsOneWidget);
+      expect(find.text('खरीदार कहाँ से हैं'), findsOneWidget);
+      expect(find.text('उच्च रुचि'), findsOneWidget);
+      expect(find.text('1 अति आवश्यक'), findsOneWidget);
     });
 
-    testWidgets('Punjabi localization renders naturally in Gurmukhi', (tester) async {
+    testWidgets('21. PA localization renders Gurmukhi correctly', (tester) async {
       tester.view.physicalSize = const Size(800, 1200);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         _buildTestApp(
-          child: const WhatBuyersWantScreen(),
           locale: const Locale('pa'),
+          child: const WhatBuyersWantScreen(
+            signals: [
+              ProducerMarketSignalItem(
+                category: 'handicraft',
+                title: 'Handicraft',
+                level: MarketDemandLevel.high,
+                activeRequestCount: 4,
+                totalRequestedQuantity: 100,
+                representativeUnit: 'pieces',
+                minTargetPrice: 500,
+                maxTargetPrice: 700,
+                topState: 'Punjab',
+                topDistrict: 'Amritsar',
+                highUrgencyCount: 1,
+              ),
+            ],
+          ),
         ),
       );
       await tester.pumpAndSettle();
 
-      // Punjabi title & badge (title only appears once in AppBar)
       expect(find.text('ਖਰੀਦਦਾਰ ਕੀ ਚਾਹੁੰਦੇ ਹਨ'), findsOneWidget);
-      expect(find.text('ਨਮੂਨਾ ਮੰਡੀ ਰੁਝਾਨ'), findsOneWidget);
-
-      // Punjabi demand label
-      expect(find.textContaining('ਵੱਧ ਮੰਗ'), findsWidgets);
-
-      // Punjabi category mapping
-      expect(find.text('ਖੇਤੀਬਾੜੀ'), findsWidgets);
+      expect(find.text('ਸਰਗਰਮ ਖਰੀਦਦਾਰ ਲੋੜਾਂ'), findsOneWidget);
+      expect(find.text('ਲੋੜੀਂਦੀ ਮਾਤਰਾ'), findsOneWidget);
+      expect(find.text('ਖਰੀਦਦਾਰ ਕੀਮਤ ਸੀਮਾ'), findsOneWidget);
+      expect(find.text('ਖਰੀਦਦਾਰ ਕਿੱਥੋਂ ਹਨ'), findsOneWidget);
+      expect(find.text('ਉੱਚ ਦਿਲਚਸਪੀ'), findsOneWidget);
+      expect(find.text('1 ਜ਼ਰੂਰੀ'), findsOneWidget);
     });
 
-    testWidgets('Responsiveness: 320px narrow phone renders without overflow', (tester) async {
-      tester.view.physicalSize = const Size(320, 640);
+    testWidgets('Home navigation shortcut opens WhatBuyersWantScreen with live provider', (tester) async {
+      tester.view.physicalSize = const Size(800, 1200);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
+      final fakeService = FakeProducerHomeService(
+        marketSignalsToReturn: [
+          const ProducerMarketSignalItem(
+            category: 'handicrafts',
+            title: 'Handicrafts',
+            level: MarketDemandLevel.high,
+            activeRequestCount: 4,
+          ),
+        ],
+      );
+      final fakeProdService = FakeProductService();
+      final productsProvider = ProducerProductsProvider(service: fakeProdService);
+
       await tester.pumpWidget(
         _buildTestApp(
-          child: const WhatBuyersWantScreen(),
+          child: ProducerMainScreen(
+            homeService: fakeService,
+            productsProvider: productsProvider,
+            productService: fakeProdService,
+            initialProfile: const ProducerShellProfile(
+              businessName: 'Sharma Crafts',
+              craftCategory: 'handicrafts',
+              district: 'Amritsar',
+              state: 'Punjab',
+            ),
+          ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(tester.takeException(), isNull);
-      expect(find.text('Basmati (Rice)'), findsOneWidget);
-    });
-
-    testWidgets('Responsiveness: 768px tablet renders cleanly', (tester) async {
-      tester.view.physicalSize = const Size(768, 1024);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-
-      await tester.pumpWidget(
-        _buildTestApp(
-          child: const WhatBuyersWantScreen(),
-        ),
-      );
+      // Find "What Buyers Want" card on Home tab
+      final shortcut = find.text('What Buyers Want');
+      expect(shortcut, findsOneWidget);
+      await tester.tap(shortcut);
       await tester.pumpAndSettle();
 
-      expect(tester.takeException(), isNull);
-      expect(find.text('Basmati (Rice)'), findsOneWidget);
-    });
-
-    testWidgets('Responsiveness: 1440px desktop renders cleanly', (tester) async {
-      tester.view.physicalSize = const Size(1440, 900);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-
-      await tester.pumpWidget(
-        _buildTestApp(
-          child: const WhatBuyersWantScreen(),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(tester.takeException(), isNull);
-      expect(find.text('Basmati (Rice)'), findsOneWidget);
+      // Verify WhatBuyersWantScreen is displayed
+      expect(find.byType(WhatBuyersWantScreen), findsOneWidget);
+      expect(find.text('Handicrafts'), findsOneWidget);
     });
   });
 }
